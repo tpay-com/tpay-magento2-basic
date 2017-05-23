@@ -1,0 +1,26 @@
+{
+  "name": "tpaycom/magento2basic",
+  "description": "tpay.com payments module",
+  "type": "magento2-module",
+  "version": "1.1.4",
+  "license": [
+    "OSL-3.0"
+  ],
+  "require": {
+    "php": "~5.5.0|~5.6.0|~7.0.0"
+  },
+  "autoload": {
+    "files": [
+      "registration.php"
+    ],
+    "psr-4": {
+      "tpaycom\\magento2basic\\": ""
+    }
+  },
+  "authors": [
+    {
+      "name": "tpay.com",
+      "homepage": "https://www.tpay.com/"
+    }
+  ]
+}

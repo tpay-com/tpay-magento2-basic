@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!--
+/**
+ *
+ * @category    payment gateway
+ * @package     Tpaycom_Magento2.1
+ * @author      Tpay.com
+ * @copyright   (https://tpay.com)
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="tpaycom\magento2basic\Api\TpayInterface" type="tpaycom\magento2basic\Model\Tpay" />
+    <preference for="tpaycom\magento2basic\Api\Sales\OrderRepositoryInterface" type="tpaycom\magento2basic\Model\Sales\OrderRepository" />
+</config>
