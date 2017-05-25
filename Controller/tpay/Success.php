@@ -23,8 +23,8 @@ class Success extends Action
      */
     public function execute()
     {
-        $this->messageManager->addSuccessMessage(__('Dziękujemy za dokonanie płatności.'));
+        $this->messageManager->addSuccessMessage(__('Thank you for your payment!'));
 
-        return $this->_redirect('checkout/cart');
+        return $this->_redirect('checkout/onepage/success');
     }
 }

@@ -23,8 +23,8 @@ class Error extends Action
      */
     public function execute()
     {
-        $this->messageManager->addWarningMessage(__("Wystąpił błąd podczas płatności."));
+        $this->messageManager->addWarningMessage(__("There was an error during your payment."));
 
-        return $this->_redirect('checkout/cart');
+        return $this->_redirect('checkout/onepage/failure');
     }
 }
