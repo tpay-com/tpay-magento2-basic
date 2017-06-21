@@ -11,7 +11,7 @@
     </div>
     <div class="payment-method-content">
 
-        <div class="blik" display="none">
+        <div class="blik">
             <div id="input_container">
                 <input type="text" class="blik_code_input" id="blik_code_input" name="blik_code" value="" maxlength="6"
                        pattern=".{6,}" data-bind="attr: {title: $t('Type in 6 digit code and press pay to commit blik payment.')}" />
@@ -27,7 +27,7 @@
             </div>
         </div>
 
-        <div id="payment_form_tpaycom_magento2basic" style="padding-left:15px;">
+        <div class="TpayBasicForm" id="payment_form_tpaycom_magento2basic">
             <input type="hidden" id="channel" name="channel" value=" ">
             <div id="channels" class="channels"></div>
         </div>
@@ -46,11 +46,14 @@
             <!-- ko foreach: $parent.getRegion('before-place-order') -->
             <!-- ko template: getTemplate() --><!-- /ko -->
             <!--/ko-->
+            <div class="TpayRegulations">
+                <input  type="checkbox"  checked name="akceptuje_regulamin" id="akceptuje_regulamin" />
+                <label for="akceptuje_regulamin">
+                    <a target="_blank" data-bind="attr: {href: getTerms()}">I do accept tpay.com service regulations</a>.
+                </label>
+            </div>
         </div>
 
-        </br>
-        <p data-bind="html: getTerms()"></p>
-        </br>
         <div class="actions-toolbar">
             <div class="primary">
                 <button class="action primary checkout"

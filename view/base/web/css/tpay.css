@@ -8,11 +8,17 @@
     margin: 6% 0 0 0;
     height: 80%
 }
+.TpayBasicForm {
+    padding-left:15px;
+}
 
 .checked {
     box-shadow: 0px 0px 10px 3px #15428F;
 }
-
+.TpayRegulations {
+    margin: 15px 0 0 0;
+    text-align: center;
+}
 .channel {
     cursor: pointer;
     display: inline-block;
@@ -60,7 +66,7 @@ p.blik {
 
 #blik_code_input {
     position: absolute;
-    top: 225px;
+    top: 245px;
     height: 60px;
     margin-top: 0px;
     left: 205px;

@@ -42,14 +42,14 @@ class TpayConfigProvider implements ConfigProviderInterface
      * TpayConfigProvider constructor.
      *
      * @param PaymentHelper $paymentHelper
-     * @param Repository    $assetRepository
+     * @param Repository $assetRepository
      */
     public function __construct(
         PaymentHelper $paymentHelper,
         Repository $assetRepository
     ) {
         $this->assetRepository = $assetRepository;
-        $this->paymentHelper   = $paymentHelper;
+        $this->paymentHelper = $paymentHelper;
     }
 
     /**
@@ -80,6 +80,28 @@ class TpayConfigProvider implements ConfigProviderInterface
     }
 
     /**
+     * @return TpayInterface|MethodInterface
+     */
+    protected function getPaymentMethodInstance()
+    {
+        if (null === $this->paymentMethod) {
+            $this->paymentMethod = $this->paymentHelper->getMethodInstance(TpayInterface::CODE);
+        }
+
+        return $this->paymentMethod;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return string
+     */
+    public function generateURL($name)
+    {
+        return $this->assetRepository->createAsset($name)->getUrl();
+    }
+
+    /**
      * @return string|null
      */
     public function showChannels()
@@ -88,26 +110,6 @@ class TpayConfigProvider implements ConfigProviderInterface
             $script = 'tpaycom_magento2basic::js/render_channels.js';
 
             return $this->createScript($script);
-        }
-
-        return null;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getTerms()
-    {
-        if ($this->getPaymentMethodInstance()->showPaymentChannels()) {
-            $textAcceptTerms = __('Akceptuję regulamin tpay.com');
-
-            return "
-            <div style=\"margin: 15px 0 0 0; text-align: center\">
-                <input  type=\"checkbox\"  checked name=\"akceptuje_regulamin\" id=\"akceptuje_regulamin\" />
-                <label for=\"akceptuje_regulamin\">
-                    <a target=\"_blank\" href=\"{$this->getPaymentMethodInstance()->getTermsURL()}\">{$textAcceptTerms}</a>.
-                </label>
-            </div>";
         }
 
         return null;
@@ -130,6 +132,18 @@ class TpayConfigProvider implements ConfigProviderInterface
     }
 
     /**
+     * @return string|null
+     */
+    public function getTerms()
+    {
+        if ($this->getPaymentMethodInstance()->showPaymentChannels()) {
+
+            return $this->getPaymentMethodInstance()->getTermsURL();
+        }
+        return null;
+    }
+
+    /**
      * @param string $css
      *
      * @return string
@@ -137,27 +151,5 @@ class TpayConfigProvider implements ConfigProviderInterface
     public function createCSS($css)
     {
         return "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$this->generateURL($css)}\">";
-    }
-
-    /**
-     * @param string $name
-     *
-     * @return string
-     */
-    public function generateURL($name)
-    {
-        return $this->assetRepository->createAsset($name)->getUrl();
-    }
-
-    /**
-     * @return TpayInterface|MethodInterface
-     */
-    protected function getPaymentMethodInstance()
-    {
-        if (null === $this->paymentMethod) {
-            $this->paymentMethod = $this->paymentHelper->getMethodInstance(TpayInterface::CODE);
-        }
-
-        return $this->paymentMethod;
     }
 }
