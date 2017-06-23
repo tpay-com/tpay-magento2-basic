@@ -173,7 +173,7 @@ class Tpay extends AbstractMethod implements TpayInterface
             $order = $this->orderRepository->getByIncrementId($orderId);
             $amount = $order->getGrandTotal();
         }
-        $amount = number_format($amount, 2);
+        $amount = number_format($amount, 2, '.', '');
         
         return (bool)($amount > $this->minAmountBlik);
     }
@@ -217,7 +217,7 @@ class Tpay extends AbstractMethod implements TpayInterface
     {
         $order = $this->getOrder($orderId);
         $billingAddress = $order->getBillingAddress();
-        $amount = number_format($order->getGrandTotal(), 2);
+        $amount = number_format($order->getGrandTotal(), 2, '.', '');
         $merchantId = $this->getMerchantId();
         $securityCode = $this->getSecurityCode();
         $crc = base64_encode($orderId);
