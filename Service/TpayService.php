@@ -55,14 +55,12 @@ class TpayService
         /** @var Order $order */
         $order = $this->orderRepository->getByIncrementId($orderId);
 
-        $order->addStatusToHistory(
-            Order::STATE_PENDING_PAYMENT,
-            __('Waiting for tpay.com payment.')
-        );
         $order->setTotalDue($order->getGrandTotal())
             ->setTotalPaid(0.00)
             ->setBaseTotalPaid(0.00)
-            ->setBaseTotalDue($order->getBaseGrandTotal());
+            ->setBaseTotalDue($order->getBaseGrandTotal())
+            ->setState(\Magento\Sales\Model\Order::STATE_PENDING_PAYMENT)
+            ->addStatusToHistory(true);
 
         $order->setSendEmail($sendEmail)->save();
 
