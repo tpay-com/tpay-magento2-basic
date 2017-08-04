@@ -53,7 +53,7 @@ class Curl
 
         try {
             $ch = curl_init();
-            libxml_disable_entity_loader(true);
+            $lastValue = libxml_disable_entity_loader(true);
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
@@ -73,6 +73,7 @@ class Curl
             return false;
         }
         curl_close($ch);
+        libxml_disable_entity_loader($lastValue);
 
         return static::checkResponse($curlRes);
     }

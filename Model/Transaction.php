@@ -19,19 +19,17 @@ use tpaycom\magento2basic\lib\Curl;
 class Transaction
 {
     /**
-     * API tpay.com url
-     *
-     * @var string
-     */
-    private $urlApi = 'https://secure.tpay.com/api/gw';
-
-    /**
      * Blik channel id in tpay.com
      *
      * @var string
      */
     const  BLIK_CHANNEL = '64';
-
+    /**
+     * API tpay.com url
+     *
+     * @var string
+     */
+    private $urlApi = 'https://secure.tpay.com/api/gw';
     /**
      * API password
      *
@@ -54,7 +52,7 @@ class Transaction
      */
     public function __construct($apiPassword, $apiKey)
     {
-        $this->apiKey      = $apiKey;
+        $this->apiKey = $apiKey;
         $this->apiPassword = $apiPassword;
     }
 
@@ -68,10 +66,10 @@ class Transaction
     public function createBlikTransaction($transactionData)
     {
         $transactionData['api_password'] = $this->apiPassword;
-        $transactionData['kanal']        = static::BLIK_CHANNEL;
-        $transactionData['json']         = '1';
+        $transactionData['kanal'] = static::BLIK_CHANNEL;
+        $transactionData['json'] = '1';
 
-        $url = $this->urlApi.'/'.$this->apiKey.'/transaction/create';
+        $url = $this->urlApi . '/' . $this->apiKey . '/transaction/create';
 
         $response = Curl::doCurlRequest($url, $transactionData);
 
@@ -80,40 +78,6 @@ class Transaction
         }
 
         return $this->blikTransactionResult($response);
-    }
-
-
-
-    /**
-     * Send BLIK code for a generated transaction
-     *
-     * @param $transactionId
-     * @param $blikCode
-     *
-     * @return bool
-     */
-    public function sendBlikCode($transactionId, $blikCode)
-    {
-        $transactionData['code']         = $blikCode;
-        $transactionData['title']        = $transactionId;
-        $transactionData['api_password'] = $this->apiPassword;
-        $url                             = "{$this->urlApi}/{$this->apiKey}/transaction/blik";
-
-        libxml_disable_entity_loader(true);
-
-        $response = Curl::doCurlRequest($url, $transactionData);
-
-        if (!$response) {
-            return false;
-        }
-
-        $xml = new \SimpleXMLElement($response);
-
-        if ((string)$xml->result !== '1') {
-            return false;
-        }
-
-        return true;
     }
 
     /**
@@ -132,5 +96,32 @@ class Transaction
         }
 
         return (string)$response->title;
+    }
+
+    /**
+     * Send BLIK code for a generated transaction
+     *
+     * @param $transactionId
+     * @param $blikCode
+     *
+     * @return bool
+     */
+    public function sendBlikCode($transactionId, $blikCode)
+    {
+        $transactionData['code'] = $blikCode;
+        $transactionData['title'] = $transactionId;
+        $transactionData['api_password'] = $this->apiPassword;
+        $transactionData['json'] = '1';
+        $url = "{$this->urlApi}/{$this->apiKey}/transaction/blik";
+
+        $response = Curl::doCurlRequest($url, $transactionData);
+
+        if (!$response) {
+            return false;
+        }
+        $resp = (array)json_decode($response);
+
+        return ((int)$resp['result'] === 1) ? true : false;
+
     }
 }
