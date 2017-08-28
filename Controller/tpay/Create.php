@@ -22,7 +22,7 @@ use tpaycom\magento2basic\Service\TpayService;
  *
  * @package tpaycom\magento2basic\Controller\tpay
  */
-class Blik extends Action
+class Create extends Action
 {
     /**
      * @var TpayService

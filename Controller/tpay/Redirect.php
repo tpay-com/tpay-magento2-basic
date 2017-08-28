@@ -72,9 +72,37 @@ class Redirect extends Action
             return $this->_redirect('checkout/cart');
         }
         $this->tpayService->setOrderStatePendingPayment($orderId, true);
+        if (!$this->tpay->showPaymentChannels() || strlen($this->tpay->getApiKey()) < 1
+            || strlen($this->tpay->getApiPassword()) < 1
+        ) {
+            $paymentData = $this->tpayService->getPaymentData($orderId);
+            $additionalPaymentInformation = $paymentData['additional_information'];
 
-        return $this->_redirect('magento2basic/tpay/Blik');
+            $this->redirectToPayment($orderId, $additionalPaymentInformation);
+            $this->checkoutSession->unsQuoteId();
+        } else {
+            return $this->_redirect('magento2basic/tpay/Create');
+        }
 
+    }
+
+    /**
+     * Redirect to tpay.com
+     *
+     * @param int $orderId
+     * @param array $additionalPaymentInformation
+     */
+    private function redirectToPayment($orderId, array $additionalPaymentInformation)
+    {
+        /** @var RedirectBlock $redirectBlock */
+        $redirectBlock = $this->_view->getLayout()->createBlock('tpaycom\magento2basic\Block\Payment\tpay\Redirect');
+        $redirectBlock
+            ->setOrderId($orderId)
+            ->setAdditionalPaymentInformation($additionalPaymentInformation);
+
+        $this->getResponse()->setBody(
+            $redirectBlock->toHtml()
+        );
     }
 
 }
