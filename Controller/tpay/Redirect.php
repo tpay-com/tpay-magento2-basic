@@ -42,10 +42,10 @@ class Redirect extends Action
     /**
      * Redirect constructor.
      *
-     * @param Context        $context
-     * @param TpayInterface  $tpayModel
-     * @param TpayService    $tpayService
-     * @param Session        $checkoutSession
+     * @param Context $context
+     * @param TpayInterface $tpayModel
+     * @param TpayService $tpayService
+     * @param Session $checkoutSession
      */
     public function __construct(
         Context $context,
@@ -53,9 +53,9 @@ class Redirect extends Action
         TpayService $tpayService,
         Session $checkoutSession
     ) {
-        $this->tpayService     = $tpayService;
+        $this->tpayService = $tpayService;
         $this->checkoutSession = $checkoutSession;
-        $this->tpay            = $tpayModel;
+        $this->tpay = $tpayModel;
 
         parent::__construct($context);
     }
@@ -65,46 +65,16 @@ class Redirect extends Action
      */
     public function execute()
     {
-        $uid     = $this->getRequest()->getParam('uid');
+        $uid = $this->getRequest()->getParam('uid');
         $orderId = $this->checkoutSession->getLastRealOrderId();
 
         if (!$orderId || !$uid) {
             return $this->_redirect('checkout/cart');
         }
+        $this->tpayService->setOrderStatePendingPayment($orderId, true);
 
-        $paymentData                  = $this->tpayService->getPaymentData($orderId);
-        $additionalPaymentInformation = $paymentData['additional_information'];
+        return $this->_redirect('magento2basic/tpay/Blik');
 
-        if (!empty($additionalPaymentInformation['blik_code'])
-            && $this->tpay->checkBlikLevel0Settings()
-            && $additionalPaymentInformation['kanal'] == Transaction::BLIK_CHANNEL
-        ) {
-            return $this->_redirect('magento2basic/tpay/Blik');
-        } else {
-            $this->tpayService->setOrderStatePendingPayment($orderId, true);
-
-            $this->redirectToPayment($orderId, $additionalPaymentInformation);
-
-            $this->checkoutSession->unsQuoteId();
-        }
     }
 
-    /**
-     * Redirect to tpay.com
-     *
-     * @param int   $orderId
-     * @param array $additionalPaymentInformation
-     */
-    private function redirectToPayment($orderId, array $additionalPaymentInformation)
-    {
-        /** @var RedirectBlock $redirectBlock */
-        $redirectBlock = $this->_view->getLayout()->createBlock('tpaycom\magento2basic\Block\Payment\tpay\Redirect');
-        $redirectBlock
-            ->setOrderId($orderId)
-            ->setAdditionalPaymentInformation($additionalPaymentInformation);
-
-        $this->getResponse()->setBody(
-            $redirectBlock->toHtml()
-        );
-    }
 }

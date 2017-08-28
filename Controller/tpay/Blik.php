@@ -52,9 +52,9 @@ class Blik extends Action
     /**
      * {@inheritdoc}
      *
-     * @param TpayInterface      $tpayModel
+     * @param TpayInterface $tpayModel
      * @param TransactionFactory $transactionFactory
-     * @param TpayService        $tpayService
+     * @param TpayService $tpayService
      */
     public function __construct(
         Context $context,
@@ -63,9 +63,9 @@ class Blik extends Action
         TpayService $tpayService,
         Session $checkoutSession
     ) {
-        $this->tpay               = $tpayModel;
+        $this->tpay = $tpayModel;
         $this->transactionFactory = $transactionFactory;
-        $this->tpayService        = $tpayService;
+        $this->tpayService = $tpayService;
         $this->checkoutSession = $checkoutSession;
 
         parent::__construct($context);
@@ -81,50 +81,51 @@ class Blik extends Action
         if ($orderId) {
             $paymentData = $this->tpayService->getPaymentData($orderId);
 
-            $this->tpayService->setOrderStatePendingPayment($orderId, true);
-
             $pass = $this->tpay->getApiPassword();
-            $key  = $this->tpay->getApiKey();
+            $key = $this->tpay->getApiKey();
 
             $this->transaction = $this->transactionFactory->create(['apiPassword' => $pass, 'apiKey' => $key]);
 
             $additionalPaymentInformation = $paymentData['additional_information'];
 
-            $result = $this->makeBlikPayment($orderId, $additionalPaymentInformation);
-            $this->checkoutSession->unsQuoteId();
+            $title = $this->prepareTransaction($orderId, $additionalPaymentInformation);
 
-            if (!$result) {
+            if (!$title) {
                 return $this->_redirect('magento2basic/tpay/error');
             }
+            $this->tpayService->addCommentToHistory($orderId, 'Transaction title ' . $title);
 
-            return $this->_redirect('magento2basic/tpay/success');
+            if (!empty($additionalPaymentInformation['blik_code'])
+                && $this->tpay->checkBlikLevel0Settings()
+                && $additionalPaymentInformation['kanal'] == Transaction::BLIK_CHANNEL
+            ) {
+                $code = $additionalPaymentInformation['blik_code'];
+                $result = $this->blikPay($title, $code);
+                $this->checkoutSession->unsQuoteId();
+                if (!$result) {
+                    $this->tpayService->addCommentToHistory($orderId,
+                        'User has typed wrong blik code and has been redirected to transaction panel in order to finish payment');
+                    return $this->_redirect("https://secure.tpay.com/?gtitle=" . $title);
+                } else {
+                    return $this->_redirect('magento2basic/tpay/success');
+                }
+            } else {
+                return $this->_redirect("https://secure.tpay.com/?gtitle=" . $title);
+            }
+
+
         }
     }
 
-    /**
-     * Create  BLIK Payment for transaction data
-     *
-     * @param int   $orderId
-     * @param array $additionalPaymentInformation
-     *
-     * @return bool
-     */
-    protected function makeBlikPayment($orderId, array $additionalPaymentInformation)
+    private function prepareTransaction($orderId, array $additionalPaymentInformation)
     {
-        $data     = $this->tpay->getTpayFormData($orderId);
-        $blikCode = $additionalPaymentInformation['blik_code'];
+        $data = $this->tpay->getTpayFormData($orderId);
+        $channel = $additionalPaymentInformation['kanal'];
 
-        unset($additionalPaymentInformation['blik_code']);
+        $transactionID = $this->transaction->createTransaction($data, $channel);
 
-        $data = array_merge($data, $additionalPaymentInformation);
+        return !$transactionID ? false : $transactionID;
 
-        $blikTransactionId = $this->transaction->createBlikTransaction($data);
-
-        if (!$blikTransactionId) {
-            return false;
-        }
-
-        return $this->blikPay($blikTransactionId, $blikCode);
     }
 
     /**

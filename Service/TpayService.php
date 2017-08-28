@@ -9,6 +9,10 @@
 
 namespace tpaycom\magento2basic\Service;
 
+use Magento\Framework\App\ObjectManager;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Model\Order\Invoice;
 use Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface;
 use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Sales\Model\Order;
@@ -27,6 +31,7 @@ class TpayService
      */
     protected $orderRepository;
     protected $builder;
+    private $objectManager;
 
     /**
      * Tpay constructor.
@@ -40,6 +45,7 @@ class TpayService
     ) {
         $this->orderRepository = $orderRepository;
         $this->builder = $builder;
+        $this->objectManager = ObjectManager::getInstance();
     }
 
     /**
@@ -67,6 +73,14 @@ class TpayService
         return $order;
     }
 
+    public function addCommentToHistory($orderId, $comment)
+    {
+        /** @var Order $order */
+        $order = $this->orderRepository->getByIncrementId($orderId);
+        $order->addStatusToHistory($order->getState(), $comment);
+        $order->save();
+    }
+
     /**
      * Return payment data
      *
@@ -90,7 +104,7 @@ class TpayService
      *
      * @return bool|Order
      */
-    public function validateOrderAndSetStatus($orderId, array $validParams)
+    public function SetOrderStatus($orderId, array $validParams)
     {
         /** @var Order $order */
         $order = $this->orderRepository->getByIncrementId($orderId);
@@ -99,34 +113,8 @@ class TpayService
             return false;
         }
 
-        $payment = $order->getPayment();
+
         $transactionDesc = $this->getTransactionDesc($validParams);
-        if ($payment) {
-            $payment->setLastTransId($validParams[ResponseFields::TR_ID]);
-            $payment->setTransactionId($validParams[ResponseFields::TR_ID]);
-            $payment->setAdditionalInformation(
-                [\Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS => (array)$validParams]
-            );
-            $trans = $this->builder;
-            $transaction = $trans->setPayment($payment)
-                ->setOrder($order)
-                ->setTransactionId($validParams[ResponseFields::TR_ID])
-                ->setAdditionalInformation(
-                    [\Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS => (array)$validParams]
-                )
-                ->setFailSafe(true)
-                //build method creates the transaction and returns the object
-                ->build(\Magento\Sales\Model\Order\Payment\Transaction::TYPE_ORDER);
-
-            $payment->addTransactionCommentsToOrder(
-                $transaction,
-                $transactionDesc
-            );
-            $payment->setParentTransactionId(null);
-            $payment->save();
-            $transaction->save();
-        }
-
         $orderAmount = (double)number_format($order->getGrandTotal(), 2, '.', '');
 
         $trStatus = $validParams[ResponseFields::TR_STATUS];
@@ -138,28 +126,24 @@ class TpayService
             if ($order->getState() != Order::STATE_PROCESSING) {
                 $emailNotify = true;
             }
-            $status = __('The payment from tpay.com has been accepted.') . '</br>' . $transactionDesc;
             $state = Order::STATE_PROCESSING;
-            $order->setTotalDue(0.00)
-                ->setTotalPaid((double)$validParams[ResponseFields::TR_PAID])
-                ->setBaseTotalDue(0.00)
-                ->setBaseTotalPaid($order->getBaseGrandTotal());
+            $this->setInvoice($order);
+            $this->setTransaction($order, $validParams);
+
         } else {
             if ($order->getState() != Order::STATE_HOLDED) {
                 $emailNotify = true;
             }
             $status = __('Payment has been canceled: ') . '</br>' . $transactionDesc;
             $state = Order::STATE_HOLDED;
+            $order->addStatusToHistory($state, $status, true);
         }
-
-        $order->setState($state);
-        $order->addStatusToHistory($state, $status, true);
 
         if ($emailNotify) {
             $order->setSendEmail(true);
         }
 
-        $order->save();
+        $order->setState($state)->save();
 
         return $order;
     }
@@ -183,5 +167,68 @@ class TpayService
         $transactionDesc .= $error === 'none' ? ' ' : ' Error:  <b>' . strtoupper($error) . '</b> (' . $paid . ')';
 
         return $transactionDesc . $validParams[ResponseFields::TEST_MODE] === '1' ? '<b> TEST </b>' : ' ';
+    }
+
+    /**
+     * @param OrderInterface $order
+     * @param array $validParams
+     */
+    private function setTransaction($order, $validParams)
+    {
+        $payment = $order->getPayment();
+        if ($payment) {
+            $payment->setLastTransId($validParams[ResponseFields::TR_ID]);
+            $payment->setTransactionId($validParams[ResponseFields::TR_ID]);
+            $payment->setAdditionalInformation(
+                [\Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS => (array)$validParams]
+            );
+            $trans = $this->builder;
+            $transaction = $trans->setPayment($payment)
+                ->setOrder($order)
+                ->setTransactionId($validParams[ResponseFields::TR_ID])
+                ->setAdditionalInformation(
+                    [\Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS => (array)$validParams]
+                )
+                ->setFailSafe(true)
+                //build method creates the transaction and returns the object
+                ->build(\Magento\Sales\Model\Order\Payment\Transaction::TYPE_ORDER);
+
+            $payment->setParentTransactionId(null)->registerCaptureNotification($order->getGrandTotal());
+            $payment->save();
+            $transaction->save();
+            foreach ($order->getRelatedObjects() as $object) {
+                $object->save();
+            }
+        }
+    }
+
+    /**
+     * @param OrderInterface $order
+     * @throws LocalizedException
+     */
+    private function setInvoice($order)
+    {
+        if ($order->canInvoice()) {
+            // Create invoice for this order
+            $invoice = $this->objectManager->create('Magento\Sales\Model\Service\InvoiceService')->prepareInvoice($order);
+
+            // Make sure there is a qty on the invoice
+            if (!$invoice->getTotalQty()) {
+                throw new LocalizedException(
+                    __('You can\'t create an invoice without products.')
+                );
+            }
+
+        }
+        // Register as invoice item
+        $invoice->setRequestedCaptureCase(Invoice::NOT_CAPTURE);
+        $invoice->register();
+        $order->save();
+        $transaction = $this->objectManager->create('Magento\Framework\DB\Transaction')
+            ->addObject($invoice)
+            ->addObject($invoice->getOrder());
+
+        $transaction->save();
+
     }
 }

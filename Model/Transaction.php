@@ -61,41 +61,25 @@ class Transaction
      *
      * @param $transactionData
      *
+     * @param $channel
      * @return bool|string
      */
-    public function createBlikTransaction($transactionData)
+    public function createTransaction($transactionData, $channel)
     {
         $transactionData['api_password'] = $this->apiPassword;
-        $transactionData['kanal'] = static::BLIK_CHANNEL;
+        $transactionData['kanal'] = $channel;
         $transactionData['json'] = '1';
 
         $url = $this->urlApi . '/' . $this->apiKey . '/transaction/create';
 
         $response = Curl::doCurlRequest($url, $transactionData);
+        $response = (array)json_decode($response);
 
-        if (!$response) {
+        if (!$response || $response['result'] === 0) {
             return false;
         }
+        return $response['title'];
 
-        return $this->blikTransactionResult($response);
-    }
-
-    /**
-     * Check response for created BLIK transaction.
-     *
-     * @param $response
-     *
-     * @return bool|string
-     */
-    private function blikTransactionResult($response)
-    {
-        $response = json_decode($response);
-
-        if ((string)$response->result !== '1') {
-            return false;
-        }
-
-        return (string)$response->title;
     }
 
     /**
