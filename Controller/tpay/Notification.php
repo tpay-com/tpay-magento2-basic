@@ -86,7 +86,7 @@ class Notification extends Action
             $validParams = $paymentBasic->checkPayment($this->remoteAddress->getRemoteAddress(), $params);
             $orderId     = base64_decode($validParams[ResponseFields::TR_CRC]);
 
-            $this->tpayService->SetOrderStatus($orderId, $validParams);
+            $this->tpayService->SetOrderStatus($orderId, $validParams, $this->tpay);
 
             return
                 $this

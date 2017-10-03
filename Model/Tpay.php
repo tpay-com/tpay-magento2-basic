@@ -207,7 +207,15 @@ class Tpay extends AbstractMethod implements TpayInterface
     {
         return $this->getConfigData('api_password');
     }
-    
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getInvoiceSendMail()
+    {
+        return $this->getConfigData('send_invoice_email');
+    }
+
     /**
      * {@inheritdoc}
      */

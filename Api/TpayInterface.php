@@ -108,4 +108,11 @@ interface TpayInterface
      * @return string
      */
     public function getTermsURL();
+
+    /**
+     * Check if send an email about the new invoice to customer
+     *
+     * @return string
+     */
+    public function getInvoiceSendMail();
 }
