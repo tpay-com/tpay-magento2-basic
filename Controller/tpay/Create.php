@@ -82,7 +82,8 @@ class Create extends Action
         $orderId = $this->checkoutSession->getLastRealOrderId();
 
         if ($orderId) {
-            $paymentData = $this->tpayService->getPaymentData($orderId);
+            $payment = $this->tpayService->getPayment($orderId);
+            $paymentData = $payment->getData();
 
             $pass = $this->tpay->getApiPassword();
             $key = $this->tpay->getApiKey();
@@ -99,9 +100,9 @@ class Create extends Action
             $this->tpayService->addCommentToHistory($orderId, 'Transaction title ' . $title);
             $transactionUrl = self::TRANSACTION_LINK . $title;
             $this->tpayService->addCommentToHistory($orderId, 'Transaction link ' . $transactionUrl);
-            $payment = $this->tpayService->getPayment($orderId);
-            $payment->setAdditionalData($transactionUrl);
-            $payment->save();
+
+            $paymentData['additional_information']['transaction_url'] = $transactionUrl;
+            $payment->setData($paymentData)->save();
 
             if (!empty($additionalPaymentInformation['blik_code'])
                 && $this->tpay->checkBlikLevel0Settings()
@@ -120,8 +121,6 @@ class Create extends Action
             } else {
                 return $this->_redirect($transactionUrl);
             }
-
-
         }
     }
 

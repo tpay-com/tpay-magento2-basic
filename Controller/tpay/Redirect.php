@@ -75,7 +75,8 @@ class Redirect extends Action
         if (!$this->tpay->showPaymentChannels() || strlen($this->tpay->getApiKey()) < 1
             || strlen($this->tpay->getApiPassword()) < 1
         ) {
-            $paymentData = $this->tpayService->getPaymentData($orderId);
+            $payment = $this->tpayService->getPayment($orderId);
+            $paymentData = $payment->getData();
             $additionalPaymentInformation = $paymentData['additional_information'];
 
             $this->redirectToPayment($orderId, $additionalPaymentInformation);
