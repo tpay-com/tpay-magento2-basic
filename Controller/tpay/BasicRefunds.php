@@ -35,7 +35,7 @@ class BasicRefunds
     public function makeRefund($payment, $amount)
     {
         $params['title'] = $payment->getParentTransactionId();
-        $params['amount'] = $amount;
+        $params['chargeback_amount'] = number_format($amount, 2);
         $params['api_password'] = $this->apiPass;
         $params['json'] = 'true';
 

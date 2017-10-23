@@ -37,7 +37,6 @@ define(
                 return window.checkoutConfig.tpay.payment.getTerms;
             },
 
-
             getLogoUrl: function () {
                 return window.checkoutConfig.tpay.payment.tpayLogoUrl;
             },
@@ -48,6 +47,14 @@ define(
 
             showBlikCode: function () {
                 return window.checkoutConfig.tpay.payment.showBlikCode;
+            },
+
+            blikStatus: function () {
+                return window.checkoutConfig.tpay.payment.blikStatus;
+            },
+
+            getBlikChannelID: function () {
+                return window.checkoutConfig.tpay.payment.getBlikChannelID;
             },
 
             addCSS: function () {

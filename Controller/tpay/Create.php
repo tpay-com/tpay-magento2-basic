@@ -15,6 +15,7 @@ use Magento\Framework\App\Action\Context;
 use tpaycom\magento2basic\Api\TpayInterface;
 use tpaycom\magento2basic\Model\TransactionFactory;
 use tpaycom\magento2basic\Model\Transaction;
+use Magento\Sales\Model\Order\Payment\Transaction as MagentoTransaction;
 use tpaycom\magento2basic\Service\TpayService;
 
 /**
@@ -24,6 +25,7 @@ use tpaycom\magento2basic\Service\TpayService;
  */
 class Create extends Action
 {
+    const TRANSACTION_LINK = 'https://secure.tpay.com/?gtitle=';
     /**
      * @var TpayService
      */
@@ -62,6 +64,7 @@ class Create extends Action
         TransactionFactory $transactionFactory,
         TpayService $tpayService,
         Session $checkoutSession
+
     ) {
         $this->tpay = $tpayModel;
         $this->transactionFactory = $transactionFactory;
@@ -94,6 +97,11 @@ class Create extends Action
                 return $this->_redirect('magento2basic/tpay/error');
             }
             $this->tpayService->addCommentToHistory($orderId, 'Transaction title ' . $title);
+            $transactionUrl = self::TRANSACTION_LINK . $title;
+            $this->tpayService->addCommentToHistory($orderId, 'Transaction link ' . $transactionUrl);
+            $payment = $this->tpayService->getPayment($orderId);
+            $payment->setAdditionalData($transactionUrl);
+            $payment->save();
 
             if (!empty($additionalPaymentInformation['blik_code'])
                 && $this->tpay->checkBlikLevel0Settings()
@@ -105,12 +113,12 @@ class Create extends Action
                 if (!$result) {
                     $this->tpayService->addCommentToHistory($orderId,
                         'User has typed wrong blik code and has been redirected to transaction panel in order to finish payment');
-                    return $this->_redirect("https://secure.tpay.com/?gtitle=" . $title);
+                    return $this->_redirect($transactionUrl);
                 } else {
                     return $this->_redirect('magento2basic/tpay/success');
                 }
             } else {
-                return $this->_redirect("https://secure.tpay.com/?gtitle=" . $title);
+                return $this->_redirect($transactionUrl);
             }
 
 

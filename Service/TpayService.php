@@ -123,6 +123,21 @@ class TpayService extends RegisterCaptureNotificationOperation
     }
 
     /**
+     * Return payment data
+     *
+     * @param int $orderId
+     *
+     * @return OrderPaymentInterface
+     */
+    public function getPayment($orderId)
+    {
+        /** @var Order $order */
+        $order = $this->orderRepository->getByIncrementId($orderId);
+
+        return $order->getPayment();
+    }
+
+    /**
      * Validate order and set appropriate state
      *
      * @param int $orderId
