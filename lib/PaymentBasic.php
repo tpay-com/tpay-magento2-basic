@@ -74,17 +74,15 @@ class PaymentBasic
      * Display information to prevent sending repeated notifications.
      *
      * @param string $remoteAddress remote address
-     * @param null|array   $params
-     *
+     * @param null|array $params
      * @return array
-     * @throws TException
+     * @throws \Exception
      */
 
     public function checkPayment($remoteAddress, $params = null)
     {
 
         $res = Validate::getResponse($params);
-
         $checkMD5 = $this->checkMD5(
             $res['md5sum'],
             $res['tr_id'],
@@ -93,32 +91,31 @@ class PaymentBasic
         );
 
         if ($this->checkServer($remoteAddress) === false) {
-            throw new TException('Request is not from secure server');
+            throw new \Exception('Request is not from secure server');
         }
 
         if ($checkMD5 === false) {
-            throw new TException('MD5 checksum is invalid');
+            throw new \Exception('MD5 checksum is invalid');
         }
 
         return $res;
     }
 
 
-
     /**
      * Check md5 sum to confirm value of payment amount
      *
-     * @param string $md5sum            md5 sum received from tpay.com
-     * @param string $transactionId     transaction id
+     * @param string $md5sum md5 sum received from tpay.com
+     * @param string $transactionId transaction id
      * @param string $transactionAmount transaction amount
-     * @param string $crc               transaction crc
+     * @param string $crc transaction crc
      *
-     * @throws TException
+     * @throws \Exception
      */
     public function validateSign($md5sum, $transactionId, $transactionAmount, $crc)
     {
         if ($md5sum !== md5($this->merchantId.$transactionId.$transactionAmount.$crc.$this->merchantSecret)) {
-            throw new TException('Invalid checksum');
+            throw new \Exception('Invalid checksum');
         }
     }
 

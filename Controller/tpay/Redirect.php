@@ -72,12 +72,12 @@ class Redirect extends Action
             return $this->_redirect('checkout/cart');
         }
         $this->tpayService->setOrderStatePendingPayment($orderId, true);
-        if (!$this->tpay->showPaymentChannels() || strlen($this->tpay->getApiKey()) < 1
-            || strlen($this->tpay->getApiPassword()) < 1
+        $payment = $this->tpayService->getPayment($orderId);
+        $paymentData = $payment->getData();
+        $additionalPaymentInformation = $paymentData['additional_information'];
+        if (!$this->tpay->showPaymentChannels() || strlen($this->tpay->getApiKey()) !== 40
+            || strlen($this->tpay->getApiPassword()) < 1 || (int)$additionalPaymentInformation['kanal'] < 1
         ) {
-            $payment = $this->tpayService->getPayment($orderId);
-            $paymentData = $payment->getData();
-            $additionalPaymentInformation = $paymentData['additional_information'];
 
             $this->redirectToPayment($orderId, $additionalPaymentInformation);
             $this->checkoutSession->unsQuoteId();

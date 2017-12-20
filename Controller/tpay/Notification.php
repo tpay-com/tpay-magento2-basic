@@ -50,6 +50,8 @@ class Notification extends Action
      */
     protected $tpayService;
 
+    protected $request;
+
     /**
      * {@inheritdoc}
      *
@@ -63,10 +65,10 @@ class Notification extends Action
         PaymentBasicFactory $paymentBasicFactory,
         TpayService $tpayService
     ) {
-        $this->tpay                = $tpayModel;
-        $this->remoteAddress       = $remoteAddress;
+        $this->tpay = $tpayModel;
+        $this->remoteAddress = $remoteAddress;
         $this->paymentBasicFactory = $paymentBasicFactory;
-        $this->tpayService         = $tpayService;
+        $this->tpayService = $tpayService;
 
         parent::__construct($context);
     }
@@ -77,15 +79,12 @@ class Notification extends Action
     public function execute()
     {
         try {
-            $id   = $this->tpay->getMerchantId();
+            $id = $this->tpay->getMerchantId();
             $code = $this->tpay->getSecurityCode();
-
             $paymentBasic = $this->paymentBasicFactory->create(['merchantId' => $id, 'merchantSecret' => $code]);
-
-            $params      = $this->getRequest()->getParams();
+            $params = $this->getRequest()->getParams();
             $validParams = $paymentBasic->checkPayment($this->remoteAddress->getRemoteAddress(), $params);
-            $orderId     = base64_decode($validParams[ResponseFields::TR_CRC]);
-
+            $orderId = base64_decode($validParams[ResponseFields::TR_CRC]);
             $this->tpayService->SetOrderStatus($orderId, $validParams, $this->tpay);
 
             return

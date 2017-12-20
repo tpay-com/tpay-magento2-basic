@@ -26,17 +26,17 @@ class Validate
      *
      * @return bool
      *
-     * @throws TException
+     * @throws \Exception
      */
     public static function validateOne($name, $value)
     {
         $requestFields = ResponseFieldsSettings::$fields;
 
         if (!is_string($name)) {
-            throw new TException('Invalid field name');
+            throw new \Exception('Invalid field name');
         }
         if (!array_key_exists($name, $requestFields)) {
-            throw new TException('Field with this name is not supported');
+            throw new \Exception('Field with this name is not supported');
         }
 
         $fieldConfig = $requestFields[$name];
@@ -58,7 +58,7 @@ class Validate
      * @param mixed  $value field value
      * @param string $name  field name
      *
-     * @throws TException
+     * @throws \Exception
      */
     public static function fieldValidation($value, $name)
     {
@@ -93,7 +93,7 @@ class Validate
      * @param mixed  $value     field value
      * @param string $name      field name
      *
-     * @throws TException
+     * @throws \Exception
      */
     public static function fieldLengthValidation($validator, $value, $name)
     {
@@ -116,7 +116,7 @@ class Validate
      * @param null $params array
      *
      * @return array
-     * @throws TException
+     * @throws \Exception
      */
     public static function getResponse($params = null)
     {
@@ -130,13 +130,12 @@ class Validate
                     $missed[] = $fieldName;
                 }
             } else {
-                $val = Util::post($fieldName, Type::STRING);
+                $val = Util::post($fieldName, Type::STRING, $params);
                 $ready[$fieldName] = static::getFieldValue($field, $val);
             }
         }
-
         if (count($missed) > 0) {
-            throw new TException(sprintf('Missing fields in transferuj response: %s', implode(',', $missed)));
+            throw new \Exception(sprintf('Missing fields in tpay response: %s', implode(',', $missed)));
         }
 
         foreach ($ready as $fieldName => $fieldVal) {
@@ -152,15 +151,15 @@ class Validate
      * @param mixed  $value variable to check
      * @param string $name  field name
      *
-     * @throws TException
+     * @throws \Exception
      */
     private static function validateUint($value, $name)
     {
         if (!is_int($value)) {
-            throw new TException(sprintf('Field "%s" must be an integer', $name));
+            throw new \Exception(sprintf('Field "%s" must be an integer', $name));
         } else {
             if ($value < 0) {
-                throw new TException(sprintf('Field "%s" must be higher than zero', $name));
+                throw new \Exception(sprintf('Field "%s" must be higher than zero', $name));
             }
         }
     }
@@ -171,15 +170,15 @@ class Validate
      * @param mixed  $value variable to check
      * @param string $name  field name
      *
-     * @throws TException
+     * @throws \Exception
      */
     private static function validateFloat($value, $name)
     {
         if (!is_float($value) && !is_int($value)) {
-            throw new TException(sprintf('Field "%s" must be a float|int number', $name));
+            throw new \Exception(sprintf('Field "%s" must be a float|int number', $name));
         } else {
             if ($value < 0) {
-                throw new TException(sprintf('Field "%s" must be higher than zero', $name));
+                throw new \Exception(sprintf('Field "%s" must be higher than zero', $name));
             }
         }
     }
@@ -190,12 +189,12 @@ class Validate
      * @param mixed  $value variable to check
      * @param string $name  field name
      *
-     * @throws TException
+     * @throws \Exception
      */
     private static function validateString($value, $name)
     {
         if (!is_string($value)) {
-            throw new TException(sprintf('Field "%s" must be a string', $name));
+            throw new \Exception(sprintf('Field "%s" must be a string', $name));
         }
     }
 
@@ -205,17 +204,17 @@ class Validate
      * @param mixed  $value variable to check
      * @param string $name  field name
      *
-     * @throws TException
+     * @throws \Exception
      */
     private static function validateEmailList($value, $name)
     {
         if (!is_string($value)) {
-            throw new TException(sprintf('Field "%s" must be a string', $name));
+            throw new \Exception(sprintf('Field "%s" must be a string', $name));
         }
         $emails = explode(',', $value);
         foreach ($emails as $email) {
             if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
-                throw new TException(
+                throw new \Exception(
                     sprintf('Field "%s" contains invalid email address', $name)
                 );
             }
@@ -229,12 +228,13 @@ class Validate
      * @param array  $options available options
      * @param string $name    field name
      *
-     * @throws TException
+     * @throws \Exception
      */
     private static function validateOptions($value, $options, $name)
     {
         if (!in_array($value, $options, true)) {
-            throw new TException(sprintf('Field "%s" has unsupported value', $name));
+            var_dump($value); var_dump($options); var_dump($name);
+            throw new \Exception(sprintf('Field "%s" has unsupported value', $name));
         }
     }
 
@@ -245,12 +245,12 @@ class Validate
      * @param int    $max   max lenght
      * @param string $name  field name
      *
-     * @throws TException
+     * @throws \Exception
      */
     private static function validateMaxLenght($value, $max, $name)
     {
         if (strlen($value) > $max) {
-            throw new TException(
+            throw new \Exception(
                 sprintf('Value of field "%s" is too long. Max %d characters', $name, $max)
             );
         }
@@ -263,12 +263,12 @@ class Validate
      * @param int    $min   min length
      * @param string $name  field name
      *
-     * @throws TException
+     * @throws \Exception
      */
     private static function validateMinLength($value, $min, $name)
     {
         if (strlen($value) < $min) {
-            throw new TException(
+            throw new \Exception(
                 sprintf('Value of field "%s" is too short. Min %d characters', $name, $min)
             );
         }
@@ -279,12 +279,12 @@ class Validate
      *
      * @param int $merchantId
      *
-     * @throws TException
+     * @throws \Exception
      */
     public static function validateMerchantId($merchantId)
     {
         if (!is_int($merchantId) || $merchantId <= 0) {
-            throw new TException('Invalid merchantId');
+            throw new \Exception('Invalid merchantId');
         }
     }
 
@@ -293,12 +293,12 @@ class Validate
      *
      * @param string $merchantSecret
      *
-     * @throws TException
+     * @throws \Exception
      */
     public static function validateMerchantSecret($merchantSecret)
     {
         if (!is_string($merchantSecret) || strlen($merchantSecret) === 0) {
-            throw new TException('Invalid secret code');
+            throw new \Exception('Invalid secret code');
         }
     }
 
@@ -308,7 +308,7 @@ class Validate
      * @param $field array
      * @param $val mixed
      * @return mixed
-     * @throws TException
+     * @throws \Exception
      */
     private static function getFieldValue($field, $val)
     {
@@ -323,7 +323,7 @@ class Validate
                 $val = (float)$val;
                 break;
             default:
-                throw new TException(sprintf('unknown field type in getResponse - field name= %s', $fieldName));
+                throw new \Exception(sprintf('unknown field type in getResponse - field name= %s', $field));
         }
 
         return $val;

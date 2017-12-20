@@ -27,18 +27,15 @@ class Util
      * If not exists return false
      *
      * @param string $name
-     * @param string $type   variable type
+     * @param string $type variable type
      *
-     * @param null   $params array
+     * @param null $params array
      *
      * @return mixed
-     * @throws TException
+     * @throws \Exception
      */
     public static function post($name, $type, $params = null)
     {
-        if ($params === null) {
-            $params = $_POST;
-        }
         if (!isset($params[$name])) {
             return false;
         }
@@ -51,7 +48,7 @@ class Util
         } elseif ($type === 'string') {
             $val = (string)$val;
         } else {
-            throw new TException('Undefined $_POST variable type');
+            throw new \Exception('Undefined $_POST variable type');
         }
 
         return $val;

@@ -30,7 +30,7 @@ class BasicRefunds
      * @param InfoInterface $payment
      * @param double $amount
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     public function makeRefund($payment, $amount)
     {

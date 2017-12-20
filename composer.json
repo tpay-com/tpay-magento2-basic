@@ -1,8 +1,8 @@
 {
-  "name": "tpaycom/magento2basic",
+  "name": "tpay/magento2basic",
   "description": "tpay.com payments module",
   "type": "magento2-module",
-  "version": "1.3.5",
+  "version": "1.3.6",
   "license": [
     "OSL-3.0"
   ],

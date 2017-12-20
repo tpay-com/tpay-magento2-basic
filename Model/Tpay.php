@@ -384,7 +384,7 @@ class Tpay extends AbstractMethod implements TpayInterface
      * @param InfoInterface $payment
      * @param float $amount
      * @return $this
-     * @throws Exception
+     * @throws \Exception
      */
     public function refund(InfoInterface $payment, $amount)
     {
