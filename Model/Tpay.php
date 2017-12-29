@@ -13,6 +13,7 @@ use Magento\Checkout\Model\Session;
 use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Framework\Api\ExtensionAttributesFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\DataObject;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Registry;
@@ -254,11 +255,13 @@ class Tpay extends AbstractMethod implements TpayInterface
             'pow_url'      => $this->urlBuilder->getUrl('magento2basic/tpay/success'),
             'online'       => $this->onlyOnlineChannels() ? '1' : '0',
             'direct'       => $this->redirectToChannel() ? '1' : '0',
+            'module'       => 'Magento ' . $this->getMagentoVersion(),
         ];
     }
-    
+
     /**
-     * @return Order
+     * @param int $orderId
+     * @return \Magento\Sales\Api\Data\OrderInterface
      */
     protected function getOrder($orderId = null)
     {
@@ -407,4 +410,12 @@ class Tpay extends AbstractMethod implements TpayInterface
 
         return $this;
     }
+
+    private function getMagentoVersion()
+    {
+        $objectManager = ObjectManager::getInstance();
+        $productMetadata = $objectManager->get('Magento\Framework\App\ProductMetadataInterface');
+        return $productMetadata->getVersion();
+    }
+
 }
