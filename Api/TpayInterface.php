@@ -115,4 +115,19 @@ interface TpayInterface
      * @return string
      */
     public function getInvoiceSendMail();
+
+    /**
+     * Check if Tpay notification server IP is forwarded by proxy
+     *
+     * @return bool
+     */
+    public function getCheckProxy();
+
+    /**
+     * Check Tpay notification server IP
+     *
+     * @return bool
+     */
+    public function getCheckTpayIP();
+
 }

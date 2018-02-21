@@ -43,7 +43,22 @@ class PaymentBasic
         '178.32.201.77',
         '46.248.167.59',
         '46.29.19.106',
+        '176.119.38.175',
     ];
+
+    /**
+     * Check Tpay server IP
+     *
+     * @var bool
+     */
+    private $validateServerIP = true;
+
+    /**
+     * Check Tpay server IP from proxy
+     *
+     * @var bool
+     */
+    private $validateForwardedIP = false;
 
     /**
      * PaymentBasic class constructor for payment:
@@ -74,14 +89,14 @@ class PaymentBasic
      * Display information to prevent sending repeated notifications.
      *
      * @param string $remoteAddress remote address
+     * @param string $forwardedAddress
      * @param null|array $params
      * @return array
      * @throws \Exception
      */
 
-    public function checkPayment($remoteAddress, $params = null)
+    public function checkPayment($remoteAddress, $forwardedAddress, $params = null)
     {
-
         $res = Validate::getResponse($params);
         $checkMD5 = $this->checkMD5(
             $res['md5sum'],
@@ -90,7 +105,7 @@ class PaymentBasic
             $res['tr_crc']
         );
 
-        if ($this->checkServer($remoteAddress) === false) {
+        if ($this->checkServer($remoteAddress, $forwardedAddress) === false) {
             throw new \Exception('Request is not from secure server');
         }
 
@@ -119,20 +134,51 @@ class PaymentBasic
         }
     }
 
+    public function disableServerValidation()
+    {
+        $this->validateServerIP = false;
+        return $this;
+    }
+
+    public function enableProxyValidation()
+    {
+        $this->validateForwardedIP = true;
+        return $this;
+    }
+
     /**
      * Check if request is called from secure tpay.com server
      *
-     * @param $remoteAddress
-     *
+     * @param $remoteIP
+     * @param $forwarderIP
      * @return bool
      */
-    private function checkServer($remoteAddress)
+    private function checkServer($remoteIP, $forwarderIP)
     {
-        if (!isset($remoteAddress) || !in_array($remoteAddress, $this->secureIP)) {
+        if (!$this->validateServerIP) {
+            return true;
+        }
+        if (is_null($remoteIP) && is_null($forwarderIP)) {
             return false;
         }
+        if ($this->checkIP($remoteIP)) {
+            return true;
+        }
+        if ($this->validateForwardedIP && $this->checkIP($forwarderIP)) {
+            return true;
+        }
+        return false;
+    }
 
-        return true;
+    /**
+     * Validate if $ip is secure
+     *
+     * @param $ip
+     * @return bool
+     */
+    private function checkIP($ip)
+    {
+        return in_array($ip, $this->secureIP, true);
     }
 
     /**

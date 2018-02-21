@@ -22,7 +22,6 @@ use Magento\Framework\Escaper;
 use Magento\Payment\Helper\Data;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Model\Method\AbstractMethod;
-use Magento\Payment\Model\Method\Adapter;
 use Magento\Payment\Model\Method\Logger;
 use Magento\Quote\Api\Data\CartInterface;
 use tpaycom\magento2basic\Api\Sales\OrderRepositoryInterface;
@@ -303,7 +302,20 @@ class Tpay extends AbstractMethod implements TpayInterface
     {
         return (bool)$this->getConfigData('redirect_directly_to_channel');
     }
-    
+    /**
+     * {@inheritdoc}
+     */
+    public function getCheckProxy()
+    {
+        return (bool)$this->getConfigData('check_proxy');
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getCheckTpayIP()
+    {
+        return (bool)$this->getConfigData('check_server');
+    }
     /**
      * {@inheritdoc}
      */

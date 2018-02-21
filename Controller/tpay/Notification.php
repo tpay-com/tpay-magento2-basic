@@ -81,9 +81,19 @@ class Notification extends Action
         try {
             $id = $this->tpay->getMerchantId();
             $code = $this->tpay->getSecurityCode();
+            $checkServer = $this->tpay->getCheckTpayIP();
+            $checkProxy = $this->tpay->getCheckProxy();
+            $forwardedIP = null;
             $paymentBasic = $this->paymentBasicFactory->create(['merchantId' => $id, 'merchantSecret' => $code]);
             $params = $this->getRequest()->getParams();
-            $validParams = $paymentBasic->checkPayment($this->remoteAddress->getRemoteAddress(), $params);
+            if ($checkServer === false) {
+                $paymentBasic->disableServerValidation();
+            }
+            if ($checkProxy === true) {
+                $paymentBasic->enableProxyValidation();
+                $forwardedIP = $this->getRequest()->getServer('HTTP_X_FORWARDED_FOR');
+            }
+            $validParams = $paymentBasic->checkPayment($this->remoteAddress->getRemoteAddress(), $forwardedIP, $params);
             $orderId = base64_decode($validParams[ResponseFields::TR_CRC]);
             $this->tpayService->SetOrderStatus($orderId, $validParams, $this->tpay);
 
