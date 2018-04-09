@@ -8,7 +8,7 @@
 require(['jquery', 'mage/translate'], function ($, $t) {
 
     function ShowChannelsCombo() {
-       var title  = $t('Choose payment method');
+        var title  = $t('Choose payment method');
         var str = '<p><strong>' + title + ':</strong></p><div id="kanal"></div>';
 
         for (var i = 0; i < tr_channels.length; i++) {
@@ -58,6 +58,9 @@ require(['jquery', 'mage/translate'], function ($, $t) {
     }
 
     function addChannelToList(tr_channels) {
+        if (window.checkoutConfig.tpay.payment.getInstallmentsAmountValid === false && tr_channels[0] === '49') {
+            return false;
+        }
 
         if (showOnlyOnlinePayments() === '0') {
             return true;
@@ -83,7 +86,7 @@ require(['jquery', 'mage/translate'], function ($, $t) {
     }
 
     jQuery.getScript("https://secure.tpay.com/channels-" + window.checkoutConfig.tpay.payment.merchantId + showOnlyOnlinePayments() + ".js", function () {
-        ShowChannelsCombo()
+        ShowChannelsCombo();
         CheckBlikLevelZeroAsDefault()
     });
 });

@@ -148,6 +148,16 @@ class Tpay extends AbstractMethod implements TpayInterface
         
         return true;
     }
+
+    /**
+     * @return bool
+     */
+    public function getInstallmentsAmountValid()
+    {
+        $amount = $this->getCheckoutTotal();
+
+        return  $amount > 300 && $amount < 4730;
+    }
     
     /**
      * {@inheritdoc}
@@ -172,16 +182,23 @@ class Tpay extends AbstractMethod implements TpayInterface
      */
     protected function checkBlikAmount()
     {
+        return (bool)($this->getCheckoutTotal() > $this->minAmountBlik);
+    }
+
+    /**
+     * @return float current cart total
+     */
+    protected function getCheckoutTotal()
+    {
         $amount = $this->getCheckout()->getQuote()->getBaseGrandTotal();
-        
+
         if (!$amount) {
             $orderId = $this->getCheckout()->getLastRealOrderId();
             $order = $this->orderRepository->getByIncrementId($orderId);
             $amount = $order->getGrandTotal();
         }
-        $amount = number_format($amount, 2, '.', '');
-        
-        return (bool)($amount > $this->minAmountBlik);
+
+        return number_format($amount, 2, '.', '');
     }
     
     /**

@@ -62,16 +62,17 @@ class TpayConfigProvider implements ConfigProviderInterface
         $config = [
             'tpay' => [
                 'payment' => [
-                    'redirectUrl'         => $tpay->getPaymentRedirectUrl(),
-                    'tpayLogoUrl'         => $this->generateURL('tpaycom_magento2basic::images/logo_tpay.png'),
-                    'merchantId'          => $tpay->getMerchantId(),
+                    'redirectUrl' => $tpay->getPaymentRedirectUrl(),
+                    'tpayLogoUrl' => $this->generateURL('tpaycom_magento2basic::images/logo_tpay.png'),
+                    'merchantId' => $tpay->getMerchantId(),
                     'showPaymentChannels' => $this->showChannels(),
-                    'getTerms'            => $this->getTerms(),
-                    'addCSS'              => $this->createCSS('tpaycom_magento2basic::css/tpay.css'),
-                    'blikStatus'          => $this->getPaymentMethodInstance()->checkBlikLevel0Settings(),
-                    'onlyOnlineChannels'  => $this->getPaymentMethodInstance()->onlyOnlineChannels(),
-                    'getBlikChannelID'    => Transaction::BLIK_CHANNEL,
-                    'getBlikPaymentLogo'  => $this->generateURL('tpaycom_magento2basic::images/blik_payment.png'),
+                    'getTerms' => $this->getTerms(),
+                    'addCSS' => $this->createCSS('tpaycom_magento2basic::css/tpay.css'),
+                    'blikStatus' => $this->getPaymentMethodInstance()->checkBlikLevel0Settings(),
+                    'onlyOnlineChannels' => $this->getPaymentMethodInstance()->onlyOnlineChannels(),
+                    'getBlikChannelID' => Transaction::BLIK_CHANNEL,
+                    'getBlikPaymentLogo' => $this->generateURL('tpaycom_magento2basic::images/blik_payment.png'),
+                    'getInstallmentsAmountValid' => $this->getPaymentMethodInstance()->getInstallmentsAmountValid(),
                 ],
             ],
         ];

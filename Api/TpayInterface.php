@@ -130,4 +130,11 @@ interface TpayInterface
      */
     public function getCheckTpayIP();
 
+    /**
+     * Check if checkout amount is in range of installments payment channel
+     * 
+     * @return bool
+     */
+    public function getInstallmentsAmountValid();
+
 }
