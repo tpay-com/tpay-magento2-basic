@@ -156,7 +156,7 @@ class TpayService extends RegisterCaptureNotificationOperation
             if ($order->getState() != Order::STATE_HOLDED) {
                 $emailNotify = true;
             }
-            $status = __('Payment has been canceled: ') . '</br>' . $transactionDesc;
+            $status = __('Payment has been canceled: ').'</br>'.$transactionDesc;
             $state = Order::STATE_HOLDED;
             $order->addStatusToHistory($state, $status, true);
         }
@@ -170,6 +170,7 @@ class TpayService extends RegisterCaptureNotificationOperation
                 $this->invoiceService->notify($invoice_id);
             }
         }
+
         return $order;
     }
 
@@ -188,10 +189,10 @@ class TpayService extends RegisterCaptureNotificationOperation
 
         $error = $validParams[ResponseFields::TR_ERROR];
         $paid = $validParams[ResponseFields::TR_PAID];
-        $transactionDesc = '<b>' . $validParams[ResponseFields::TR_ID] . '</b> ';
-        $transactionDesc .= $error === 'none' ? ' ' : ' Error:  <b>' . strtoupper($error) . '</b> (' . $paid . ')';
+        $transactionDesc = '<b>'.$validParams[ResponseFields::TR_ID].'</b> ';
+        $transactionDesc .= $error === 'none' ? ' ' : ' Error:  <b>'.strtoupper($error).'</b> ('.$paid.')';
 
-        return $transactionDesc . $validParams[ResponseFields::TEST_MODE] === '1' ? '<b> TEST </b>' : ' ';
+        return $transactionDesc.$validParams[ResponseFields::TEST_MODE] === '1' ? '<b> TEST </b>' : ' ';
     }
 
     /**
@@ -222,28 +223,25 @@ class TpayService extends RegisterCaptureNotificationOperation
         $order = $payment->getOrder();
         $amount = (double)$amount;
         $invoice = $this->getInvoiceForTransactionId($order, $payment->getTransactionId());
-
+        $orderCurrency = $order->getOrderCurrency()->getCode();
         // register new capture
-        if (!$invoice) {
-            if ($payment->isSameCurrency() && $payment->isCaptureFinal($amount)) {
-                $invoice = $order->prepareInvoice()->register();
-                $invoice->setOrder($order);
-                $order->addRelatedObject($invoice);
-                $payment->setCreatedInvoice($invoice);
-                $payment->setShouldCloseParentTransaction(true);
-            } else {
-                $payment->setIsFraudDetected(!$skipFraudDetection);
-                $this->updateTotals($payment, ['base_amount_paid_online' => $amount]);
-            }
+
+        if (!$invoice && $orderCurrency === 'PLN' && $payment->isCaptureFinal($amount)) {
+            $invoice = $order->prepareInvoice()->register();
+            $invoice->setOrder($order);
+            $order->addRelatedObject($invoice);
+            $payment->setCreatedInvoice($invoice);
+            $payment->setShouldCloseParentTransaction(true);
+        } else {
+            $payment->setIsFraudDetected(!$skipFraudDetection);
+            $this->updateTotals($payment, ['base_amount_paid_online' => $amount]);
         }
 
-        if (!$payment->getIsTransactionPending()) {
-            if ($invoice && Invoice::STATE_OPEN == $invoice->getState()) {
-                $invoice->setOrder($order);
-                $invoice->pay();
-                $this->updateTotals($payment, ['base_amount_paid_online' => $amount]);
-                $order->addRelatedObject($invoice);
-            }
+        if (!$payment->getIsTransactionPending() && $invoice && Invoice::STATE_OPEN === $invoice->getState()) {
+            $invoice->setOrder($order);
+            $invoice->pay();
+            $this->updateTotals($payment, ['base_amount_paid_online' => $amount]);
+            $order->addRelatedObject($invoice);
         }
 
         $message = $this->stateCommand->execute($payment, $amount, $order);
@@ -256,6 +254,5 @@ class TpayService extends RegisterCaptureNotificationOperation
         );
         $message = $payment->prependMessage($message);
         $payment->addTransactionCommentsToOrder($transaction, $message);
-
     }
 }
