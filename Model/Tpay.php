@@ -401,12 +401,14 @@ class Tpay extends AbstractMethod implements TpayInterface
             static::BLIK_CODE,
             isset($additionalData[static::BLIK_CODE]) ? $additionalData[static::BLIK_CODE] : ''
         );
-        
-        $info->setAdditionalInformation(
-            static::TERMS_ACCEPT,
-            isset($additionalData[static::TERMS_ACCEPT]) ? '1' : ''
-        );
-        
+
+        if (isset($additionalData[static::TERMS_ACCEPT]) && $additionalData[static::TERMS_ACCEPT] === 1) {
+            $info->setAdditionalInformation(
+                static::TERMS_ACCEPT,
+                1
+            );
+        }
+
         return $this;
     }
 

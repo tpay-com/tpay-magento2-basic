@@ -74,15 +74,13 @@ define(
                     paymentData = {};
                 paymentData['kanal'] = $('input[name="channel"]').val();
                 paymentData['blik_code'] = $('input[name="blik_code"]').val();
-                paymentData['akceptuje_regulamin'] = $('input[name="akceptuje_regulamin"]').val();
+                paymentData['akceptuje_regulamin'] = $('input[name="akceptuje_regulamin"]').is(':checked');
                 return $.extend(true, parent, {'additional_data': paymentData});
             },
 
             isActive: function () {
                 return true;
             },
-
-
         });
     }
 );
