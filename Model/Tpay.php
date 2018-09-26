@@ -156,7 +156,7 @@ class Tpay extends AbstractMethod implements TpayInterface
     {
         $amount = $this->getCheckoutTotal();
 
-        return  $amount > 300 && $amount < 4730;
+        return  $amount > 300 && $amount < 4810;
     }
     
     /**
