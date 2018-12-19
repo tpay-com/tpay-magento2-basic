@@ -73,13 +73,12 @@ class Transaction
         $url = $this->urlApi . '/' . $this->apiKey . '/transaction/create';
 
         $response = Curl::doCurlRequest($url, $transactionData);
-        $response = (array)json_decode($response);
+        $response = json_decode($response, true);
 
         if (!$response || $response['result'] === 0) {
             return false;
         }
         return $response['title'];
-
     }
 
     /**
@@ -103,9 +102,8 @@ class Transaction
         if (!$response) {
             return false;
         }
-        $resp = (array)json_decode($response);
+        $resp = json_decode($response, true);
 
-        return ((int)$resp['result'] === 1) ? true : false;
-
+        return ((int)$resp['result'] === 1);
     }
 }

@@ -39,7 +39,7 @@ class BasicRefunds
         $params['api_password'] = $this->apiPass;
         $params['json'] = 'true';
 
-        $result = (array)json_decode(Curl::doCurlRequest(static::API_URL . $this->apiKey . '/chargeback/any', $params));
+        $result = json_decode(Curl::doCurlRequest(static::API_URL . $this->apiKey . '/chargeback/any', $params), true);
 
         if ((int)$result['result'] === 1) {
             return true;
@@ -47,8 +47,6 @@ class BasicRefunds
             $errCode = isset($result['err']) ? ' error code: ' . $result['err'] : '';
             throw new Exception(__('Payment refunding error. -' . $errCode));
         }
-
     }
-
 
 }
