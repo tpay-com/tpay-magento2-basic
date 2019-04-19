@@ -2,12 +2,13 @@
   "name": "tpaycom/magento2basic",
   "description": "tpay.com payments module",
   "type": "magento2-module",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "license": [
     "OSL-3.0"
   ],
   "require": {
-    "php": "~5.5.0|~5.6.0|~7.0.0|~7.1.0|~7.2.0"
+    "php": "~5.5.0|~5.6.0|~7.0.0|~7.1.0|~7.2.0",
+    "magento/product-community-edition": "2.3.*"
   },
   "autoload": {
     "files": [
