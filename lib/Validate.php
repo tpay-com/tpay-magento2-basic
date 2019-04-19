@@ -233,7 +233,6 @@ class Validate
     private static function validateOptions($value, $options, $name)
     {
         if (!in_array($value, $options, true)) {
-            var_dump($value); var_dump($options); var_dump($name);
             throw new \Exception(sprintf('Field "%s" has unsupported value', $name));
         }
     }

@@ -144,26 +144,27 @@ class TpayService extends RegisterCaptureNotificationOperation
         $trStatus = $validParams[ResponseFields::TR_STATUS];
         $emailNotify = false;
 
-        if ($trStatus === 'TRUE' && ((double)number_format($validParams[ResponseFields::TR_PAID],
-                    2, '.', '') === $orderAmount)
+        if (
+            $trStatus === 'TRUE'
+            && ((double)number_format($validParams[ResponseFields::TR_PAID], 2, '.', '') === $orderAmount)
         ) {
             if ($order->getState() != Order::STATE_PROCESSING) {
                 $emailNotify = true;
             }
-            $state = Order::STATE_PROCESSING;
+            $status = Order::STATE_PROCESSING;
             $this->registerCaptureNotificationTpay($order->getPayment(), $order->getGrandTotal(), $validParams);
         } else {
             if ($order->getState() != Order::STATE_HOLDED) {
                 $emailNotify = true;
             }
-            $status = __('Payment has been canceled: ').'</br>'.$transactionDesc;
-            $state = Order::STATE_HOLDED;
-            $order->addStatusToHistory($state, $status, true);
+            $comment = __('Payment has been canceled: ').'</br>'.$transactionDesc;
+            $status = Order::STATE_HOLDED;
+            $order->addStatusToHistory($status, $comment, true);
         }
         if ($emailNotify) {
             $order->setSendEmail(true);
         }
-        $order->setState($state)->save();
+        $order->setStatus($status)->save();
         if ($sendNewInvoiceMail) {
             foreach ($order->getInvoiceCollection() as $invoice) {
                 $invoice_id = $invoice->getIncrementId();

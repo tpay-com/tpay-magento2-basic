@@ -11,6 +11,9 @@ namespace tpaycom\magento2basic\Controller\tpay;
 
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\CsrfAwareActionInterface;
+use Magento\Framework\App\Request\InvalidRequestException;
+use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\Response\Http;
 use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
 use tpaycom\magento2basic\Api\TpayInterface;
@@ -23,7 +26,7 @@ use tpaycom\magento2basic\Service\TpayService;
  *
  * @package tpaycom\magento2basic\Controller\tpay
  */
-class Notification extends Action
+class Notification extends Action implements CsrfAwareActionInterface
 {
     /**
      * @var TpayInterface
@@ -106,5 +109,33 @@ class Notification extends Action
         } catch (\Exception $e) {
             return false;
         }
+    }
+
+    /**
+     * Create exception in case CSRF validation failed.
+     * Return null if default exception will suffice.
+     *
+     * @param RequestInterface $request
+     *
+     * @return InvalidRequestException|null
+     */
+    public function createCsrfValidationException(
+        RequestInterface $request
+    ): ?InvalidRequestException
+    {
+        return null;
+    }
+
+    /**
+     * Perform custom request validation.
+     * Return null if default validation is needed.
+     *
+     * @param RequestInterface $request
+     *
+     * @return bool|null
+     */
+    public function validateForCsrf(RequestInterface $request): ?bool
+    {
+        return true;
     }
 }
