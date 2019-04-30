@@ -164,7 +164,7 @@ class TpayService extends RegisterCaptureNotificationOperation
         if ($emailNotify) {
             $order->setSendEmail(true);
         }
-        $order->setStatus($status)->save();
+        $order->setStatus($status)->setState($status)->save();
         if ($sendNewInvoiceMail) {
             foreach ($order->getInvoiceCollection() as $invoice) {
                 $invoice_id = $invoice->getIncrementId();
