@@ -2,7 +2,7 @@
 /**
  *
  * @category    payment gateway
- * @package     Tpaycom_Magento2.1
+ * @package     Tpaycom_Magento2.3
  * @author      Tpay.com
  * @copyright   (https://tpay.com)
  */
@@ -70,9 +70,8 @@ class TpayConfigProvider implements ConfigProviderInterface
                     'addCSS' => $this->createCSS('tpaycom_magento2basic::css/tpay.css'),
                     'blikStatus' => $this->getPaymentMethodInstance()->checkBlikLevel0Settings(),
                     'onlyOnlineChannels' => $this->getPaymentMethodInstance()->onlyOnlineChannels(),
-                    'getBlikChannelID' => Transaction::BLIK_CHANNEL,
-                    'getBlikPaymentLogo' => $this->generateURL('tpaycom_magento2basic::images/blik_payment.png'),
-                    'getInstallmentsAmountValid' => $this->getPaymentMethodInstance()->getInstallmentsAmountValid(),
+                    'getBlikChannelID' => TransactionModel::BLIK_CHANNEL,
+                    'isInstallmentsAmountValid' => $this->getPaymentMethodInstance()->getInstallmentsAmountValid(),
                 ],
             ],
         ];
@@ -107,13 +106,9 @@ class TpayConfigProvider implements ConfigProviderInterface
      */
     public function showChannels()
     {
-        if ($this->getPaymentMethodInstance()->showPaymentChannels()) {
-            $script = 'tpaycom_magento2basic::js/render_channels.js';
+        $script = 'tpaycom_magento2basic::js/render_channels.js';
 
-            return $this->createScript($script);
-        }
-
-        return null;
+        return $this->createScript($script);
     }
 
     /**
@@ -137,11 +132,7 @@ class TpayConfigProvider implements ConfigProviderInterface
      */
     public function getTerms()
     {
-        if ($this->getPaymentMethodInstance()->showPaymentChannels()) {
-
-            return $this->getPaymentMethodInstance()->getTermsURL();
-        }
-        return null;
+        return $this->getPaymentMethodInstance()->getTermsURL();
     }
 
     /**

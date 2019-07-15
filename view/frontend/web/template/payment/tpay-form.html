@@ -10,29 +10,60 @@
         </label>
     </div>
     <div class="payment-method-content">
-
-        <div class="blik">
-            <div id="input_container">
-                <input type="text" class="blik_code_input" id="blik_code_input" name="blik_code" value="" maxlength="6"
-                       pattern=".{6,}" data-bind="attr: {title: $t('Type in 6 digit code and press pay to commit blik payment.')}" />
-                <p class="blik">
-                  <!-- ko i18n: 'Type in 6 digit code and press pay to commit blik payment.'--><!--/ko-->
-                </p>
-                <img
-                        data-bind="
-                        click: BlikInputFocus(),
-                        attr: {src: getBlikPaymentLogo()}"
-                        id="blik_img"
-                />
+        <div class="tpay-insidebg">
+            <div class="blik">
+                <div class="tpay-header-wrapper">
+                    <div class="tpay-header-logo">
+                        <img class="tpay-logo" src="https://tpay.com/img/banners/tpay_logo_white.svg"/>
+                    </div>
+                    <div class="tpay-header-belt"></div>
+                </div>
+                <div class="tpay-panel-inside-content">
+                    <div class="tpay-channel-form-wrapper tpay-content-wrapper-class">
+                        <img src="https://secure.tpay.com/_/banks/b64.png"/>
+                        <div class="tpay-row">
+                            <p>
+                                <!-- ko i18n: 'Type in 6 digit code and press pay to commit blik payment.'--><!--/ko-->
+                            </p>
+                            <div class="tpay-input-blik-code">
+                                <div class="tpay-input-wrapper">
+                                    <div class="tpay-input-label">
+                                        <!-- ko i18n: 'BLIK code'--><!--/ko-->
+                                    </div>
+                                    <input id="blik_code"
+                                           name="blik_code"
+                                           pattern="\d*"
+                                           type="tel"
+                                           autocomplete="off"
+                                           maxlength="6"
+                                           minlength="6"
+                                           placeholder="000000"
+                                           tabindex="1"
+                                           value=""
+                                           class="tpay-input-value tpay-blik-input"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="tpay-basic-main-payment">
+                <div class="tpay-header-wrapper">
+                    <div class="tpay-header-logo">
+                        <img class="tpay-logo" src="https://tpay.com/img/banners/tpay_logo_white.svg"/>
+                    </div>
+                    <div class="tpay-header-belt"></div>
+                </div>
+                <p><!-- ko i18n: 'Choose a payment method'--><!--/ko--></p>
+                <div id="groups_v" class="tpay-panel-inside-content">
+                    <div id="bank-selection-form" class="tpay-groups-wrapper">
+                    </div>
+                </div>
+                <input type="hidden" id="tpay-channel-input" name="tpay-channel-input"/>
             </div>
         </div>
-
-        <div class="TpayBasicForm" id="payment_form_tpaycom_magento2basic">
-            <input type="hidden" id="channel" name="channel" value=" ">
-            <div id="channels" class="channels"></div>
-        </div>
-
-        <span data-bind="html: showChannels()"></span>
+        <span data-bind="html: showPaymentChannels()"></span>
         <span data-bind="html: addCSS()"></span>
         <!-- ko foreach: getRegion('messages') -->
         <!-- ko template: getTemplate() --><!-- /ko -->
@@ -47,9 +78,10 @@
             <!-- ko template: getTemplate() --><!-- /ko -->
             <!--/ko-->
             <div class="TpayRegulations">
-                <input  type="checkbox"  checked name="akceptuje_regulamin" id="akceptuje_regulamin" />
-                <label for="akceptuje_regulamin">
-                    <a target="_blank" data-bind="attr: {href: getTerms()}, text: $t('I do accept tpay.com service regulations')"></a>.
+                <input type="checkbox" checked name="accept_tos" id="accept_tos"/>
+                <label for="accept_tos">
+                    <a target="_blank"
+                       data-bind="attr: {href: getTerms()}, text: $t('I do accept tpay.com service regulations')"></a>.
                 </label>
             </div>
         </div>

@@ -2,7 +2,7 @@
 /**
  *
  * @category    payment gateway
- * @package     Tpaycom_Magento2.1
+ * @package     Tpaycom_Magento2.3
  * @author      Tpay.com
  * @copyright   (https://tpay.com)
  */
@@ -25,7 +25,7 @@ interface TpayInterface
     /**
      * @var string
      */
-    const CHANNEL = 'kanal';
+    const CHANNEL = 'group';
 
     /**
      * @var string
@@ -35,7 +35,7 @@ interface TpayInterface
     /**
      * @var string
      */
-    const TERMS_ACCEPT = 'akceptuje_regulamin';
+    const TERMS_ACCEPT = 'accept_tos';
 
     /**
      * Return string for redirection
@@ -93,7 +93,7 @@ interface TpayInterface
     /**
      * @return bool
      */
-    public function showPaymentChannels();
+    public function redirectToChannel();
 
     /**
      * Return url to redirect after placed order

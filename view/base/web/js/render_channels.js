@@ -1,92 +1,113 @@
 /**
  *
  * @category    payment gateway
- * @package     Tpaycom_Magento2.1
+ * @package     Tpaycom_Magento2.3
  * @author      Tpay.com
  * @copyright   (https://tpay.com)
  */
 require(['jquery', 'mage/translate'], function ($, $t) {
 
-    function ShowChannelsCombo() {
-        var title  = $t('Choose payment method');
-        var str = '<p><strong>' + title + ':</strong></p><div id="kanal"></div>';
+    var payButton = $('#tpaycom_magento2basic_submit');
 
-        for (var i = 0; i < tr_channels.length; i++) {
-            if (addChannelToList(tr_channels[i]) === true) {
-                str += '<div   class="channel"   ><image id="' + tr_channels[i][0] + '" class="check"  src="' + tr_channels[i][3] + '" ></div>';
+        function getBankTile(groupId, groupName, logoSrc) {
+            return '<div class="tpay-group-holder tpay-with-logo" id="bank-' + groupId + '">' +
+                '<div class="tpay-group-name">' + groupName + '</div>' +
+                '<div class="tpay-group-logo-holder">' +
+                '<img src="' + logoSrc + '" class="tpay-group-logo" alt="' + groupName + '">' +
+                '</div></div></div>';
+        }
+
+        function inArray(needle, haystack) {
+            var length = haystack.length;
+            for (var i = 0; i < length; i++) {
+                if (haystack[i] == needle) return true;
+            }
+            return false;
+        }
+
+        function ShowChannelsCombo() {
+            var str = '',
+                i,
+                str2 = '',
+                tile,
+                others = [157, 106, 109, 148, 104],
+                installmentsGroupId = 109,
+                group,
+                id,
+                groupName,
+                logoSrc,
+                bank_selection_form = document.getElementById('bank-selection-form');
+
+            for (i in tr_groups) {
+                group = tr_groups[i];
+                id = group[0];
+                groupName = group[1];
+                logoSrc = group[3];
+                if (id == installmentsGroupId && window.checkoutConfig.tpay.payment.isInstallmentsAmountValid === false) {
+                    continue;
+                }
+                tile = getBankTile(id, groupName, logoSrc);
+                if (inArray(id, others) === false) {
+                    str += tile;
+                } else {
+                    str2 += tile;
+                }
+            }
+            bank_selection_form.innerHTML = str + str2;
+            $('.tpay-group-holder').each(function () {
+                $(this).on('click', function () {
+                    var input = $('#tpay-channel-input'),
+                        active_bank_blocks = document.getElementsByClassName('tpay-active'),
+                        that = $(this);
+                    input.val(that.attr('id').substr(5));
+                    if (active_bank_blocks.length > 0) {
+                        active_bank_blocks[0].className = active_bank_blocks[0].className.replace('tpay-active', '');
+                    }
+                    this.className = this.className + ' tpay-active';
+                    if (input.val() > 0 && $('#blik_code').val().length === 0) {
+                        payButton.removeClass('disabled');
+                    }
+                });
+            });
+        }
+
+        function showOnlyOnlinePayments() {
+            if (window.checkoutConfig.tpay.payment.onlyOnlineChannels !== true) {
+                return '0';
+            }
+            return '1';
+        }
+
+        function checkBlikInput() {
+            if (window.checkoutConfig.tpay.payment.blikStatus !== true) {
+                $(".blik").hide();
             }
         }
 
-        var container = jQuery("#channels");
-        container.append(str);
+        function setBlikInputAction() {
+            const TRIGGER_EVENTS = 'input change blur';
 
-        jQuery(".check").click(function () {
+            $('#blik_code').on(TRIGGER_EVENTS, function () {
+                var that = $(this);
+                if (that.val().length > 0) {
+                    $('#tpay-basic-main-payment').css('display', 'none');
+                } else {
+                    $('#tpay-basic-main-payment').css('display', 'block');
+                }
+                if (that.val().length === 6 || (that.val().length === 0 && $('#tpay-channel-input').val() > 0)) {
+                    payButton.removeClass('disabled');
+                }
+                if (that.val().length > 0 && that.val().length !== 6) {
+                    payButton.addClass('disabled');
+                }
+            });
+        }
 
-            $(".check").parent().removeClass("checked");
-            $(this).parent().addClass("checked");
-
-            var kanal = $(this).attr("id");
-            $('#channel').val(kanal);
-
-            var blik = showBlikInput(kanal);
-
-            if (!blik) {
-                $("html,body").animate({scrollTop: $('body').height() - 150}, 600);
-            }
+        $.getScript("https://secure.tpay.com/groups-" + window.checkoutConfig.tpay.payment.merchantId + showOnlyOnlinePayments() + ".js", function () {
+            ShowChannelsCombo();
+            checkBlikInput();
+            setBlikInputAction();
+            payButton.addClass('disabled');
         });
     }
-
-    function showBlikInput(kanal) {
-        if (window.checkoutConfig.tpay.payment.blikStatus !== true) {
-            return false;
-        }
-        $(".blik").hide();
-
-        if (kanal === window.checkoutConfig.tpay.payment.getBlikChannelID) {
-            $(".blik").show();
-            $("html,body").animate({scrollTop: 0}, 600);
-            return true;
-        }
-        return false;
-    }
-
-    function showOnlyOnlinePayments() {
-        if (window.checkoutConfig.tpay.payment.onlyOnlineChannels !== true) {
-            return '0';
-        }
-        return '1';
-    }
-
-    function addChannelToList(tr_channels) {
-        if (window.checkoutConfig.tpay.payment.getInstallmentsAmountValid === false && tr_channels[0] === '49') {
-            return false;
-        }
-
-        if (showOnlyOnlinePayments() === '0') {
-            return true;
-        }
-
-        if (showOnlyOnlinePayments() === '1' && tr_channels[2] === '1') {
-            return true;
-        }
-
-        return false;
-    }
-
-    function CheckBlikLevelZeroAsDefault() {
-        if (window.checkoutConfig.tpay.payment.blikStatus !== true) {
-            $(".blik").hide();
-            return false;
-        }
-        var blik_id = window.checkoutConfig.tpay.payment.getBlikChannelID;
-        $('#' + blik_id).parent().addClass("checked");
-        $('#channel').val(blik_id);
-        $(".blik").show();
-
-    }
-
-    jQuery.getScript("https://secure.tpay.com/channels-" + window.checkoutConfig.tpay.payment.merchantId + showOnlyOnlinePayments() + ".js", function () {
-        ShowChannelsCombo();
-        CheckBlikLevelZeroAsDefault()
-    });
-});
+);

@@ -2,7 +2,7 @@
 /**
  *
  * @category    payment gateway
- * @package     Tpaycom_Magento2.1
+ * @package     Tpaycom_Magento2.3
  * @author      Tpay.com
  * @copyright   (https://tpay.com)
  */
@@ -16,7 +16,6 @@ use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Sales\Model\Order;
 use tpaycom\magento2basic\Api\Sales\OrderRepositoryInterface;
 use tpaycom\magento2basic\Api\TpayInterface;
-use tpaycom\magento2basic\lib\ResponseFields;
 use Magento\Sales\Api\Data\OrderPaymentInterface;
 use Magento\Sales\Model\Order\Payment\Operations\RegisterCaptureNotificationOperation;
 use Magento\Sales\Model\Service\InvoiceService;
@@ -71,7 +70,8 @@ class TpayService extends RegisterCaptureNotificationOperation
             $stateCommand,
             $transactionBuilder,
             $transactionManager,
-            $eventManager);
+            $eventManager
+        );
     }
 
     /**
@@ -141,12 +141,12 @@ class TpayService extends RegisterCaptureNotificationOperation
         $sendNewInvoiceMail = (bool)$tpayModel->getInvoiceSendMail();
         $transactionDesc = $this->getTransactionDesc($validParams);
         $orderAmount = (double)number_format($order->getGrandTotal(), 2, '.', '');
-        $trStatus = $validParams[ResponseFields::TR_STATUS];
+        $trStatus = $validParams['tr_status'];
         $emailNotify = false;
 
         if (
             $trStatus === 'TRUE'
-            && ((double)number_format($validParams[ResponseFields::TR_PAID], 2, '.', '') === $orderAmount)
+            && ((double)number_format($validParams['tr_paid'], 2, '.', '') === $orderAmount)
         ) {
             if ($order->getState() != Order::STATE_PROCESSING) {
                 $emailNotify = true;
@@ -187,13 +187,15 @@ class TpayService extends RegisterCaptureNotificationOperation
         if ($validParams === false) {
             return false;
         }
-
-        $error = $validParams[ResponseFields::TR_ERROR];
-        $paid = $validParams[ResponseFields::TR_PAID];
-        $transactionDesc = '<b>'.$validParams[ResponseFields::TR_ID].'</b> ';
+        $error = $validParams['tr_error'];
+        $paid = $validParams['tr_paid'];
+        $transactionDesc = '<b>'.$validParams['tr_id'].'</b> ';
         $transactionDesc .= $error === 'none' ? ' ' : ' Error:  <b>'.strtoupper($error).'</b> ('.$paid.')';
+        if (isset($validParams['test_mode'])) {
+            $transactionDesc .= '<b> TEST </b>';
+        }
 
-        return $transactionDesc.$validParams[ResponseFields::TEST_MODE] === '1' ? '<b> TEST </b>' : ' ';
+        return $transactionDesc;
     }
 
     /**
@@ -246,7 +248,7 @@ class TpayService extends RegisterCaptureNotificationOperation
         }
 
         $message = $this->stateCommand->execute($payment, $amount, $order);
-        $payment->setTransactionId($validParams[ResponseFields::TR_ID])
+        $payment->setTransactionId($validParams['tr_id'])
             ->setTransactionAdditionalInfo(Transaction::RAW_DETAILS, $validParams);
         $transaction = $payment->addTransaction(
             Transaction::TYPE_ORDER,
@@ -256,4 +258,5 @@ class TpayService extends RegisterCaptureNotificationOperation
         $message = $payment->prependMessage($message);
         $payment->addTransactionCommentsToOrder($transaction, $message);
     }
+
 }

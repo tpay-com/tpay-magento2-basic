@@ -3,7 +3,7 @@
 /**
  *
  * @category    payment gateway
- * @package     Tpaycom_Magento2.1
+ * @package     Tpaycom_Magento2.3
  * @author      Tpay.com
  * @copyright   (https://tpay.com)
  */
@@ -37,49 +37,45 @@
                     <label>API password</label>
                     <validate>validate-length maximum-length-40</validate>
                 </field>
-                <field id="show_payment_channels" translate="label" type="select" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Show payment channels on front</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                </field>
-                <field id="show_payment_channels_online" translate="label" type="select" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="show_payment_channels_online" translate="label" type="select" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Only online methods</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="redirect_directly_to_channel" translate="label" type="select" sortOrder="9" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="redirect_directly_to_channel" translate="label" type="select" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Redirect directly to bank</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="blik_level_zero" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="blik_level_zero" translate="label" type="select" sortOrder="9" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>BLIK level zero</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="send_invoice_email" translate="label" type="select" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="send_invoice_email" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Send new invoice email to customer</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="check_proxy" translate="label" type="select" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="check_proxy" translate="label" type="select" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>My server use proxy</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="check_server" translate="label" type="select" sortOrder="13" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="check_server" translate="label" type="select" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Validate Tpay notifications server IP (recommended)</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="sort_order" translate="label" type="text" sortOrder="14" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="sort_order" translate="label" type="text" sortOrder="13" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Sort order</label>
                 </field>
-                <field id="allowspecific" translate="label" type="allowspecific" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="allowspecific" translate="label" type="allowspecific" sortOrder="14" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>All or allowed countries</label>
                     <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
                 </field>
-                <field id="specificcountry" translate="label" type="multiselect" sortOrder="16" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="specificcountry" translate="label" type="multiselect" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Allowed countries</label>
                     <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
                 </field>
-                <field id="min_order_total" translate="label" type="text" sortOrder="17" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="min_order_total" translate="label" type="text" sortOrder="16" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Minimal amount for method</label>
                 </field>
-                <field id="max_order_total" translate="label" type="text" sortOrder="18" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="max_order_total" translate="label" type="text" sortOrder="17" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Maximal amount for method</label>
                     <comment>Leave empty for no limit</comment>
                 </field>

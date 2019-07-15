@@ -2,14 +2,12 @@
 /**
  *
  * @category    payment gateway
- * @package     Tpaycom_Magento2.1
+ * @package     Tpaycom_Magento2.3
  * @author      Tpay.com
  * @copyright   (https://tpay.com)
  */
 
 namespace tpaycom\magento2basic\Controller;
-
-use \tpaycom\magento2basic\Model\Tpay;
 
 /**
  * Class Tpaycom
@@ -18,8 +16,6 @@ use \tpaycom\magento2basic\Model\Tpay;
 
 abstract class Tpaycom extends \Magento\Framework\App\Action\Action
 {
-
-
     // Check Real IP if server is proxy, balancer...
     const CHECK_REAL_IP = false;
 

@@ -3,7 +3,7 @@
 /**
  *
  * @category    payment gateway
- * @package     Tpaycom_Magento2.1
+ * @package     Tpaycom_Magento2.3
  * @author      Tpay.com
  * @copyright   (https://tpay.com)
  */
@@ -17,7 +17,6 @@
                 <model>tpaycom\magento2basic\Model\Tpay</model>
                 <title>tpay.com - szybkie płatności online</title>
                 <allowspecific>0</allowspecific>
-                <show_payment_channels>1</show_payment_channels>
                 <blik_level_zero>0</blik_level_zero>
                 <min_order_total>0.10</min_order_total>
                 <is_gateway>1</is_gateway>

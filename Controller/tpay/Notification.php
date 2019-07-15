@@ -2,7 +2,7 @@
 /**
  *
  * @category    payment gateway
- * @package     Tpaycom_Magento2.1
+ * @package     Tpaycom_Magento2.3
  * @author      Tpay.com
  * @copyright   (https://tpay.com)
  */
@@ -17,9 +17,10 @@ use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\Response\Http;
 use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
 use tpaycom\magento2basic\Api\TpayInterface;
-use tpaycom\magento2basic\lib\PaymentBasicFactory;
-use tpaycom\magento2basic\lib\ResponseFields;
+use tpaycom\magento2basic\Model\NotificationModel;
 use tpaycom\magento2basic\Service\TpayService;
+use tpaycom\magento2basic\Model\NotificationModelFactory;
+use tpayLibs\src\_class_tpay\Utilities\Util;
 
 /**
  * Class Notification
@@ -44,9 +45,9 @@ class Notification extends Action implements CsrfAwareActionInterface
     protected $emailNotify = false;
 
     /**
-     * @var PaymentBasicFactory
+     * @var NotificationModelFactory
      */
-    protected $paymentBasicFactory;
+    protected $notificationFactory;
 
     /**
      * @var TpayService
@@ -54,6 +55,11 @@ class Notification extends Action implements CsrfAwareActionInterface
     protected $tpayService;
 
     protected $request;
+
+    /**
+     * @var NotificationModel
+     */
+    protected $NotificationHandler;
 
     /**
      * {@inheritdoc}
@@ -65,13 +71,14 @@ class Notification extends Action implements CsrfAwareActionInterface
         Context $context,
         RemoteAddress $remoteAddress,
         TpayInterface $tpayModel,
-        PaymentBasicFactory $paymentBasicFactory,
+        NotificationModelFactory $notificationModelFactory,
         TpayService $tpayService
     ) {
         $this->tpay = $tpayModel;
         $this->remoteAddress = $remoteAddress;
-        $this->paymentBasicFactory = $paymentBasicFactory;
+        $this->notificationFactory = $notificationModelFactory;
         $this->tpayService = $tpayService;
+        Util::$loggingEnabled = false;
 
         parent::__construct($context);
     }
@@ -87,17 +94,20 @@ class Notification extends Action implements CsrfAwareActionInterface
             $checkServer = $this->tpay->getCheckTpayIP();
             $checkProxy = $this->tpay->getCheckProxy();
             $forwardedIP = null;
-            $paymentBasic = $this->paymentBasicFactory->create(['merchantId' => $id, 'merchantSecret' => $code]);
-            $params = $this->getRequest()->getParams();
+            $this->NotificationHandler = $this->notificationFactory->create(
+                [
+                    'merchantId' => $id,
+                    'merchantSecret' => $code
+                ]
+            );
             if ($checkServer === false) {
-                $paymentBasic->disableServerValidation();
+                $this->NotificationHandler->disableValidationServerIP();
             }
             if ($checkProxy === true) {
-                $paymentBasic->enableProxyValidation();
-                $forwardedIP = $this->getRequest()->getServer('HTTP_X_FORWARDED_FOR');
+                $this->NotificationHandler->enableForwardedIPValidation();
             }
-            $validParams = $paymentBasic->checkPayment($this->remoteAddress->getRemoteAddress(), $forwardedIP, $params);
-            $orderId = base64_decode($validParams[ResponseFields::TR_CRC]);
+            $validParams = $this->NotificationHandler->checkPayment('');
+            $orderId = base64_decode($validParams['tr_crc']);
             $this->tpayService->SetOrderStatus($orderId, $validParams, $this->tpay);
 
             return
@@ -119,9 +129,7 @@ class Notification extends Action implements CsrfAwareActionInterface
      *
      * @return InvalidRequestException|null
      */
-    public function createCsrfValidationException(
-        RequestInterface $request
-    ): ?InvalidRequestException
+    public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
     {
         return null;
     }
