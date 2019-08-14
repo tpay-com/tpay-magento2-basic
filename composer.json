@@ -8,8 +8,8 @@
   ],
   "require": {
     "php": "~7.0.0|~7.1.0|~7.2.0|~7.3.0",
-    "magento/product-community-edition": "^2.3.*",
-    "tpay-com/tpay-php": "^2.2.*"
+    "magento/product-community-edition": "^2.3",
+    "tpay-com/tpay-php": "^2.2"
   },
   "autoload": {
     "files": [
