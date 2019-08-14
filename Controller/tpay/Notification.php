@@ -21,6 +21,7 @@ use tpaycom\magento2basic\Model\NotificationModel;
 use tpaycom\magento2basic\Service\TpayService;
 use tpaycom\magento2basic\Model\NotificationModelFactory;
 use tpayLibs\src\_class_tpay\Utilities\Util;
+use Magento\Sales\Model\Order;
 
 /**
  * Class Notification
@@ -108,6 +109,14 @@ class Notification extends Action implements CsrfAwareActionInterface
             }
             $validParams = $this->NotificationHandler->checkPayment('');
             $orderId = base64_decode($validParams['tr_crc']);
+            if ($validParams['tr_status'] === 'PAID') {
+                $response = $this->getPaidTransactionResponse($orderId);
+
+                return $this
+                    ->getResponse()
+                    ->setStatusCode(Http::STATUS_CODE_200)
+                    ->setContent($response);
+            }
             $this->tpayService->SetOrderStatus($orderId, $validParams, $this->tpay);
 
             return
@@ -146,4 +155,24 @@ class Notification extends Action implements CsrfAwareActionInterface
     {
         return true;
     }
+
+    /**
+     * Check if the order has been canceled and get response to Tpay server.
+     * @param int $orderId
+     * @return string response for Tpay server
+     * @throws \Exception
+     */
+    protected function getPaidTransactionResponse($orderId)
+    {
+        $order = $this->tpayService->getOrderById($orderId);
+        if (!$order->getId()) {
+            throw new \Exception('Unable to get order by orderId %s', $orderId);
+        }
+        if ($order->getState() === Order::STATE_CANCELED) {
+            return 'FALSE';
+        }
+
+        return 'TRUE';
+    }
+
 }

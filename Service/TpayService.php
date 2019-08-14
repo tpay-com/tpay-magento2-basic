@@ -133,13 +133,11 @@ class TpayService extends RegisterCaptureNotificationOperation
      */
     public function SetOrderStatus($orderId, array $validParams, $tpayModel)
     {
-        /** @var Order $order */
-        $order = $this->orderRepository->getByIncrementId($orderId);
+        $order = $this->getOrderById($orderId);
         if (!$order->getId()) {
             return false;
         }
         $sendNewInvoiceMail = (bool)$tpayModel->getInvoiceSendMail();
-        $transactionDesc = $this->getTransactionDesc($validParams);
         $orderAmount = (double)number_format($order->getGrandTotal(), 2, '.', '');
         $trStatus = $validParams['tr_status'];
         $emailNotify = false;
@@ -153,11 +151,16 @@ class TpayService extends RegisterCaptureNotificationOperation
             }
             $status = Order::STATE_PROCESSING;
             $this->registerCaptureNotificationTpay($order->getPayment(), $order->getGrandTotal(), $validParams);
+        } elseif ($trStatus === 'CHARGEBACK') {
+            $order->addCommentToStatusHistory($this->getTransactionDesc($validParams));
+            $order->save();
+
+            return $order;
         } else {
             if ($order->getState() != Order::STATE_HOLDED) {
                 $emailNotify = true;
             }
-            $comment = __('Payment has been canceled: ').'</br>'.$transactionDesc;
+            $comment = __('The order has been holded: ').'</br>'.$this->getTransactionDesc($validParams);
             $status = Order::STATE_HOLDED;
             $order->addStatusToHistory($status, $comment, true);
         }
@@ -176,6 +179,16 @@ class TpayService extends RegisterCaptureNotificationOperation
     }
 
     /**
+     * Get Order object by orderId
+     * @param int $orderId
+     * @return Order
+     */
+    public function getOrderById($orderId)
+    {
+        return $this->orderRepository->getByIncrementId($orderId);
+    }
+
+    /**
      * Get description for transaction
      *
      * @param array $validParams
@@ -189,8 +202,12 @@ class TpayService extends RegisterCaptureNotificationOperation
         }
         $error = $validParams['tr_error'];
         $paid = $validParams['tr_paid'];
+        $status = $validParams['tr_status'];
         $transactionDesc = '<b>'.$validParams['tr_id'].'</b> ';
         $transactionDesc .= $error === 'none' ? ' ' : ' Error:  <b>'.strtoupper($error).'</b> ('.$paid.')';
+        if ($status === 'CHARGEBACK') {
+            $transactionDesc .= __('Transaction has been refunded');
+        }
         if (isset($validParams['test_mode'])) {
             $transactionDesc .= '<b> TEST </b>';
         }
