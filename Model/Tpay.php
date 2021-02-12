@@ -29,6 +29,7 @@ use tpaycom\magento2basic\Api\TpayInterface;
 use Magento\Framework\Validator\Exception;
 use Magento\Sales\Model\Order\Payment\Transaction;
 use tpaycom\magento2basic\Controller\tpay\Refund;
+use Magento\Store\Model\StoreManager;
 
 /**
  * Class Tpay
@@ -88,6 +89,11 @@ class Tpay extends AbstractMethod implements TpayInterface
     protected $refund;
 
     /**
+     * @var StoreManager
+     */
+    protected $storeManager;
+
+    /**
      * {@inheritdoc}
      *
      * @param UrlInterface $urlBuilder
@@ -108,6 +114,7 @@ class Tpay extends AbstractMethod implements TpayInterface
         OrderRepositoryInterface $orderRepository,
         Refund $refund,
         Escaper $escaper,
+        StoreManager $storeManager,
         $data = []
     ) {
         $this->urlBuilder = $urlBuilder;
@@ -115,6 +122,7 @@ class Tpay extends AbstractMethod implements TpayInterface
         $this->checkoutSession = $checkoutSession;
         $this->orderRepository = $orderRepository;
         $this->refund = $refund;
+        $this->storeManager = $storeManager;
 
         parent::__construct(
             $context,
@@ -449,6 +457,15 @@ class Tpay extends AbstractMethod implements TpayInterface
         $productMetadata = $objectManager->get('Magento\Framework\App\ProductMetadataInterface');
 
         return $productMetadata->getVersion();
+    }
+
+    public function getConfigData($field, $storeId = null)
+    {
+        if (is_null($storeId)) {
+            $storeId = $this->storeManager->getStore()->getId();
+        }
+
+        return parent::getConfigData($field, $storeId);
     }
 
 }
