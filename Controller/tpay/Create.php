@@ -25,7 +25,6 @@ use tpaycom\magento2basic\Service\TpayService;
  */
 class Create extends Action
 {
-    const TRANSACTION_LINK = 'https://secure.tpay.com/?gtitle=';
     /**
      * @var TpayService
      */
@@ -92,13 +91,13 @@ class Create extends Action
 
             $additionalPaymentInformation = $paymentData['additional_information'];
 
-            $title = $this->prepareTransaction($orderId, $additionalPaymentInformation);
+            $transaction = $this->prepareTransaction($orderId, $additionalPaymentInformation);
 
-            if (!$title) {
+            if (!isset($transaction['title'], $transaction['url'])) {
                 return $this->_redirect('magento2basic/tpay/error');
             }
-            $this->tpayService->addCommentToHistory($orderId, 'Transaction title ' . $title);
-            $transactionUrl = self::TRANSACTION_LINK . $title;
+            $this->tpayService->addCommentToHistory($orderId, 'Transaction title ' . $transaction['title']);
+            $transactionUrl = $transaction['url'];
             $this->tpayService->addCommentToHistory($orderId, 'Transaction link ' . $transactionUrl);
 
             $paymentData['additional_information']['transaction_url'] = $transactionUrl;
@@ -109,7 +108,7 @@ class Create extends Action
                 && $additionalPaymentInformation['kanal'] == Transaction::BLIK_CHANNEL
             ) {
                 $code = $additionalPaymentInformation['blik_code'];
-                $result = $this->blikPay($title, $code);
+                $result = $this->blikPay($transaction['title'], $code);
                 $this->checkoutSession->unsQuoteId();
                 if (!$result) {
                     $this->tpayService->addCommentToHistory($orderId,
@@ -129,10 +128,7 @@ class Create extends Action
         $data = $this->tpay->getTpayFormData($orderId);
         $channel = $additionalPaymentInformation['kanal'];
 
-        $transactionID = $this->transaction->createTransaction($data, $channel);
-
-        return !$transactionID ? false : $transactionID;
-
+        return $this->transaction->createTransaction($data, $channel);
     }
 
     /**

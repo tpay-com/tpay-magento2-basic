@@ -78,7 +78,7 @@ class Transaction
         if (!$response || $response['result'] === 0) {
             return false;
         }
-        return $response['title'];
+        return $response;
     }
 
     /**
