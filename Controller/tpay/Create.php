@@ -26,10 +26,6 @@ use tpayLibs\src\_class_tpay\Utilities\Util;
  */
 class Create extends Action
 {
-    const TRANSACTION_URL = 'https://secure.tpay.com/?gtitle=';
-
-    const DIRECT_TRANSACTION_URL = 'https://secure.tpay.com/?title=';
-
     /**
      * @var TpayService
      */
@@ -96,16 +92,15 @@ class Create extends Action
                 ]
             );
             $additionalPaymentInformation = $paymentData['additional_information'];
-            $title = $this->prepareTransaction($orderId, $additionalPaymentInformation);
+            $transaction = $this->prepareTransaction($orderId, $additionalPaymentInformation);
 
-            if (empty($title)) {
+            if (!isset($transaction['title'], $transaction['url'])) {
                 return $this->_redirect('magento2basic/tpay/error');
             }
-            $this->tpayService->addCommentToHistory($orderId, 'Transaction title '.$title);
+            $this->tpayService->addCommentToHistory($orderId, 'Transaction title '.$transaction['title']);
+            $transactionUrl = $transaction['url'];
             if ($this->tpay->redirectToChannel() === true) {
-                $transactionUrl = self::DIRECT_TRANSACTION_URL.$title;
-            } else {
-                $transactionUrl = self::TRANSACTION_URL.$title;
+                $transactionUrl = str_replace('gtitle', 'title', $transactionUrl);
             }
             $this->tpayService->addCommentToHistory($orderId, 'Transaction link '.$transactionUrl);
             $paymentData['additional_information']['transaction_url'] = $transactionUrl;
@@ -114,19 +109,19 @@ class Create extends Action
             if (strlen($additionalPaymentInformation['blik_code']) === 6
                 && $this->tpay->checkBlikLevel0Settings()
             ) {
-                $result = $this->blikPay($title, $additionalPaymentInformation['blik_code']);
+                $result = $this->blikPay($transaction['title'], $additionalPaymentInformation['blik_code']);
                 $this->checkoutSession->unsQuoteId();
                 if (!$result) {
                     $this->tpayService->addCommentToHistory($orderId,
                         'User has typed wrong blik code and has been redirected to transaction panel in order to finish payment');
 
                     return $this->_redirect($transactionUrl);
-                } else {
-                    return $this->_redirect('magento2basic/tpay/success');
                 }
-            } else {
-                return $this->_redirect($transactionUrl);
+
+                return $this->_redirect('magento2basic/tpay/success');
             }
+
+            return $this->_redirect($transactionUrl);
         }
     }
 
@@ -153,9 +148,8 @@ class Create extends Action
         } else {
             $data['group'] = (int)$additionalPaymentInformation['group'];
         }
-        $apiResult = $this->transaction->create($data);
 
-        return isset($apiResult['title']) ? $apiResult['title'] : '';
+        return $this->transaction->create($data);
     }
 
 }
