@@ -27,7 +27,7 @@
                 </field>
                 <field id="security_code" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Secure code</label>
-                    <validate>validate-no-empty  validate-length maximum-length-16</validate>
+                    <validate>validate-no-empty  validate-length maximum-length-32</validate>
                 </field>
                 <field id="api_key_tpay" translate="label comment" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>API key</label>
