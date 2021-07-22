@@ -9,7 +9,7 @@
   "require": {
     "php": ">=7",
     "magento/product-community-edition": "~2.3|~2.4",
-    "tpay-com/tpay-php": "^2.2"
+    "tpay-com/tpay-php": "^2.3"
   },
   "autoload": {
     "files": [
