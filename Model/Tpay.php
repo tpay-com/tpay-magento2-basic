@@ -252,7 +252,7 @@ class Tpay extends AbstractMethod implements TpayInterface
         $merchantId = $this->getMerchantId();
         $securityCode = $this->getSecurityCode();
         $crc = base64_encode($orderId);
-        $md5sum = md5($merchantId . $amount . $crc . $securityCode);
+        $md5sum = md5(implode('&', [$merchantId, $amount, $crc, $securityCode]));
         $name = $billingAddress->getData('firstname') . ' ' . $billingAddress->getData('lastname');
         return [
             'id'           => $merchantId,
