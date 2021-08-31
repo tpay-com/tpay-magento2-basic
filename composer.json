@@ -2,7 +2,7 @@
   "name": "tpaycom/magento2basic",
   "description": "tpay.com payments module",
   "type": "magento2-module",
-  "version": "1.4.5",
+  "version": "1.4.6",
   "license": [
     "OSL-3.0"
   ],
