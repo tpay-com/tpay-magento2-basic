@@ -226,7 +226,8 @@ class Tpay extends AbstractMethod implements TpayInterface
         $amount = number_format($order->getGrandTotal(), 2, '.', '');
         $crc = base64_encode($orderId);
         $name = $billingAddress->getData('firstname').' '.$billingAddress->getData('lastname');
-
+        $phone = $billingAddress->getData('telephone');
+        
         return [
             'email' => $this->escaper->escapeHtml($order->getCustomerEmail()),
             'name' => $this->escaper->escapeHtml($name),
@@ -240,6 +241,7 @@ class Tpay extends AbstractMethod implements TpayInterface
             'return_error_url' => $this->urlBuilder->getUrl('magento2basic/tpay/error'),
             'result_url' => $this->urlBuilder->getUrl('magento2basic/tpay/notification'),
             'return_url' => $this->urlBuilder->getUrl('magento2basic/tpay/success'),
+            'phone' => $phone,
             'online' => $this->onlyOnlineChannels() ? 1 : 0,
             'module' => 'Magento '.$this->getMagentoVersion(),
         ];
