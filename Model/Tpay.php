@@ -61,7 +61,7 @@ class Tpay extends AbstractMethod implements TpayInterface
      *
      * @var float
      */
-    protected $minAmountBlik = 1.01;
+    protected $minAmountBlik = 0.01;
 
     /**
      * @var UrlInterface
@@ -397,7 +397,7 @@ class Tpay extends AbstractMethod implements TpayInterface
      */
     protected function checkBlikAmount()
     {
-        return (bool)($this->getCheckoutTotal() > $this->minAmountBlik);
+        return (bool)($this->getCheckoutTotal() >= $this->minAmountBlik);
     }
 
     /**
