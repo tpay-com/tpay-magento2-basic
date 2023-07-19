@@ -72,6 +72,7 @@ class TpayConfigProvider implements ConfigProviderInterface
                     'onlyOnlineChannels' => $this->getPaymentMethodInstance()->onlyOnlineChannels(),
                     'getBlikChannelID' => TransactionModel::BLIK_CHANNEL,
                     'isInstallmentsAmountValid' => $this->getPaymentMethodInstance()->getInstallmentsAmountValid(),
+                    'useSandbox' => $tpay->useSandboxMode()
                 ],
             ],
         ];

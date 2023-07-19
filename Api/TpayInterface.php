@@ -116,23 +116,15 @@ interface TpayInterface
      */
     public function getInvoiceSendMail();
 
-    /**
-     * Check if Tpay notification server IP is forwarded by proxy
-     *
-     * @return bool
-     */
-    public function getCheckProxy();
 
     /**
-     * Check Tpay notification server IP
-     *
      * @return bool
      */
-    public function getCheckTpayIP();
+    public function useSandboxMode();
 
     /**
      * Check if checkout amount is in range of installments payment channel
-     * 
+     *
      * @return bool
      */
     public function getInstallmentsAmountValid();

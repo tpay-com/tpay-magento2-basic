@@ -89,6 +89,7 @@ class Create extends Action
                     'apiKey' => $this->tpay->getApiKey(),
                     'merchantId' => $this->tpay->getMerchantId(),
                     'merchantSecret' => $this->tpay->getSecurityCode(),
+                    'isProd' => !$this->tpay->useSandboxMode()
                 ]
             );
             $additionalPaymentInformation = $paymentData['additional_information'];

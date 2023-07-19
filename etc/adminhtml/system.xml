@@ -53,12 +53,8 @@
                     <label>Send new invoice email to customer</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="check_proxy" translate="label" type="select" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>My server use proxy</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                </field>
-                <field id="check_server" translate="label" type="select" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Validate Tpay notifications server IP (recommended)</label>
+                <field id="use_sandbox" translate="label" type="select" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Use sandbox mode (avoid using it in real production store)</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="sort_order" translate="label" type="text" sortOrder="13" showInDefault="1" showInWebsite="1" showInStore="1">

@@ -11,7 +11,7 @@ Install
 2. Copy plugin files to app/code/tpaycom/magento2basic
 
 3. If you have already installed the [magento2cards](https://github.com/tpay-com/tpay-magento2-cards) module, you can skip this step.  
-Download and copy depending library [tpay-php](https://github.com/tpay-com/tpay-php) to app/code folder. In the result your should have 2 folders in app/code - tpaycom and tpayLibs.  
+Download and copy depending library [tpay-php,tpay-openapi-php](https://github.com/tpay-com/tpay-php, https://github.com/tpay-com/tpay-openapi-php) to app/code folder. In the result your should have 2 folders in app/code - tpaycom and tpayLibs.  
 
 4. Enter following commands to enable module:
 

@@ -17,11 +17,10 @@ use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\Response\Http;
 use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
 use tpaycom\magento2basic\Api\TpayInterface;
-use tpaycom\magento2basic\Model\NotificationModel;
 use tpaycom\magento2basic\Service\TpayService;
-use tpaycom\magento2basic\Model\NotificationModelFactory;
 use tpayLibs\src\_class_tpay\Utilities\Util;
 use Magento\Sales\Model\Order;
+use tpaySDK\Webhook\JWSVerifiedPaymentNotification;
 
 /**
  * Class Notification
@@ -41,26 +40,11 @@ class Notification extends Action implements CsrfAwareActionInterface
     protected $remoteAddress;
 
     /**
-     * @var bool
-     */
-    protected $emailNotify = false;
-
-    /**
-     * @var NotificationModelFactory
-     */
-    protected $notificationFactory;
-
-    /**
      * @var TpayService
      */
     protected $tpayService;
 
     protected $request;
-
-    /**
-     * @var NotificationModel
-     */
-    protected $NotificationHandler;
 
     /**
      * {@inheritdoc}
@@ -69,15 +53,14 @@ class Notification extends Action implements CsrfAwareActionInterface
      * @param TpayInterface $tpayModel
      */
     public function __construct(
-        Context $context,
-        RemoteAddress $remoteAddress,
-        TpayInterface $tpayModel,
-        NotificationModelFactory $notificationModelFactory,
-        TpayService $tpayService
-    ) {
+        Context                  $context,
+        RemoteAddress            $remoteAddress,
+        TpayInterface            $tpayModel,
+        TpayService              $tpayService
+    )
+    {
         $this->tpay = $tpayModel;
         $this->remoteAddress = $remoteAddress;
-        $this->notificationFactory = $notificationModelFactory;
         $this->tpayService = $tpayService;
         Util::$loggingEnabled = false;
 
@@ -92,24 +75,11 @@ class Notification extends Action implements CsrfAwareActionInterface
         try {
             $id = $this->tpay->getMerchantId();
             $code = $this->tpay->getSecurityCode();
-            $checkServer = $this->tpay->getCheckTpayIP();
-            $checkProxy = $this->tpay->getCheckProxy();
-            $forwardedIP = null;
-            $this->NotificationHandler = $this->notificationFactory->create(
-                [
-                    'merchantId' => $id,
-                    'merchantSecret' => $code
-                ]
-            );
-            if ($checkServer === false) {
-                $this->NotificationHandler->disableValidationServerIP();
-            }
-            if ($checkProxy === true) {
-                $this->NotificationHandler->enableForwardedIPValidation();
-            }
+            $notification = (new JWSVerifiedPaymentNotification($code, !$this->tpay->useSandboxMode()))->getNotification();
+
             $validParams = $this->NotificationHandler->checkPayment('');
-            $orderId = base64_decode($validParams['tr_crc']);
-            if ($validParams['tr_status'] === 'PAID') {
+            $orderId = base64_decode($notification->tr_crc->getValue());
+            if ($notification->tr_status->getValue() === 'PAID') {
                 $response = $this->getPaidTransactionResponse($orderId);
 
                 return $this

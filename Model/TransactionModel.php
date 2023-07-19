@@ -28,13 +28,16 @@ class TransactionModel extends PaymentBlik
      * @param int $merchantId
      * @param string $merchantSecret
      */
-    public function __construct($apiPassword, $apiKey, $merchantId, $merchantSecret)
+    public function __construct($apiPassword, $apiKey, $merchantId, $merchantSecret, $isProd = true)
     {
         $this->trApiKey = $apiKey;
         $this->trApiPass = $apiPassword;
         $this->merchantId = $merchantId;
         $this->merchantSecret = $merchantSecret;
         parent::__construct();
+        if(!$isProd){
+            $this->apiURL = 'https://secure.sandbox.tpay.com/api/gw/';
+        }
     }
 
 }

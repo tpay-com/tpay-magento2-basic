@@ -28,7 +28,7 @@ use tpaycom\magento2basic\Api\Sales\OrderRepositoryInterface;
 use tpaycom\magento2basic\Api\TpayInterface;
 use Magento\Framework\Validator\Exception;
 use Magento\Sales\Model\Order\Payment\Transaction;
-use tpaycom\magento2basic\Controller\tpay\Refund;
+use tpaycom\magento2basic\Model\RefundModelFactory;
 use Magento\Store\Model\StoreManager;
 
 /**
@@ -83,10 +83,6 @@ class Tpay extends AbstractMethod implements TpayInterface
      */
     protected $escaper;
 
-    /**
-     * @var Refund
-     */
-    protected $refund;
 
     /**
      * @var StoreManager
@@ -99,29 +95,30 @@ class Tpay extends AbstractMethod implements TpayInterface
      * @param UrlInterface $urlBuilder
      * @param Session $checkoutSession
      * @param OrderRepositoryInterface $orderRepository
-     * @param Refund $refund
+     * @param RefundModelFactory $refundFactory
      */
     public function __construct(
-        Context $context,
-        Registry $registry,
+        Context                    $context,
+        Registry                   $registry,
         ExtensionAttributesFactory $extensionFactory,
-        AttributeValueFactory $customAttributeFactory,
-        Data $paymentData,
-        ScopeConfigInterface $scopeConfig,
-        Logger $logger,
-        UrlInterface $urlBuilder,
-        Session $checkoutSession,
-        OrderRepositoryInterface $orderRepository,
-        Refund $refund,
-        Escaper $escaper,
-        StoreManager $storeManager,
-        $data = []
-    ) {
+        AttributeValueFactory      $customAttributeFactory,
+        Data                       $paymentData,
+        ScopeConfigInterface       $scopeConfig,
+        Logger                     $logger,
+        UrlInterface               $urlBuilder,
+        Session                    $checkoutSession,
+        OrderRepositoryInterface   $orderRepository,
+        RefundModelFactory         $refundFactory,
+        Escaper                    $escaper,
+        StoreManager               $storeManager,
+                                   $data = []
+    )
+    {
         $this->urlBuilder = $urlBuilder;
         $this->escaper = $escaper;
         $this->checkoutSession = $checkoutSession;
         $this->orderRepository = $orderRepository;
-        $this->refund = $refund;
+        $this->refundFactory = $refundFactory;
         $this->storeManager = $storeManager;
 
         parent::__construct(
@@ -225,14 +222,14 @@ class Tpay extends AbstractMethod implements TpayInterface
         $billingAddress = $order->getBillingAddress();
         $amount = number_format($order->getGrandTotal(), 2, '.', '');
         $crc = base64_encode($orderId);
-        $name = $billingAddress->getData('firstname').' '.$billingAddress->getData('lastname');
+        $name = $billingAddress->getData('firstname') . ' ' . $billingAddress->getData('lastname');
         $phone = $billingAddress->getData('telephone');
-        
+
         return [
             'email' => $this->escaper->escapeHtml($order->getCustomerEmail()),
             'name' => $this->escaper->escapeHtml($name),
             'amount' => $amount,
-            'description' => 'Zamówienie '.$orderId,
+            'description' => 'Zamówienie ' . $orderId,
             'crc' => $crc,
             'address' => $this->escaper->escapeHtml($order->getBillingAddress()->getData('street')),
             'city' => $this->escaper->escapeHtml($order->getBillingAddress()->getData('city')),
@@ -243,7 +240,7 @@ class Tpay extends AbstractMethod implements TpayInterface
             'return_url' => $this->urlBuilder->getUrl('magento2basic/tpay/success'),
             'phone' => $phone,
             'online' => $this->onlyOnlineChannels() ? 1 : 0,
-            'module' => 'Magento '.$this->getMagentoVersion(),
+            'module' => 'Magento ' . $this->getMagentoVersion(),
         ];
     }
 
@@ -282,17 +279,9 @@ class Tpay extends AbstractMethod implements TpayInterface
     /**
      * {@inheritdoc}
      */
-    public function getCheckProxy()
+    public function useSandboxMode()
     {
-        return (bool)$this->getConfigData('check_proxy');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getCheckTpayIP()
-    {
-        return (bool)$this->getConfigData('check_server');
+        return (bool)$this->getConfigData('use_sandbox');
     }
 
     /**
@@ -300,7 +289,7 @@ class Tpay extends AbstractMethod implements TpayInterface
      */
     public function getPaymentRedirectUrl()
     {
-        return $this->urlBuilder->getUrl('magento2basic/tpay/redirect', ['uid' => time().uniqid(true)]);
+        return $this->urlBuilder->getUrl('magento2basic/tpay/redirect', ['uid' => time() . uniqid(true)]);
     }
 
     /**
@@ -367,12 +356,16 @@ class Tpay extends AbstractMethod implements TpayInterface
      */
     public function refund(InfoInterface $payment, $amount)
     {
-        $this->refund
-            ->setApiKey($this->getApiKey())
-            ->setApiPassword($this->getApiPassword())
-            ->setMerchantId($this->getMerchantId())
-            ->setMerchantSecret($this->getSecurityCode());
-        $refundResult = $this->refund->makeRefund($payment, $amount);
+        $refundService = $this->refundFactory->create(
+            [
+                'apiPassword' => $this->getApiPassword(),
+                'apiKey' => $this->getApiKey(),
+                'merchantId' => $this->getMerchantId(),
+                'merchantSecret' => $this->getSecurityCode(),
+                'isProd' => !$this->useSandboxMode()
+            ]
+        );
+        $refundResult = $refundService->makeRefund($payment, $amount);
         try {
             if ($refundResult) {
                 $payment

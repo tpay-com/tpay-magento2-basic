@@ -102,8 +102,11 @@ require(['jquery', 'mage/translate'], function ($, $t) {
                 }
             });
         }
-
-        $.getScript("https://secure.tpay.com/groups-" + window.checkoutConfig.tpay.payment.merchantId + showOnlyOnlinePayments() + ".js", function () {
+        url = 'https://secure.tpay.com/';
+        if(window.checkoutConfig.tpay.payment.useSandbox){
+            url = 'https://secure.sandbox.tpay.com/';
+        }
+        $.getScript(url+ "groups-" + window.checkoutConfig.tpay.payment.merchantId + showOnlyOnlinePayments() + ".js", function () {
             ShowChannelsCombo();
             checkBlikInput();
             setBlikInputAction();
