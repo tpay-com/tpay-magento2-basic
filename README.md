@@ -38,7 +38,7 @@ Download and copy required library [`tpay-php`](https://github.com/tpay-com/tpay
     php bin/magento setup:upgrade
     ```
 
-3. Enable and configure module in Magento Admin under Stores/Configuration/Payment Methods/tpay.com
+3. Enable and configure module in Magento Admin under `Stores/Configuration/Payment Methods/tpay.com`.
 
 
 ## Other notes
