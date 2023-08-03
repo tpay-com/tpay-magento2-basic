@@ -7,7 +7,7 @@
 [![License](https://img.shields.io/github/license/tpay-com/tpay-magento2-basic.svg)](LICENSE)
 [![CI status](https://github.com/tpay-com/tpay-magento2-basic/actions/workflows/ci.yaml/badge.svg?branch=master)](https://github.com/tpay-com/tpay-magento2-basic/actions)
 
-## Installation
+## Manual installation
 
 1. Go to Magento2 root directory.
 
