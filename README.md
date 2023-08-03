@@ -2,6 +2,10 @@
 
 [Tpay](https://tpay.com) payment gateway Magento2 module.
 
+[![Latest stable version](https://img.shields.io/packagist/v/tpaycom/magento2basic.svg?label=current%20version)](https://packagist.org/packages/tpaycom/magento2basic)
+[![PHP version](https://img.shields.io/packagist/php-v/tpaycom/magento2basic.svg)](https://php.net)
+[![License](https://img.shields.io/github/license/tpay-com/tpay-magento2-basic.svg)](LICENSE)
+[![CI status](https://github.com/tpay-com/tpay-magento2-basic/actions/workflows/ci.yaml/badge.svg?branch=master)](https://github.com/tpay-com/tpay-magento2-basic/actions)
 
 ## Installation
 
