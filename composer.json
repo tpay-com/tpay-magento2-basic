@@ -1,26 +1,25 @@
 {
-  "name": "tpaycom/magento2basic",
-  "description": "Tpay payments module",
-  "type": "magento2-module",
-  "license": "MIT",
-  "require": {
-    "php": ">=7",
-    "magento/product-community-edition": "~2.3|~2.4",
-    "tpay-com/tpay-php": "^2.3"
-  },
-  "autoload": {
-    "files": [
-      "registration.php"
+    "name": "tpaycom/magento2basic",
+    "description": "Tpay payments module",
+    "license": "MIT",
+    "type": "magento2-module",
+    "authors": [
+        {
+            "name": "tpay.com",
+            "homepage": "https://tpay.com/"
+        }
     ],
-    "psr-4": {
-      "tpaycom\\magento2basic\\": ""
+    "require": {
+        "php": ">=7",
+        "magento/product-community-edition": "^2.3",
+        "tpay-com/tpay-php": "^2.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "tpaycom\\magento2basic\\": ""
+        },
+        "files": [
+            "registration.php"
+        ]
     }
-  },
-  "authors": [
-    {
-      "name": "tpay.com",
-      "homepage": "https://tpay.com/"
-    }
-  ]
 }
-
