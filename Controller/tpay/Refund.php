@@ -49,7 +49,6 @@ class Refund
         }
         $errCode = isset($apiResult['err']) ? ' error code: '.$apiResult['err'] : '';
         throw new Exception(__('Payment refunding error. -'.$errCode));
-
     }
 
     /**

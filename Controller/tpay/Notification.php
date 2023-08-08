@@ -112,7 +112,6 @@ class Notification extends Action implements CsrfAwareActionInterface
                     ->getResponse()
                     ->setStatusCode(Http::STATUS_CODE_200)
                     ->setContent('TRUE');
-
         } catch (\Exception $e) {
             return false;
         }

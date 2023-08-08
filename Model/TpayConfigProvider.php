@@ -6,7 +6,6 @@ use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Framework\View\Asset\Repository;
 use Magento\Payment\Helper\Data as PaymentHelper;
 use Magento\Payment\Model\MethodInterface;
-
 use tpaycom\magento2basic\Api\TpayInterface;
 
 /**
