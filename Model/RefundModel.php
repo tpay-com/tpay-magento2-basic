@@ -1,11 +1,4 @@
 <?php
-/**
- *
- * @category    payment gateway
- * @package     Tpaycom_Magento2.3
- * @author      Tpay.com
- * @copyright   (https://tpay.com)
- */
 
 namespace tpaycom\magento2basic\Model;
 
@@ -13,8 +6,6 @@ use tpayLibs\src\_class_tpay\Refunds\BasicRefunds;
 
 /**
  * Class Refund
- *
- * @package tpaycom\magento2basic\Model
  */
 class RefundModel extends BasicRefunds
 {
@@ -23,7 +14,7 @@ class RefundModel extends BasicRefunds
      *
      * @param string $apiPassword
      * @param string $apiKey
-     * @param int $merchantId
+     * @param int    $merchantId
      * @param string $merchantSecret
      */
     public function __construct($apiPassword, $apiKey, $merchantId, $merchantSecret)
@@ -34,5 +25,4 @@ class RefundModel extends BasicRefunds
         $this->merchantSecret = $merchantSecret;
         parent::__construct();
     }
-
 }

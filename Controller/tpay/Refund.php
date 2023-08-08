@@ -1,8 +1,9 @@
 <?php
+
 namespace tpaycom\magento2basic\Controller\tpay;
 
-use Magento\Payment\Model\InfoInterface;
 use Magento\Framework\Validator\Exception;
+use Magento\Payment\Model\InfoInterface;
 use tpaycom\magento2basic\Model\RefundModel;
 use tpayLibs\src\_class_tpay\Utilities\Util;
 
@@ -30,9 +31,11 @@ class Refund
 
     /**
      * @param InfoInterface $payment
-     * @param double $amount
-     * @return bool
+     * @param float         $amount
+     *
      * @throws \Exception
+     *
+     * @return bool
      */
     public function makeRefund($payment, $amount)
     {
@@ -41,16 +44,17 @@ class Refund
         $apiResult = $RefundModel
             ->setTransactionID($payment->getParentTransactionId())
             ->refundAny(number_format($amount, 2));
-        if (isset($apiResult['result']) && (int)$apiResult['result'] === 1) {
+        if (isset($apiResult['result']) && 1 === (int)$apiResult['result']) {
             return true;
-        } else {
-            $errCode = isset($apiResult['err']) ? ' error code: '.$apiResult['err'] : '';
-            throw new Exception(__('Payment refunding error. -'.$errCode));
         }
+        $errCode = isset($apiResult['err']) ? ' error code: '.$apiResult['err'] : '';
+        throw new Exception(__('Payment refunding error. -'.$errCode));
+
     }
 
     /**
      * @param string $merchantSecret
+     *
      * @return Refund
      */
     public function setMerchantSecret($merchantSecret)
@@ -62,6 +66,7 @@ class Refund
 
     /**
      * @param int $merchantId
+     *
      * @return Refund
      */
     public function setMerchantId($merchantId)
@@ -73,6 +78,7 @@ class Refund
 
     /**
      * @param string $apiPassword
+     *
      * @return Refund
      */
     public function setApiPassword($apiPassword)
@@ -84,6 +90,7 @@ class Refund
 
     /**
      * @param string $apiKey
+     *
      * @return Refund
      */
     public function setApiKey($apiKey)
@@ -92,5 +99,4 @@ class Refund
 
         return $this;
     }
-
 }

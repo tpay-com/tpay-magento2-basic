@@ -1,11 +1,4 @@
 <?php
-/**
- *
- * @category    payment gateway
- * @package     Tpaycom_Magento2.3
- * @author      Tpay.com
- * @copyright   (https://tpay.com)
- */
 
 namespace tpaycom\magento2basic\Model;
 
@@ -15,45 +8,35 @@ use Magento\Framework\Api\ExtensionAttributesFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\DataObject;
+use Magento\Framework\Escaper;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Registry;
 use Magento\Framework\UrlInterface;
-use Magento\Framework\Escaper;
+use Magento\Framework\Validator\Exception;
 use Magento\Payment\Helper\Data;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Model\Method\AbstractMethod;
 use Magento\Payment\Model\Method\Logger;
 use Magento\Quote\Api\Data\CartInterface;
+use Magento\Sales\Model\Order\Payment\Transaction;
+use Magento\Store\Model\StoreManager;
 use tpaycom\magento2basic\Api\Sales\OrderRepositoryInterface;
 use tpaycom\magento2basic\Api\TpayInterface;
-use Magento\Framework\Validator\Exception;
-use Magento\Sales\Model\Order\Payment\Transaction;
 use tpaycom\magento2basic\Controller\tpay\Refund;
-use Magento\Store\Model\StoreManager;
 
 /**
  * Class Tpay
- *
- * @package tpaycom\magento2basic\Model
  */
 class Tpay extends AbstractMethod implements TpayInterface
 {
     protected $_code = self::CODE;
-
     protected $_isGateway = true;
-
     protected $_canCapture = false;
-
     protected $_canCapturePartial = false;
-
     protected $_canRefund = true;
-
     protected $_canRefundInvoicePartial = true;
-
     protected $availableCurrencyCodes = ['PLN'];
-
     protected $redirectURL = 'https://secure.tpay.com';
-
     protected $termsURL = 'https://secure.tpay.com/regulamin.pdf';
 
     /**
@@ -95,11 +78,6 @@ class Tpay extends AbstractMethod implements TpayInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @param UrlInterface $urlBuilder
-     * @param Session $checkoutSession
-     * @param OrderRepositoryInterface $orderRepository
-     * @param Refund $refund
      */
     public function __construct(
         Context $context,
@@ -159,11 +137,7 @@ class Tpay extends AbstractMethod implements TpayInterface
 
         $apiPassword = $this->getApiPassword();
 
-        if (empty($apiKey) || strlen($apiKey) < 8 || empty($apiPassword) || strlen($apiPassword) < 4) {
-            return false;
-        }
-
-        return true;
+        return ! (empty($apiKey) || strlen($apiKey) < 8 || empty($apiPassword) || strlen($apiPassword) < 4);
     }
 
     /**
@@ -227,7 +201,7 @@ class Tpay extends AbstractMethod implements TpayInterface
         $crc = base64_encode($orderId);
         $name = $billingAddress->getData('firstname').' '.$billingAddress->getData('lastname');
         $phone = $billingAddress->getData('telephone');
-        
+
         return [
             'email' => $this->escaper->escapeHtml($order->getCustomerEmail()),
             'name' => $this->escaper->escapeHtml($name),
@@ -347,7 +321,7 @@ class Tpay extends AbstractMethod implements TpayInterface
             isset($additionalData[static::BLIK_CODE]) ? $additionalData[static::BLIK_CODE] : ''
         );
 
-        if (isset($additionalData[static::TERMS_ACCEPT]) && $additionalData[static::TERMS_ACCEPT] === 1) {
+        if (isset($additionalData[static::TERMS_ACCEPT]) && 1 === $additionalData[static::TERMS_ACCEPT]) {
             $info->setAdditionalInformation(
                 static::TERMS_ACCEPT,
                 1
@@ -360,10 +334,11 @@ class Tpay extends AbstractMethod implements TpayInterface
     /**
      * Payment refund
      *
-     * @param InfoInterface $payment
      * @param float $amount
-     * @return $this
+     *
      * @throws \Exception
+     *
+     * @return $this
      */
     public function refund(InfoInterface $payment, $amount)
     {
@@ -426,11 +401,12 @@ class Tpay extends AbstractMethod implements TpayInterface
 
     /**
      * @param int $orderId
+     *
      * @return \Magento\Sales\Api\Data\OrderInterface
      */
     protected function getOrder($orderId = null)
     {
-        if ($orderId === null) {
+        if (null === $orderId) {
             $orderId = $this->getCheckout()->getLastRealOrderId();
         }
 
@@ -446,11 +422,7 @@ class Tpay extends AbstractMethod implements TpayInterface
      */
     protected function isAvailableForCurrency($currencyCode)
     {
-        if (!in_array($currencyCode, $this->availableCurrencyCodes)) {
-            return false;
-        }
-
-        return true;
+        return ! (!in_array($currencyCode, $this->availableCurrencyCodes));
     }
 
     private function getMagentoVersion()
@@ -469,5 +441,4 @@ class Tpay extends AbstractMethod implements TpayInterface
 
         return parent::getConfigData($field, $storeId);
     }
-
 }

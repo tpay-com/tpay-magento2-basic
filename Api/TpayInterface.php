@@ -1,18 +1,10 @@
 <?php
-/**
- *
- * @category    payment gateway
- * @package     Tpaycom_Magento2.3
- * @author      Tpay.com
- * @copyright   (https://tpay.com)
- */
 
 namespace tpaycom\magento2basic\Api;
 
 /**
  * Interface TpayInterface
  *
- * @package tpaycom\magento2basic\Api
  * @api
  */
 interface TpayInterface
@@ -132,9 +124,8 @@ interface TpayInterface
 
     /**
      * Check if checkout amount is in range of installments payment channel
-     * 
+     *
      * @return bool
      */
     public function getInstallmentsAmountValid();
-
 }

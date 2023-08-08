@@ -1,11 +1,4 @@
 <?php
-/**
- *
- * @category    payment gateway
- * @package     Tpaycom_Magento2.3
- * @author      Tpay.com
- * @copyright   (https://tpay.com)
- */
 
 namespace tpaycom\magento2basic\Controller\tpay;
 
@@ -13,16 +6,13 @@ use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use tpaycom\magento2basic\Api\TpayInterface;
-use tpaycom\magento2basic\Model\TransactionModelFactory;
 use tpaycom\magento2basic\Model\TransactionModel;
-use Magento\Sales\Model\Order\Payment\Transaction as MagentoTransaction;
+use tpaycom\magento2basic\Model\TransactionModelFactory;
 use tpaycom\magento2basic\Service\TpayService;
 use tpayLibs\src\_class_tpay\Utilities\Util;
 
 /**
  * Class Blik
- *
- * @package tpaycom\magento2basic\Controller\tpay
  */
 class Create extends Action
 {
@@ -53,10 +43,6 @@ class Create extends Action
 
     /**
      * {@inheritdoc}
-     *
-     * @param TpayInterface $tpayModel
-     * @param TransactionModelFactory $transactionModelFactory
-     * @param TpayService $tpayService
      */
     public function __construct(
         Context $context,
@@ -99,21 +85,23 @@ class Create extends Action
             }
             $this->tpayService->addCommentToHistory($orderId, 'Transaction title '.$transaction['title']);
             $transactionUrl = $transaction['url'];
-            if ($this->tpay->redirectToChannel() === true) {
+            if (true === $this->tpay->redirectToChannel()) {
                 $transactionUrl = str_replace('gtitle', 'title', $transactionUrl);
             }
             $this->tpayService->addCommentToHistory($orderId, 'Transaction link '.$transactionUrl);
             $paymentData['additional_information']['transaction_url'] = $transactionUrl;
             $payment->setData($paymentData)->save();
 
-            if (strlen($additionalPaymentInformation['blik_code']) === 6
+            if (6 === strlen($additionalPaymentInformation['blik_code'])
                 && $this->tpay->checkBlikLevel0Settings()
             ) {
                 $result = $this->blikPay($transaction['title'], $additionalPaymentInformation['blik_code']);
                 $this->checkoutSession->unsQuoteId();
                 if (!$result) {
-                    $this->tpayService->addCommentToHistory($orderId,
-                        'User has typed wrong blik code and has been redirected to transaction panel in order to finish payment');
+                    $this->tpayService->addCommentToHistory(
+                        $orderId,
+                        'User has typed wrong blik code and has been redirected to transaction panel in order to finish payment'
+                    );
 
                     return $this->_redirect($transactionUrl);
                 }
@@ -137,13 +125,13 @@ class Create extends Action
     {
         $apiResult = $this->transaction->blik($blikTransactionId, $blikCode);
 
-        return isset($apiResult['result']) && $apiResult['result'] === 1;
+        return isset($apiResult['result']) && 1 === $apiResult['result'];
     }
 
     private function prepareTransaction($orderId, array $additionalPaymentInformation)
     {
         $data = $this->tpay->getTpayFormData($orderId);
-        if (strlen($additionalPaymentInformation['blik_code']) === 6) {
+        if (6 === strlen($additionalPaymentInformation['blik_code'])) {
             $data['group'] = TransactionModel::BLIK_CHANNEL;
         } else {
             $data['group'] = (int)$additionalPaymentInformation['group'];
@@ -151,5 +139,4 @@ class Create extends Action
 
         return $this->transaction->create($data);
     }
-
 }

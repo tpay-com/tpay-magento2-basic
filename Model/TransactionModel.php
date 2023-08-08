@@ -1,11 +1,4 @@
 <?php
-/**
- *
- * @category    payment gateway
- * @package     Tpaycom_Magento2.3
- * @author      Tpay.com
- * @copyright   (https://tpay.com)
- */
 
 namespace tpaycom\magento2basic\Model;
 
@@ -13,8 +6,6 @@ use tpayLibs\src\_class_tpay\PaymentBlik;
 
 /**
  * Class Transaction
- *
- * @package tpaycom\magento2basic\Model
  */
 class TransactionModel extends PaymentBlik
 {
@@ -25,7 +16,7 @@ class TransactionModel extends PaymentBlik
      *
      * @param string $apiPassword
      * @param string $apiKey
-     * @param int $merchantId
+     * @param int    $merchantId
      * @param string $merchantSecret
      */
     public function __construct($apiPassword, $apiKey, $merchantId, $merchantSecret)
@@ -36,5 +27,4 @@ class TransactionModel extends PaymentBlik
         $this->merchantSecret = $merchantSecret;
         parent::__construct();
     }
-
 }

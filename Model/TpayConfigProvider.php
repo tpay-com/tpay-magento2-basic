@@ -1,25 +1,16 @@
 <?php
-/**
- *
- * @category    payment gateway
- * @package     Tpaycom_Magento2.3
- * @author      Tpay.com
- * @copyright   (https://tpay.com)
- */
 
 namespace tpaycom\magento2basic\Model;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Framework\View\Asset\Repository;
-use Magento\Payment\Model\MethodInterface;
-use tpaycom\magento2basic\Api\TpayInterface;
-
 use Magento\Payment\Helper\Data as PaymentHelper;
+use Magento\Payment\Model\MethodInterface;
+
+use tpaycom\magento2basic\Api\TpayInterface;
 
 /**
  * Class TpayConfigProvider
- *
- * @package tpaycom\magento2basic\Model
  */
 class TpayConfigProvider implements ConfigProviderInterface
 {
@@ -40,9 +31,6 @@ class TpayConfigProvider implements ConfigProviderInterface
 
     /**
      * TpayConfigProvider constructor.
-     *
-     * @param PaymentHelper $paymentHelper
-     * @param Repository $assetRepository
      */
     public function __construct(
         PaymentHelper $paymentHelper,
@@ -80,7 +68,7 @@ class TpayConfigProvider implements ConfigProviderInterface
     }
 
     /**
-     * @return TpayInterface|MethodInterface
+     * @return MethodInterface|TpayInterface
      */
     protected function getPaymentMethodInstance()
     {
@@ -102,7 +90,7 @@ class TpayConfigProvider implements ConfigProviderInterface
     }
 
     /**
-     * @return string|null
+     * @return null|string
      */
     public function showChannels()
     {
@@ -128,7 +116,7 @@ class TpayConfigProvider implements ConfigProviderInterface
     }
 
     /**
-     * @return string|null
+     * @return null|string
      */
     public function getTerms()
     {
