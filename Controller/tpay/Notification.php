@@ -16,9 +16,6 @@ use tpaycom\magento2basic\Model\NotificationModelFactory;
 use tpaycom\magento2basic\Service\TpayService;
 use tpayLibs\src\_class_tpay\Utilities\Util;
 
-/**
- * Class Notification
- */
 class Notification extends Action implements CsrfAwareActionInterface
 {
     /**

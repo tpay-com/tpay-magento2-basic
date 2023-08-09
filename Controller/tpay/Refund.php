@@ -54,7 +54,7 @@ class Refund
     /**
      * @param string $merchantSecret
      *
-     * @return Refund
+     * @return self
      */
     public function setMerchantSecret($merchantSecret)
     {
@@ -66,7 +66,7 @@ class Refund
     /**
      * @param int $merchantId
      *
-     * @return Refund
+     * @return self
      */
     public function setMerchantId($merchantId)
     {
@@ -78,7 +78,7 @@ class Refund
     /**
      * @param string $apiPassword
      *
-     * @return Refund
+     * @return self
      */
     public function setApiPassword($apiPassword)
     {
@@ -90,7 +90,7 @@ class Refund
     /**
      * @param string $apiKey
      *
-     * @return Refund
+     * @return self
      */
     public function setApiKey($apiKey)
     {

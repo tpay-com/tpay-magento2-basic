@@ -24,9 +24,6 @@ use tpaycom\magento2basic\Api\Sales\OrderRepositoryInterface;
 use tpaycom\magento2basic\Api\TpayInterface;
 use tpaycom\magento2basic\Controller\tpay\Refund;
 
-/**
- * Class Tpay
- */
 class Tpay extends AbstractMethod implements TpayInterface
 {
     protected $_code = self::CODE;

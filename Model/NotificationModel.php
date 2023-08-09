@@ -4,9 +4,6 @@ namespace tpaycom\magento2basic\Model;
 
 use tpayLibs\src\_class_tpay\Notifications\BasicNotificationHandler;
 
-/**
- * Class Notification
- */
 class NotificationModel extends BasicNotificationHandler
 {
     /**

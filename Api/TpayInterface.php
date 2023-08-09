@@ -3,30 +3,13 @@
 namespace tpaycom\magento2basic\Api;
 
 /**
- * Interface TpayInterface
- *
  * @api
  */
 interface TpayInterface
 {
-    /**
-     * @var string
-     */
     const CODE = 'tpaycom_magento2basic';
-
-    /**
-     * @var string
-     */
     const CHANNEL = 'group';
-
-    /**
-     * @var string
-     */
     const BLIK_CODE = 'blik_code';
-
-    /**
-     * @var string
-     */
     const TERMS_ACCEPT = 'accept_tos';
 
     /**

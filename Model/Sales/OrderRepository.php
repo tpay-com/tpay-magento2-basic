@@ -8,9 +8,6 @@ use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\OrderRepository as MagentoOrderRepository;
 use tpaycom\magento2basic\Api\Sales\OrderRepositoryInterface;
 
-/**
- * Class OrderRepository
- */
 class OrderRepository extends MagentoOrderRepository implements OrderRepositoryInterface
 {
     /**

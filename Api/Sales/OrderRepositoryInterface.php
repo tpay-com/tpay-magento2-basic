@@ -4,9 +4,6 @@ namespace tpaycom\magento2basic\Api\Sales;
 
 use Magento\Sales\Api\OrderRepositoryInterface as MagentoOrderRepositoryInterface;
 
-/**
- * Interface OrderRepositoryInterface
- */
 interface OrderRepositoryInterface extends MagentoOrderRepositoryInterface
 {
     /**

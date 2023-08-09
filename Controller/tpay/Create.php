@@ -11,9 +11,6 @@ use tpaycom\magento2basic\Model\TransactionModelFactory;
 use tpaycom\magento2basic\Service\TpayService;
 use tpayLibs\src\_class_tpay\Utilities\Util;
 
-/**
- * Class Blik
- */
 class Create extends Action
 {
     /**

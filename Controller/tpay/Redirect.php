@@ -7,9 +7,6 @@ use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use tpaycom\magento2basic\Service\TpayService;
 
-/**
- * Class Redirect
- */
 class Redirect extends Action
 {
     /**
@@ -22,9 +19,6 @@ class Redirect extends Action
      */
     protected $tpayService;
 
-    /**
-     * Redirect constructor.
-     */
     public function __construct(
         Context $context,
         TpayService $tpayService,

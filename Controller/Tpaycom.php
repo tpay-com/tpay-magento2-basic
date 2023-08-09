@@ -2,9 +2,6 @@
 
 namespace tpaycom\magento2basic\Controller;
 
-/**
- * Class Tpaycom
- */
 abstract class Tpaycom extends \Magento\Framework\App\Action\Action
 {
     // Check Real IP if server is proxy, balancer...

@@ -4,14 +4,9 @@ namespace tpaycom\magento2basic\Model;
 
 use tpayLibs\src\_class_tpay\Refunds\BasicRefunds;
 
-/**
- * Class Refund
- */
 class RefundModel extends BasicRefunds
 {
     /**
-     * Refund constructor.
-     *
      * @param string $apiPassword
      * @param string $apiKey
      * @param int    $merchantId

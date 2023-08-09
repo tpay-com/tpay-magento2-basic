@@ -17,9 +17,6 @@ use Magento\Sales\Model\Service\InvoiceService;
 use tpaycom\magento2basic\Api\Sales\OrderRepositoryInterface;
 use tpaycom\magento2basic\Api\TpayInterface;
 
-/**
- * Class TpayService
- */
 class TpayService extends RegisterCaptureNotificationOperation
 {
     /**
@@ -31,9 +28,6 @@ class TpayService extends RegisterCaptureNotificationOperation
     protected $invoiceService;
     private $objectManager;
 
-    /**
-     * TpayBasic constructor.
-     */
     public function __construct(
         OrderRepositoryInterface $orderRepository,
         BuilderInterface $builder,

@@ -4,9 +4,6 @@ namespace tpaycom\magento2basic\Controller\tpay;
 
 use Magento\Framework\App\Action\Action;
 
-/**
- * Class Success
- */
 class Success extends Action
 {
     /**

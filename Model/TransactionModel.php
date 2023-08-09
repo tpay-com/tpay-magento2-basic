@@ -4,16 +4,11 @@ namespace tpaycom\magento2basic\Model;
 
 use tpayLibs\src\_class_tpay\PaymentBlik;
 
-/**
- * Class Transaction
- */
 class TransactionModel extends PaymentBlik
 {
     const BLIK_CHANNEL = 150;
 
     /**
-     * Transaction constructor.
-     *
      * @param string $apiPassword
      * @param string $apiKey
      * @param int    $merchantId

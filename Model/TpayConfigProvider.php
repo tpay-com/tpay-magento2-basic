@@ -8,9 +8,6 @@ use Magento\Payment\Helper\Data as PaymentHelper;
 use Magento\Payment\Model\MethodInterface;
 use tpaycom\magento2basic\Api\TpayInterface;
 
-/**
- * Class TpayConfigProvider
- */
 class TpayConfigProvider implements ConfigProviderInterface
 {
     /**
@@ -28,9 +25,6 @@ class TpayConfigProvider implements ConfigProviderInterface
      */
     protected $paymentMethod;
 
-    /**
-     * TpayConfigProvider constructor.
-     */
     public function __construct(
         PaymentHelper $paymentHelper,
         Repository $assetRepository
