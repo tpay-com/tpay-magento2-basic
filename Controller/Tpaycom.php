@@ -1,18 +1,6 @@
 <?php
-/**
- *
- * @category    payment gateway
- * @package     Tpaycom_Magento2.3
- * @author      Tpay.com
- * @copyright   (https://tpay.com)
- */
 
 namespace tpaycom\magento2basic\Controller;
-
-/**
- * Class Tpaycom
- * @package tpaycom\magento2basic\Controller
- */
 
 abstract class Tpaycom extends \Magento\Framework\App\Action\Action
 {
@@ -43,7 +31,6 @@ abstract class Tpaycom extends \Magento\Framework\App\Action\Action
     /**
      * @var \tpaycom\magento2basic\Model\Tpay
      */
-
     protected $_model;
 
     /**
@@ -52,26 +39,15 @@ abstract class Tpaycom extends \Magento\Framework\App\Action\Action
      * @var \Magento\Framework\Locale\Resolver
      */
     protected $localeResolver;
+
     private $objectManager;
 
-    /**
-     * @param \Magento\Framework\App\Action\Context $context
-     * @param \Magento\Customer\Model\Session $customerSession
-     * @param \Magento\Checkout\Model\Session $checkoutSession
-     * @param \Magento\Sales\Model\OrderFactory $orderFactory
-     * @param \Magento\Framework\Locale\Resolver $localeResolver
-     */
     public function __construct(
-        \Magento\Framework\App\Action\Context $context
-        ,
-        \Magento\Customer\Model\Session $customerSession
-        ,
-        \Magento\Checkout\Model\Session $checkoutSession
-        ,
-        \Magento\Sales\Model\OrderFactory $orderFactory
-        ,
-        \tpaycom\magento2basic\Model\Tpay $model
-        ,
+        \Magento\Framework\App\Action\Context $context,
+        \Magento\Customer\Model\Session $customerSession,
+        \Magento\Checkout\Model\Session $checkoutSession,
+        \Magento\Sales\Model\OrderFactory $orderFactory,
+        \tpaycom\magento2basic\Model\Tpay $model,
         \Magento\Framework\Locale\Resolver $localeResolver
     ) {
         $this->_customerSession = $customerSession;

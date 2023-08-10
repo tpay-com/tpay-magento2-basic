@@ -1,11 +1,4 @@
 <?php
-/**
- *
- * @category    payment gateway
- * @package     Tpaycom_Magento2.3
- * @author      Tpay.com
- * @copyright   (https://tpay.com)
- */
 
 namespace tpaycom\magento2basic\Controller\tpay;
 
@@ -16,18 +9,13 @@ use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\Response\Http;
 use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
+use Magento\Sales\Model\Order;
 use tpaycom\magento2basic\Api\TpayInterface;
 use tpaycom\magento2basic\Model\NotificationModel;
-use tpaycom\magento2basic\Service\TpayService;
 use tpaycom\magento2basic\Model\NotificationModelFactory;
+use tpaycom\magento2basic\Service\TpayService;
 use tpayLibs\src\_class_tpay\Utilities\Util;
-use Magento\Sales\Model\Order;
 
-/**
- * Class Notification
- *
- * @package tpaycom\magento2basic\Controller\tpay
- */
 class Notification extends Action implements CsrfAwareActionInterface
 {
     /**
@@ -64,9 +52,6 @@ class Notification extends Action implements CsrfAwareActionInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @param RemoteAddress $remoteAddress
-     * @param TpayInterface $tpayModel
      */
     public function __construct(
         Context $context,
@@ -98,18 +83,18 @@ class Notification extends Action implements CsrfAwareActionInterface
             $this->NotificationHandler = $this->notificationFactory->create(
                 [
                     'merchantId' => $id,
-                    'merchantSecret' => $code
+                    'merchantSecret' => $code,
                 ]
             );
-            if ($checkServer === false) {
+            if (false === $checkServer) {
                 $this->NotificationHandler->disableValidationServerIP();
             }
-            if ($checkProxy === true) {
+            if (true === $checkProxy) {
                 $this->NotificationHandler->enableForwardedIPValidation();
             }
             $validParams = $this->NotificationHandler->checkPayment('');
             $orderId = base64_decode($validParams['tr_crc']);
-            if ($validParams['tr_status'] === 'PAID') {
+            if ('PAID' === $validParams['tr_status']) {
                 $response = $this->getPaidTransactionResponse($orderId);
 
                 return $this
@@ -124,7 +109,6 @@ class Notification extends Action implements CsrfAwareActionInterface
                     ->getResponse()
                     ->setStatusCode(Http::STATUS_CODE_200)
                     ->setContent('TRUE');
-
         } catch (\Exception $e) {
             return false;
         }
@@ -134,9 +118,7 @@ class Notification extends Action implements CsrfAwareActionInterface
      * Create exception in case CSRF validation failed.
      * Return null if default exception will suffice.
      *
-     * @param RequestInterface $request
-     *
-     * @return InvalidRequestException|null
+     * @return null|InvalidRequestException
      */
     public function createCsrfValidationException(RequestInterface $request)
     {
@@ -147,9 +129,7 @@ class Notification extends Action implements CsrfAwareActionInterface
      * Perform custom request validation.
      * Return null if default validation is needed.
      *
-     * @param RequestInterface $request
-     *
-     * @return bool|null
+     * @return null|bool
      */
     public function validateForCsrf(RequestInterface $request)
     {
@@ -158,9 +138,12 @@ class Notification extends Action implements CsrfAwareActionInterface
 
     /**
      * Check if the order has been canceled and get response to Tpay server.
+     *
      * @param int $orderId
-     * @return string response for Tpay server
+     *
      * @throws \Exception
+     *
+     * @return string response for Tpay server
      */
     protected function getPaidTransactionResponse($orderId)
     {
@@ -168,11 +151,10 @@ class Notification extends Action implements CsrfAwareActionInterface
         if (!$order->getId()) {
             throw new \Exception('Unable to get order by orderId %s', $orderId);
         }
-        if ($order->getState() === Order::STATE_CANCELED) {
+        if (Order::STATE_CANCELED === $order->getState()) {
             return 'FALSE';
         }
 
         return 'TRUE';
     }
-
 }
