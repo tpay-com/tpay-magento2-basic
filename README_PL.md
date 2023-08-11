@@ -8,6 +8,8 @@ Moduł Magento2 bramki płatności [Tpay](https://tpay.com).
 [![CI status](https://github.com/tpay-com/tpay-magento2-basic/actions/workflows/ci.yaml/badge.svg?branch=master)](https://github.com/tpay-com/tpay-magento2-basic/actions)
 [![Pokrycie typami](https://shepherd.dev/github/tpay-com/tpay-magento2-basic/coverage.svg)](https://shepherd.dev/github/tpay-com/tpay-magento2-basic)
 
+[English version :gb: wersja angielska](./README.md)
+
 ## Instalacja ręczna
 
 1. Przejdź do katalogu głównego Magento2.
