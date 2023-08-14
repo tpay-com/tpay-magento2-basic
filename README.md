@@ -8,6 +8,8 @@
 [![CI status](https://github.com/tpay-com/tpay-magento2-basic/actions/workflows/ci.yaml/badge.svg?branch=master)](https://github.com/tpay-com/tpay-magento2-basic/actions)
 [![Type coverage](https://shepherd.dev/github/tpay-com/tpay-magento2-basic/coverage.svg)](https://shepherd.dev/github/tpay-com/tpay-magento2-basic)
 
+[Polish version :poland: wersja polska](./README_PL.md)
+
 ## Manual installation
 
 1. Go to Magento2 root directory.
