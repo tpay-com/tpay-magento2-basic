@@ -1,15 +1,26 @@
 {
     "require": {
-        "ergebnis/composer-normalize": "^2.34",
+        "ergebnis/composer-normalize": "^2.35",
         "kubawerlos/composer-smaller-lock": "^1.0.1",
         "kubawerlos/php-cs-fixer-custom-fixers": "^3.16.2",
+        "magento/magento2ce": "^2.4",
         "php-cs-fixer/shim": "^3.22",
+        "phpstan/phpstan": "^1.10.28",
+        "tpay-com/tpay-php": "^2.3.4",
         "vimeo/psalm": "^5.14.1"
     },
+    "repositories": [
+        {
+            "type": "github",
+            "url": "https://github.com/magento/magento2.git"
+        }
+    ],
     "config": {
         "allow-plugins": {
             "ergebnis/composer-normalize": true,
-            "kubawerlos/composer-smaller-lock": true
+            "kubawerlos/composer-smaller-lock": true,
+            "magento/composer-dependency-version-audit-plugin": false,
+            "magento/magento-composer-installer": false
         }
     }
 }
