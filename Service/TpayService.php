@@ -101,6 +101,7 @@ class TpayService extends RegisterCaptureNotificationOperation
      * Validate order and set appropriate state
      *
      * @param int           $orderId
+     * @param array<string> $validParams
      * @param TpayInterface $tpayModel
      *
      * @return bool|Order
@@ -143,8 +144,11 @@ class TpayService extends RegisterCaptureNotificationOperation
         }
         $order->setStatus($status)->setState($status)->save();
         if ($sendNewInvoiceMail) {
+            /** @var Invoice $invoice */
             foreach ($order->getInvoiceCollection() as $invoice) {
+                /** @var int $invoiceId */
                 $invoiceId = $invoice->getId();
+
                 $this->invoiceService->notify($invoiceId);
             }
         }
@@ -166,6 +170,8 @@ class TpayService extends RegisterCaptureNotificationOperation
 
     /**
      * Get description for transaction
+     *
+     * @param array<string> $validParams
      *
      * @return bool|string
      */

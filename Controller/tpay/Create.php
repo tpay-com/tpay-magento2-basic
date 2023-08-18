@@ -62,10 +62,14 @@ class Create extends Action
      */
     public function execute()
     {
+        /** @var int $orderId */
         $orderId = $this->checkoutSession->getLastRealOrderId();
+
         if ($orderId) {
             $payment = $this->tpayService->getPayment($orderId);
+            /** @var array<string> $paymentData */
             $paymentData = $payment->getData();
+
             $this->transaction = $this->transactionFactory->create(
                 [
                     'apiPassword' => $this->tpay->getApiPassword(),
@@ -75,6 +79,8 @@ class Create extends Action
                 ]
             );
             $additionalPaymentInformation = $paymentData['additional_information'];
+
+            /** @var array<string> $transaction */
             $transaction = $this->prepareTransaction($orderId, $additionalPaymentInformation);
 
             if (!isset($transaction['title'], $transaction['url'])) {
@@ -120,11 +126,15 @@ class Create extends Action
      */
     protected function blikPay($blikTransactionId, $blikCode)
     {
+        /** @var array<string, mixed> $apiResult */
         $apiResult = $this->transaction->blik($blikTransactionId, $blikCode);
 
         return isset($apiResult['result']) && 1 === $apiResult['result'];
     }
 
+    /**
+     * @param array{blik_code: string, group: int|string} $additionalPaymentInformation
+     */
     private function prepareTransaction($orderId, array $additionalPaymentInformation)
     {
         $data = $this->tpay->getTpayFormData($orderId);

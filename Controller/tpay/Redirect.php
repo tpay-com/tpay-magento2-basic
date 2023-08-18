@@ -35,13 +35,20 @@ class Redirect extends Action
      */
     public function execute()
     {
+        /** @var string $uid */
         $uid = $this->getRequest()->getParam('uid');
+
+        /** @var int $orderId */
         $orderId = $this->checkoutSession->getLastRealOrderId();
+
         if (!$orderId || !$uid) {
             return $this->_redirect('checkout/cart');
         }
         $payment = $this->tpayService->getPayment($orderId);
+
+        /** @var array<string> $paymentData */
         $paymentData = $payment->getData();
+
         $additionalPaymentInfo = $paymentData['additional_information'];
         if (
             (!isset($additionalPaymentInfo['group']) || (int)$additionalPaymentInfo['group'] < 1)

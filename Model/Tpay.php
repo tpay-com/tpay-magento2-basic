@@ -7,6 +7,7 @@ use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Framework\Api\ExtensionAttributesFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ObjectManager;
+use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Framework\DataObject;
 use Magento\Framework\Escaper;
 use Magento\Framework\Model\Context;
@@ -197,6 +198,8 @@ class Tpay extends AbstractMethod implements TpayInterface
         $amount = number_format($order->getGrandTotal(), 2, '.', '');
         $crc = base64_encode($orderId);
         $name = $billingAddress->getData('firstname').' '.$billingAddress->getData('lastname');
+
+        /** @var string $phone */
         $phone = $billingAddress->getData('telephone');
 
         return [
@@ -281,7 +284,10 @@ class Tpay extends AbstractMethod implements TpayInterface
      */
     public function isAvailable(CartInterface $quote = null)
     {
+        /** @var float|int $minAmount */
         $minAmount = $this->getConfigData('min_order_total');
+
+        /** @var float|int $maxAmount */
         $maxAmount = $this->getConfigData('max_order_total');
 
         if (
@@ -305,7 +311,9 @@ class Tpay extends AbstractMethod implements TpayInterface
      */
     public function assignData(DataObject $data)
     {
+        /** @var array<string> $additionalData */
         $additionalData = $data->getData('additional_data');
+
         $info = $this->getInfoInstance();
 
         $info->setAdditionalInformation(
@@ -380,7 +388,9 @@ class Tpay extends AbstractMethod implements TpayInterface
         $amount = $this->getCheckout()->getQuote()->getBaseGrandTotal();
 
         if (!$amount) {
+            /** @var int $orderId */
             $orderId = $this->getCheckout()->getLastRealOrderId();
+
             $order = $this->orderRepository->getByIncrementId($orderId);
             $amount = $order->getGrandTotal();
         }
@@ -404,6 +414,7 @@ class Tpay extends AbstractMethod implements TpayInterface
     protected function getOrder($orderId = null)
     {
         if (null === $orderId) {
+            /** @var int $orderId */
             $orderId = $this->getCheckout()->getLastRealOrderId();
         }
 
@@ -425,6 +436,8 @@ class Tpay extends AbstractMethod implements TpayInterface
     private function getMagentoVersion()
     {
         $objectManager = ObjectManager::getInstance();
+
+        /** @var ProductMetadataInterface $productMetadata */
         $productMetadata = $objectManager->get('Magento\Framework\App\ProductMetadataInterface');
 
         return $productMetadata->getVersion();

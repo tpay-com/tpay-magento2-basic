@@ -41,9 +41,12 @@ class Refund
     {
         Util::$loggingEnabled = false;
         $RefundModel = new RefundModel($this->apiPassword, $this->apiKey, $this->merchantId, $this->merchantSecret);
+
+        /** @var array{result?: string, err?: int} $apiResult */
         $apiResult = $RefundModel
             ->setTransactionID($payment->getParentTransactionId())
             ->refundAny(number_format($amount, 2));
+
         if (isset($apiResult['result']) && 1 === (int)$apiResult['result']) {
             return true;
         }

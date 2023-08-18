@@ -92,7 +92,10 @@ class Notification extends Action implements CsrfAwareActionInterface
             if (true === $checkProxy) {
                 $this->NotificationHandler->enableForwardedIPValidation();
             }
+
+            /** @var array<string> $validParams */
             $validParams = $this->NotificationHandler->checkPayment('');
+
             $orderId = base64_decode($validParams['tr_crc']);
             if ('PAID' === $validParams['tr_status']) {
                 $response = $this->getPaidTransactionResponse($orderId);
