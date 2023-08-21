@@ -10,9 +10,6 @@ use tpaycom\magento2basic\Api\Sales\OrderRepositoryInterface;
 
 class OrderRepository extends MagentoOrderRepository implements OrderRepositoryInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getByIncrementId($incrementId)
     {
         if (!$incrementId) {

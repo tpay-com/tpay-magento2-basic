@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9229e3d509bfef393bea8c18bee9ee0b",
+    "content-hash": "6aa0bd6dff48affaf106cb1ad480c326",
     "packages": [
         {
             "name": "amphp/amp",
@@ -107,16 +107,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.279.1",
+            "version": "3.279.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "73ca831b1311945e96594b3cdf2b973bc733d57a"
+                "reference": "ebd5e47c5be0425bb5cf4f80737850ed74767107"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/73ca831b1311945e96594b3cdf2b973bc733d57a",
-                "reference": "73ca831b1311945e96594b3cdf2b973bc733d57a"
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/ebd5e47c5be0425bb5cf4f80737850ed74767107",
+                "reference": "ebd5e47c5be0425bb5cf4f80737850ed74767107"
             },
             "require": {
                 "aws/aws-crt-php": "^1.0.4",
@@ -5540,6 +5540,35 @@
             "description": "Javascript Minifier built in PHP"
         },
         {
+            "name": "tpay-com/coding-standards",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tpay-com/php-coding-standards.git",
+                "reference": "ea0211bcaa6143690f4dc25a00abc7a0befa359a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tpay-com/php-coding-standards/zipball/ea0211bcaa6143690f4dc25a00abc7a0befa359a",
+                "reference": "ea0211bcaa6143690f4dc25a00abc7a0befa359a"
+            },
+            "require": {
+                "friendsofphp/php-cs-fixer": "^3.22",
+                "kubawerlos/php-cs-fixer-custom-fixers": "^3.16.2",
+                "php": "^7.4 || ^8.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Tpay\\CodingStandards\\": "./src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Tpay.com coding standards library"
+        },
+        {
             "name": "tpay-com/tpay-php",
             "version": "2.3.4",
             "source": {
@@ -5605,16 +5634,16 @@
         },
         {
             "name": "vimeo/psalm",
-            "version": "5.14.1",
+            "version": "5.15.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vimeo/psalm.git",
-                "reference": "b9d355e0829c397b9b3b47d0c0ed042a8a70284d"
+                "reference": "5c774aca4746caf3d239d9c8cadb9f882ca29352"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vimeo/psalm/zipball/b9d355e0829c397b9b3b47d0c0ed042a8a70284d",
-                "reference": "b9d355e0829c397b9b3b47d0c0ed042a8a70284d"
+                "url": "https://api.github.com/repos/vimeo/psalm/zipball/5c774aca4746caf3d239d9c8cadb9f882ca29352",
+                "reference": "5c774aca4746caf3d239d9c8cadb9f882ca29352"
             },
             "require": {
                 "amphp/amp": "^2.4.2",

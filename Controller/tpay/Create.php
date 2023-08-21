@@ -13,34 +13,21 @@ use tpayLibs\src\_class_tpay\Utilities\Util;
 
 class Create extends Action
 {
-    /**
-     * @var TpayService
-     */
+    /** @var TpayService */
     protected $tpayService;
 
-    /**
-     * @var Session
-     */
+    /** @var Session */
     protected $checkoutSession;
 
-    /**
-     * @var TpayInterface
-     */
+    /** @var TpayInterface */
     private $tpay;
 
-    /**
-     * @var TransactionModel
-     */
+    /** @var TransactionModel */
     private $transaction;
 
-    /**
-     * @var TransactionModelFactory
-     */
+    /** @var TransactionModelFactory */
     private $transactionFactory;
 
-    /**
-     * {@inheritdoc}
-     */
     public function __construct(
         Context $context,
         TpayInterface $tpayModel,
@@ -57,9 +44,6 @@ class Create extends Action
         parent::__construct($context);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function execute()
     {
         /** @var int $orderId */
@@ -133,6 +117,7 @@ class Create extends Action
     }
 
     /**
+     * @param mixed                                       $orderId
      * @param array{blik_code: string, group: int|string} $additionalPaymentInformation
      */
     private function prepareTransaction($orderId, array $additionalPaymentInformation)
@@ -141,7 +126,7 @@ class Create extends Action
         if (6 === strlen($additionalPaymentInformation['blik_code'])) {
             $data['group'] = TransactionModel::BLIK_CHANNEL;
         } else {
-            $data['group'] = (int)$additionalPaymentInformation['group'];
+            $data['group'] = (int) $additionalPaymentInformation['group'];
         }
 
         return $this->transaction->create($data);
