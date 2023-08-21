@@ -10,19 +10,13 @@ use tpaycom\magento2basic\Api\TpayInterface;
 
 class TpayConfigProvider implements ConfigProviderInterface
 {
-    /**
-     * @var Repository
-     */
+    /** @var Repository */
     protected $assetRepository;
 
-    /**
-     * @var PaymentHelper
-     */
+    /** @var PaymentHelper */
     protected $paymentHelper;
 
-    /**
-     * @var TpayInterface
-     */
+    /** @var TpayInterface */
     protected $paymentMethod;
 
     public function __construct(
@@ -33,9 +27,6 @@ class TpayConfigProvider implements ConfigProviderInterface
         $this->paymentHelper = $paymentHelper;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getConfig()
     {
         $tpay = $this->getPaymentMethodInstance();
@@ -61,18 +52,6 @@ class TpayConfigProvider implements ConfigProviderInterface
     }
 
     /**
-     * @return MethodInterface|TpayInterface
-     */
-    protected function getPaymentMethodInstance()
-    {
-        if (null === $this->paymentMethod) {
-            $this->paymentMethod = $this->paymentHelper->getMethodInstance(TpayInterface::CODE);
-        }
-
-        return $this->paymentMethod;
-    }
-
-    /**
      * @param string $name
      *
      * @return string
@@ -82,9 +61,7 @@ class TpayConfigProvider implements ConfigProviderInterface
         return $this->assetRepository->createAsset($name)->getUrl();
     }
 
-    /**
-     * @return null|string
-     */
+    /** @return null|string */
     public function showChannels()
     {
         $script = 'tpaycom_magento2basic::js/render_channels.js';
@@ -108,9 +85,7 @@ class TpayConfigProvider implements ConfigProviderInterface
             </script>";
     }
 
-    /**
-     * @return null|string
-     */
+    /** @return null|string */
     public function getTerms()
     {
         return $this->getPaymentMethodInstance()->getTermsURL();
@@ -124,5 +99,15 @@ class TpayConfigProvider implements ConfigProviderInterface
     public function createCSS($css)
     {
         return "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$this->generateURL($css)}\">";
+    }
+
+    /** @return MethodInterface|TpayInterface */
+    protected function getPaymentMethodInstance()
+    {
+        if (null === $this->paymentMethod) {
+            $this->paymentMethod = $this->paymentHelper->getMethodInstance(TpayInterface::CODE);
+        }
+
+        return $this->paymentMethod;
     }
 }

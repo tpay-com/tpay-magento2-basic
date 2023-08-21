@@ -2,6 +2,7 @@
 
 namespace tpaycom\magento2basic\Controller\tpay;
 
+use Exception;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\CsrfAwareActionInterface;
@@ -18,41 +19,26 @@ use tpayLibs\src\_class_tpay\Utilities\Util;
 
 class Notification extends Action implements CsrfAwareActionInterface
 {
-    /**
-     * @var TpayInterface
-     */
+    /** @var TpayInterface */
     protected $tpay;
 
-    /**
-     * @var RemoteAddress
-     */
+    /** @var RemoteAddress */
     protected $remoteAddress;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     protected $emailNotify = false;
 
-    /**
-     * @var NotificationModelFactory
-     */
+    /** @var NotificationModelFactory */
     protected $notificationFactory;
 
-    /**
-     * @var TpayService
-     */
+    /** @var TpayService */
     protected $tpayService;
 
     protected $request;
 
-    /**
-     * @var NotificationModel
-     */
+    /** @var NotificationModel */
     protected $NotificationHandler;
 
-    /**
-     * {@inheritdoc}
-     */
     public function __construct(
         Context $context,
         RemoteAddress $remoteAddress,
@@ -69,9 +55,7 @@ class Notification extends Action implements CsrfAwareActionInterface
         parent::__construct($context);
     }
 
-    /**
-     * @return bool
-     */
+    /** @return bool */
     public function execute()
     {
         try {
@@ -107,12 +91,11 @@ class Notification extends Action implements CsrfAwareActionInterface
             }
             $this->tpayService->SetOrderStatus($orderId, $validParams, $this->tpay);
 
-            return
-                $this
-                    ->getResponse()
-                    ->setStatusCode(Http::STATUS_CODE_200)
-                    ->setContent('TRUE');
-        } catch (\Exception $e) {
+            return $this
+                ->getResponse()
+                ->setStatusCode(Http::STATUS_CODE_200)
+                ->setContent('TRUE');
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -123,10 +106,7 @@ class Notification extends Action implements CsrfAwareActionInterface
      *
      * @return null|InvalidRequestException
      */
-    public function createCsrfValidationException(RequestInterface $request)
-    {
-        return null;
-    }
+    public function createCsrfValidationException(RequestInterface $request) {}
 
     /**
      * Perform custom request validation.
@@ -144,7 +124,7 @@ class Notification extends Action implements CsrfAwareActionInterface
      *
      * @param int $orderId
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @return string response for Tpay server
      */
@@ -152,7 +132,7 @@ class Notification extends Action implements CsrfAwareActionInterface
     {
         $order = $this->tpayService->getOrderById($orderId);
         if (!$order->getId()) {
-            throw new \Exception('Unable to get order by orderId %s', $orderId);
+            throw new Exception('Unable to get order by orderId %s', $orderId);
         }
         if (Order::STATE_CANCELED === $order->getState()) {
             return 'FALSE';

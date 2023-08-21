@@ -6,9 +6,6 @@ use Magento\Framework\App\Action\Action;
 
 class Success extends Action
 {
-    /**
-     * {@inheritdoc}
-     */
     public function execute()
     {
         $this->messageManager->addSuccessMessage(__('Thank you for your payment!'));

@@ -13,24 +13,16 @@ abstract class Tpaycom extends \Magento\Framework\App\Action\Action
     // STR EMPTY
     const STR_EMPTY = '';
 
-    /**
-     * @var \Magento\Customer\Model\Session
-     */
+    /** @var \Magento\Customer\Model\Session */
     protected $_customerSession;
 
-    /**
-     * @var \Magento\Checkout\Model\Session
-     */
+    /** @var \Magento\Checkout\Model\Session */
     protected $_checkoutSession;
 
-    /**
-     * @var \Magento\Sales\Model\OrderFactory
-     */
+    /** @var \Magento\Sales\Model\OrderFactory */
     protected $_orderFactory;
 
-    /**
-     * @var \tpaycom\magento2basic\Model\Tpay
-     */
+    /** @var \tpaycom\magento2basic\Model\Tpay */
     protected $_model;
 
     /**

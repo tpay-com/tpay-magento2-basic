@@ -9,24 +9,16 @@ use tpayLibs\src\_class_tpay\Utilities\Util;
 
 class Refund
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $apiKey;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $apiPassword;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $merchantId;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $merchantSecret;
 
     /**
@@ -47,7 +39,7 @@ class Refund
             ->setTransactionID($payment->getParentTransactionId())
             ->refundAny(number_format($amount, 2));
 
-        if (isset($apiResult['result']) && 1 === (int)$apiResult['result']) {
+        if (isset($apiResult['result']) && 1 === (int) $apiResult['result']) {
             return true;
         }
         $errCode = isset($apiResult['err']) ? ' error code: '.$apiResult['err'] : '';

@@ -9,14 +9,10 @@ use tpaycom\magento2basic\Service\TpayService;
 
 class Redirect extends Action
 {
-    /**
-     * @var Session
-     */
+    /** @var Session */
     protected $checkoutSession;
 
-    /**
-     * @var TpayService
-     */
+    /** @var TpayService */
     protected $tpayService;
 
     public function __construct(
@@ -30,9 +26,6 @@ class Redirect extends Action
         parent::__construct($context);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function execute()
     {
         /** @var string $uid */
@@ -51,7 +44,7 @@ class Redirect extends Action
 
         $additionalPaymentInfo = $paymentData['additional_information'];
         if (
-            (!isset($additionalPaymentInfo['group']) || (int)$additionalPaymentInfo['group'] < 1)
+            (!isset($additionalPaymentInfo['group']) || (int) $additionalPaymentInfo['group'] < 1)
             && (!isset($additionalPaymentInfo['blik_code']) || 6 !== strlen($additionalPaymentInfo['blik_code']))
         ) {
             return $this->_redirect('checkout/cart');

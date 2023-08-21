@@ -19,9 +19,7 @@ use tpaycom\magento2basic\Api\TpayInterface;
 
 class TpayService extends RegisterCaptureNotificationOperation
 {
-    /**
-     * @var OrderRepositoryInterface
-     */
+    /** @var OrderRepositoryInterface */
     protected $orderRepository;
 
     protected $builder;
@@ -112,14 +110,14 @@ class TpayService extends RegisterCaptureNotificationOperation
         if (!$order->getId()) {
             return false;
         }
-        $sendNewInvoiceMail = (bool)$tpayModel->getInvoiceSendMail();
-        $orderAmount = (float)number_format($order->getGrandTotal(), 2, '.', '');
+        $sendNewInvoiceMail = (bool) $tpayModel->getInvoiceSendMail();
+        $orderAmount = (float) number_format($order->getGrandTotal(), 2, '.', '');
         $trStatus = $validParams['tr_status'];
         $emailNotify = false;
 
         if (
             'TRUE' === $trStatus
-            && ((float)number_format($validParams['tr_paid'], 2, '.', '') === $orderAmount)
+            && ((float) number_format($validParams['tr_paid'], 2, '.', '') === $orderAmount)
         ) {
             if (Order::STATE_PROCESSING != $order->getState()) {
                 $emailNotify = true;
@@ -208,9 +206,7 @@ class TpayService extends RegisterCaptureNotificationOperation
         $validParams,
         $skipFraudDetection = false
     ) {
-        /**
-         * @var Payment $payment
-         */
+        // @var Payment $payment
         $payment->setTransactionId(
             $this->transactionManager->generateTransactionId(
                 $payment,
@@ -220,7 +216,7 @@ class TpayService extends RegisterCaptureNotificationOperation
         );
 
         $order = $payment->getOrder();
-        $amount = (float)$amount;
+        $amount = (float) $amount;
         $invoice = $this->getInvoiceForTransactionId($order, $payment->getTransactionId());
         $orderCurrency = $order->getOrderCurrency()->getCode();
         // register new capture

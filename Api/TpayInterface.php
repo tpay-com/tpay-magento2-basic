@@ -28,24 +28,16 @@ interface TpayInterface
      */
     public function getTpayFormData($orderId = null);
 
-    /**
-     * @return string
-     */
+    /** @return string */
     public function getApiPassword();
 
-    /**
-     * @return string
-     */
+    /** @return string */
     public function getApiKey();
 
-    /**
-     * @return string
-     */
+    /** @return string */
     public function getSecurityCode();
 
-    /**
-     * @return int
-     */
+    /** @return int */
     public function getMerchantId();
 
     /**
@@ -55,19 +47,13 @@ interface TpayInterface
      */
     public function checkBlikLevel0Settings();
 
-    /**
-     * @return bool
-     */
+    /** @return bool */
     public function getBlikLevelZeroStatus();
 
-    /**
-     * @return bool
-     */
+    /** @return bool */
     public function onlyOnlineChannels();
 
-    /**
-     * @return bool
-     */
+    /** @return bool */
     public function redirectToChannel();
 
     /**
