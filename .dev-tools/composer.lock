@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6aa0bd6dff48affaf106cb1ad480c326",
+    "content-hash": "e7c90031bc10070801e3c6d58404f44a",
     "packages": [
         {
             "name": "amphp/amp",
@@ -107,16 +107,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.279.2",
+            "version": "3.279.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "ebd5e47c5be0425bb5cf4f80737850ed74767107"
+                "reference": "ed0f0f73896c359c5a801ba145f1c0adc5b90047"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/ebd5e47c5be0425bb5cf4f80737850ed74767107",
-                "reference": "ebd5e47c5be0425bb5cf4f80737850ed74767107"
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/ed0f0f73896c359c5a801ba145f1c0adc5b90047",
+                "reference": "ed0f0f73896c359c5a801ba145f1c0adc5b90047"
             },
             "require": {
                 "aws/aws-crt-php": "^1.0.4",
@@ -3821,16 +3821,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.10.29",
+            "version": "1.10.30",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "ee5d8f2d3977fb09e55603eee6fb53bdd76ee9c1"
+                "reference": "2910afdd3fe33e5afd71c09f3fb0d0845b48c410"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/ee5d8f2d3977fb09e55603eee6fb53bdd76ee9c1",
-                "reference": "ee5d8f2d3977fb09e55603eee6fb53bdd76ee9c1"
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/2910afdd3fe33e5afd71c09f3fb0d0845b48c410",
+                "reference": "2910afdd3fe33e5afd71c09f3fb0d0845b48c410"
             },
             "require": {
                 "php": "^7.2|^8.0"
@@ -5541,21 +5541,21 @@
         },
         {
             "name": "tpay-com/coding-standards",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tpay-com/php-coding-standards.git",
-                "reference": "ea0211bcaa6143690f4dc25a00abc7a0befa359a"
+                "reference": "9a924d5098f7623dfa64ab8f6c228418048e02b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tpay-com/php-coding-standards/zipball/ea0211bcaa6143690f4dc25a00abc7a0befa359a",
-                "reference": "ea0211bcaa6143690f4dc25a00abc7a0befa359a"
+                "url": "https://api.github.com/repos/tpay-com/php-coding-standards/zipball/9a924d5098f7623dfa64ab8f6c228418048e02b9",
+                "reference": "9a924d5098f7623dfa64ab8f6c228418048e02b9"
             },
             "require": {
-                "friendsofphp/php-cs-fixer": "^3.22",
                 "kubawerlos/php-cs-fixer-custom-fixers": "^3.16.2",
-                "php": "^7.4 || ^8.0"
+                "php": "^7.4 || ^8.0",
+                "php-cs-fixer/shim": "^3.22"
             },
             "type": "library",
             "autoload": {
@@ -5702,16 +5702,16 @@
         },
         {
             "name": "web-token/jwt-framework",
-            "version": "3.2.7",
+            "version": "3.2.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/web-token/jwt-framework.git",
-                "reference": "aef1302821213bec40d141a4fe5f95276017da45"
+                "reference": "bfceee5b742560dd861dcf690b12aa8fab3a8756"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/web-token/jwt-framework/zipball/aef1302821213bec40d141a4fe5f95276017da45",
-                "reference": "aef1302821213bec40d141a4fe5f95276017da45"
+                "url": "https://api.github.com/repos/web-token/jwt-framework/zipball/bfceee5b742560dd861dcf690b12aa8fab3a8756",
+                "reference": "bfceee5b742560dd861dcf690b12aa8fab3a8756"
             },
             "require": {
                 "brick/math": "^0.9|^0.10|^0.11",

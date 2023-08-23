@@ -27,14 +27,31 @@ use tpaycom\magento2basic\Controller\tpay\Refund;
 
 class Tpay extends AbstractMethod implements TpayInterface
 {
+    /** @var string */
     protected $_code = self::CODE;
+
+    /** @var bool */
     protected $_isGateway = true;
+
+    /** @var bool */
     protected $_canCapture = false;
+
+    /** @var bool */
     protected $_canCapturePartial = false;
+
+    /** @var bool */
     protected $_canRefund = true;
+
+    /** @var bool */
     protected $_canRefundInvoicePartial = true;
+
+    /** @var array<string> */
     protected $availableCurrencyCodes = ['PLN'];
+
+    /** @var string */
     protected $redirectURL = 'https://secure.tpay.com';
+
+    /** @var string */
     protected $termsURL = 'https://secure.tpay.com/regulamin.pdf';
 
     /**
