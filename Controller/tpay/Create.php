@@ -5,6 +5,7 @@ namespace tpaycom\magento2basic\Controller\tpay;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\DataObject;
 use tpaycom\magento2basic\Api\TpayInterface;
 use tpaycom\magento2basic\Model\TransactionModel;
 use tpaycom\magento2basic\Model\TransactionModelFactory;
@@ -50,7 +51,9 @@ class Create extends Action
         $orderId = $this->checkoutSession->getLastRealOrderId();
 
         if ($orderId) {
+            /** @var DataObject $payment */
             $payment = $this->tpayService->getPayment($orderId);
+
             /** @var array<string> $paymentData */
             $paymentData = $payment->getData();
 

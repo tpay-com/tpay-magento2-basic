@@ -22,8 +22,13 @@ class TpayService extends RegisterCaptureNotificationOperation
     /** @var OrderRepositoryInterface */
     protected $orderRepository;
 
+    /** @var BuilderInterface */
     protected $builder;
+
+    /** @var InvoiceService */
     protected $invoiceService;
+
+    /** @var ObjectManager */
     private $objectManager;
 
     public function __construct(
@@ -196,6 +201,7 @@ class TpayService extends RegisterCaptureNotificationOperation
     /**
      * Registers capture notification.
      *
+     * @param Payment      $payment
      * @param float|string $amount
      * @param array        $validParams
      * @param bool|int     $skipFraudDetection
@@ -206,7 +212,6 @@ class TpayService extends RegisterCaptureNotificationOperation
         $validParams,
         $skipFraudDetection = false
     ) {
-        // @var Payment $payment
         $payment->setTransactionId(
             $this->transactionManager->generateTransactionId(
                 $payment,
