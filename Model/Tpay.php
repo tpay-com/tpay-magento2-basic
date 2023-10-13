@@ -146,7 +146,7 @@ class Tpay extends AbstractMethod implements TpayInterface
         return $this->termsURL;
     }
 
-    public function getTpayFormData($orderId = null): array
+    public function getTpayFormData(?int $orderId = null): array
     {
         $order = $this->getOrder($orderId);
         $billingAddress = $order->getBillingAddress();
@@ -262,7 +262,7 @@ class Tpay extends AbstractMethod implements TpayInterface
      *
      * @return $this
      */
-    public function refund(InfoInterface $payment, float $amount)
+    public function refund(InfoInterface $payment, $amount)
     {
         $refundService = $this->refundFactory->create(
             [
