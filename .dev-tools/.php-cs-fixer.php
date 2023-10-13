@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 require __DIR__.'/vendor/tpay-com/coding-standards/bootstrap.php';
 
 $config = Tpay\CodingStandards\PhpCsFixerConfigFactory::createWithLegacyRules()

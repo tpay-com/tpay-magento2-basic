@@ -78,7 +78,7 @@
             <!-- ko template: getTemplate() --><!-- /ko -->
             <!--/ko-->
             <div class="TpayRegulations">
-                <input type="checkbox" name="accept_tos" id="accept_tos"/>
+                <input type="checkbox" checked name="accept_tos" id="accept_tos"/>
                 <label for="accept_tos">
                     <a target="_blank"
                        data-bind="attr: {href: getTerms()}, text: $t('I do accept tpay.com service regulations')"></a>.
@@ -95,7 +95,7 @@
                         click: placeOrder,
                         attr: {title: $t('Place Order')},
                         css: {disabled: !isPlaceOrderActionAllowed()},
-                        enable: getCode() == isChecked()
+                        enable: (getCode() == isChecked())
                         "
                         disabled>
                     <span data-bind="text: $t('Place Order')"></span>

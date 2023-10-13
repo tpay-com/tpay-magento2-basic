@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace tpaycom\magento2basic\Model;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
@@ -45,8 +43,7 @@ class TpayConfigProvider implements ConfigProviderInterface
                     'blikStatus' => $this->getPaymentMethodInstance()->checkBlikLevel0Settings(),
                     'onlyOnlineChannels' => $this->getPaymentMethodInstance()->onlyOnlineChannels(),
                     'getBlikChannelID' => TransactionModel::BLIK_CHANNEL,
-                    'useSandbox' => $tpay->useSandboxMode(),
-                    'grandTotal' => $this->getPaymentMethodInstance()->getCheckoutTotal(),
+                    'isInstallmentsAmountValid' => $this->getPaymentMethodInstance()->getInstallmentsAmountValid(),
                 ],
             ],
         ];
@@ -54,19 +51,30 @@ class TpayConfigProvider implements ConfigProviderInterface
         return $tpay->isAvailable() ? $config : [];
     }
 
-    public function generateURL(string $name): string
+    /**
+     * @param string $name
+     *
+     * @return string
+     */
+    public function generateURL($name)
     {
         return $this->assetRepository->createAsset($name)->getUrl();
     }
 
-    public function showChannels(): ?string
+    /** @return null|string */
+    public function showChannels()
     {
         $script = 'tpaycom_magento2basic::js/render_channels.js';
 
         return $this->createScript($script);
     }
 
-    public function createScript(string $script): string
+    /**
+     * @param string $script
+     *
+     * @return string
+     */
+    public function createScript($script)
     {
         return "
             <script type=\"text/javascript\">
@@ -77,12 +85,18 @@ class TpayConfigProvider implements ConfigProviderInterface
             </script>";
     }
 
-    public function getTerms(): ?string
+    /** @return null|string */
+    public function getTerms()
     {
         return $this->getPaymentMethodInstance()->getTermsURL();
     }
 
-    public function createCSS(string $css): string
+    /**
+     * @param string $css
+     *
+     * @return string
+     */
+    public function createCSS($css)
     {
         return "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$this->generateURL($css)}\">";
     }

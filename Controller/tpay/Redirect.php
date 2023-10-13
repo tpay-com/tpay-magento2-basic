@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace tpaycom\magento2basic\Controller\tpay;
 
 use Magento\Checkout\Model\Session;
@@ -30,17 +28,24 @@ class Redirect extends Action
 
     public function execute()
     {
+        /** @var string $uid */
         $uid = $this->getRequest()->getParam('uid');
+
+        /** @var int $orderId */
         $orderId = $this->checkoutSession->getLastRealOrderId();
+
         if (!$orderId || !$uid) {
             return $this->_redirect('checkout/cart');
         }
         $payment = $this->tpayService->getPayment($orderId);
+
+        /** @var array<string> $paymentData */
         $paymentData = $payment->getData();
+
         $additionalPaymentInfo = $paymentData['additional_information'];
         if (
-            (!array_key_exists('group', $additionalPaymentInfo) || (int) $additionalPaymentInfo['group'] < 1)
-            && (!array_key_exists('blik_code', $additionalPaymentInfo) || 6 !== strlen($additionalPaymentInfo['blik_code']))
+            (!isset($additionalPaymentInfo['group']) || (int) $additionalPaymentInfo['group'] < 1)
+            && (!isset($additionalPaymentInfo['blik_code']) || 6 !== strlen($additionalPaymentInfo['blik_code']))
         ) {
             return $this->_redirect('checkout/cart');
         }

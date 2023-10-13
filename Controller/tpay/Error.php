@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace tpaycom\magento2basic\Controller\tpay;
 
 use Magento\Framework\App\Action\Action;

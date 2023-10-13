@@ -27,7 +27,8 @@
                 <can_void>0</can_void>
                 <can_cancel>1</can_cancel>
                 <currency>PLN</currency>
-                <use_sandbox>0</use_sandbox>
+                <check_server>1</check_server>
+                <check_proxy>0</check_proxy>
             </tpaycom_magento2basic>
         </payment>
         <csp>

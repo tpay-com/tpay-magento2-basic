@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace tpaycom\magento2basic\Controller\tpay;
 
 use Exception;
@@ -14,9 +12,10 @@ use Magento\Framework\App\Response\Http;
 use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
 use Magento\Sales\Model\Order;
 use tpaycom\magento2basic\Api\TpayInterface;
+use tpaycom\magento2basic\Model\NotificationModel;
+use tpaycom\magento2basic\Model\NotificationModelFactory;
 use tpaycom\magento2basic\Service\TpayService;
 use tpayLibs\src\_class_tpay\Utilities\Util;
-use tpaySDK\Webhook\JWSVerifiedPaymentNotification;
 
 class Notification extends Action implements CsrfAwareActionInterface
 {
@@ -26,35 +25,63 @@ class Notification extends Action implements CsrfAwareActionInterface
     /** @var RemoteAddress */
     protected $remoteAddress;
 
+    /** @var bool */
+    protected $emailNotify = false;
+
+    /** @var NotificationModelFactory */
+    protected $notificationFactory;
+
     /** @var TpayService */
     protected $tpayService;
 
     protected $request;
 
+    /** @var NotificationModel */
+    protected $NotificationHandler;
+
     public function __construct(
         Context $context,
         RemoteAddress $remoteAddress,
         TpayInterface $tpayModel,
+        NotificationModelFactory $notificationModelFactory,
         TpayService $tpayService
     ) {
         $this->tpay = $tpayModel;
         $this->remoteAddress = $remoteAddress;
+        $this->notificationFactory = $notificationModelFactory;
         $this->tpayService = $tpayService;
         Util::$loggingEnabled = false;
 
         parent::__construct($context);
     }
 
-    public function execute(): bool
+    /** @return bool */
+    public function execute()
     {
         try {
             $id = $this->tpay->getMerchantId();
             $code = $this->tpay->getSecurityCode();
-            $notification = (new JWSVerifiedPaymentNotification($code, !$this->tpay->useSandboxMode()))->getNotification();
+            $checkServer = $this->tpay->getCheckTpayIP();
+            $checkProxy = $this->tpay->getCheckProxy();
+            $forwardedIP = null;
+            $this->NotificationHandler = $this->notificationFactory->create(
+                [
+                    'merchantId' => $id,
+                    'merchantSecret' => $code,
+                ]
+            );
+            if (false === $checkServer) {
+                $this->NotificationHandler->disableValidationServerIP();
+            }
+            if (true === $checkProxy) {
+                $this->NotificationHandler->enableForwardedIPValidation();
+            }
 
+            /** @var array<string> $validParams */
             $validParams = $this->NotificationHandler->checkPayment('');
-            $orderId = base64_decode($notification->tr_crc->getValue());
-            if ('PAID' === $notification->tr_status->getValue()) {
+
+            $orderId = base64_decode($validParams['tr_crc']);
+            if ('PAID' === $validParams['tr_status']) {
                 $response = $this->getPaidTransactionResponse($orderId);
 
                 return $this
@@ -76,17 +103,18 @@ class Notification extends Action implements CsrfAwareActionInterface
     /**
      * Create exception in case CSRF validation failed.
      * Return null if default exception will suffice.
+     *
+     * @return null|InvalidRequestException
      */
-    public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
-    {
-        return null;
-    }
+    public function createCsrfValidationException(RequestInterface $request) {}
 
     /**
      * Perform custom request validation.
      * Return null if default validation is needed.
+     *
+     * @return null|bool
      */
-    public function validateForCsrf(RequestInterface $request): ?bool
+    public function validateForCsrf(RequestInterface $request)
     {
         return true;
     }
@@ -94,11 +122,13 @@ class Notification extends Action implements CsrfAwareActionInterface
     /**
      * Check if the order has been canceled and get response to Tpay server.
      *
+     * @param int $orderId
+     *
      * @throws Exception
      *
      * @return string response for Tpay server
      */
-    protected function getPaidTransactionResponse(int $orderId): string
+    protected function getPaidTransactionResponse($orderId)
     {
         $order = $this->tpayService->getOrderById($orderId);
         if (!$order->getId()) {

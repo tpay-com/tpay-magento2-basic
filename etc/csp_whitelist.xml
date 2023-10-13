@@ -6,42 +6,36 @@
         <policy id="script-src">
             <values>
                 <value id="secure-tpay" type="host">https://secure.tpay.com</value>
-                <value id="secure-sandbox-tpay" type="host">https://secure.sandbox.tpay.com</value>
                 <value id="tpay" type="host">https://tpay.com</value>
             </values>
         </policy>
         <policy id="connect-src">
             <values>
                 <value id="secure-tpay" type="host">https://secure.tpay.com</value>
-                <value id="secure-sandbox-tpay" type="host">https://secure.sandbox.tpay.com</value>
                 <value id="tpay" type="host">https://tpay.com</value>
             </values>
         </policy>
         <policy id="style-src">
             <values>
                 <value id="secure-tpay" type="host">https://secure.tpay.com</value>
-                <value id="secure-sandbox-tpay" type="host">https://secure.sandbox.tpay.com</value>
                 <value id="tpay" type="host">https://tpay.com</value>
             </values>
         </policy>
         <policy id="frame-src">
             <values>
                 <value id="secure-tpay" type="host">https://secure.tpay.com</value>
-                <value id="secure-sandbox-tpay" type="host">https://secure.sandbox.tpay.com</value>
                 <value id="tpay" type="host">https://tpay.com</value>
             </values>
         </policy>
         <policy id="img-src">
             <values>
                 <value id="secure-tpay" type="host">https://secure.tpay.com</value>
-                <value id="secure-sandbox-tpay" type="host">https://secure.sandbox.tpay.com</value>
                 <value id="tpay" type="host">https://tpay.com</value>
             </values>
         </policy>
         <policy id="font-src">
             <values>
                 <value id="secure-tpay" type="host">https://secure.tpay.com</value>
-                <value id="secure-sandbox-tpay" type="host">https://secure.sandbox.tpay.com</value>
                 <value id="tpay" type="host">https://tpay.com</value>
             </values>
         </policy>

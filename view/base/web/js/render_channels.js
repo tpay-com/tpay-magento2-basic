@@ -7,8 +7,7 @@
  */
 require(['jquery', 'mage/translate'], function ($, $t) {
 
-        var payButton = $('#tpaycom_magento2basic_submit'),
-            tos = $('#accept_tos');
+    var payButton = $('#tpaycom_magento2basic_submit');
 
         function getBankTile(groupId, groupName, logoSrc) {
             return '<div class="tpay-group-holder tpay-with-logo" id="bank-' + groupId + '">' +
@@ -26,40 +25,25 @@ require(['jquery', 'mage/translate'], function ($, $t) {
             return false;
         }
 
-        function doesAmountFitToInstallments(grandTotal, channelId){
-            switch (channelId){
-                case 167: //twisto
-                    return grandTotal >= 1 && grandTotal <= 1500;
-                    break;
-                case 169: //raty pekao
-                    return grandTotal >= 100 && grandTotal <= 20000;
-                    break;
-                case 109:  //alior raty
-                    return grandTotal >= 300 && grandTotal <= 9259;
-                    break;
-            }
-
-            return true;
-        }
-
         function ShowChannelsCombo() {
             var str = '',
                 i,
                 str2 = '',
                 tile,
                 others = [157, 106, 109, 148, 104],
-                installmentsGroupId = [109,169,167],
+                installmentsGroupId = 109,
                 group,
                 id,
                 groupName,
                 logoSrc,
                 bank_selection_form = document.getElementById('bank-selection-form');
+
             for (i in tr_groups) {
                 group = tr_groups[i];
                 id = group[0];
                 groupName = group[1];
                 logoSrc = group[3];
-                if (inArray(id, installmentsGroupId) && !doesAmountFitToInstallments(parseFloat(window.checkoutConfig.tpay.payment.grandTotal), parseInt(id))) {
+                if (id == installmentsGroupId && window.checkoutConfig.tpay.payment.isInstallmentsAmountValid === false) {
                     continue;
                 }
                 tile = getBankTile(id, groupName, logoSrc);
@@ -80,7 +64,7 @@ require(['jquery', 'mage/translate'], function ($, $t) {
                         active_bank_blocks[0].className = active_bank_blocks[0].className.replace('tpay-active', '');
                     }
                     this.className = this.className + ' tpay-active';
-                    if (input.val() > 0 && $('#blik_code').val().length === 0 && tos.is(':checked')) {
+                    if (input.val() > 0 && $('#blik_code').val().length === 0) {
                         payButton.removeClass('disabled');
                     }
                 });
@@ -110,11 +94,7 @@ require(['jquery', 'mage/translate'], function ($, $t) {
                 } else {
                     $('#tpay-basic-main-payment').css('display', 'block');
                 }
-                if (
-                    (that.val().length === 6 || (that.val().length === 0 && $('#tpay-channel-input').val() > 0))
-                    &&
-                    tos.is(':checked')
-                ) {
+                if (that.val().length === 6 || (that.val().length === 0 && $('#tpay-channel-input').val() > 0)) {
                     payButton.removeClass('disabled');
                 }
                 if (that.val().length > 0 && that.val().length !== 6) {
@@ -123,28 +103,11 @@ require(['jquery', 'mage/translate'], function ($, $t) {
             });
         }
 
-        url = 'https://secure.tpay.com/';
-        if (window.checkoutConfig.tpay.payment.useSandbox) {
-            url = 'https://secure.sandbox.tpay.com/';
-        }
-        $.getScript(url + "groups-" + window.checkoutConfig.tpay.payment.merchantId + showOnlyOnlinePayments() + ".js", function () {
+        $.getScript("https://secure.tpay.com/groups-" + window.checkoutConfig.tpay.payment.merchantId + showOnlyOnlinePayments() + ".js", function () {
             ShowChannelsCombo();
             checkBlikInput();
             setBlikInputAction();
             payButton.addClass('disabled');
-            tos.on('change', function () {
-                var input = $('#tpay-channel-input');
-                if (input.val() > 0 && $('#blik_code').val().length === 0 && tos.is(':checked')) {
-                    payButton.removeClass('disabled');
-                    return;
-                }
-
-                if ($('#blik_code').val().length === 6 && tos.is(':checked')) {
-                    payButton.removeClass('disabled');
-                    return;
-                }
-                payButton.addClass('disabled');
-            });
         });
     }
 );
