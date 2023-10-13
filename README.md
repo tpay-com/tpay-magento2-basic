@@ -1,49 +1,44 @@
-# Magento2-Tpay
+Magento2-Tpay
+======================
 
-[Tpay](https://tpay.com) payment gateway Magento2 module.
+Tpay payment gateway Magento2 extension
 
-[![Latest stable version](https://img.shields.io/packagist/v/tpaycom/magento2basic.svg?label=current%20version)](https://packagist.org/packages/tpaycom/magento2basic)
-[![PHP version](https://img.shields.io/packagist/php-v/tpaycom/magento2basic.svg)](https://php.net)
-[![License](https://img.shields.io/github/license/tpay-com/tpay-magento2-basic.svg)](LICENSE)
-[![CI status](https://github.com/tpay-com/tpay-magento2-basic/actions/workflows/ci.yaml/badge.svg?branch=master)](https://github.com/tpay-com/tpay-magento2-basic/actions)
-[![Type coverage](https://shepherd.dev/github/tpay-com/tpay-magento2-basic/coverage.svg)](https://shepherd.dev/github/tpay-com/tpay-magento2-basic)
+Install
+=======
 
-[Polish version :poland: wersja polska](./README_PL.md)
+1. Go to Magento2 root folder
 
-## Manual installation
+2. Copy plugin files to app/code/tpaycom/magento2basic
 
-1. Go to Magento2 root directory.
+3. If you have already installed the [magento2cards](https://github.com/tpay-com/tpay-magento2-cards) module, you can skip this step.  
+Download and copy depending library [tpay-php,tpay-openapi-php](https://github.com/tpay-com/tpay-php, https://github.com/tpay-com/tpay-openapi-php) to app/code folder. In the result your should have 2 folders in app/code - tpaycom and tpayLibs.  
 
-2. Copy plugin files to `app/code/tpaycom/magento2basic`.
+4. Enter following commands to enable module:
 
-3. If you have already installed the [`magento2cards`](https://github.com/tpay-com/tpay-magento2-cards) module, you can skip this step.
-   Download and copy required library [`tpay-php`](https://github.com/tpay-com/tpay-php) to `app/code` directory. In the result you should have 2 directories in `app/code` - `tpaycom` and `tpayLibs`.
-
-4. Execute following commands to enable module:
-    ```console
-    php bin/magento module:enable tpaycom_magento2basic
+    ```bash
+    php bin/magento module:enable tpaycom_magento2basic  
     php bin/magento setup:upgrade
     ```
+5. Enable and configure module in Magento Admin under Stores/Configuration/Payment Methods/tpay.com
 
-5. Enable and configure module in Magento Admin under `Stores/Configuration/Payment Methods/tpay.com`.
+Composer install
+=======
 
-
-## [Composer](https://getcomposer.org) installation
-
-1. Execute following command to download module:
-    ```console
-    composer require tpaycom/magento2basic
+1. Enter following commands to download module:
+    ```bash
+    composer require tpaycom/magento2basic  
     ```
+2. Enter following commands to enable module:
 
-2. Execute following commands to enable module:
-    ```console
-    php bin/magento module:enable tpaycom_magento2basic
+    ```bash
+    php bin/magento module:enable tpaycom_magento2basic  
     php bin/magento setup:upgrade
     ```
+3. Enable and configure module in Magento Admin under Stores/Configuration/Payment Methods/tpay.com
 
-3. Enable and configure module in Magento Admin under `Stores/Configuration/Payment Methods/tpay.com`.
 
+Other Notes
+===========
 
-## Notes
+tpaycom works with PLN only!** If PLN is not your base currency, you will not see this module on checkout pages. 
 
-This module works with PLN only! If PLN is not your base currency, you will not see this module on checkout pages.

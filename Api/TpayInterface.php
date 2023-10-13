@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace tpaycom\magento2basic\Api;
 
 /**
@@ -7,94 +9,45 @@ namespace tpaycom\magento2basic\Api;
  */
 interface TpayInterface
 {
-    const CODE = 'tpaycom_magento2basic';
-    const CHANNEL = 'group';
-    const BLIK_CODE = 'blik_code';
-    const TERMS_ACCEPT = 'accept_tos';
+    public const CODE = 'tpaycom_magento2basic';
+    public const CHANNEL = 'group';
+    public const BLIK_CODE = 'blik_code';
+    public const TERMS_ACCEPT = 'accept_tos';
 
-    /**
-     * Return string for redirection
-     *
-     * @return string
-     */
-    public function getRedirectURL();
+    /** Return string for redirection */
+    public function getRedirectURL(): string;
 
-    /**
-     * Return data for form
-     *
-     * @param null|int $orderId
-     *
-     * @return array
-     */
-    public function getTpayFormData($orderId = null);
+    /** Return data for form */
+    public function getTpayFormData(?int $orderId = null): array;
 
-    /** @return string */
-    public function getApiPassword();
+    public function getApiPassword(): string;
 
-    /** @return string */
-    public function getApiKey();
+    public function getApiKey(): string;
 
-    /** @return string */
-    public function getSecurityCode();
+    public function getSecurityCode(): string;
 
-    /** @return int */
-    public function getMerchantId();
+    public function getMerchantId(): int;
 
-    /**
-     * Check that the BLIK Level 0 should be active on a payment channels list
-     *
-     * @return bool
-     */
-    public function checkBlikLevel0Settings();
+    /** Check that the BLIK Level 0 should be active on a payment channels list */
+    public function checkBlikLevel0Settings(): bool;
 
-    /** @return bool */
-    public function getBlikLevelZeroStatus();
+    public function getBlikLevelZeroStatus(): bool;
 
-    /** @return bool */
-    public function onlyOnlineChannels();
+    public function onlyOnlineChannels(): bool;
 
-    /** @return bool */
-    public function redirectToChannel();
+    public function redirectToChannel(): bool;
 
-    /**
-     * Return url to redirect after placed order
-     *
-     * @return string
-     */
-    public function getPaymentRedirectUrl();
+    /** Return url to redirect after placed order */
+    public function getPaymentRedirectUrl(): string;
 
-    /**
-     * Return url for a tpay.com terms
-     *
-     * @return string
-     */
-    public function getTermsURL();
+    /** Return url for a tpay.com terms */
+    public function getTermsURL(): string;
 
-    /**
-     * Check if send an email about the new invoice to customer
-     *
-     * @return string
-     */
-    public function getInvoiceSendMail();
+    /** Check if send an email about the new invoice to customer */
+    public function getInvoiceSendMail(): string;
 
-    /**
-     * Check if Tpay notification server IP is forwarded by proxy
-     *
-     * @return bool
-     */
-    public function getCheckProxy();
+    public function useSandboxMode(): bool;
 
-    /**
-     * Check Tpay notification server IP
-     *
-     * @return bool
-     */
-    public function getCheckTpayIP();
-
-    /**
-     * Check if checkout amount is in range of installments payment channel
-     *
-     * @return bool
-     */
-    public function getInstallmentsAmountValid();
+    /** Check if checkout amount is in range of installments payment channel */
+    public function getInstallmentsAmountValid(): bool;
 }
