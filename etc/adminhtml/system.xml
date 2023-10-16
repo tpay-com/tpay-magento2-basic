@@ -31,11 +31,11 @@
                 </field>
                 <field id="api_key_tpay" translate="label comment" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>API key</label>
-                    <validate>validate-length maximum-length-126</validate>
+                    <validate>no-whitespace validate-length maximum-length-126</validate>
                 </field>
                 <field id="api_password" translate="label comment" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>API password</label>
-                    <validate>validate-length maximum-length-40</validate>
+                    <validate>no-whitespace validate-length maximum-length-40</validate>
                 </field>
                 <field id="show_payment_channels_online" translate="label" type="select" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Only online methods</label>
@@ -53,16 +53,13 @@
                     <label>Send new invoice email to customer</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="check_proxy" translate="label" type="select" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>My server use proxy</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                </field>
-                <field id="check_server" translate="label" type="select" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Validate Tpay notifications server IP (recommended)</label>
+                <field id="use_sandbox" translate="label" type="select" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Use sandbox mode (avoid using it in real production store)</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="sort_order" translate="label" type="text" sortOrder="13" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Sort order</label>
+                    <validate>validate-number</validate>
                 </field>
                 <field id="allowspecific" translate="label" type="allowspecific" sortOrder="14" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>All or allowed countries</label>
@@ -74,10 +71,12 @@
                 </field>
                 <field id="min_order_total" translate="label" type="text" sortOrder="16" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Minimal amount for method</label>
+                    <validate>validate-number</validate>
                 </field>
                 <field id="max_order_total" translate="label" type="text" sortOrder="17" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Maximal amount for method</label>
                     <comment>Leave empty for no limit</comment>
+                    <validate>validate-number</validate>
                 </field>
             </group>
         </section>
