@@ -50,7 +50,7 @@ class TpayService extends RegisterCaptureNotificationOperation
     }
 
     /** Change order state and notify user if needed */
-    public function setOrderStatePendingPayment(int $orderId, bool $sendEmail): Order
+    public function setOrderStatePendingPayment(string $orderId, bool $sendEmail): Order
     {
         /** @var Order $order */
         $order = $this->orderRepository->getByIncrementId($orderId);
@@ -76,7 +76,7 @@ class TpayService extends RegisterCaptureNotificationOperation
     }
 
     /** Return payment data */
-    public function getPayment(int $orderId): OrderPaymentInterface
+    public function getPayment(string $orderId): OrderPaymentInterface
     {
         /** @var Order $order */
         $order = $this->orderRepository->getByIncrementId($orderId);

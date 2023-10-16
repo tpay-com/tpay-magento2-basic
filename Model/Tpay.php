@@ -146,11 +146,11 @@ class Tpay extends AbstractMethod implements TpayInterface
         return $this->termsURL;
     }
 
-    public function getTpayFormData(?int $orderId = null): array
+    public function getTpayFormData(?string $orderId = null): array
     {
         $order = $this->getOrder($orderId);
         $billingAddress = $order->getBillingAddress();
-        $amount = number_format($order->getGrandTotal(), 2, '.', '');
+        $amount = number_format((float) $order->getGrandTotal(), 2, '.', '');
         $crc = base64_encode($orderId);
         $name = $billingAddress->getData('firstname').' '.$billingAddress->getData('lastname');
         $phone = $billingAddress->getData('telephone');
@@ -201,7 +201,7 @@ class Tpay extends AbstractMethod implements TpayInterface
 
     public function getPaymentRedirectUrl(): string
     {
-        return $this->urlBuilder->getUrl('magento2basic/tpay/redirect', ['uid' => time().uniqid(true)]);
+        return $this->urlBuilder->getUrl('magento2basic/tpay/redirect', ['uid' => time().uniqid('', true)]);
     }
 
     /**
@@ -294,7 +294,7 @@ class Tpay extends AbstractMethod implements TpayInterface
     /** @return float current cart total */
     public function getCheckoutTotal()
     {
-        $amount = $this->getCheckout()->getQuote()->getBaseGrandTotal();
+        $amount = (float) $this->getCheckout()->getQuote()->getBaseGrandTotal();
 
         if (!$amount) {
             $orderId = $this->getCheckout()->getLastRealOrderId();
@@ -325,7 +325,7 @@ class Tpay extends AbstractMethod implements TpayInterface
         return $this->checkoutSession;
     }
 
-    protected function getOrder(?int $orderId = null): \Magento\Sales\Api\Data\OrderInterface
+    protected function getOrder(?string $orderId = null): \Magento\Sales\Api\Data\OrderInterface
     {
         if (null === $orderId) {
             $orderId = $this->getCheckout()->getLastRealOrderId();

@@ -18,7 +18,7 @@ interface TpayInterface
     public function getRedirectURL(): string;
 
     /** Return data for form */
-    public function getTpayFormData(?int $orderId = null): array;
+    public function getTpayFormData(?string $orderId = null): array;
 
     public function getApiPassword(): string;
 
