@@ -43,10 +43,17 @@ require(['jquery', 'mage/translate'], function ($, $t) {
                 id = group[0];
                 groupName = group[1];
                 logoSrc = group[3];
+
+                if (window.checkoutConfig.tpay.payment.blikStatus === true && id === '150') {
+                    continue;
+                }
+
                 if (id == installmentsGroupId && window.checkoutConfig.tpay.payment.isInstallmentsAmountValid === false) {
                     continue;
                 }
+
                 tile = getBankTile(id, groupName, logoSrc);
+
                 if (inArray(id, others) === false) {
                     str += tile;
                 } else {
