@@ -13,10 +13,10 @@ use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\Response\Http;
 use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
 use Magento\Sales\Model\Order;
+use Tpay\OriginApi\Webhook\JWSVerifiedPaymentNotification;
 use tpaycom\magento2basic\Api\TpayInterface;
 use tpaycom\magento2basic\Service\TpayService;
 use tpayLibs\src\_class_tpay\Utilities\Util;
-use tpaySDK\Webhook\JWSVerifiedPaymentNotification;
 
 class Notification extends Action implements CsrfAwareActionInterface
 {
@@ -50,15 +50,15 @@ class Notification extends Action implements CsrfAwareActionInterface
         try {
             $code = $this->tpay->getSecurityCode();
             $notification = (new JWSVerifiedPaymentNotification($code, !$this->tpay->useSandboxMode()))->getNotification();
-            $orderId = base64_decode($notification->tr_crc->getValue());
+            $orderId = base64_decode($notification['tr_crc']);
 
-            if ('PAID' === $notification->tr_status->getValue()) {
+            if ('PAID' === $notification['tr_status']) {
                 $response = $this->getPaidTransactionResponse($orderId);
 
                 return $this->getResponse()->setStatusCode(Http::STATUS_CODE_200)->setContent($response);
             }
 
-            $this->tpayService->SetOrderStatus($orderId, $notification->getNotificationAssociative(), $this->tpay);
+            $this->tpayService->SetOrderStatus($orderId, $notification, $this->tpay);
 
             return $this->getResponse()->setStatusCode(Http::STATUS_CODE_200)->setContent('TRUE');
         } catch (Exception $e) {
