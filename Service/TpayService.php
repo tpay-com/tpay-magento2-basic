@@ -6,10 +6,10 @@ namespace tpaycom\magento2basic\Service;
 
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Event\ManagerInterface as EventManagerInterface;
+use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderPaymentInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Invoice;
-use Magento\Sales\Model\Order\Payment;
 use Magento\Sales\Model\Order\Payment\Operations\RegisterCaptureNotificationOperation;
 use Magento\Sales\Model\Order\Payment\State\CommandInterface;
 use Magento\Sales\Model\Order\Payment\Transaction;
@@ -50,9 +50,8 @@ class TpayService extends RegisterCaptureNotificationOperation
     }
 
     /** Change order state and notify user if needed */
-    public function setOrderStatePendingPayment(string $orderId, bool $sendEmail): Order
+    public function setOrderStatePendingPayment(string $orderId, bool $sendEmail): OrderInterface
     {
-        /** @var Order $order */
         $order = $this->orderRepository->getByIncrementId($orderId);
 
         $order->setTotalDue($order->getGrandTotal())
@@ -87,16 +86,19 @@ class TpayService extends RegisterCaptureNotificationOperation
     /**
      * Validate order and set appropriate state
      *
-     * @return bool|Order
+     * @return bool|OrderInterface
+     * @throws \Exception
      */
-    public function SetOrderStatus(int $orderId, array $validParams, TpayInterface $tpayModel)
+    public function SetOrderStatus(string $orderId, array $validParams, TpayInterface $tpayModel)
     {
         $order = $this->getOrderById($orderId);
+
         if (!$order->getId()) {
             return false;
         }
+
         $sendNewInvoiceMail = (bool) $tpayModel->getInvoiceSendMail();
-        $orderAmount = (float) number_format($order->getGrandTotal(), 2, '.', '');
+        $orderAmount = (float) number_format((float) $order->getGrandTotal(), 2, '.', '');
         $trStatus = $validParams['tr_status'];
         $emailNotify = false;
 
@@ -137,7 +139,7 @@ class TpayService extends RegisterCaptureNotificationOperation
     }
 
     /** Get Order object by orderId */
-    public function getOrderById(int $orderId): Order
+    public function getOrderById(string $orderId): OrderInterface
     {
         return $this->orderRepository->getByIncrementId($orderId);
     }

@@ -13,10 +13,10 @@ use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\Response\Http;
 use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
 use Magento\Sales\Model\Order;
+use Tpay\OriginApi\Webhook\JWSVerifiedPaymentNotification;
 use tpaycom\magento2basic\Api\TpayInterface;
 use tpaycom\magento2basic\Service\TpayService;
 use tpayLibs\src\_class_tpay\Utilities\Util;
-use tpaySDK\Webhook\JWSVerifiedPaymentNotification;
 
 class Notification extends Action implements CsrfAwareActionInterface
 {
@@ -45,31 +45,26 @@ class Notification extends Action implements CsrfAwareActionInterface
         parent::__construct($context);
     }
 
-    public function execute(): bool
+    public function execute()
     {
         try {
-            $id = $this->tpay->getMerchantId();
             $code = $this->tpay->getSecurityCode();
             $notification = (new JWSVerifiedPaymentNotification($code, !$this->tpay->useSandboxMode()))->getNotification();
+            $orderId = base64_decode($notification['tr_crc']);
 
-            $validParams = $this->NotificationHandler->checkPayment('');
-            $orderId = base64_decode($notification->tr_crc->getValue());
-            if ('PAID' === $notification->tr_status->getValue()) {
+            if ('PAID' === $notification['tr_status']) {
                 $response = $this->getPaidTransactionResponse($orderId);
 
-                return $this
-                    ->getResponse()
-                    ->setStatusCode(Http::STATUS_CODE_200)
-                    ->setContent($response);
+                return $this->getResponse()->setStatusCode(Http::STATUS_CODE_200)->setContent($response);
             }
-            $this->tpayService->SetOrderStatus($orderId, $validParams, $this->tpay);
 
-            return $this
-                ->getResponse()
-                ->setStatusCode(Http::STATUS_CODE_200)
-                ->setContent('TRUE');
+            $this->tpayService->SetOrderStatus($orderId, $notification, $this->tpay);
+
+            return $this->getResponse()->setStatusCode(Http::STATUS_CODE_200)->setContent('TRUE');
         } catch (Exception $e) {
-            return false;
+            Util::log('Notification exception', "{$e->getMessage()} in file {$e->getFile()} line: {$e->getLine()} \n\n {$e->getTraceAsString()}");
+
+            return $this->getResponse()->setStatusCode(Http::STATUS_CODE_500)->setContent('FALSE');
         }
     }
 
@@ -98,12 +93,14 @@ class Notification extends Action implements CsrfAwareActionInterface
      *
      * @return string response for Tpay server
      */
-    protected function getPaidTransactionResponse(int $orderId): string
+    protected function getPaidTransactionResponse(string $orderId): string
     {
         $order = $this->tpayService->getOrderById($orderId);
+
         if (!$order->getId()) {
-            throw new Exception('Unable to get order by orderId %s', $orderId);
+            throw new Exception(sprintf('Unable to get order by orderId %s', $orderId));
         }
+
         if (Order::STATE_CANCELED === $order->getState()) {
             return 'FALSE';
         }
