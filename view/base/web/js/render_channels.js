@@ -54,15 +54,23 @@ require(['jquery', 'mage/translate'], function ($, $t) {
                 groupName,
                 logoSrc,
                 bank_selection_form = document.getElementById('bank-selection-form');
+
             for (i in tr_groups) {
                 group = tr_groups[i];
                 id = group[0];
                 groupName = group[1];
                 logoSrc = group[3];
+
+                if (window.checkoutConfig.tpay.payment.blikStatus === true && id === '150') {
+                    continue;
+                }
+
                 if (inArray(id, installmentsGroupId) && !doesAmountFitToInstallments(parseFloat(window.checkoutConfig.tpay.payment.grandTotal), parseInt(id))) {
                     continue;
                 }
+
                 tile = getBankTile(id, groupName, logoSrc);
+
                 if (inArray(id, others) === false) {
                     str += tile;
                 } else {
