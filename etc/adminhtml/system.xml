@@ -31,11 +31,11 @@
                 </field>
                 <field id="api_key_tpay" translate="label comment" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>API key</label>
-                    <validate>validate-length maximum-length-126</validate>
+                    <validate>no-whitespace validate-length maximum-length-126</validate>
                 </field>
                 <field id="api_password" translate="label comment" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>API password</label>
-                    <validate>validate-length maximum-length-40</validate>
+                    <validate>no-whitespace validate-length maximum-length-40</validate>
                 </field>
                 <field id="show_payment_channels_online" translate="label" type="select" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Only online methods</label>
