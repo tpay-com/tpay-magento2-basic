@@ -37,6 +37,9 @@ require(['jquery', 'mage/translate'], function ($, $t) {
                 case 109:  //alior raty
                     return grandTotal >= 300 && grandTotal <= 9259;
                     break;
+                case 172:  //paypo
+                    return grandTotal >= 40 && grandTotal <= 3000;
+                    break;
             }
 
             return true;
@@ -48,13 +51,12 @@ require(['jquery', 'mage/translate'], function ($, $t) {
                 str2 = '',
                 tile,
                 others = [157, 106, 109, 148, 104],
-                installmentsGroupId = [109,169,167],
+                installmentsGroupId = [109,169,167,172],
                 group,
                 id,
                 groupName,
                 logoSrc,
                 bank_selection_form = document.getElementById('bank-selection-form');
-
             for (i in tr_groups) {
                 group = tr_groups[i];
                 id = group[0];
