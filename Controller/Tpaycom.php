@@ -1,17 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace tpaycom\magento2basic\Controller;
 
 abstract class Tpaycom extends \Magento\Framework\App\Action\Action
 {
     // Check Real IP if server is proxy, balancer...
-    const CHECK_REAL_IP = false;
+    public const CHECK_REAL_IP = false;
 
     // Local IP address
-    const LOCAL_IP = '127.0.0.1';
+    public const LOCAL_IP = '127.0.0.1';
 
     // STR EMPTY
-    const STR_EMPTY = '';
+    public const STR_EMPTY = '';
 
     /** @var \Magento\Customer\Model\Session */
     protected $_customerSession;

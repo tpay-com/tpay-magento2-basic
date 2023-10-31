@@ -8,7 +8,8 @@
 define(
     [
         'Magento_Checkout/js/view/payment/default',
-        'jquery'
+        'jquery',
+        'Magento_Checkout/js/model/totals'
     ],
     function (Component, $) {
         'use strict';
@@ -59,7 +60,7 @@ define(
 
             isActive: function () {
                 return true;
-            }
+            },
         });
     }
 );

@@ -1,16 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace tpaycom\magento2basic\Model;
 
 use tpayLibs\src\_class_tpay\Notifications\BasicNotificationHandler;
 
 class NotificationModel extends BasicNotificationHandler
 {
-    /**
-     * @param int    $merchantId
-     * @param string $merchantSecret
-     */
-    public function __construct($merchantId, $merchantSecret)
+    public function __construct(int $merchantId, string $merchantSecret)
     {
         $this->merchantId = $merchantId;
         $this->merchantSecret = $merchantSecret;

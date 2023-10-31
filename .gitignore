@@ -1,2 +1,4 @@
 /.dev-tools/vendor/
 /.dev-tools/.php-cs-fixer.cache
+vendor
+.idea

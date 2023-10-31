@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace tpaycom\magento2basic\Model;
 
 use Magento\Checkout\Model\Session;
@@ -7,7 +9,6 @@ use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Framework\Api\ExtensionAttributesFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ObjectManager;
-use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Framework\DataObject;
 use Magento\Framework\Escaper;
 use Magento\Framework\Model\Context;
@@ -23,35 +24,17 @@ use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Store\Model\StoreManager;
 use tpaycom\magento2basic\Api\Sales\OrderRepositoryInterface;
 use tpaycom\magento2basic\Api\TpayInterface;
-use tpaycom\magento2basic\Controller\tpay\Refund;
 
 class Tpay extends AbstractMethod implements TpayInterface
 {
-    /** @var string */
     protected $_code = self::CODE;
-
-    /** @var bool */
     protected $_isGateway = true;
-
-    /** @var bool */
     protected $_canCapture = false;
-
-    /** @var bool */
     protected $_canCapturePartial = false;
-
-    /** @var bool */
     protected $_canRefund = true;
-
-    /** @var bool */
     protected $_canRefundInvoicePartial = true;
-
-    /** @var array<string> */
     protected $availableCurrencyCodes = ['PLN'];
-
-    /** @var string */
     protected $redirectURL = 'https://secure.tpay.com';
-
-    /** @var string */
     protected $termsURL = 'https://secure.tpay.com/regulamin.pdf';
 
     /**
@@ -73,9 +56,6 @@ class Tpay extends AbstractMethod implements TpayInterface
     /** @var Escaper */
     protected $escaper;
 
-    /** @var Refund */
-    protected $refund;
-
     /** @var StoreManager */
     protected $storeManager;
 
@@ -90,7 +70,7 @@ class Tpay extends AbstractMethod implements TpayInterface
         UrlInterface $urlBuilder,
         Session $checkoutSession,
         OrderRepositoryInterface $orderRepository,
-        Refund $refund,
+        RefundModelFactory $refundFactory,
         Escaper $escaper,
         StoreManager $storeManager,
         $data = []
@@ -99,7 +79,7 @@ class Tpay extends AbstractMethod implements TpayInterface
         $this->escaper = $escaper;
         $this->checkoutSession = $checkoutSession;
         $this->orderRepository = $orderRepository;
-        $this->refund = $refund;
+        $this->refundFactory = $refundFactory;
         $this->storeManager = $storeManager;
 
         parent::__construct(
@@ -116,12 +96,12 @@ class Tpay extends AbstractMethod implements TpayInterface
         );
     }
 
-    public function getRedirectURL()
+    public function getRedirectURL(): string
     {
         return $this->redirectURL;
     }
 
-    public function checkBlikLevel0Settings()
+    public function checkBlikLevel0Settings(): bool
     {
         if (!$this->getBlikLevelZeroStatus() || !$this->checkBlikAmount()) {
             return false;
@@ -134,48 +114,45 @@ class Tpay extends AbstractMethod implements TpayInterface
         return !(empty($apiKey) || strlen($apiKey) < 8 || empty($apiPassword) || strlen($apiPassword) < 4);
     }
 
-    /** @return bool */
-    public function getInstallmentsAmountValid()
+    public function getInstallmentsAmountValid(): bool
     {
         $amount = $this->getCheckoutTotal();
 
         return $amount > 300 && $amount < 9259;
     }
 
-    public function getBlikLevelZeroStatus()
+    public function getBlikLevelZeroStatus(): bool
     {
         return (bool) $this->getConfigData('blik_level_zero');
     }
 
-    public function getApiKey()
+    public function getApiKey(): string
     {
         return $this->getConfigData('api_key_tpay');
     }
 
-    public function getApiPassword()
+    public function getApiPassword(): string
     {
         return $this->getConfigData('api_password');
     }
 
-    public function getInvoiceSendMail()
+    public function getInvoiceSendMail(): string
     {
         return $this->getConfigData('send_invoice_email');
     }
 
-    public function getTermsURL()
+    public function getTermsURL(): string
     {
         return $this->termsURL;
     }
 
-    public function getTpayFormData($orderId = null)
+    public function getTpayFormData(?string $orderId = null): array
     {
         $order = $this->getOrder($orderId);
         $billingAddress = $order->getBillingAddress();
-        $amount = number_format($order->getGrandTotal(), 2, '.', '');
+        $amount = number_format((float) $order->getGrandTotal(), 2, '.', '');
         $crc = base64_encode($orderId);
         $name = $billingAddress->getData('firstname').' '.$billingAddress->getData('lastname');
-
-        /** @var string $phone */
         $phone = $billingAddress->getData('telephone');
 
         return [
@@ -197,39 +174,34 @@ class Tpay extends AbstractMethod implements TpayInterface
         ];
     }
 
-    public function getMerchantId()
+    public function getMerchantId(): int
     {
         return (int) $this->getConfigData('merchant_id');
     }
 
-    public function getSecurityCode()
+    public function getSecurityCode(): string
     {
         return $this->getConfigData('security_code');
     }
 
-    public function onlyOnlineChannels()
+    public function onlyOnlineChannels(): bool
     {
         return (bool) $this->getConfigData('show_payment_channels_online');
     }
 
-    public function redirectToChannel()
+    public function redirectToChannel(): bool
     {
         return (bool) $this->getConfigData('redirect_directly_to_channel');
     }
 
-    public function getCheckProxy()
+    public function useSandboxMode(): bool
     {
-        return (bool) $this->getConfigData('check_proxy');
+        return (bool) $this->getConfigData('use_sandbox');
     }
 
-    public function getCheckTpayIP()
+    public function getPaymentRedirectUrl(): string
     {
-        return (bool) $this->getConfigData('check_server');
-    }
-
-    public function getPaymentRedirectUrl()
-    {
-        return $this->urlBuilder->getUrl('magento2basic/tpay/redirect', ['uid' => time().uniqid(true)]);
+        return $this->urlBuilder->getUrl('magento2basic/tpay/redirect', ['uid' => time().uniqid('', true)]);
     }
 
     /**
@@ -237,12 +209,9 @@ class Tpay extends AbstractMethod implements TpayInterface
      *
      * Check that tpay.com payments should be available.
      */
-    public function isAvailable(CartInterface $quote = null)
+    public function isAvailable(?CartInterface $quote = null)
     {
-        /** @var float|int $minAmount */
         $minAmount = $this->getConfigData('min_order_total');
-
-        /** @var float|int $maxAmount */
         $maxAmount = $this->getConfigData('max_order_total');
 
         if (
@@ -263,22 +232,20 @@ class Tpay extends AbstractMethod implements TpayInterface
 
     public function assignData(DataObject $data)
     {
-        /** @var array<string> $additionalData */
         $additionalData = $data->getData('additional_data');
-
         $info = $this->getInfoInstance();
 
         $info->setAdditionalInformation(
             static::CHANNEL,
-            isset($additionalData[static::CHANNEL]) ? $additionalData[static::CHANNEL] : ''
+            array_key_exists(static::CHANNEL, $additionalData) ? $additionalData[static::CHANNEL] : ''
         );
 
         $info->setAdditionalInformation(
             static::BLIK_CODE,
-            isset($additionalData[static::BLIK_CODE]) ? $additionalData[static::BLIK_CODE] : ''
+            array_key_exists(static::BLIK_CODE, $additionalData) ? $additionalData[static::BLIK_CODE] : ''
         );
 
-        if (isset($additionalData[static::TERMS_ACCEPT]) && 1 === $additionalData[static::TERMS_ACCEPT]) {
+        if (array_key_exists(static::TERMS_ACCEPT, $additionalData) && 1 === $additionalData[static::TERMS_ACCEPT]) {
             $info->setAdditionalInformation(
                 static::TERMS_ACCEPT,
                 1
@@ -291,20 +258,22 @@ class Tpay extends AbstractMethod implements TpayInterface
     /**
      * Payment refund
      *
-     * @param float $amount
-     *
      * @throws \Exception
      *
      * @return $this
      */
     public function refund(InfoInterface $payment, $amount)
     {
-        $this->refund
-            ->setApiKey($this->getApiKey())
-            ->setApiPassword($this->getApiPassword())
-            ->setMerchantId($this->getMerchantId())
-            ->setMerchantSecret($this->getSecurityCode());
-        $refundResult = $this->refund->makeRefund($payment, $amount);
+        $refundService = $this->refundFactory->create(
+            [
+                'apiPassword' => $this->getApiPassword(),
+                'apiKey' => $this->getApiKey(),
+                'merchantId' => $this->getMerchantId(),
+                'merchantSecret' => $this->getSecurityCode(),
+                'isProd' => !$this->useSandboxMode(),
+            ]
+        );
+        $refundResult = $refundService->makeRefund($payment, $amount);
         try {
             if ($refundResult) {
                 $payment
@@ -322,34 +291,13 @@ class Tpay extends AbstractMethod implements TpayInterface
         return $this;
     }
 
-    public function getConfigData($field, $storeId = null)
-    {
-        if (is_null($storeId)) {
-            $storeId = $this->storeManager->getStore()->getId();
-        }
-
-        return parent::getConfigData($field, $storeId);
-    }
-
-    /**
-     * Check that the  BLIK should be available for order/quote amount
-     *
-     * @return bool
-     */
-    protected function checkBlikAmount()
-    {
-        return (bool) ($this->getCheckoutTotal() >= $this->minAmountBlik);
-    }
-
     /** @return float current cart total */
-    protected function getCheckoutTotal()
+    public function getCheckoutTotal()
     {
-        $amount = $this->getCheckout()->getQuote()->getBaseGrandTotal();
+        $amount = (float) $this->getCheckout()->getQuote()->getBaseGrandTotal();
 
         if (!$amount) {
-            /** @var int $orderId */
             $orderId = $this->getCheckout()->getLastRealOrderId();
-
             $order = $this->orderRepository->getByIncrementId($orderId);
             $amount = $order->getGrandTotal();
         }
@@ -357,35 +305,37 @@ class Tpay extends AbstractMethod implements TpayInterface
         return number_format($amount, 2, '.', '');
     }
 
-    /** @return Session */
-    protected function getCheckout()
+    public function getConfigData($field, $storeId = null)
+    {
+        if (null === $storeId) {
+            $storeId = $this->storeManager->getStore()->getId();
+        }
+
+        return parent::getConfigData($field, $storeId);
+    }
+
+    /** Check that the  BLIK should be available for order/quote amount */
+    protected function checkBlikAmount(): bool
+    {
+        return (bool) ($this->getCheckoutTotal() >= $this->minAmountBlik);
+    }
+
+    protected function getCheckout(): Session
     {
         return $this->checkoutSession;
     }
 
-    /**
-     * @param int $orderId
-     *
-     * @return \Magento\Sales\Api\Data\OrderInterface
-     */
-    protected function getOrder($orderId = null)
+    protected function getOrder(?string $orderId = null): \Magento\Sales\Api\Data\OrderInterface
     {
         if (null === $orderId) {
-            /** @var int $orderId */
             $orderId = $this->getCheckout()->getLastRealOrderId();
         }
 
         return $this->orderRepository->getByIncrementId($orderId);
     }
 
-    /**
-     * Availability for currency
-     *
-     * @param string $currencyCode
-     *
-     * @return bool
-     */
-    protected function isAvailableForCurrency($currencyCode)
+    /** Availability for currency */
+    protected function isAvailableForCurrency(string $currencyCode): bool
     {
         return !(!in_array($currencyCode, $this->availableCurrencyCodes));
     }
@@ -393,8 +343,6 @@ class Tpay extends AbstractMethod implements TpayInterface
     private function getMagentoVersion()
     {
         $objectManager = ObjectManager::getInstance();
-
-        /** @var ProductMetadataInterface $productMetadata */
         $productMetadata = $objectManager->get('Magento\Framework\App\ProductMetadataInterface');
 
         return $productMetadata->getVersion();

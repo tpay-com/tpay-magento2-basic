@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace tpaycom\magento2basic\Controller\tpay;
 
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
-use Magento\Framework\DataObject;
 use tpaycom\magento2basic\Api\TpayInterface;
 use tpaycom\magento2basic\Model\TransactionModel;
 use tpaycom\magento2basic\Model\TransactionModelFactory;
@@ -47,27 +48,20 @@ class Create extends Action
 
     public function execute()
     {
-        /** @var int $orderId */
         $orderId = $this->checkoutSession->getLastRealOrderId();
-
         if ($orderId) {
-            /** @var DataObject $payment */
             $payment = $this->tpayService->getPayment($orderId);
-
-            /** @var array<string> $paymentData */
             $paymentData = $payment->getData();
-
             $this->transaction = $this->transactionFactory->create(
                 [
                     'apiPassword' => $this->tpay->getApiPassword(),
                     'apiKey' => $this->tpay->getApiKey(),
                     'merchantId' => $this->tpay->getMerchantId(),
                     'merchantSecret' => $this->tpay->getSecurityCode(),
+                    'isProd' => !$this->tpay->useSandboxMode(),
                 ]
             );
             $additionalPaymentInformation = $paymentData['additional_information'];
-
-            /** @var array<string> $transaction */
             $transaction = $this->prepareTransaction($orderId, $additionalPaymentInformation);
 
             if (!isset($transaction['title'], $transaction['url'])) {
@@ -103,26 +97,14 @@ class Create extends Action
         }
     }
 
-    /**
-     * Send BLIK code for transaction id
-     *
-     * @param string $blikTransactionId
-     * @param string $blikCode
-     *
-     * @return bool
-     */
-    protected function blikPay($blikTransactionId, $blikCode)
+    /** Send BLIK code for transaction id */
+    protected function blikPay(string $blikTransactionId, string $blikCode): bool
     {
-        /** @var array<string, mixed> $apiResult */
         $apiResult = $this->transaction->blik($blikTransactionId, $blikCode);
 
-        return isset($apiResult['result']) && 1 === $apiResult['result'];
+        return array_key_exists('result', $apiResult) && 1 === $apiResult['result'];
     }
 
-    /**
-     * @param mixed                                       $orderId
-     * @param array{blik_code: string, group: int|string} $additionalPaymentInformation
-     */
     private function prepareTransaction($orderId, array $additionalPaymentInformation)
     {
         $data = $this->tpay->getTpayFormData($orderId);
@@ -130,6 +112,9 @@ class Create extends Action
             $data['group'] = TransactionModel::BLIK_CHANNEL;
         } else {
             $data['group'] = (int) $additionalPaymentInformation['group'];
+            if ($this->tpay->redirectToChannel()) {
+                $data['direct'] = 1;
+            }
         }
 
         return $this->transaction->create($data);

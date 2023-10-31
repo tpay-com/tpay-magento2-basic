@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace tpaycom\magento2basic\Controller\tpay;
 
 use Magento\Framework\Validator\Exception;
@@ -21,15 +23,8 @@ class Refund
     /** @var string */
     protected $merchantSecret;
 
-    /**
-     * @param InfoInterface $payment
-     * @param float         $amount
-     *
-     * @throws \Exception
-     *
-     * @return bool
-     */
-    public function makeRefund($payment, $amount)
+    /** @throws \Exception */
+    public function makeRefund(InfoInterface $payment, float $amount): bool
     {
         Util::$loggingEnabled = false;
         $RefundModel = new RefundModel($this->apiPassword, $this->apiKey, $this->merchantId, $this->merchantSecret);
@@ -39,55 +34,35 @@ class Refund
             ->setTransactionID($payment->getParentTransactionId())
             ->refundAny(number_format($amount, 2));
 
-        if (isset($apiResult['result']) && 1 === (int) $apiResult['result']) {
+        if (array_key_exists('result', $apiResult) && 1 === (int) $apiResult['result']) {
             return true;
         }
-        $errCode = isset($apiResult['err']) ? ' error code: '.$apiResult['err'] : '';
+        $errCode = array_key_exists('err', $apiResult) ? ' error code: '.$apiResult['err'] : '';
         throw new Exception(__('Payment refunding error. -'.$errCode));
     }
 
-    /**
-     * @param string $merchantSecret
-     *
-     * @return self
-     */
-    public function setMerchantSecret($merchantSecret)
+    public function setMerchantSecret(string $merchantSecret): self
     {
         $this->merchantSecret = $merchantSecret;
 
         return $this;
     }
 
-    /**
-     * @param int $merchantId
-     *
-     * @return self
-     */
-    public function setMerchantId($merchantId)
+    public function setMerchantId(int $merchantId): self
     {
         $this->merchantId = $merchantId;
 
         return $this;
     }
 
-    /**
-     * @param string $apiPassword
-     *
-     * @return self
-     */
-    public function setApiPassword($apiPassword)
+    public function setApiPassword(string $apiPassword): self
     {
         $this->apiPassword = $apiPassword;
 
         return $this;
     }
 
-    /**
-     * @param string $apiKey
-     *
-     * @return self
-     */
-    public function setApiKey($apiKey)
+    public function setApiKey(string $apiKey): self
     {
         $this->apiKey = $apiKey;
 
