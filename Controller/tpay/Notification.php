@@ -106,7 +106,10 @@ class Notification extends Action implements CsrfAwareActionInterface
      *
      * @return null|InvalidRequestException
      */
-    public function createCsrfValidationException(RequestInterface $request) {}
+    public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
+    {
+        return null;
+    }
 
     /**
      * Perform custom request validation.
@@ -114,7 +117,7 @@ class Notification extends Action implements CsrfAwareActionInterface
      *
      * @return null|bool
      */
-    public function validateForCsrf(RequestInterface $request)
+    public function validateForCsrf(RequestInterface $request): ?bool
     {
         return true;
     }
