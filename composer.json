@@ -11,7 +11,7 @@
     ],
     "require": {
         "php": ">=7",
-        "magento/product-community-edition": "^2.3",
+        "magento/framework": "^102.0|^103.0",
         "tpay-com/tpay-php": "^2.3"
     },
     "autoload": {
