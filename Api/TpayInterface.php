@@ -20,9 +20,9 @@ interface TpayInterface
     /** Return data for form */
     public function getTpayFormData(?string $orderId = null): array;
 
-    public function getApiPassword(): string;
+    public function getApiPassword(): ?string;
 
-    public function getApiKey(): string;
+    public function getApiKey(): ?string;
 
     public function getSecurityCode(): string;
 

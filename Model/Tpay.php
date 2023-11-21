@@ -126,12 +126,12 @@ class Tpay extends AbstractMethod implements TpayInterface
         return (bool) $this->getConfigData('blik_level_zero');
     }
 
-    public function getApiKey(): string
+    public function getApiKey(): ?string
     {
         return $this->getConfigData('api_key_tpay');
     }
 
-    public function getApiPassword(): string
+    public function getApiPassword(): ?string
     {
         return $this->getConfigData('api_password');
     }
