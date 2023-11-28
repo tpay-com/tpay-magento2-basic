@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace tpaycom\magento2basic\Model;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
@@ -7,6 +9,7 @@ use Magento\Framework\View\Asset\Repository;
 use Magento\Payment\Helper\Data as PaymentHelper;
 use Magento\Payment\Model\MethodInterface;
 use tpaycom\magento2basic\Api\TpayInterface;
+use tpaycom\magento2basic\Model\ApiFacade\Transaction\TransactionOriginApi;
 
 class TpayConfigProvider implements ConfigProviderInterface
 {
@@ -42,8 +45,9 @@ class TpayConfigProvider implements ConfigProviderInterface
                     'addCSS' => $this->createCSS('tpaycom_magento2basic::css/tpay.css'),
                     'blikStatus' => $this->getPaymentMethodInstance()->checkBlikLevel0Settings(),
                     'onlyOnlineChannels' => $this->getPaymentMethodInstance()->onlyOnlineChannels(),
-                    'getBlikChannelID' => TransactionModel::BLIK_CHANNEL,
-                    'isInstallmentsAmountValid' => $this->getPaymentMethodInstance()->getInstallmentsAmountValid(),
+                    'getBlikChannelID' => TransactionOriginApi::BLIK_CHANNEL,
+                    'useSandbox' => $tpay->useSandboxMode(),
+                    'grandTotal' => number_format($this->getPaymentMethodInstance()->getCheckoutTotal(), 2, '.', ''),
                 ],
             ],
         ];
@@ -51,30 +55,19 @@ class TpayConfigProvider implements ConfigProviderInterface
         return $tpay->isAvailable() ? $config : [];
     }
 
-    /**
-     * @param string $name
-     *
-     * @return string
-     */
-    public function generateURL($name)
+    public function generateURL(string $name): string
     {
         return $this->assetRepository->createAsset($name)->getUrl();
     }
 
-    /** @return null|string */
-    public function showChannels()
+    public function showChannels(): ?string
     {
         $script = 'tpaycom_magento2basic::js/render_channels.js';
 
         return $this->createScript($script);
     }
 
-    /**
-     * @param string $script
-     *
-     * @return string
-     */
-    public function createScript($script)
+    public function createScript(string $script): string
     {
         return "
             <script type=\"text/javascript\">
@@ -85,18 +78,12 @@ class TpayConfigProvider implements ConfigProviderInterface
             </script>";
     }
 
-    /** @return null|string */
-    public function getTerms()
+    public function getTerms(): ?string
     {
         return $this->getPaymentMethodInstance()->getTermsURL();
     }
 
-    /**
-     * @param string $css
-     *
-     * @return string
-     */
-    public function createCSS($css)
+    public function createCSS(string $css): string
     {
         return "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$this->generateURL($css)}\">";
     }

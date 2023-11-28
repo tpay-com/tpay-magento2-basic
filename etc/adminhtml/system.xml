@@ -78,6 +78,14 @@
                     <comment>Leave empty for no limit</comment>
                     <validate>validate-number</validate>
                 </field>
+                <field id="client_id" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Client ID OPEN API</label>
+                    <validate>validate-length maximum-length-64</validate>
+                </field>
+                <field id="open_api_password" translate="label comment" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>API password OPEN API</label>
+                    <validate>validate-length maximum-length-64</validate>
+                </field>
             </group>
         </section>
     </system>

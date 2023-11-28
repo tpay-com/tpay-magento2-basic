@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace tpaycom\magento2basic\Model\Sales;
 
 use Magento\Framework\Exception\InputException;
@@ -10,7 +12,7 @@ use tpaycom\magento2basic\Api\Sales\OrderRepositoryInterface;
 
 class OrderRepository extends MagentoOrderRepository implements OrderRepositoryInterface
 {
-    public function getByIncrementId($incrementId)
+    public function getByIncrementId(string $incrementId): OrderInterface
     {
         if (!$incrementId) {
             throw new InputException(__('Id required'));
