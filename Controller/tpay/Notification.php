@@ -15,7 +15,7 @@ use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
 use Magento\Sales\Model\Order;
 use tpaycom\magento2basic\Api\TpayInterface;
 use tpaycom\magento2basic\Service\TpayService;
-use tpayLibs\src\_class_tpay\Utilities\Util;
+use Tpay\OriginApi\Utilities\Util;
 use tpaySDK\Webhook\JWSVerifiedPaymentNotification;
 
 class Notification extends Action implements CsrfAwareActionInterface
