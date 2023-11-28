@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace tpaycom\magento2basic\Service;
 
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Event\ManagerInterface as EventManagerInterface;
+use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderPaymentInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Invoice;
-use Magento\Sales\Model\Order\Payment;
 use Magento\Sales\Model\Order\Payment\Operations\RegisterCaptureNotificationOperation;
 use Magento\Sales\Model\Order\Payment\State\CommandInterface;
 use Magento\Sales\Model\Order\Payment\Transaction;
@@ -22,13 +24,8 @@ class TpayService extends RegisterCaptureNotificationOperation
     /** @var OrderRepositoryInterface */
     protected $orderRepository;
 
-    /** @var BuilderInterface */
     protected $builder;
-
-    /** @var InvoiceService */
     protected $invoiceService;
-
-    /** @var ObjectManager */
     private $objectManager;
 
     public function __construct(
@@ -52,17 +49,9 @@ class TpayService extends RegisterCaptureNotificationOperation
         );
     }
 
-    /**
-     * Change order state and notify user if needed
-     *
-     * @param int  $orderId
-     * @param bool $sendEmail
-     *
-     * @return Order
-     */
-    public function setOrderStatePendingPayment($orderId, $sendEmail)
+    /** Change order state and notify user if needed */
+    public function setOrderStatePendingPayment(string $orderId, bool $sendEmail): OrderInterface
     {
-        /** @var Order $order */
         $order = $this->orderRepository->getByIncrementId($orderId);
 
         $order->setTotalDue($order->getGrandTotal())
@@ -85,14 +74,8 @@ class TpayService extends RegisterCaptureNotificationOperation
         $order->save();
     }
 
-    /**
-     * Return payment data
-     *
-     * @param int $orderId
-     *
-     * @return OrderPaymentInterface
-     */
-    public function getPayment($orderId)
+    /** Return payment data */
+    public function getPayment(string $orderId): OrderPaymentInterface
     {
         /** @var Order $order */
         $order = $this->orderRepository->getByIncrementId($orderId);
@@ -102,21 +85,19 @@ class TpayService extends RegisterCaptureNotificationOperation
 
     /**
      * Validate order and set appropriate state
-     *
-     * @param int           $orderId
-     * @param array<string> $validParams
-     * @param TpayInterface $tpayModel
-     *
-     * @return bool|Order
+     * @return bool|OrderInterface
+     * @throws \Exception
      */
-    public function SetOrderStatus($orderId, array $validParams, $tpayModel)
+    public function SetOrderStatus(string $orderId, array $validParams, TpayInterface $tpayModel)
     {
         $order = $this->getOrderById($orderId);
+
         if (!$order->getId()) {
             return false;
         }
+
         $sendNewInvoiceMail = (bool) $tpayModel->getInvoiceSendMail();
-        $orderAmount = (float) number_format($order->getGrandTotal(), 2, '.', '');
+        $orderAmount = (float) number_format((float) $order->getGrandTotal(), 2, '.', '');
         $trStatus = $validParams['tr_status'];
         $emailNotify = false;
 
@@ -124,7 +105,7 @@ class TpayService extends RegisterCaptureNotificationOperation
             'TRUE' === $trStatus
             && ((float) number_format($validParams['tr_paid'], 2, '.', '') === $orderAmount)
         ) {
-            if (Order::STATE_PROCESSING != $order->getState()) {
+            if (Order::STATE_PROCESSING !== $order->getState()) {
                 $emailNotify = true;
             }
             $status = Order::STATE_PROCESSING;
@@ -135,7 +116,7 @@ class TpayService extends RegisterCaptureNotificationOperation
 
             return $order;
         } else {
-            if (Order::STATE_HOLDED != $order->getState()) {
+            if (Order::STATE_HOLDED !== $order->getState()) {
                 $emailNotify = true;
             }
             $comment = __('The order has been holded: ').'</br>'.$this->getTransactionDesc($validParams);
@@ -147,11 +128,8 @@ class TpayService extends RegisterCaptureNotificationOperation
         }
         $order->setStatus($status)->setState($status)->save();
         if ($sendNewInvoiceMail) {
-            /** @var Invoice $invoice */
             foreach ($order->getInvoiceCollection() as $invoice) {
-                /** @var int $invoiceId */
                 $invoiceId = $invoice->getId();
-
                 $this->invoiceService->notify($invoiceId);
             }
         }
@@ -159,23 +137,14 @@ class TpayService extends RegisterCaptureNotificationOperation
         return $order;
     }
 
-    /**
-     * Get Order object by orderId
-     *
-     * @param int $orderId
-     *
-     * @return Order
-     */
-    public function getOrderById($orderId)
+    /** Get Order object by orderId */
+    public function getOrderById(string $orderId): OrderInterface
     {
         return $this->orderRepository->getByIncrementId($orderId);
     }
 
     /**
      * Get description for transaction
-     *
-     * @param array<string> $validParams
-     *
      * @return bool|string
      */
     protected function getTransactionDesc(array $validParams)
@@ -191,7 +160,7 @@ class TpayService extends RegisterCaptureNotificationOperation
         if ('CHARGEBACK' === $status) {
             $transactionDesc .= __('Transaction has been refunded');
         }
-        if (isset($validParams['test_mode'])) {
+        if (array_key_exists('test_mode', $validParams)) {
             $transactionDesc .= '<b> TEST </b>';
         }
 
@@ -200,18 +169,16 @@ class TpayService extends RegisterCaptureNotificationOperation
 
     /**
      * Registers capture notification.
-     *
-     * @param Payment      $payment
      * @param float|string $amount
-     * @param array        $validParams
      * @param bool|int     $skipFraudDetection
      */
     private function registerCaptureNotificationTpay(
         OrderPaymentInterface $payment,
         $amount,
-        $validParams,
+        array $validParams,
         $skipFraudDetection = false
     ) {
+        // @var $payment Payment
         $payment->setTransactionId(
             $this->transactionManager->generateTransactionId(
                 $payment,
