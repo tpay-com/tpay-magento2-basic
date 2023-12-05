@@ -224,16 +224,11 @@ class Tpay extends AbstractMethod implements TpayInterface
         $minAmount = $this->getConfigData('min_order_total');
         $maxAmount = $this->getConfigData('max_order_total');
 
-        if (
-            $quote
-            && ($quote->getBaseGrandTotal() < $minAmount || ($maxAmount && $quote->getBaseGrandTotal() > $maxAmount))
-        ) {
+        if ($quote && ($quote->getBaseGrandTotal() < $minAmount || ($maxAmount && $quote->getBaseGrandTotal() > $maxAmount))) {
             return false;
         }
 
-        if (!$this->getMerchantId()
-            || ($quote && !$this->isAvailableForCurrency($quote->getCurrency()->getQuoteCurrencyCode()))
-        ) {
+        if (!$this->getMerchantId() || ($quote && !$this->isAvailableForCurrency($quote->getCurrency()->getQuoteCurrencyCode()))) {
             return false;
         }
 
@@ -245,21 +240,12 @@ class Tpay extends AbstractMethod implements TpayInterface
         $additionalData = $data->getData('additional_data');
         $info = $this->getInfoInstance();
 
-        $info->setAdditionalInformation(
-            static::CHANNEL,
-            array_key_exists(static::CHANNEL, $additionalData) ? $additionalData[static::CHANNEL] : ''
-        );
+        $info->setAdditionalInformation(static::CHANNEL, array_key_exists(static::CHANNEL, $additionalData) ? $additionalData[static::CHANNEL] : '');
 
-        $info->setAdditionalInformation(
-            static::BLIK_CODE,
-            array_key_exists(static::BLIK_CODE, $additionalData) ? $additionalData[static::BLIK_CODE] : ''
-        );
+        $info->setAdditionalInformation(static::BLIK_CODE, array_key_exists(static::BLIK_CODE, $additionalData) ? $additionalData[static::BLIK_CODE] : '');
 
         if (array_key_exists(static::TERMS_ACCEPT, $additionalData) && 1 === $additionalData[static::TERMS_ACCEPT]) {
-            $info->setAdditionalInformation(
-                static::TERMS_ACCEPT,
-                1
-            );
+            $info->setAdditionalInformation(static::TERMS_ACCEPT, 1);
         }
 
         return $this;
