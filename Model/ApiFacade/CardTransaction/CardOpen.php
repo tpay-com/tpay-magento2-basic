@@ -156,44 +156,17 @@ class CardOpen
 
     private function handleDataStructure(): array
     {
-//        return [
-//            'amount' => (float)$this->tpayPaymentConfig['amount'],
-//            'description' => $this->tpayPaymentConfig['description'],
-//            'hiddenDescription' => $this->tpayPaymentConfig['crc'],
-//            'payer' => [
-//                'email' => $this->tpayPaymentConfig['email'],
-//                'name' => $this->tpayPaymentConfig['name'],
-//                'phone' => $this->tpayPaymentConfig['phone'],
-//                'address' => $this->tpayPaymentConfig['address'],
-//                'code' => $this->tpayPaymentConfig['zip'],
-//                'city' => $this->tpayPaymentConfig['city'],
-//                'country' => $this->tpayPaymentConfig['country'],
-//            ],
-//            'lang' => 'pl',
-//            'pay' => [
-//                'groupId' => 103,
-//            ],
-//            'callbacks' => [
-//                'notification' => [
-//                    "url" => $this->tpayPaymentConfig['result_url'],
-//                ],
-//                'payerUrls' => [
-//                    "success" => $this->tpayPaymentConfig['return_url'],
-//                    "error" => $this->tpayPaymentConfig['return_error_url']
-//                ],
-//            ]
-//        ];
         return [
             'amount' => (float)$this->tpayPaymentConfig['amount'],
             'description' => $this->tpayPaymentConfig['description'],
             'hiddenDescription' => $this->tpayPaymentConfig['crc'],
             'payer' => [
-                'email' => 'ktpay@inny.com',
-                'name' => 'Krzysztof Inny',
-                'phone' => '695065220',
-                'address' => 'Barwinek 7a',
-                'code' => '38-454',
-                'city' => 'Tylawa',
+                'email' => $this->tpayPaymentConfig['email'],
+                'name' => $this->tpayPaymentConfig['name'],
+                'phone' => $this->tpayPaymentConfig['phone'],
+                'address' => $this->tpayPaymentConfig['address'],
+                'code' => $this->tpayPaymentConfig['zip'],
+                'city' => $this->tpayPaymentConfig['city'],
                 'country' => $this->tpayPaymentConfig['country'],
             ],
             'lang' => 'pl',
