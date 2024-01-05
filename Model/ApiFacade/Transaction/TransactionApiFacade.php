@@ -31,7 +31,7 @@ class TransactionApiFacade
     public function __construct(TpayInterface $tpay)
     {
         $this->originApi = new TransactionOriginApi($tpay->getApiPassword(), $tpay->getApiKey(), $tpay->getMerchantId(), $tpay->getSecurityCode(), !$tpay->useSandboxMode());
-        $this->createOpenApiInstance($tpay->getClientId(), $tpay->getOpenApiPassword(), !$tpay->useSandboxMode());
+        $this->createOpenApiInstance($tpay->getOpenApiClientId(), $tpay->getOpenApiPassword(), !$tpay->useSandboxMode());
     }
 
     public function isOpenApiUse()

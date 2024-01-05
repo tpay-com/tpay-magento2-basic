@@ -19,7 +19,7 @@ use tpaycom\magento2basic\Model\ApiFacade\Transaction\TransactionOriginApi;
 use tpaycom\magento2basic\Service\TpayService;
 
 /**
- * Class Blik
+ * Class Create
  * @package tpaycom\magento2basic\Controller\tpay
  */
 class Create extends Action

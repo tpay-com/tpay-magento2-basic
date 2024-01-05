@@ -12,7 +12,7 @@ namespace tpaycom\magento2basic\Model\ApiFacade\Transaction;
 use Tpay\OriginApi\PaymentBlik;
 
 /**
- * Class OriginApi
+ * Class TransactionOriginApi
  * @package tpaycom\magento2basic\Model\ApiFacade
  */
 class TransactionOriginApi extends PaymentBlik
