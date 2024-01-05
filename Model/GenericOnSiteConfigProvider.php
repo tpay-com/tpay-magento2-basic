@@ -3,7 +3,6 @@
 namespace tpaycom\magento2basic\Model;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
-use Magento\Framework\App\CacheInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\View\Asset\Repository;
 use Magento\Payment\Helper\Data as PaymentHelper;
@@ -12,6 +11,7 @@ use Magento\Payment\Model\MethodList;
 use Magento\Store\Model\ScopeInterface;
 use tpaycom\magento2basic\Api\TpayInterface;
 use tpaycom\magento2basic\Model\ApiFacade\Transaction\TransactionApiFacade;
+use tpaycom\magento2basic\Model\ApiFacade\Transaction\TransactionOriginApi;
 
 #[\AllowDynamicProperties]
 class GenericOnSiteConfigProvider implements ConfigProviderInterface
@@ -51,7 +51,7 @@ class GenericOnSiteConfigProvider implements ConfigProviderInterface
                     'addCSS' => $this->createCSS('tpaycom_magento2basic::css/tpay.css'),
                     'blikStatus' => $this->getPaymentMethodInstance()->checkBlikLevel0Settings(),
                     'onlyOnlineChannels' => $this->getPaymentMethodInstance()->onlyOnlineChannels(),
-                    'getBlikChannelID' => TransactionModel::BLIK_CHANNEL,
+                    'getBlikChannelID' => TransactionOriginApi::BLIK_CHANNEL,
                     'isInstallmentsAmountValid' => $this->getPaymentMethodInstance()->getInstallmentsAmountValid(),
                 ],
             ],

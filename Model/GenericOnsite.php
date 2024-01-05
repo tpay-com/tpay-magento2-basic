@@ -203,4 +203,64 @@ class GenericOnsite extends AbstractMethod implements TpayInterface
     {
         return '';
     }
+
+    public function getOpenApiSecurityCode(): ?string
+    {
+        return '';
+    }
+
+    public function getCardApiKey(): ?string
+    {
+        return '';
+    }
+
+    public function getCardApiPassword(): ?string
+    {
+        return '';
+    }
+
+    public function getCardSaveEnabled(): bool
+    {
+        return '';
+    }
+
+    public function getCheckoutCustomerId(): ?string
+    {
+        return '';
+    }
+
+    public function getRSAKey(): string
+    {
+        return '';
+    }
+
+    public function isCustomerLoggedIn(): bool
+    {
+        return '';
+    }
+
+    public function getHashType(): string
+    {
+        return '';
+    }
+
+    public function getVerificationCode(): string
+    {
+        return '';
+    }
+
+    public function getCustomerId($orderId)
+    {
+        return '';
+    }
+
+    public function isCustomerGuest($orderId)
+    {
+        return '';
+    }
+
+    public function getOpenApiClientId()
+    {
+        return '';
+    }
 }
