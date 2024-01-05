@@ -4,6 +4,7 @@ namespace tpaycom\magento2basic\Model\ApiFacade\Transaction;
 
 use Exception;
 use Magento\Framework\App\CacheInterface;
+use Tpay\OpenApi\Utilities\TpayException;
 use tpaycom\magento2basic\Api\TpayInterface;
 use tpaycom\magento2basic\Model\ApiFacade\OpenApi;
 

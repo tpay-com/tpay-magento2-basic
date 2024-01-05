@@ -47,7 +47,7 @@ class ConfigOpen extends TpayApi
         ];
         $config = array_merge($config, $this->getCardConfig());
 
-        return $this->tpay->isAvailable() ? $config : [];
+        return $config;
     }
 
     public function generateURL(string $name): string

@@ -79,7 +79,7 @@ class Create extends Action
             $paymentData['additional_information']['transaction_url'] = $transactionUrl;
             $payment->setData($paymentData)->save();
 
-            if (6 === strlen($additionalPaymentInformation['blik_code']) && $this->tpay->checkBlikLevel0Settings()) {
+            if (6 === strlen($additionalPaymentInformation['blik_code'] ?? '') && $this->tpay->checkBlikLevel0Settings()) {
                 if (true === $this->transaction->isOpenApiUse()) {
                     return $this->_redirect('magento2basic/tpay/success');
                 }
@@ -119,11 +119,11 @@ class Create extends Action
     {
         $data = $this->tpay->getTpayFormData($orderId);
 
-        if (6 === strlen($additionalPaymentInformation['blik_code'])) {
+        if (6 === strlen($additionalPaymentInformation['blik_code'] ?? '')) {
             $data['group'] = TransactionOriginApi::BLIK_CHANNEL;
             $this->handleBlikData($data, $additionalPaymentInformation['blik_code']);
         } else {
-            $data['group'] = (int) $additionalPaymentInformation['group'];
+            $data['group'] = (int) ($additionalPaymentInformation['group'] ?? null);
             $data['channel'] = (int) ($additionalPaymentInformation['channel'] ?? null);
 
             if ($this->tpay->redirectToChannel()) {

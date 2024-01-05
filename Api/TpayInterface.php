@@ -10,7 +10,8 @@ namespace tpaycom\magento2basic\Api;
 interface TpayInterface
 {
     public const CODE = 'tpaycom_magento2basic';
-    public const CHANNEL = 'group';
+    public const GROUP = 'group';
+    public const CHANNEL = 'channel';
     public const BLIK_CODE = 'blik_code';
     public const TERMS_ACCEPT = 'accept_tos';
     public const CARDDATA = 'card_data';

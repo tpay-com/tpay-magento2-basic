@@ -62,11 +62,11 @@ class OpenApi extends TpayApi
             ];
         }
 
-        if (isset($data['group'])) {
+        if ($data['group']) {
             $paymentData['pay'] = ['groupId' => $data['group']];
         }
 
-        if (isset($data['channel'])) {
+        if ($data['channel']) {
             $paymentData['pay'] = ['channelId' => $data['channel']];
         }
 

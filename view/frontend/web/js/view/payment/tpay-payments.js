@@ -23,6 +23,9 @@ define(
 
          Object.values(window.checkoutConfig.generic).forEach((element) => rendererList.push({type: `generic-${element.id}`, component: 'tpaycom_magento2basic/js/view/payment/method-renderer/tpay-generic-onsite'}))
 
+
+        rendererList.push({type: 'tpaycom_magento2basic_cards', component: 'tpaycom_magento2basic/js/view/payment/method-renderer/tpay-card-method'});
+
         /** Add view logic here if needed */
         return Component.extend({});
     }

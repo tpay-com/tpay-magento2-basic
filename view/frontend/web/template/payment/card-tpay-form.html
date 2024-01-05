@@ -1,16 +1,16 @@
 
-<div class="card_payment-method" data-bind="css: {'_active': (getCode() == isChecked())}">
+<div class="payment-method" data-bind="css: {'_active': (getCode() == isChecked())}">
     <div class="card_payment-method-title field choice">
         <input type="radio"
                name="payment[card]"
                class="radio"
                data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()"/>
         <label data-bind="attr: {'for': getCode()}" class="label">
-            <img data-bind="attr: {src: cardGetLogoUrl(), alt: $t('tpay.com')}" class="payment-icon"/>
+<!--            <img data-bind="attr: {src: cardGetLogoUrl(), alt: $t('tpay.com')}" class="payment-icon"/>-->
             <span data-bind="text: getTitle()"></span>
         </label>
     </div>
-    <div class="card_payment-method-content" id="card_payment_form">
+    <div class="payment-method-content" id="card_payment_form">
         <div class="card_insidebg">
             <div class="tpay-header-wrapper">
                 <div class="tpay-header-logo">

@@ -23,13 +23,15 @@ class GenericOnSiteConfigProvider implements ConfigProviderInterface
         Repository $assetRepository,
         MethodList $methods,
         ScopeConfigInterface $scopeConfig,
-        TransactionApiFacade $transactionApiFacade
+        TransactionApiFacade $transactionApiFacade,
+        TpayConfigProvider $tpayConfigProvider
     ) {
         $this->paymentHelper = $paymentHelper;
         $this->assetRepository = $assetRepository;
         $this->methodList = $methods;
         $this->scopeConfig = $scopeConfig;
         $this->transactionApiFacade = $transactionApiFacade;
+        $this->tpayConfigProvider = $tpayConfigProvider;
     }
 
     /**
@@ -40,22 +42,7 @@ class GenericOnSiteConfigProvider implements ConfigProviderInterface
         $tpay = $this->getPaymentMethodInstance();
         $onsites = explode(',', $this->scopeConfig->getValue('payment/tpaycom_magento2basic/onsite_channels', ScopeInterface::SCOPE_STORE));
 
-        $config = [
-            'tpay' => [
-                'payment' => [
-                    'redirectUrl' => $tpay->getPaymentRedirectUrl(),
-                    'tpayLogoUrl' => $this->generateURL('tpaycom_magento2basic::images/logo_tpay.png'),
-                    'merchantId' => $tpay->getMerchantId(),
-                    'showPaymentChannels' => $this->showChannels(),
-                    'getTerms' => $this->getTerms(),
-                    'addCSS' => $this->createCSS('tpaycom_magento2basic::css/tpay.css'),
-                    'blikStatus' => $this->getPaymentMethodInstance()->checkBlikLevel0Settings(),
-                    'onlyOnlineChannels' => $this->getPaymentMethodInstance()->onlyOnlineChannels(),
-                    'getBlikChannelID' => TransactionOriginApi::BLIK_CHANNEL,
-                    'isInstallmentsAmountValid' => $this->getPaymentMethodInstance()->getInstallmentsAmountValid(),
-                ],
-            ],
-        ];
+        $config = $this->tpayConfigProvider->getConfig();
 
         $channels = $this->transactionApiFacade->channels();
 

@@ -271,7 +271,7 @@ class Tpay extends AbstractMethod implements TpayInterface
         $additionalData = $data->getData('additional_data');
         $info = $this->getInfoInstance();
 
-        $info->setAdditionalInformation(static::CHANNEL, array_key_exists(static::CHANNEL, $additionalData) ? $additionalData[static::CHANNEL] : '');
+        $info->setAdditionalInformation(static::GROUP, array_key_exists(static::GROUP, $additionalData) ? $additionalData[static::GROUP] : '');
 
         $info->setAdditionalInformation(static::BLIK_CODE, array_key_exists(static::BLIK_CODE, $additionalData) ? $additionalData[static::BLIK_CODE] : '');
 
