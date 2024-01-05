@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace tpaycom\magento2basic\Api;
 
 /**
@@ -7,94 +9,75 @@ namespace tpaycom\magento2basic\Api;
  */
 interface TpayInterface
 {
-    const CODE = 'tpaycom_magento2basic';
-    const CHANNEL = 'group';
-    const BLIK_CODE = 'blik_code';
-    const TERMS_ACCEPT = 'accept_tos';
+    public const CODE = 'tpaycom_magento2basic';
+    public const CHANNEL = 'group';
+    public const BLIK_CODE = 'blik_code';
+    public const TERMS_ACCEPT = 'accept_tos';
+    public const CARDDATA = 'card_data';
+    public const CARD_SAVE = 'card_save';
+    public const CARD_ID = 'card_id';
+    public const CARD_VENDOR = 'card_vendor';
+    public const SHORT_CODE = 'short_code';
 
-    /**
-     * Return string for redirection
-     *
-     * @return string
-     */
-    public function getRedirectURL();
+    /** Return string for redirection */
+    public function getRedirectURL(): string;
 
-    /**
-     * Return data for form
-     *
-     * @param null|int $orderId
-     *
-     * @return array
-     */
-    public function getTpayFormData($orderId = null);
+    /** Return data for form */
+    public function getTpayFormData(?string $orderId = null): array;
 
-    /** @return string */
-    public function getApiPassword();
+    public function getApiPassword(): string;
 
-    /** @return string */
-    public function getApiKey();
+    public function getApiKey(): string;
 
-    /** @return string */
-    public function getSecurityCode();
+    public function getSecurityCode(): string;
 
-    /** @return int */
-    public function getMerchantId();
+    public function getOpenApiSecurityCode(): ?string;
 
-    /**
-     * Check that the BLIK Level 0 should be active on a payment channels list
-     *
-     * @return bool
-     */
-    public function checkBlikLevel0Settings();
+    public function getMerchantId(): int;
 
-    /** @return bool */
-    public function getBlikLevelZeroStatus();
+    /** Check that the BLIK Level 0 should be active on a payment channels list */
+    public function checkBlikLevel0Settings(): bool;
 
-    /** @return bool */
-    public function onlyOnlineChannels();
+    public function getBlikLevelZeroStatus(): bool;
 
-    /** @return bool */
-    public function redirectToChannel();
+    public function onlyOnlineChannels(): bool;
 
-    /**
-     * Return url to redirect after placed order
-     *
-     * @return string
-     */
-    public function getPaymentRedirectUrl();
+    public function redirectToChannel(): bool;
 
-    /**
-     * Return url for a tpay.com terms
-     *
-     * @return string
-     */
-    public function getTermsURL();
+    /** Return url to redirect after placed order */
+    public function getPaymentRedirectUrl(): string;
 
-    /**
-     * Check if send an email about the new invoice to customer
-     *
-     * @return string
-     */
-    public function getInvoiceSendMail();
+    /** Return url for a tpay.com terms */
+    public function getTermsURL(): string;
 
-    /**
-     * Check if Tpay notification server IP is forwarded by proxy
-     *
-     * @return bool
-     */
-    public function getCheckProxy();
+    /** Check if send an email about the new invoice to customer */
+    public function getInvoiceSendMail(): string;
 
-    /**
-     * Check Tpay notification server IP
-     *
-     * @return bool
-     */
-    public function getCheckTpayIP();
+    public function useSandboxMode(): bool;
 
-    /**
-     * Check if checkout amount is in range of installments payment channel
-     *
-     * @return bool
-     */
-    public function getInstallmentsAmountValid();
+    /** Check if checkout amount is in range of installments payment channel */
+    public function getInstallmentsAmountValid(): bool;
+
+    // KARTY
+    public function getCardApiKey(): ?string;
+
+    public function getCardApiPassword(): ?string;
+
+    public function getCardSaveEnabled(): bool;
+
+    public function getCheckoutCustomerId(): ?string;
+
+    public function getRSAKey(): string;
+
+    public function isCustomerLoggedIn(): bool;
+
+    public function getHashType(): string;
+
+    public function getVerificationCode(): string;
+
+    /** @param string $orderId */
+    public function getCustomerId($orderId);
+
+    /** @param string $orderId */
+    public function isCustomerGuest($orderId);
 }

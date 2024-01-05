@@ -1,10 +1,10 @@
 <?php
 
-namespace tpaycom\magento2basic\Model;
+namespace tpaycom\magento2basic\Model\ApiFacade\Transaction;
 
-use tpayLibs\src\_class_tpay\PaymentBlik;
+use Tpay\OriginApi\PaymentBlik;
 
-class TransactionModel extends PaymentBlik
+class TransactionOriginApi extends PaymentBlik
 {
     const BLIK_CHANNEL = 150;
 
@@ -13,13 +13,17 @@ class TransactionModel extends PaymentBlik
      * @param string $apiKey
      * @param int    $merchantId
      * @param string $merchantSecret
+     * @param mixed  $isProd
      */
-    public function __construct($apiPassword, $apiKey, $merchantId, $merchantSecret)
+    public function __construct($apiPassword, $apiKey, $merchantId, $merchantSecret, $isProd = true)
     {
         $this->trApiKey = $apiKey;
         $this->trApiPass = $apiPassword;
         $this->merchantId = $merchantId;
         $this->merchantSecret = $merchantSecret;
         parent::__construct();
+        if (!$isProd) {
+            $this->apiURL = 'https://secure.sandbox.tpay.com/api/gw/';
+        }
     }
 }

@@ -26,8 +26,8 @@ require(['jquery', 'mage/translate'], function ($, $t) {
             return false;
         }
 
-        function doesAmountFitToInstallments(grandTotal, channelId){
-            switch (channelId){
+        function doesAmountFitToInstallments(grandTotal, channelId) {
+            switch (channelId) {
                 case 167: //twisto
                     return grandTotal >= 1 && grandTotal <= 1500;
                     break;
@@ -51,7 +51,7 @@ require(['jquery', 'mage/translate'], function ($, $t) {
                 str2 = '',
                 tile,
                 others = [157, 106, 109, 148, 104],
-                installmentsGroupId = [109,169,167,172],
+                installmentsGroupId = [109, 169, 167, 172],
                 group,
                 id,
                 groupName,
@@ -59,9 +59,9 @@ require(['jquery', 'mage/translate'], function ($, $t) {
                 bank_selection_form = document.getElementById('bank-selection-form');
             for (i in tr_groups) {
                 group = tr_groups[i];
-                id = group[0];
-                groupName = group[1];
-                logoSrc = group[3];
+                id = group['id'];
+                groupName = group['name'];
+                logoSrc = group['img'];
 
                 if (window.checkoutConfig.tpay.payment.blikStatus === true && id === '150') {
                     continue;
@@ -79,6 +79,7 @@ require(['jquery', 'mage/translate'], function ($, $t) {
                     str2 += tile;
                 }
             }
+
             bank_selection_form.innerHTML = str + str2;
             $('.tpay-group-holder').each(function () {
                 $(this).on('click', function () {
@@ -95,13 +96,6 @@ require(['jquery', 'mage/translate'], function ($, $t) {
                     }
                 });
             });
-        }
-
-        function showOnlyOnlinePayments() {
-            if (window.checkoutConfig.tpay.payment.onlyOnlineChannels !== true) {
-                return '0';
-            }
-            return '1';
         }
 
         function checkBlikInput() {
@@ -133,29 +127,23 @@ require(['jquery', 'mage/translate'], function ($, $t) {
             });
         }
 
-        url = 'https://secure.tpay.com/';
-        if (window.checkoutConfig.tpay.payment.useSandbox) {
-            url = 'https://secure.sandbox.tpay.com/';
-        }
-        $.getScript(url + "groups-" + window.checkoutConfig.tpay.payment.merchantId + showOnlyOnlinePayments() + ".js", function () {
-            ShowChannelsCombo();
-            checkBlikInput();
-            setBlikInputAction();
-            payButton.addClass('disabled');
-            tos.on('change', function () {
-                var input = $('#tpay-channel-input');
-                if (input.val() > 0 && $('#blik_code').val().length === 0 && tos.is(':checked')) {
-                    payButton.removeClass('disabled');
-                    return;
-                }
+        var tr_groups = window.checkoutConfig.tpay.payment.groups;
+        ShowChannelsCombo();
+        checkBlikInput();
+        setBlikInputAction();
+        payButton.addClass('disabled');
+        tos.on('change', function () {
+            var input = $('#tpay-channel-input');
+            if (input.val() > 0 && $('#blik_code').val().length === 0 && tos.is(':checked')) {
+                payButton.removeClass('disabled');
+                return;
+            }
 
-                if ($('#blik_code').val().length === 6 && tos.is(':checked')) {
-                    payButton.removeClass('disabled');
-                    return;
-                }
-                payButton.addClass('disabled');
-            });
-            console.log(this)
+            if ($('#blik_code').val().length === 6 && tos.is(':checked')) {
+                payButton.removeClass('disabled');
+                return;
+            }
+            payButton.addClass('disabled');
         });
     }
 );
