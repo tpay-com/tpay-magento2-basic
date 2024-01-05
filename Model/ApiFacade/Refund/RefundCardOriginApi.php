@@ -22,21 +22,6 @@ class RefundCardOriginApi extends CardRefunds
 {
     public function __construct(TpayInterface $tpay)
     {
-//
-//        $this->apiKey = 'bda5eda723bf1ae71a82e90a249803d3f852248d';
-//        $this->apiPass = 'IhZVgraNcZoWPLgA1yQcGMIzquVWWrWtJ';
-//        $this->verificationCode = '6680181602d396e640cb091ea5418171';
-//        $this->keyRsa = 'LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0NCk1JR2ZNQTBHQ1NxR1NJYjNEUUVCQVFVQUE0R05BRENCaVFLQmdRQ2NLRTVZNU1Wemd5a1Z5ODNMS1NTTFlEMEVrU2xadTRVZm1STS8NCmM5L0NtMENuVDM2ekU0L2dMRzBSYzQwODRHNmIzU3l5NVpvZ1kwQXFOVU5vUEptUUZGVyswdXJacU8yNFRCQkxCcU10TTVYSllDaVQNCmVpNkx3RUIyNnpPOFZocW9SK0tiRS92K1l1YlFhNGQ0cWtHU0IzeHBhSUJncllrT2o0aFJDOXk0WXdJREFRQUINCi0tLS0tRU5EIFBVQkxJQyBLRVktLS0tLQ==';
-//        $this->hashType = 'sha512';
-
-
-//        $this->tpay = $tpay;
-//        $this->apiKey = $tpay->getApiPassword();
-//        $this->apiPass = $tpay->getApiKey();
-//        $this->verificationCode = $tpay->getVerificationCode();
-//        $this->keyRsa = $tpay->getRSAKey();
-//        $this->hashType = $tpay->getHashType();
-
         Util::$loggingEnabled = false;
         $this->cardApiKey = $tpay->getCardApiKey();
         $this->cardApiPass = $tpay->getCardApiPassword();
@@ -49,7 +34,6 @@ class RefundCardOriginApi extends CardRefunds
 
     public function makeCardRefund($payment, $amount, $currency = '985')
     {
-//        $tpayApi = new CardRefundModel($this->apiPass, $this->apiKey, $this->verificationCode, $this->keyRsa, $this->hashType);
         $transactionId = $payment->getParentTransactionId();
         $this->setAmount($amount)->setCurrency($currency);
         $result = $this->refund($transactionId, __('Zwrot do zamówienia ') . $payment->getOrder()->getRealOrderId());
