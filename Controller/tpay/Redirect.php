@@ -41,7 +41,7 @@ class Redirect extends Action
             return $this->_redirect('magento2basic/tpay/CardPayment');
         }
 
-        if ((!array_key_exists(TpayInterface::CHANNEL, $additionalPaymentInfo) || (int)$additionalPaymentInfo[TpayInterface::CHANNEL] < 1) && (!array_key_exists(TpayInterface::BLIK_CODE, $additionalPaymentInfo) || 6 !== strlen($additionalPaymentInfo[TpayInterface::BLIK_CODE]))) {
+        if ((!array_key_exists(TpayInterface::CHANNEL, $additionalPaymentInfo) || (int) $additionalPaymentInfo[TpayInterface::CHANNEL] < 1) && (!array_key_exists(TpayInterface::BLIK_CODE, $additionalPaymentInfo) || 6 !== strlen($additionalPaymentInfo[TpayInterface::BLIK_CODE]))) {
             return $this->_redirect('checkout/cart');
         }
         $this->tpayService->setOrderStatePendingPayment($orderId, true);

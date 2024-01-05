@@ -1,10 +1,4 @@
 <?php
-/**
- * @category    payment gateway
- * @package     Tpaycom_Magento2.3
- * @author      Tpay.com
- * @copyright   (https://tpay.com)
- */
 
 namespace tpaycom\magento2basic\Model\ApiFacade\CardTransaction;
 
@@ -14,10 +8,6 @@ use tpaycom\magento2basic\Service\TpayService;
 use tpaycom\magento2basic\Service\TpayTokensService;
 use tpaySDK\Api\TpayApi;
 
-/**
- * Class CardOpen
- * @package tpaycom\magento2basic\Model\ApiFacade\CardTransaction
- */
 class CardOpen
 {
     /** @var TpayInterface */
@@ -53,7 +43,7 @@ class CardOpen
         $this->tpayPaymentConfig = $this->tpay->getTpayFormData($orderId);
 
         if (isset($additionalPaymentInformation['card_id']) && false !== $additionalPaymentInformation['card_id'] && $this->tpay->getCardSaveEnabled()) {
-            $cardId = (int)$additionalPaymentInformation['card_id'];
+            $cardId = (int) $additionalPaymentInformation['card_id'];
 
             return $this->processSavedCardPayment($orderId, $cardId);
         }
@@ -87,9 +77,9 @@ class CardOpen
                 }
 
                 if (isset($paymentResult['status']) && 'declined' === $paymentResult['status']) {
-                    $this->tpayService->addCommentToHistory($orderId, 'Failed to pay by saved card, Elavon rejection code: ' . $paymentResult['reason']);
+                    $this->tpayService->addCommentToHistory($orderId, 'Failed to pay by saved card, Elavon rejection code: '.$paymentResult['reason']);
                 } else {
-                    $this->tpayService->addCommentToHistory($orderId, 'Failed to pay by saved card, error: ' . $paymentResult['err_desc']);
+                    $this->tpayService->addCommentToHistory($orderId, 'Failed to pay by saved card, error: '.$paymentResult['err_desc']);
                 }
             } catch (Exception $e) {
                 return 'magento2basic/tpay/error';
@@ -111,7 +101,7 @@ class CardOpen
 
     private function processNewCardPayment(string $orderId, array $additionalPaymentInformation): string
     {
-        $saveCard = isset($additionalPaymentInformation['card_save']) && $this->tpay->getCardSaveEnabled() ? (bool)$additionalPaymentInformation['card_save'] : false;
+        $saveCard = isset($additionalPaymentInformation['card_save']) && $this->tpay->getCardSaveEnabled() ? (bool) $additionalPaymentInformation['card_save'] : false;
         try {
             $transaction = $this->tpayApi->Transactions->createTransaction($this->handleDataStructure());
             $request = [
@@ -124,14 +114,13 @@ class CardOpen
             ];
             $result = $this->tpayApi->Transactions->createPaymentByTransactionId($request, $transaction['transactionId']);
             $this->tpayService->setCardOrderStatus($orderId, $this->handleValidParams($result), $this->tpay);
-
         } catch (Exception $e) {
             return 'magento2basic/tpay/error';
         }
 
-        if (isset($result['transactionPaymentUrl']) && $result['payments']['status'] === 'pending') {
+        if (isset($result['transactionPaymentUrl']) && 'pending' === $result['payments']['status']) {
             $url3ds = $result['transactionPaymentUrl'];
-            $this->tpayService->addCommentToHistory($orderId, '3DS Transaction link ' . $url3ds);
+            $this->tpayService->addCommentToHistory($orderId, '3DS Transaction link '.$url3ds);
             $this->addToPaymentData($orderId, 'transaction_url', $url3ds);
             $this->saveCard($orderId, $saveCard, $additionalPaymentInformation);
 
@@ -157,7 +146,7 @@ class CardOpen
     private function handleDataStructure(): array
     {
         return [
-            'amount' => (float)$this->tpayPaymentConfig['amount'],
+            'amount' => (float) $this->tpayPaymentConfig['amount'],
             'description' => $this->tpayPaymentConfig['description'],
             'hiddenDescription' => $this->tpayPaymentConfig['crc'],
             'payer' => [
@@ -175,13 +164,13 @@ class CardOpen
             ],
             'callbacks' => [
                 'notification' => [
-                    "url" => $this->tpayPaymentConfig['result_url'],
+                    'url' => $this->tpayPaymentConfig['result_url'],
                 ],
                 'payerUrls' => [
-                    "success" => $this->tpayPaymentConfig['return_url'],
-                    "error" => $this->tpayPaymentConfig['return_error_url']
+                    'success' => $this->tpayPaymentConfig['return_url'],
+                    'error' => $this->tpayPaymentConfig['return_error_url'],
                 ],
-            ]
+            ],
         ];
     }
 

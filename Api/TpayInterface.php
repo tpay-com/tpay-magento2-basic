@@ -58,7 +58,6 @@ interface TpayInterface
     /** Check if checkout amount is in range of installments payment channel */
     public function getInstallmentsAmountValid(): bool;
 
-
     // KARTY
     public function getCardApiKey(): ?string;
 

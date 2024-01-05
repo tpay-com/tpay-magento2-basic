@@ -1,11 +1,4 @@
 <?php
-/**
- *
- * @category    payment gateway
- * @package     Tpaycom_Magento2.3
- * @author      Tpay.com
- * @copyright   (https://tpay.com)
- */
 
 namespace tpaycom\magento2basic\Model\ApiFacade\CardTransaction;
 
@@ -14,10 +7,6 @@ use tpaycom\magento2basic\Api\TpayInterface;
 use tpaycom\magento2basic\Service\TpayService;
 use tpaycom\magento2basic\Service\TpayTokensService;
 
-/**
- * Class CardApiFacade
- * @package tpaycom\magento2basic\Model\ApiFacade\CardTransaction
- */
 class CardApiFacade
 {
     /** @var CardOrigin */

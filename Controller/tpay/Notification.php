@@ -13,9 +13,9 @@ use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\Response\Http;
 use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
 use Magento\Sales\Model\Order;
+use Tpay\OriginApi\Utilities\Util;
 use tpaycom\magento2basic\Api\TpayInterface;
 use tpaycom\magento2basic\Service\TpayService;
-use Tpay\OriginApi\Utilities\Util;
 use tpaycom\magento2basic\Service\TpayTokensService;
 use tpaySDK\Webhook\JWSVerifiedPaymentNotification;
 
@@ -30,10 +30,10 @@ class Notification extends Action implements CsrfAwareActionInterface
     /** @var TpayService */
     protected $tpayService;
 
+    protected $request;
+
     /** @var TpayTokensService */
     private $tokensService;
-
-    protected $request;
 
     public function __construct(Context $context, RemoteAddress $remoteAddress, TpayInterface $tpayModel, TpayService $tpayService, TpayTokensService $tokensService)
     {
@@ -90,8 +90,10 @@ class Notification extends Action implements CsrfAwareActionInterface
 
     /**
      * Check if the order has been canceled and get response to Tpay server.
-     * @return string response for Tpay server
+     *
      * @throws Exception
+     *
+     * @return string response for Tpay server
      */
     protected function getPaidTransactionResponse(string $orderId): string
     {
@@ -113,9 +115,9 @@ class Notification extends Action implements CsrfAwareActionInterface
         $order = $this->tpayService->getOrderById($orderId);
 
         if (isset($notification['card_token']) && !$this->tpay->isCustomerGuest($orderId)) {
-            $token = $this->tokensService->getWithoutAuthCustomerTokens((int)$order->getCustomerId(), $notification['tr_crc']);
+            $token = $this->tokensService->getWithoutAuthCustomerTokens((int) $order->getCustomerId(), $notification['tr_crc']);
             if (!empty($token)) {
-                $this->tokensService->updateTokenById((int)$token['tokenId'], $notification['card_token']);
+                $this->tokensService->updateTokenById((int) $token['tokenId'], $notification['card_token']);
             }
         }
     }

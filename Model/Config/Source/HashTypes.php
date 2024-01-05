@@ -23,7 +23,7 @@ class HashTypes implements ArrayInterface
     /**
      * Get options in "key-value" format
      *
-     * @return array<string>
+     * @return list<string>
      */
     public function toArray()
     {

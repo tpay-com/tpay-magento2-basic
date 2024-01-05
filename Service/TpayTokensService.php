@@ -7,6 +7,7 @@ use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Registry;
 use tpaycom\magento2basic\Model\Tokens;
+use Zend_Db_Expr;
 
 class TpayTokensService extends Tokens
 {
@@ -42,8 +43,8 @@ class TpayTokensService extends Tokens
         $select = $connection->select()
             ->from($tableName)
             ->where('cli_id = ?', $customerId)
-            ->where(new \Zend_Db_Expr('cli_auth IS NOT NULL'))
-            ->where(new \Zend_Db_Expr($crcRequired ? 'crc IS NOT NULL' : 'crc IS NULL'));
+            ->where(new Zend_Db_Expr('cli_auth IS NOT NULL'))
+            ->where(new Zend_Db_Expr($crcRequired ? 'crc IS NOT NULL' : 'crc IS NULL'));
 
         $results = [];
         foreach ($connection->fetchAll($select) as $token) {
@@ -94,7 +95,7 @@ class TpayTokensService extends Tokens
             ->from($tableName)
             ->where('id = ?', $tokenId)
             ->where('cli_id = ?', $customerId)
-            ->where(new \Zend_Db_Expr($crcRequired ? 'crc IS NOT NULL' : 'crc IS NULL'));
+            ->where(new Zend_Db_Expr($crcRequired ? 'crc IS NOT NULL' : 'crc IS NULL'));
 
         $result = $connection->fetchAll($select);
 

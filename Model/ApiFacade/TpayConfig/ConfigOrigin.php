@@ -1,11 +1,4 @@
 <?php
-/**
- *
- * @category    payment gateway
- * @package     Tpaycom_Magento2.3
- * @author      Tpay.com
- * @copyright   (https://tpay.com)
- */
 
 namespace tpaycom\magento2basic\Model\ApiFacade\TpayConfig;
 
@@ -14,20 +7,16 @@ use tpaycom\magento2basic\Api\TpayInterface;
 use tpaycom\magento2basic\Model\ApiFacade\Transaction\TransactionOriginApi;
 use tpaycom\magento2basic\Service\TpayTokensService;
 
-/**
- * Class ConfigOrigin
- * @package tpaycom\magento2basic\Model\ApiFacade\TpayConfig
- */
 class ConfigOrigin
 {
-    /** @var TpayInterface */
-    private $tpay;
-
     /** @var Repository */
     protected $assetRepository;
 
     /** @var TpayTokensService */
     protected $tokensService;
+
+    /** @var TpayInterface */
+    private $tpay;
 
     public function __construct(TpayInterface $tpay, Repository $assetRepository, TpayTokensService $tokensService)
     {
@@ -107,6 +96,7 @@ class ConfigOrigin
                 ];
             }
         }
+
         return [
             'tpaycards' => [
                 'payment' => [

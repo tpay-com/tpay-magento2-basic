@@ -1,11 +1,4 @@
 <?php
-/**
- *
- * @category    payment gateway
- * @package     Tpaycom_Magento2.3
- * @author      Tpay.com
- * @copyright   (https://tpay.com)
- */
 
 namespace tpaycom\magento2basic\Model\ApiFacade\TpayConfig;
 
@@ -15,20 +8,16 @@ use tpaycom\magento2basic\Model\ApiFacade\Transaction\TransactionOriginApi;
 use tpaycom\magento2basic\Service\TpayTokensService;
 use tpaySDK\Api\TpayApi;
 
-/**
- * Class ConfigOpen
- * @package tpaycom\magento2basic\Model\ApiFacade\TpayConfig
- */
 class ConfigOpen extends TpayApi
 {
+    /** @var TpayTokensService */
+    protected $tokensService;
+
     /** @var TpayInterface */
     private $tpay;
 
     /** @var Repository */
     private $assetRepository;
-
-    /** @var TpayTokensService */
-    protected $tokensService;
 
     public function __construct(TpayInterface $tpay, Repository $assetRepository, TpayTokensService $tokensService)
     {
@@ -52,7 +41,7 @@ class ConfigOpen extends TpayApi
                     'getBlikChannelID' => TransactionOriginApi::BLIK_CHANNEL,
                     'useSandbox' => $this->tpay->useSandboxMode(),
                     'grandTotal' => number_format($this->tpay->getCheckoutTotal(), 2, '.', ''),
-                    'groups' => $this->Transactions->getBankGroups((bool)$this->tpay->onlyOnlineChannels())['groups']
+                    'groups' => $this->Transactions->getBankGroups((bool) $this->tpay->onlyOnlineChannels())['groups'],
                 ],
             ],
         ];
@@ -107,6 +96,7 @@ class ConfigOpen extends TpayApi
                 ];
             }
         }
+
         return [
             'tpaycards' => [
                 'payment' => [

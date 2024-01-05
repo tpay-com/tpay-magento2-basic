@@ -2,10 +2,10 @@
 
 namespace tpaycom\magento2basic\Setup;
 
+use Magento\Framework\DB\Ddl\Table;
 use Magento\Framework\Setup\InstallSchemaInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
-use Magento\Framework\DB\Ddl\Table;
 
 class InstallSchema implements InstallSchemaInterface
 {
@@ -17,7 +17,7 @@ class InstallSchema implements InstallSchemaInterface
         // Get tpay cards table
         $tableName = $installer->getTable('tpay_credit_cards');
         // Check if the table already exists
-        if ($installer->getConnection()->isTableExists($tableName) != true) {
+        if (true != $installer->getConnection()->isTableExists($tableName)) {
             // Create table
             $table = $installer->getConnection()
                 ->newTable($tableName)
@@ -29,7 +29,7 @@ class InstallSchema implements InstallSchemaInterface
                         'identity' => true,
                         'unsigned' => true,
                         'nullable' => false,
-                        'primary' => true
+                        'primary' => true,
                     ],
                     'ID'
                 )

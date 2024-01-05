@@ -1,11 +1,4 @@
 <?php
-/**
- *
- * @category    payment gateway
- * @package     Tpaycom_Magento2.3
- * @author      Tpay.com
- * @copyright   (https://tpay.com)
- */
 
 namespace tpaycom\magento2basic\Model\ApiFacade\Refund;
 
@@ -15,10 +8,6 @@ use Tpay\OriginApi\Refunds\BasicRefunds;
 use Tpay\OriginApi\Utilities\Util;
 use tpaycom\magento2basic\Api\TpayInterface;
 
-/**
- * Class RefundOriginApi
- * @package tpaycom\magento2basic\Model\ApiFacade
- */
 class RefundOriginApi extends BasicRefunds
 {
     public function __construct(TpayInterface $tpay)
@@ -37,11 +26,10 @@ class RefundOriginApi extends BasicRefunds
     {
         Util::$loggingEnabled = false;
         $apiResult = $this->setTransactionID($payment->getParentTransactionId())->refundAny(number_format($amount, 2));
-        if (isset($apiResult['result']) && (int)$apiResult['result'] === 1) {
+        if (isset($apiResult['result']) && 1 === (int) $apiResult['result']) {
             return true;
-        } else {
-            $errCode = isset($apiResult['err']) ? ' error code: ' . $apiResult['err'] : '';
-            throw new Exception(__('Payment refunding error. -' . $errCode));
         }
+        $errCode = isset($apiResult['err']) ? ' error code: '.$apiResult['err'] : '';
+        throw new Exception(__('Payment refunding error. -'.$errCode));
     }
 }
