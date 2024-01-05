@@ -21,6 +21,14 @@
                 <field id="title" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Description</label>
                 </field>
+                <field id="client_id" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Client ID OPEN API</label>
+                    <validate>validate-length maximum-length-64</validate>
+                </field>
+                <field id="open_api_password" translate="label comment" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>API password OPEN API</label>
+                    <validate>validate-length maximum-length-64</validate>
+                </field>
                 <field id="merchant_id" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Merchant ID</label>
                     <validate>validate-no-empty validate-number validate-length maximum-length-10</validate>
@@ -107,6 +115,10 @@
                     <label>Maximal amount for method</label>
                     <comment>Leave empty for no limit</comment>
                     <validate>validate-number</validate>
+                </field>
+                <field id="onsite_channels" translate="label" type="multiselect" sortOrder="18" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Generic onsites</label>
+                    <source_model>tpaycom\magento2basic\Model\Config\Source\OnsiteChannels</source_model>
                 </field>
 
 

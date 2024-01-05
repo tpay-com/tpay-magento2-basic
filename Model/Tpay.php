@@ -233,7 +233,7 @@ class Tpay extends AbstractMethod implements TpayInterface
 
     public function redirectToChannel(): bool
     {
-        return (bool) $this->getConfigData('redirect_directly_to_channel');
+        return true;
     }
 
     public function useSandboxMode(): bool
@@ -447,5 +447,10 @@ class Tpay extends AbstractMethod implements TpayInterface
         $productMetadata = $objectManager->get('Magento\Framework\App\ProductMetadataInterface');
 
         return $productMetadata->getVersion();
+    }
+
+    public function getClientId(): string
+    {
+        return $this->getConfigData('client_id');
     }
 }

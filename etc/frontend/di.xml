@@ -9,18 +9,11 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <virtualType name="tpaycom\magento2basic\Model\ConfigProvider" type="Magento\Payment\Model\CcGenericConfigProvider">
-        <arguments>
-            <argument name="methodCodes" xsi:type="array">
-                <item name="tpaycom_magento2basic" xsi:type="const">tpaycom\magento2basic\Model\Tpay::CODE</item>
-            </argument>
-        </arguments>
-    </virtualType>
     <type name="Magento\Core\Model\Session" />
     <type name="Magento\Checkout\Model\CompositeConfigProvider">
         <arguments>
             <argument name="configProviders" xsi:type="array">
-                <item name="tpay_payment_config_provider" xsi:type="object">tpaycom\magento2basic\Model\TpayConfigProvider</item>
+                <item name="tpay_payment_config_provider" xsi:type="object">tpaycom\magento2basic\Model\GenericOnSiteConfigProvider</item>
             </argument>
         </arguments>
     </type>
