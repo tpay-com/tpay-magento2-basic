@@ -11,8 +11,9 @@ class TransactionOriginApi extends PaymentBlik
     /**
      * @param string $apiPassword
      * @param string $apiKey
-     * @param int    $merchantId
+     * @param int $merchantId
      * @param string $merchantSecret
+     * @param mixed $isProd
      */
     public function __construct($apiPassword, $apiKey, $merchantId, $merchantSecret, $isProd = true)
     {
