@@ -10,12 +10,10 @@ use Magento\Payment\Helper\Data as PaymentHelper;
 use Magento\Payment\Model\MethodInterface;
 use tpaycom\magento2basic\Api\TpayInterface;
 use tpaycom\magento2basic\Model\ApiFacade\TpayConfig\ConfigFacade;
+use tpaycom\magento2basic\Service\TpayTokensService;
 
 class TpayConfigProvider implements ConfigProviderInterface
 {
-    /** @var Repository */
-    protected $assetRepository;
-
     /** @var PaymentHelper */
     protected $paymentHelper;
 
@@ -25,11 +23,10 @@ class TpayConfigProvider implements ConfigProviderInterface
     /** @var ConfigFacade */
     protected $configFacade;
 
-    public function __construct(PaymentHelper $paymentHelper, Repository $assetRepository)
+    public function __construct(PaymentHelper $paymentHelper, Repository $assetRepository, TpayTokensService $tokensService)
     {
-        $this->assetRepository = $assetRepository;
         $this->paymentHelper = $paymentHelper;
-        $this->configFacade = new ConfigFacade($this->getPaymentMethodInstance(), $assetRepository);
+        $this->configFacade = new ConfigFacade($this->getPaymentMethodInstance(), $assetRepository, $tokensService);
     }
 
     public function getConfig()

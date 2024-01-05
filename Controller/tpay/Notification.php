@@ -16,6 +16,7 @@ use Magento\Sales\Model\Order;
 use tpaycom\magento2basic\Api\TpayInterface;
 use tpaycom\magento2basic\Service\TpayService;
 use Tpay\OriginApi\Utilities\Util;
+use tpaycom\magento2basic\Service\TpayTokensService;
 use tpaySDK\Webhook\JWSVerifiedPaymentNotification;
 
 class Notification extends Action implements CsrfAwareActionInterface
@@ -29,13 +30,17 @@ class Notification extends Action implements CsrfAwareActionInterface
     /** @var TpayService */
     protected $tpayService;
 
+    /** @var TpayTokensService */
+    private $tokensService;
+
     protected $request;
 
-    public function __construct(Context $context, RemoteAddress $remoteAddress, TpayInterface $tpayModel, TpayService $tpayService)
+    public function __construct(Context $context, RemoteAddress $remoteAddress, TpayInterface $tpayModel, TpayService $tpayService, TpayTokensService $tokensService)
     {
         $this->tpay = $tpayModel;
         $this->remoteAddress = $remoteAddress;
         $this->tpayService = $tpayService;
+        $this->tokensService = $tokensService;
         Util::$loggingEnabled = false;
 
         parent::__construct($context);
@@ -44,8 +49,7 @@ class Notification extends Action implements CsrfAwareActionInterface
     public function execute()
     {
         try {
-            $code = $this->tpay->getSecurityCode();
-            $notification = (new JWSVerifiedPaymentNotification($code, !$this->tpay->useSandboxMode()))->getNotification();
+            $notification = $this->generateNotification();
             $notification = $notification->getNotificationAssociative();
             $orderId = base64_decode($notification['tr_crc']);
 
@@ -55,6 +59,7 @@ class Notification extends Action implements CsrfAwareActionInterface
                 return $this->getResponse()->setStatusCode(Http::STATUS_CODE_200)->setContent($response);
             }
 
+            $this->saveCard($notification, $orderId);
             $this->tpayService->SetOrderStatus($orderId, $notification, $this->tpay);
 
             return $this->getResponse()->setStatusCode(Http::STATUS_CODE_200)->setContent('TRUE');
@@ -101,5 +106,26 @@ class Notification extends Action implements CsrfAwareActionInterface
         }
 
         return 'TRUE';
+    }
+
+    private function saveCard(array $notification, string $orderId)
+    {
+        $order = $this->tpayService->getOrderById($orderId);
+
+        if (isset($notification['card_token']) && !$this->tpay->isCustomerGuest($orderId)) {
+            $token = $this->tokensService->getWithoutAuthCustomerTokens((int)$order->getCustomerId(), $notification['tr_crc']);
+            if (!empty($token)) {
+                $this->tokensService->updateTokenById((int)$token['tokenId'], $notification['card_token']);
+            }
+        }
+    }
+
+    private function generateNotification()
+    {
+        try {
+            return (new JWSVerifiedPaymentNotification($this->tpay->getSecurityCode(), !$this->tpay->useSandboxMode()))->getNotification();
+        } catch (Exception $e) {
+            return (new JWSVerifiedPaymentNotification($this->tpay->getOpenApiSecurityCode(), !$this->tpay->useSandboxMode()))->getNotification();
+        }
     }
 }

@@ -25,9 +25,12 @@ use Magento\Store\Model\StoreManager;
 use tpaycom\magento2basic\Api\Sales\OrderRepositoryInterface;
 use tpaycom\magento2basic\Api\TpayInterface;
 use tpaycom\magento2basic\Model\ApiFacade\Refund\RefundApiFacade;
+use tpayLibs\src\_class_tpay\Validators\FieldsValidator;
 
 class Tpay extends AbstractMethod implements TpayInterface
 {
+    use FieldsValidator;
+
     protected $_code = self::CODE;
     protected $_isGateway = true;
     protected $_canCapture = false;
@@ -58,6 +61,15 @@ class Tpay extends AbstractMethod implements TpayInterface
 
     /** @var StoreManager */
     protected $storeManager;
+
+    private $supportedVendors = [
+        'visa',
+        'jcb',
+        'dinersclub',
+        'maestro',
+        'amex',
+        'mastercard',
+    ];
 
     public function __construct(
         Context                    $context,
@@ -130,9 +142,19 @@ class Tpay extends AbstractMethod implements TpayInterface
         return $this->getConfigData('api_key_tpay');
     }
 
+    public function getCardApiKey(): ?string
+    {
+        return $this->getConfigData('card_api_key_tpay');
+    }
+
     public function getApiPassword(): string
     {
         return $this->getConfigData('api_password');
+    }
+
+    public function getCardApiPassword(): ?string
+    {
+        return $this->getConfigData('card_api_password');
     }
 
     public function getInvoiceSendMail(): string
@@ -160,6 +182,10 @@ class Tpay extends AbstractMethod implements TpayInterface
         $name = $billingAddress->getData('firstname') . ' ' . $billingAddress->getData('lastname');
         $phone = $billingAddress->getData('telephone');
 
+        $om = ObjectManager::getInstance();
+        $resolver = $om->get('Magento\Framework\Locale\Resolver');
+        $language = $this->validateCardLanguage($resolver->getLocale());
+
         return [
             'email' => $this->escaper->escapeHtml($order->getCustomerEmail()),
             'name' => $this->escaper->escapeHtml($name),
@@ -176,6 +202,8 @@ class Tpay extends AbstractMethod implements TpayInterface
             'phone' => $phone,
             'online' => $this->onlyOnlineChannels() ? 1 : 0,
             'module' => 'Magento ' . $this->getMagentoVersion(),
+            'currency' => $this->getISOCurrencyCode($order->getOrderCurrencyCode()),
+            'language' => $language,
         ];
     }
 
@@ -185,14 +213,19 @@ class Tpay extends AbstractMethod implements TpayInterface
     }
 
     /** {@inheritdoc} */
-    public function getClientId()
+    public function getOpenApiClientId()
     {
-        return $this->getConfigData('client_id');
+        return $this->getConfigData('open_api_client_id');
     }
 
     public function getSecurityCode(): string
     {
         return $this->getConfigData('security_code');
+    }
+
+    public function getOpenApiSecurityCode(): ?string
+    {
+        return $this->getConfigData('open_api_security_code');
     }
 
     public function onlyOnlineChannels(): bool
@@ -247,6 +280,13 @@ class Tpay extends AbstractMethod implements TpayInterface
         if (array_key_exists(static::TERMS_ACCEPT, $additionalData) && 1 === $additionalData[static::TERMS_ACCEPT]) {
             $info->setAdditionalInformation(static::TERMS_ACCEPT, 1);
         }
+
+        //KARTY
+        $info->setAdditionalInformation(static::CARDDATA, isset($additionalData[static::CARDDATA]) ? $additionalData[static::CARDDATA] : '');
+        $info->setAdditionalInformation(static::CARD_VENDOR, isset($additionalData[static::CARD_VENDOR]) && in_array($additionalData[static::CARD_VENDOR], $this->supportedVendors) ? $additionalData[static::CARD_VENDOR] : 'undefined');
+        $info->setAdditionalInformation(static::CARD_SAVE, isset($additionalData[static::CARD_SAVE]) ? '1' === $additionalData[static::CARD_SAVE] : false);
+        $info->setAdditionalInformation(static::CARD_ID, isset($additionalData[static::CARD_ID]) && is_numeric($additionalData[static::CARD_ID]) ? $additionalData[static::CARD_ID] : false);
+        $info->setAdditionalInformation(static::SHORT_CODE, isset($additionalData[static::SHORT_CODE]) && is_numeric($additionalData[static::SHORT_CODE]) ? '****'.$additionalData[static::SHORT_CODE] : false);
 
         return $this;
     }
@@ -303,6 +343,70 @@ class Tpay extends AbstractMethod implements TpayInterface
         return parent::getConfigData($field, $storeId);
     }
 
+
+// KARTY
+    public function getCardSaveEnabled(): bool
+    {
+        return (bool)$this->getConfigData('card_save_enabled');
+    }
+
+    public function getCheckoutCustomerId(): ?string
+    {
+        $objectManager = ObjectManager::getInstance();
+
+        /** @var \Magento\Customer\Model\Session $customerSession */
+        $customerSession = $objectManager->get('Magento\Customer\Model\Session');
+
+        return $customerSession->getCustomerId();
+    }
+
+    public function getRSAKey(): string
+    {
+        return $this->getConfigData('rsa_key');
+    }
+
+    public function isCustomerLoggedIn(): bool
+    {
+        $objectManager = ObjectManager::getInstance();
+
+        /** @var \Magento\Customer\Model\Session $customerSession */
+        $customerSession = $objectManager->get('Magento\Customer\Model\Session');
+
+        return $customerSession->isLoggedIn();
+    }
+
+    public function getHashType(): string
+    {
+        return $this->getConfigData('hash_type');
+    }
+
+    public function getVerificationCode(): string
+    {
+        return $this->getConfigData('verification_code');
+    }
+
+    /**
+     * @param string $orderId
+     * @return string
+     */
+    public function getCustomerId($orderId)
+    {
+        $order = $this->getOrder($orderId);
+
+        return $order->getCustomerId();
+    }
+
+    /**
+     * check if customer was logged while placing order
+     * @param string $orderId
+     * @return bool
+     */
+    public function isCustomerGuest($orderId)
+    {
+        $order = $this->getOrder($orderId);
+        return $order->getCustomerIsGuest();
+    }
+
     /** Check that the  BLIK should be available for order/quote amount */
     protected function checkBlikAmount(): bool
     {
@@ -312,6 +416,11 @@ class Tpay extends AbstractMethod implements TpayInterface
     protected function getCheckout(): Session
     {
         return $this->checkoutSession;
+    }
+
+    public function getISOCurrencyCode($orderCurrency)
+    {
+        return $this->validateCardCurrency($orderCurrency);
     }
 
     protected function getOrder(?string $orderId = null): \Magento\Sales\Api\Data\OrderInterface

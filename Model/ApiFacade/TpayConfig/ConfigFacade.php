@@ -11,6 +11,7 @@ namespace tpaycom\magento2basic\Model\ApiFacade\TpayConfig;
 use Exception;
 use Magento\Framework\View\Asset\Repository;
 use tpaycom\magento2basic\Api\TpayInterface;
+use tpaycom\magento2basic\Service\TpayTokensService;
 
 /**
  * Class ConfigFacade
@@ -27,11 +28,11 @@ class ConfigFacade
     /** @var bool */
     private $useOpenApi;
 
-    public function __construct(TpayInterface $tpay, Repository $assetRepository)
+    public function __construct(TpayInterface $tpay, Repository $assetRepository, TpayTokensService $tokensService)
     {
         $this->tpay = $tpay;
-        $this->originApi = new ConfigOrigin($tpay, $assetRepository);
-        $this->createOpenApiInstance($tpay, $assetRepository);
+        $this->originApi = new ConfigOrigin($tpay, $assetRepository, $tokensService);
+        $this->createOpenApiInstance($tpay, $assetRepository, $tokensService);
     }
 
     public function getConfig(): array
@@ -44,10 +45,10 @@ class ConfigFacade
         return $this->useOpenApi ? $this->openApi : $this->originApi;
     }
 
-    private function createOpenApiInstance(TpayInterface $tpay, Repository $assetRepository)
+    private function createOpenApiInstance(TpayInterface $tpay, Repository $assetRepository, TpayTokensService $tokensService)
     {
         try {
-            $this->openApi = new ConfigOpen($tpay, $assetRepository);
+            $this->openApi = new ConfigOpen($tpay, $assetRepository, $tokensService);
             $this->useOpenApi = true;
         } catch (Exception $exception) {
             $this->openApi = null;

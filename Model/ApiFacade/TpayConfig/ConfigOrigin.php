@@ -12,6 +12,7 @@ namespace tpaycom\magento2basic\Model\ApiFacade\TpayConfig;
 use Magento\Framework\View\Asset\Repository;
 use tpaycom\magento2basic\Api\TpayInterface;
 use tpaycom\magento2basic\Model\ApiFacade\Transaction\TransactionOriginApi;
+use tpaycom\magento2basic\Service\TpayTokensService;
 
 /**
  * Class ConfigOrigin
@@ -25,10 +26,14 @@ class ConfigOrigin
     /** @var Repository */
     protected $assetRepository;
 
-    public function __construct(TpayInterface $tpay, Repository $assetRepository)
+    /** @var TpayTokensService */
+    protected $tokensService;
+
+    public function __construct(TpayInterface $tpay, Repository $assetRepository, TpayTokensService $tokensService)
     {
         $this->tpay = $tpay;
         $this->assetRepository = $assetRepository;
+        $this->tokensService = $tokensService;
     }
 
     public function getConfig(): array
@@ -50,6 +55,8 @@ class ConfigOrigin
                 ],
             ],
         ];
+
+        $config = array_merge($config, $this->getCardConfig());
 
         return $this->tpay->isAvailable() ? $config : [];
     }
@@ -85,5 +92,51 @@ class ConfigOrigin
     public function createCSS(string $css): string
     {
         return "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$this->generateURL($css)}\">";
+    }
+
+    private function getCardConfig()
+    {
+        $customerTokensData = [];
+        if ($this->tpay->getCardSaveEnabled()) {
+            $customerTokens = $this->tokensService->getCustomerTokens($this->tpay->getCheckoutCustomerId());
+            foreach ($customerTokens as $key => $value) {
+                $customerTokensData[] = [
+                    'cardShortCode' => $value['cardShortCode'],
+                    'id' => $value['tokenId'],
+                    'vendor' => $value['vendor'],
+                ];
+            }
+        }
+        return [
+            'tpaycards' => [
+                'payment' => [
+                    'tpayLogoUrl' => $this->generateURL('tpaycom_magento2cards::images/logo_tpay.png'),
+                    'getTpayLoadingGif' => $this->generateURL('tpaycom_magento2cards::images/loading.gif'),
+                    'getRSAkey' => $this->tpay->getRSAKey(),
+                    'fetchJavaScripts' => $this->fetchJavaScripts(),
+                    'addCSS' => $this->createCSS('tpaycom_magento2cards::css/tpaycards.css'),
+                    'redirectUrl' => $this->tpay->getPaymentRedirectUrl(),
+                    'isCustomerLoggedIn' => $this->tpay->isCustomerLoggedIn(),
+                    'customerTokens' => $customerTokensData,
+                    'isSavingEnabled' => $this->tpay->getCardSaveEnabled(),
+                ],
+            ],
+        ];
+    }
+
+    private function fetchJavaScripts(): string
+    {
+        $script = [];
+        $script[] = 'tpaycom_magento2basic::js/jquery.payment.min.js';
+        $script[] = 'tpaycom_magento2basic::js/jsencrypt.min.js';
+        $script[] = 'tpaycom_magento2basic::js/string_routines.js';
+        $script[] = 'tpaycom_magento2basic::js/tpayCards.js';
+        $script[] = 'tpaycom_magento2basic::js/renderSavedCards.js';
+        $scripts = '';
+        foreach ($script as $value) {
+            $scripts .= $this->createScript($value);
+        }
+
+        return $scripts;
     }
 }

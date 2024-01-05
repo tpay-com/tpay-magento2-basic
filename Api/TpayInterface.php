@@ -13,6 +13,11 @@ interface TpayInterface
     public const CHANNEL = 'group';
     public const BLIK_CODE = 'blik_code';
     public const TERMS_ACCEPT = 'accept_tos';
+    public const CARDDATA = 'card_data';
+    public const CARD_SAVE = 'card_save';
+    public const CARD_ID = 'card_id';
+    public const CARD_VENDOR = 'card_vendor';
+    public const SHORT_CODE = 'short_code';
 
     /** Return string for redirection */
     public function getRedirectURL(): string;
@@ -25,6 +30,8 @@ interface TpayInterface
     public function getApiKey(): string;
 
     public function getSecurityCode(): string;
+
+    public function getOpenApiSecurityCode(): ?string;
 
     public function getMerchantId(): int;
 
@@ -50,4 +57,28 @@ interface TpayInterface
 
     /** Check if checkout amount is in range of installments payment channel */
     public function getInstallmentsAmountValid(): bool;
+
+
+    // KARTY
+    public function getCardApiKey(): ?string;
+
+    public function getCardApiPassword(): ?string;
+
+    public function getCardSaveEnabled(): bool;
+
+    public function getCheckoutCustomerId(): ?string;
+
+    public function getRSAKey(): string;
+
+    public function isCustomerLoggedIn(): bool;
+
+    public function getHashType(): string;
+
+    public function getVerificationCode(): string;
+
+    /** @param string $orderId */
+    public function getCustomerId($orderId);
+
+    /** @param string $orderId */
+    public function isCustomerGuest($orderId);
 }
