@@ -10,7 +10,7 @@ class OpenApi extends TpayApi
     public function create(array $data): array
     {
         $transactionData = $this->handleDataStructure($data);
-        $transaction = $this->Transactions->createTransaction($transactionData);
+        $transaction = $this->transactions()->createTransaction($transactionData);
 
         return $this->updateRedirectUrl($transaction);
     }
@@ -18,7 +18,7 @@ class OpenApi extends TpayApi
     public function createWithInstantRedirect(array $data)
     {
         $transactionData = $this->handleDataStructure($data);
-        $transaction = $this->Transactions->createTransactionWithInstantRedirection($transactionData);
+        $transaction = $this->transactions()->createTransactionWithInstantRedirection($transactionData);
 
         return $this->updateRedirectUrl($transaction);
     }
