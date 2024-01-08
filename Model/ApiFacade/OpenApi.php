@@ -53,6 +53,7 @@ class OpenApi extends TpayApi
                     "success" => $data['return_url'],
                     "error" => $data['return_error_url']
                 ],
+                'notification' => ['url' => $data['result_url']],
             ],
         ];
 
