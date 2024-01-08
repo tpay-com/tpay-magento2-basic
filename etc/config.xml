@@ -29,42 +29,6 @@
                 <currency>PLN</currency>
                 <use_sandbox>0</use_sandbox>
             </tpaycom_magento2basic>
-            <tpaycom_magento2basic_cards>
-                <order_status>pending_payment</order_status>
-                <active>0</active>
-                <model>tpaycom\magento2basic\Model\Tpay</model>
-                <title>Karty</title>
-                <allowspecific>0</allowspecific>
-                <min_order_total>0.10</min_order_total>
-                <is_gateway>1</is_gateway>
-                <can_use_checkout>1</can_use_checkout>
-                <can_authorize>0</can_authorize>
-                <can_capture>0</can_capture>
-                <can_refund>1</can_refund>
-                <can_void>0</can_void>
-                <can_cancel>1</can_cancel>
-                <currency>PLN</currency>
-                <check_server>1</check_server>
-                <check_proxy>0</check_proxy>
-            </tpaycom_magento2basic_cards>
-            <generic>
-                <order_status>pending_payment</order_status>
-                <active>0</active>
-                <model>tpaycom\magento2basic\Model\GenericOnsite</model>
-                <title>Generic</title>
-                <allowspecific>0</allowspecific>
-                <min_order_total>0.10</min_order_total>
-                <is_gateway>1</is_gateway>
-                <can_use_checkout>1</can_use_checkout>
-                <can_authorize>0</can_authorize>
-                <can_capture>0</can_capture>
-                <can_refund>1</can_refund>
-                <can_void>0</can_void>
-                <can_cancel>1</can_cancel>
-                <currency>PLN</currency>
-                <check_server>1</check_server>
-                <check_proxy>0</check_proxy>
-            </generic>
         </payment>
         <csp>
             <mode>

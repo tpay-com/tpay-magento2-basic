@@ -32,17 +32,17 @@ class TransactionApiFacade
         $this->cache = $cache;
     }
 
-    public function isOpenApiUse()
+    public function isOpenApiUse(): bool
     {
         return $this->useOpenApi;
     }
 
-    public function create(array $config)
+    public function create(array $config): array
     {
         return $this->getCurrentApi()->create($config);
     }
 
-    public function createWithInstantRedirection(array $config)
+    public function createWithInstantRedirection(array $config): array
     {
         if (!$this->useOpenApi) {
             throw new TpayException('OpenAPI not availabile - Failed to create transaction with instant redirection');
@@ -51,7 +51,7 @@ class TransactionApiFacade
         return $this->openApi->createWithInstantRedirect($config);
     }
 
-    public function blik($blikTransactionId, $blikCode)
+    public function blik($blikTransactionId, $blikCode): array
     {
         return $this->originApi->blik($blikTransactionId, $blikCode);
     }
@@ -72,7 +72,7 @@ class TransactionApiFacade
             return $channel['available'] === true && empty($channel['constraints']) === true;
         });
 
-        $this->cache->save(json_encode($channels), self::CHANNELS_CACHE_KEY, []);
+        $this->cache->save(json_encode($channels), self::CHANNELS_CACHE_KEY, [], self::CACHE_LIFETIME);
 
         return $channels;
     }

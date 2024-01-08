@@ -155,7 +155,6 @@ require(['jquery', 'mage/translate'], function ($, $t) {
                 }
                 payButton.addClass('disabled');
             });
-            console.log(this)
         });
     }
 );

@@ -17,14 +17,9 @@ class ConfigFacade
 
     /** @var bool */
     private $useOpenApi;
-    /**
-     * @var TpayInterface
-     */
-    private $tpay;
 
     public function __construct(TpayInterface $tpay, Repository $assetRepository, TpayTokensService $tokensService)
     {
-        $this->tpay = $tpay;
         $this->originApi = new ConfigOrigin($tpay, $assetRepository, $tokensService);
         $this->createOpenApiInstance($tpay, $assetRepository, $tokensService);
     }

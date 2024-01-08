@@ -15,7 +15,7 @@ class OpenApi extends TpayApi
         return $this->updateRedirectUrl($transaction);
     }
 
-    public function createWithInstantRedirect(array $data)
+    public function createWithInstantRedirect(array $data): array
     {
         $transactionData = $this->handleDataStructure($data);
         $transaction = $this->transactions()->createTransactionWithInstantRedirection($transactionData);
@@ -23,9 +23,9 @@ class OpenApi extends TpayApi
         return $this->updateRedirectUrl($transaction);
     }
 
-    public function makeRefund(InfoInterface $payment, string $amount): array
+    public function makeRefund(InfoInterface $payment, float $amount): array
     {
-        return $this->Transactions->createRefundByTransactionId(['amount' => number_format($amount, 2)], $payment->getAdditionalInformation('transaction_id'));
+        return $this->transactions()->createRefundByTransactionId(['amount' => $amount], $payment->getAdditionalInformation('transaction_id'));
     }
 
     public function channels(): array

@@ -104,6 +104,7 @@
                 </field>
                 <field id="onsite_channels" translate="label" type="multiselect" sortOrder="18" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Generic onsites</label>
+                    <can_be_empty>1</can_be_empty>
                     <source_model>tpaycom\magento2basic\Model\Config\Source\OnsiteChannels</source_model>
                 </field>
                 <field id="open_api_client_id" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">

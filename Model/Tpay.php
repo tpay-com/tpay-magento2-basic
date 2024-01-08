@@ -112,6 +112,11 @@ class Tpay extends AbstractMethod implements TpayInterface
         return $this->redirectURL;
     }
 
+    public function setCode(string $code)
+    {
+        $this->_code = $code;
+    }
+
     public function checkBlikLevel0Settings(): bool
     {
         if (!$this->getBlikLevelZeroStatus() || !$this->checkBlikAmount()) {
@@ -236,6 +241,16 @@ class Tpay extends AbstractMethod implements TpayInterface
         return true;
     }
 
+    public function setTitle(string $title): void
+    {
+        $this->_title = $title;
+    }
+
+    public function getTitle(): string
+    {
+        return $this->_title ?? $this->getConfigData('title');
+    }
+
     public function useSandboxMode(): bool
     {
         return (bool) $this->getConfigData('use_sandbox');
@@ -274,6 +289,8 @@ class Tpay extends AbstractMethod implements TpayInterface
         $info->setAdditionalInformation(static::GROUP, array_key_exists(static::GROUP, $additionalData) ? $additionalData[static::GROUP] : '');
 
         $info->setAdditionalInformation(static::BLIK_CODE, array_key_exists(static::BLIK_CODE, $additionalData) ? $additionalData[static::BLIK_CODE] : '');
+
+        $info->setAdditionalInformation('channel', $additionalData['channel'] ?? null);
 
         if (array_key_exists(static::TERMS_ACCEPT, $additionalData) && 1 === $additionalData[static::TERMS_ACCEPT]) {
             $info->setAdditionalInformation(static::TERMS_ACCEPT, 1);

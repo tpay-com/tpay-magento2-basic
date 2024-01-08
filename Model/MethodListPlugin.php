@@ -4,11 +4,13 @@ namespace tpaycom\magento2basic\Model;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Payment\Helper\Data;
+use Magento\Payment\Model\MethodInterface;
 use Magento\Payment\Model\MethodList;
 use Magento\Store\Model\ScopeInterface;
+use tpaycom\magento2basic\Api\TpayInterface;
 use tpaycom\magento2basic\Model\Config\Source\OnsiteChannels;
 
-class TpayConfig
+class MethodListPlugin
 {
     private const CONFIG_PATH = 'payment/tpaycom_magento2basic/onsite_channels';
 
@@ -31,31 +33,26 @@ class TpayConfig
     public function afterGetAvailableMethods(MethodList $compiled, $result)
     {
         $onsiteChannels = $this->scopeConfig->getValue(self::CONFIG_PATH, ScopeInterface::SCOPE_STORE);
+        $channels = $onsiteChannels ? explode(',', $onsiteChannels) : [];
 
-        $secondTpay = false;
-        foreach ($result as $paymentMethod) {
-            if ($paymentMethod->getCode() == 'tpaycom_magento2basic') {
-                if ($secondTpay) {
-                    $paymentMethod->setCode('tpaycom_magento2basic_cards');
-                } else {
-                    $secondTpay = true;
-                }
-            }
-        }
+        $result[] = $this->getMethodInstance('tpay.com - Płatność kartą', 'tpaycom_magento2basic_cards');
 
-        if (!$onsiteChannels){
-            return $result;
-        }
-
-        foreach (explode(',', $onsiteChannels) as $onsiteChannel) {
-            $method = $this->data->getMethodInstance('generic');
-            $method->setChannelId($onsiteChannel);
-            $method->setTitle($this->onsiteChannels->getLabelFromValue($onsiteChannel));
-            $method->setCode("generic-".$onsiteChannel);
-
-            $result[] = $method;
+        foreach ($channels as $onsiteChannel) {
+            $result[] = $this->getMethodInstance(
+                $this->onsiteChannels->getLabelFromValue($onsiteChannel),
+                "generic-$onsiteChannel"
+            );
         }
 
         return $result;
+    }
+
+    public function getMethodInstance(string $title, string $code): MethodInterface
+    {
+        $method = $this->data->getMethodInstance(TpayInterface::CODE);
+        $method->setTitle($title);
+        $method->setCode($code);
+
+        return $method;
     }
 }
