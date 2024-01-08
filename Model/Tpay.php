@@ -213,7 +213,7 @@ class Tpay extends AbstractMethod implements TpayInterface
 
     public function getOpenApiClientId()
     {
-        return $this->getConfigData('open_api_client_id');
+        return $this->getConfigData('open_api_client_id') ?? '';
     }
 
     public function getSecurityCode(): string
@@ -233,7 +233,7 @@ class Tpay extends AbstractMethod implements TpayInterface
 
     public function redirectToChannel(): bool
     {
-        return (bool) $this->getConfigData('redirect_directly_to_channel');
+        return true;
     }
 
     public function useSandboxMode(): bool
@@ -271,7 +271,7 @@ class Tpay extends AbstractMethod implements TpayInterface
         $additionalData = $data->getData('additional_data');
         $info = $this->getInfoInstance();
 
-        $info->setAdditionalInformation(static::CHANNEL, array_key_exists(static::CHANNEL, $additionalData) ? $additionalData[static::CHANNEL] : '');
+        $info->setAdditionalInformation(static::GROUP, array_key_exists(static::GROUP, $additionalData) ? $additionalData[static::GROUP] : '');
 
         $info->setAdditionalInformation(static::BLIK_CODE, array_key_exists(static::BLIK_CODE, $additionalData) ? $additionalData[static::BLIK_CODE] : '');
 
@@ -447,5 +447,10 @@ class Tpay extends AbstractMethod implements TpayInterface
         $productMetadata = $objectManager->get('Magento\Framework\App\ProductMetadataInterface');
 
         return $productMetadata->getVersion();
+    }
+
+    public function getClientId(): string
+    {
+        return $this->getConfigData('client_id');
     }
 }

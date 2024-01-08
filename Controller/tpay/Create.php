@@ -5,6 +5,7 @@ namespace tpaycom\magento2basic\Controller\tpay;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\CacheInterface;
 use Tpay\OriginApi\Utilities\Util;
 use tpaycom\magento2basic\Api\TpayInterface;
 use tpaycom\magento2basic\Model\ApiFacade\Transaction\TransactionApiFacade;
@@ -25,23 +26,38 @@ class Create extends Action
     /** @var TransactionApiFacade */
     private $transaction;
 
-    public function __construct(Context $context, TpayInterface $tpayModel, TpayService $tpayService, Session $checkoutSession)
-    {
+    /** @var CacheInterface */
+    private $cache;
+
+    /**
+     * {@inheritdoc}
+     * @param TpayInterface $tpayModel
+     * @param TpayService $tpayService
+     */
+    public function __construct(
+        Context $context,
+        TpayInterface $tpayModel,
+        TpayService $tpayService,
+        Session $checkoutSession,
+        CacheInterface $cache
+    ) {
         $this->tpay = $tpayModel;
         $this->tpayService = $tpayService;
         $this->checkoutSession = $checkoutSession;
+        $this->cache = $cache;
         Util::$loggingEnabled = false;
 
         parent::__construct($context);
     }
 
+    /** {@inheritdoc} */
     public function execute()
     {
         $orderId = $this->checkoutSession->getLastRealOrderId();
         if ($orderId) {
             $payment = $this->tpayService->getPayment($orderId);
             $paymentData = $payment->getData();
-            $this->transaction = new TransactionApiFacade($this->tpay);
+            $this->transaction = new TransactionApiFacade($this->tpay, $this->cache);
             $additionalPaymentInformation = $paymentData['additional_information'];
 
             $transaction = $this->prepareTransaction($orderId, $additionalPaymentInformation);
@@ -63,7 +79,7 @@ class Create extends Action
             $paymentData['additional_information']['transaction_url'] = $transactionUrl;
             $payment->setData($paymentData)->save();
 
-            if (6 === strlen($additionalPaymentInformation['blik_code']) && $this->tpay->checkBlikLevel0Settings()) {
+            if (6 === strlen($additionalPaymentInformation['blik_code'] ?? '') && $this->tpay->checkBlikLevel0Settings()) {
                 if (true === $this->transaction->isOpenApiUse()) {
                     return $this->_redirect('magento2basic/tpay/success');
                 }
@@ -103,15 +119,20 @@ class Create extends Action
     {
         $data = $this->tpay->getTpayFormData($orderId);
 
-        if (6 === strlen($additionalPaymentInformation['blik_code'])) {
+        if (6 === strlen($additionalPaymentInformation['blik_code'] ?? '')) {
             $data['group'] = TransactionOriginApi::BLIK_CHANNEL;
             $this->handleBlikData($data, $additionalPaymentInformation['blik_code']);
         } else {
-            $data['group'] = (int) $additionalPaymentInformation['group'];
+            $data['group'] = (int) ($additionalPaymentInformation['group'] ?? null);
+            $data['channel'] = (int) ($additionalPaymentInformation['channel'] ?? null);
 
             if ($this->tpay->redirectToChannel()) {
                 $data['direct'] = 1;
             }
+        }
+
+        if ($data['channel']) {
+            return $this->transaction->createWithInstantRedirection($data);
         }
 
         return $this->transaction->create($data);

@@ -76,6 +76,8 @@ class CardOpen
                     return 'magento2basic/tpay/success';
                 }
 
+                $paymentResult = $result['payments'] ?? [];
+
                 if (isset($paymentResult['status']) && 'declined' === $paymentResult['status']) {
                     $this->tpayService->addCommentToHistory($orderId, 'Failed to pay by saved card, Elavon rejection code: '.$paymentResult['reason']);
                 } else {

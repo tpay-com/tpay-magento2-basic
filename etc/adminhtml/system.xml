@@ -37,8 +37,6 @@
                     <label>API password</label>
                     <validate>validate-no-empty no-whitespace validate-length maximum-length-40</validate>
                 </field>
-
-
                 <field id="card_api_key_tpay" translate="label comment" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Card API key</label>
                     <validate>validate-no-empty no-whitespace validate-length maximum-length-126</validate>
@@ -61,12 +59,8 @@
                 </field>
                 <field id="hash_type" translate="label" type="select" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Hash type</label>
-                    <source_model>tpaycom\magento2cards\Model\Config\Source\HashTypes</source_model>
+                    <source_model>tpaycom\magento2basic\Model\Config\Source\HashTypes</source_model>
                 </field>
-
-
-
-
                 <field id="show_payment_channels_online" translate="label" type="select" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Only online methods</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -108,8 +102,10 @@
                     <comment>Leave empty for no limit</comment>
                     <validate>validate-number</validate>
                 </field>
-
-
+                <field id="onsite_channels" translate="label" type="multiselect" sortOrder="18" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Generic onsites</label>
+                    <source_model>tpaycom\magento2basic\Model\Config\Source\OnsiteChannels</source_model>
+                </field>
                 <field id="open_api_client_id" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Client ID OPEN API</label>
                     <validate>validate-length maximum-length-64</validate>
@@ -118,7 +114,6 @@
                     <label>API password OPEN API</label>
                     <validate>validate-length maximum-length-64</validate>
                 </field>
-
                 <field id="open_api_security_code" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Open Api Secure code</label>
                     <validate>validate-no-empty validate-length maximum-length-32</validate>

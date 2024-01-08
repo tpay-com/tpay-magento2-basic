@@ -17,6 +17,10 @@ class ConfigFacade
 
     /** @var bool */
     private $useOpenApi;
+    /**
+     * @var TpayInterface
+     */
+    private $tpay;
 
     public function __construct(TpayInterface $tpay, Repository $assetRepository, TpayTokensService $tokensService)
     {

@@ -10,7 +10,15 @@ class OpenApi extends TpayApi
     public function create(array $data): array
     {
         $transactionData = $this->handleDataStructure($data);
-        $transaction = $this->Transactions->createTransaction($transactionData);
+        $transaction = $this->transactions()->createTransaction($transactionData);
+
+        return $this->updateRedirectUrl($transaction);
+    }
+
+    public function createWithInstantRedirect(array $data)
+    {
+        $transactionData = $this->handleDataStructure($data);
+        $transaction = $this->transactions()->createTransactionWithInstantRedirection($transactionData);
 
         return $this->updateRedirectUrl($transaction);
     }
@@ -18,6 +26,11 @@ class OpenApi extends TpayApi
     public function makeRefund(InfoInterface $payment, string $amount): array
     {
         return $this->Transactions->createRefundByTransactionId(['amount' => number_format($amount, 2)], $payment->getAdditionalInformation('transaction_id'));
+    }
+
+    public function channels(): array
+    {
+        return $this->transactions()->getChannels();
     }
 
     private function handleDataStructure(array $data): array
@@ -35,17 +48,12 @@ class OpenApi extends TpayApi
                 'city' => $data['city'],
                 'country' => $data['country'],
             ],
-            'pay' => [
-                'groupId' => $data['group'],
-            ],
-            'callbacks' => [
-                'payerUrls' => [
-                    'success' => $data['return_url'],
-                    'error' => $data['return_error_url'],
+            "callbacks" => [
+                "payerUrls" => [
+                    "success" => $data['return_url'],
+                    "error" => $data['return_error_url']
                 ],
-                'notification' => [
-                    'url' => $data['result_url'],
-                ],
+                'notification' => ['url' => $data['result_url']],
             ],
         ];
 
@@ -53,6 +61,14 @@ class OpenApi extends TpayApi
             $paymentData['pay']['blikPaymentData'] = [
                 'blikToken' => $data['blikPaymentData']['blikToken'],
             ];
+        }
+
+        if ($data['group']) {
+            $paymentData['pay'] = ['groupId' => $data['group']];
+        }
+
+        if ($data['channel']) {
+            $paymentData['pay'] = ['channelId' => $data['channel']];
         }
 
         return $paymentData;
