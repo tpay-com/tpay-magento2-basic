@@ -32,6 +32,21 @@ class TpayConfig
     {
         $onsiteChannels = $this->scopeConfig->getValue(self::CONFIG_PATH, ScopeInterface::SCOPE_STORE);
 
+        $secondTpay = false;
+        foreach ($result as $paymentMethod) {
+            if ($paymentMethod->getCode() == 'tpaycom_magento2basic') {
+                if ($secondTpay) {
+                    $paymentMethod->setCode('tpaycom_magento2basic_cards');
+                } else {
+                    $secondTpay = true;
+                }
+            }
+        }
+
+        if (!$onsiteChannels){
+            return $result;
+        }
+
         foreach (explode(',', $onsiteChannels) as $onsiteChannel) {
             $method = $this->data->getMethodInstance('generic');
             $method->setChannelId($onsiteChannel);
