@@ -5,8 +5,3 @@ parameters:
   excludePaths:
     - ../Controller/tpay/Notification.php
     - ../vendor/
-  ignoreErrors:
-    - '#^Call to an undefined method tpaycom\\magento2basic\\Controller\\Tpaycom::getFormatAmount\(\)\.$#'
-    - '# invalid type Magento\\Sales\\Model\\OrderFactory\.$#'
-    - '# invalid type tpaycom\\magento2basic\\Model\\TransactionModelFactory\.$#'
-    - '# return statement is missing\.$#'

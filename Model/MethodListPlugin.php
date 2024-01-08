@@ -40,7 +40,7 @@ class MethodListPlugin
         foreach ($channels as $onsiteChannel) {
             $result[] = $this->getMethodInstance(
                 $this->onsiteChannels->getLabelFromValue($onsiteChannel),
-                "generic-$onsiteChannel"
+                "generic-{$onsiteChannel}"
             );
         }
 

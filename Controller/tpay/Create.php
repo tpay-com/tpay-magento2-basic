@@ -6,6 +6,7 @@ use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\CacheInterface;
+use Magento\Framework\App\ResponseInterface;
 use Tpay\OriginApi\Utilities\Util;
 use tpaycom\magento2basic\Api\TpayInterface;
 use tpaycom\magento2basic\Model\ApiFacade\Transaction\TransactionApiFacade;
@@ -29,11 +30,6 @@ class Create extends Action
     /** @var CacheInterface */
     private $cache;
 
-    /**
-     * {@inheritdoc}
-     * @param TpayInterface $tpayModel
-     * @param TpayService $tpayService
-     */
     public function __construct(
         Context $context,
         TpayInterface $tpayModel,
@@ -50,10 +46,10 @@ class Create extends Action
         parent::__construct($context);
     }
 
-    /** {@inheritdoc} */
-    public function execute()
+    public function execute(): ResponseInterface
     {
         $orderId = $this->checkoutSession->getLastRealOrderId();
+
         if ($orderId) {
             $payment = $this->tpayService->getPayment($orderId);
             $paymentData = $payment->getData();
@@ -100,6 +96,8 @@ class Create extends Action
 
             return $this->_redirect($transactionUrl);
         }
+
+        return $this->_redirect('magento2basic/tpay/error');
     }
 
     /**

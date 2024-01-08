@@ -9,7 +9,6 @@ use tpaycom\magento2basic\Model\ApiFacade\Transaction\TransactionApiFacade;
 
 class OnsiteChannels implements OptionSourceInterface
 {
-
     /** @var TransactionApiFacade */
     private $transactions;
 
@@ -29,11 +28,7 @@ class OnsiteChannels implements OptionSourceInterface
         return null;
     }
 
-    /**
-     * @inheritDoc
-     *
-     * @return array{array{value: int, label: string}}
-     */
+    /** @return array{array{value: int, label: string}} */
     public function toOptionArray(): array
     {
         return array_map(function (array $channel) {

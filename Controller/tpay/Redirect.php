@@ -43,8 +43,6 @@ class Redirect extends Action
             return $this->_redirect('magento2basic/tpay/CardPayment');
         }
 
-
-
         if (empty(array_intersect(array_keys($additionalPaymentInfo), [TpayInterface::GROUP, TpayInterface::CHANNEL])) && (!array_key_exists(TpayInterface::BLIK_CODE, $additionalPaymentInfo) || 6 !== strlen($additionalPaymentInfo[TpayInterface::BLIK_CODE]))) {
             return $this->_redirect('checkout/cart');
         }

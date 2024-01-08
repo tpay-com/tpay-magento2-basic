@@ -48,10 +48,10 @@ class OpenApi extends TpayApi
                 'city' => $data['city'],
                 'country' => $data['country'],
             ],
-            "callbacks" => [
-                "payerUrls" => [
-                    "success" => $data['return_url'],
-                    "error" => $data['return_error_url']
+            'callbacks' => [
+                'payerUrls' => [
+                    'success' => $data['return_url'],
+                    'error' => $data['return_error_url'],
                 ],
                 'notification' => ['url' => $data['result_url']],
             ],

@@ -41,13 +41,12 @@ class ConfigOpen extends TpayApi
                     'getBlikChannelID' => TransactionOriginApi::BLIK_CHANNEL,
                     'useSandbox' => $this->tpay->useSandboxMode(),
                     'grandTotal' => number_format($this->tpay->getCheckoutTotal(), 2, '.', ''),
-                    'groups' => $this->Transactions->getBankGroups((bool) $this->tpay->onlyOnlineChannels())['groups'],
+                    'groups' => $this->transactions()->getBankGroups((bool) $this->tpay->onlyOnlineChannels())['groups'],
                 ],
             ],
         ];
-        $config = array_merge($config, $this->getCardConfig());
 
-        return $config;
+        return array_merge($config, $this->getCardConfig());
     }
 
     public function generateURL(string $name): string

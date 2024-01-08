@@ -72,6 +72,9 @@ class Tpay extends AbstractMethod implements TpayInterface
         'mastercard',
     ];
 
+    /** @var string */
+    private $_title;
+
     public function __construct(
         Context $context,
         Registry $registry,
@@ -432,6 +435,11 @@ class Tpay extends AbstractMethod implements TpayInterface
         return $this->validateCardCurrency($orderCurrency);
     }
 
+    public function getClientId(): string
+    {
+        return $this->getConfigData('client_id');
+    }
+
     /** Check that the  BLIK should be available for order/quote amount */
     protected function checkBlikAmount(): bool
     {
@@ -464,10 +472,5 @@ class Tpay extends AbstractMethod implements TpayInterface
         $productMetadata = $objectManager->get('Magento\Framework\App\ProductMetadataInterface');
 
         return $productMetadata->getVersion();
-    }
-
-    public function getClientId(): string
-    {
-        return $this->getConfigData('client_id');
     }
 }
