@@ -100,11 +100,11 @@ class ConfigOrigin
         return [
             'tpaycards' => [
                 'payment' => [
-                    'tpayLogoUrl' => $this->generateURL('tpaycom_magento2cards::images/logo_tpay.png'),
-                    'getTpayLoadingGif' => $this->generateURL('tpaycom_magento2cards::images/loading.gif'),
+                    'tpayLogoUrl' => $this->generateURL('tpaycom_magento2basic::images/logo_tpay.png'),
+                    'getTpayLoadingGif' => $this->generateURL('tpaycom_magento2basic::images/loading.gif'),
                     'getRSAkey' => $this->tpay->getRSAKey(),
                     'fetchJavaScripts' => $this->fetchJavaScripts(),
-                    'addCSS' => $this->createCSS('tpaycom_magento2cards::css/tpaycards.css'),
+                    'addCSS' => $this->createCSS('tpaycom_magento2basic::css/tpaycards.css'),
                     'redirectUrl' => $this->tpay->getPaymentRedirectUrl(),
                     'isCustomerLoggedIn' => $this->tpay->isCustomerLoggedIn(),
                     'customerTokens' => $customerTokensData,
