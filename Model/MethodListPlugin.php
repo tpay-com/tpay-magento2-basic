@@ -64,12 +64,12 @@ class MethodListPlugin
 
     private function filterResult(array $result): array
     {
-        if ($this->storeManager->getStore()->getCurrentCurrencyCode() === 'PLN') {
+        if ('PLN' === $this->storeManager->getStore()->getCurrentCurrencyCode()) {
             return $result;
         }
 
         return array_filter($result, function ($method) {
-            return $method->getCode() !== 'tpaycom_magento2basic';
+            return 'tpaycom_magento2basic' !== $method->getCode();
         });
     }
 }

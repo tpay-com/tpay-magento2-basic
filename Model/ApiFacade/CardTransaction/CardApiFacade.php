@@ -41,7 +41,7 @@ class CardApiFacade
 
     private function createOpenApiInstance(TpayInterface $tpay, TpayTokensService $tokensService, TpayService $tpayService)
     {
-        if ($this->storeManager->getStore()->getCurrentCurrencyCode() !== 'PLN') {
+        if ('PLN' !== $this->storeManager->getStore()->getCurrentCurrencyCode()) {
             $this->cardOpen = null;
             $this->useOpenCard = false;
 

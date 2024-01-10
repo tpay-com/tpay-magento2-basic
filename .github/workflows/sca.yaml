@@ -25,10 +25,10 @@ jobs:
         run: composer normalize --diff --dry-run --indent-size=4 --indent-style=space ../composer.json
 
       - working-directory: .dev-tools
-        run: ./vendor/bin/php-cs-fixer fix -vvv --diff --dry-run
+        run: composer cs:fixer -- --dry-run
 
       - working-directory: .dev-tools
-        run: ./vendor/bin/phpstan
+        run: composer cs:phpstan
 
       - working-directory: .dev-tools
-        run: ./vendor/bin/psalm --no-progress --shepherd
+        run: composer cs:psalm -- --no-progress --shepherd

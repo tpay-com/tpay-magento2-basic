@@ -13,7 +13,7 @@ class GenericPaymentPlugin
             $data['channel'] = explode('-', $data['method'])[1];
             $data['method'] = TpayInterface::CODE;
         }
-        if ($data['method'] == 'tpaycom_magento2basic_cards') {
+        if ('tpaycom_magento2basic_cards' == $data['method']) {
             $data['method'] = TpayInterface::CODE;
         }
 

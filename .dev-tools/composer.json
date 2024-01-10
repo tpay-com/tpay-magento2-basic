@@ -16,6 +16,11 @@
             "url": "https://github.com/magento/magento2.git"
         }
     ],
+    "scripts": {
+        "cs:fixer": "./vendor/bin/php-cs-fixer fix -vvv --diff",
+        "cs:phpstan": "./vendor/bin/phpstan",
+        "cs:psalm": "./vendor/bin/psalm"
+    },
     "config": {
         "allow-plugins": {
             "ergebnis/composer-normalize": true,
