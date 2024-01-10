@@ -6,7 +6,7 @@ use Tpay\OriginApi\PaymentBlik;
 
 class TransactionOriginApi extends PaymentBlik
 {
-    const BLIK_CHANNEL = 150;
+    public const BLIK_CHANNEL = 150;
 
     /**
      * @param string $apiPassword

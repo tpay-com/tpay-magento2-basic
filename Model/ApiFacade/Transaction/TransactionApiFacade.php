@@ -7,6 +7,7 @@ use Magento\Framework\App\CacheInterface;
 use Tpay\OpenApi\Utilities\TpayException;
 use tpaycom\magento2basic\Api\TpayInterface;
 use tpaycom\magento2basic\Model\ApiFacade\OpenApi;
+use tpaycom\magento2basic\Model\ApiFacade\Transaction\Dto\Channel;
 
 class TransactionApiFacade
 {
@@ -56,23 +57,24 @@ class TransactionApiFacade
         return $this->originApi->blik($blikTransactionId, $blikCode);
     }
 
+    /** @return list<Channel> */
     public function channels(): array
     {
         $channels = $this->cache->load(self::CHANNELS_CACHE_KEY);
 
         if ($channels) {
-            return json_decode($channels, true);
+            return unserialize($channels);
         }
 
         if (false === $this->useOpenApi) {
             return [];
         }
 
-        $channels = array_filter($this->openApi->channels()['channels'], function (array $channel) {
-            return true === $channel['available'] && true === empty($channel['constraints']);
+        $channels = array_filter($this->openApi->channels(), function (Channel $channel) {
+            return true === $channel->available && true === empty($channel->constraints);
         });
 
-        $this->cache->save(json_encode($channels), self::CHANNELS_CACHE_KEY, [], self::CACHE_LIFETIME);
+        $this->cache->save(serialize($channels), self::CHANNELS_CACHE_KEY, [], self::CACHE_LIFETIME);
 
         return $channels;
     }

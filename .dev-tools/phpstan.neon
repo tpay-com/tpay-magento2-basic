@@ -3,5 +3,4 @@ parameters:
   paths:
     - ../
   excludePaths:
-    - ../Controller/tpay/Notification.php
     - ../vendor/

@@ -300,7 +300,7 @@ class Tpay extends AbstractMethod implements TpayInterface
         }
 
         // KARTY
-        $info->setAdditionalInformation(static::CARDDATA, isset($additionalData[static::CARDDATA]) ? $additionalData[static::CARDDATA] : '');
+        $info->setAdditionalInformation(static::CARDDATA, $additionalData[static::CARDDATA] ?? '');
         $info->setAdditionalInformation(static::CARD_VENDOR, isset($additionalData[static::CARD_VENDOR]) && in_array($additionalData[static::CARD_VENDOR], $this->supportedVendors) ? $additionalData[static::CARD_VENDOR] : 'undefined');
         $info->setAdditionalInformation(static::CARD_SAVE, isset($additionalData[static::CARD_SAVE]) ? '1' === $additionalData[static::CARD_SAVE] : false);
         $info->setAdditionalInformation(static::CARD_ID, isset($additionalData[static::CARD_ID]) && is_numeric($additionalData[static::CARD_ID]) ? $additionalData[static::CARD_ID] : false);

@@ -2,15 +2,11 @@
 
 require __DIR__.'/vendor/tpay-com/coding-standards/bootstrap.php';
 
-$config = Tpay\CodingStandards\PhpCsFixerConfigFactory::createWithLegacyRules()
+$config = Tpay\CodingStandards\PhpCsFixerConfigFactory::createWithNonRiskyRules()
     ->setFinder(
         PhpCsFixer\Finder::create()
             ->ignoreDotFiles(false)
             ->in(__DIR__.'/..')
     );
 
-$rules = $config->getRules();
-
-$rules['nullable_type_declaration_for_default_null_value'] = false;
-
-return $config->setRules($rules);
+return $config;

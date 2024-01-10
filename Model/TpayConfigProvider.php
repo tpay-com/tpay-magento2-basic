@@ -45,10 +45,10 @@ class TpayConfigProvider implements ConfigProviderInterface
         $channels = $this->transactionApi->channels();
 
         foreach ($channels as $channel) {
-            $config['generic'][$channel['id']] = [
-                'id' => $channel['id'],
-                'name' => $channel['fullName'],
-                'logoUrl' => $channel['image']['url'],
+            $config['generic'][$channel->id] = [
+                'id' => $channel->id,
+                'name' => $channel->fullName,
+                'logoUrl' => $channel->image,
             ];
         }
 

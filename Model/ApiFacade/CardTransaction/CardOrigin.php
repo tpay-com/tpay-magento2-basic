@@ -186,7 +186,7 @@ class CardOrigin extends CardNotificationHandler
     private function validateNon3dsSign(array $tpayResponse)
     {
         $testMode = isset($tpayResponse['test_mode']) ? '1' : '';
-        $cliAuth = isset($tpayResponse['cli_auth']) ? $tpayResponse['cli_auth'] : '';
+        $cliAuth = $tpayResponse['cli_auth'] ?? '';
         $localHash = hash(
             $this->tpay->getHashType(),
             $testMode

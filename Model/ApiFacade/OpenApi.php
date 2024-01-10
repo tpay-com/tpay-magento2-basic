@@ -3,6 +3,7 @@
 namespace tpaycom\magento2basic\Model\ApiFacade;
 
 use Magento\Payment\Model\InfoInterface;
+use tpaycom\magento2basic\Model\ApiFacade\Transaction\Dto\Channel;
 use tpaySDK\Api\TpayApi;
 
 class OpenApi extends TpayApi
@@ -25,12 +26,29 @@ class OpenApi extends TpayApi
 
     public function makeRefund(InfoInterface $payment, float $amount): array
     {
-        return $this->transactions()->createRefundByTransactionId(['amount' => $amount], $payment->getAdditionalInformation('transaction_id'));
+        return $this->transactions()->createRefundByTransactionId(
+            ['amount' => $amount],
+            $payment->getAdditionalInformation('transaction_id')
+        );
     }
 
     public function channels(): array
     {
-        return $this->transactions()->getChannels();
+        $result = $this->transactions()->getChannels();
+
+        return array_map(function (array $channel) {
+            return new Channel(
+                $channel['id'],
+                $channel['name'],
+                $channel['fullName'],
+                $channel['image']['url'],
+                $channel['available'],
+                $channel['onlinePayment'],
+                $channel['instantRedirection'],
+                $channel['groups'],
+                $channel['constraints']
+            );
+        }, $result['channels'] ?? []);
     }
 
     private function handleDataStructure(array $data): array
