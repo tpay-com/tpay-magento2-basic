@@ -242,10 +242,9 @@ class TpayService extends RegisterCaptureNotificationOperation
         $order = $payment->getOrder();
         $amount = (float) $amount;
         $invoice = $this->getInvoiceForTransactionId($order, $payment->getTransactionId());
-        $orderCurrency = $order->getOrderCurrency()->getCode();
         // register new capture
 
-        if (!$invoice && 'PLN' === $orderCurrency && $payment->isCaptureFinal($amount)) {
+        if (!$invoice && $payment->isCaptureFinal($amount)) {
             $invoice = $order->prepareInvoice()->register();
             $invoice->setOrder($order);
             $order->addRelatedObject($invoice);

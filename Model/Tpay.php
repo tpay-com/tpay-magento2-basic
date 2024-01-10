@@ -277,7 +277,7 @@ class Tpay extends AbstractMethod implements TpayInterface
             return false;
         }
 
-        if (!$this->getMerchantId() || ($quote && !$this->isAvailableForCurrency($quote->getCurrency()->getQuoteCurrencyCode()))) {
+        if (!$this->getMerchantId()) {
             return false;
         }
 
@@ -458,12 +458,6 @@ class Tpay extends AbstractMethod implements TpayInterface
         }
 
         return $this->orderRepository->getByIncrementId($orderId);
-    }
-
-    /** Availability for currency */
-    protected function isAvailableForCurrency(string $currencyCode): bool
-    {
-        return !(!in_array($currencyCode, $this->availableCurrencyCodes));
     }
 
     private function getMagentoVersion()

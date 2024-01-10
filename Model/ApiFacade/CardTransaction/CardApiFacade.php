@@ -3,6 +3,7 @@
 namespace tpaycom\magento2basic\Model\ApiFacade\CardTransaction;
 
 use Exception;
+use Magento\Store\Model\StoreManagerInterface;
 use tpaycom\magento2basic\Api\TpayInterface;
 use tpaycom\magento2basic\Service\TpayService;
 use tpaycom\magento2basic\Service\TpayTokensService;
@@ -15,11 +16,15 @@ class CardApiFacade
     /** @var CardOpen */
     private $cardOpen;
 
+    /** @var StoreManagerInterface */
+    private $storeManager;
+
     /** @var bool */
     private $useOpenCard;
 
-    public function __construct(TpayInterface $tpay, TpayTokensService $tokensService, TpayService $tpayService)
+    public function __construct(TpayInterface $tpay, TpayTokensService $tokensService, TpayService $tpayService, StoreManagerInterface $storeManager)
     {
+        $this->storeManager = $storeManager;
         $this->cardOrigin = new CardOrigin($tpay, $tokensService, $tpayService);
         $this->createOpenApiInstance($tpay, $tokensService, $tpayService);
     }
@@ -36,6 +41,13 @@ class CardApiFacade
 
     private function createOpenApiInstance(TpayInterface $tpay, TpayTokensService $tokensService, TpayService $tpayService)
     {
+        if ($this->storeManager->getStore()->getCurrentCurrencyCode() !== 'PLN') {
+            $this->cardOpen = null;
+            $this->useOpenCard = false;
+
+            return;
+        }
+
         try {
             $this->cardOpen = new CardOpen($tpay, $tokensService, $tpayService);
             $this->useOpenCard = true;

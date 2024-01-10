@@ -8,6 +8,7 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Model\Context as ModelContext;
 use Magento\Framework\Registry;
+use Magento\Store\Model\StoreManagerInterface;
 use Tpay\OriginApi\Utilities\Util;
 use tpaycom\magento2basic\Api\TpayInterface;
 use tpaycom\magento2basic\Model\ApiFacade\CardTransaction\CardApiFacade;
@@ -28,12 +29,16 @@ class CardPayment extends Action
     /** @var TpayTokensService */
     private $tokensService;
 
-    public function __construct(Context $context, TpayInterface $tpayModel, TpayService $tpayService, Session $checkoutSession, ModelContext $modelContext, Registry $registry, ResourceConnection $resourceConnection)
+    /** @var StoreManagerInterface */
+    private $storeManager;
+
+    public function __construct(Context $context, TpayInterface $tpayModel, TpayService $tpayService, Session $checkoutSession, ModelContext $modelContext, Registry $registry, ResourceConnection $resourceConnection, StoreManagerInterface $storeManager)
     {
         $this->tpay = $tpayModel;
         $this->tpayService = $tpayService;
         $this->checkoutSession = $checkoutSession;
         $this->tokensService = new TpayTokensService($modelContext, $registry, $resourceConnection);
+        $this->storeManager = $storeManager;
         Util::$loggingEnabled = false;
         parent::__construct($context);
     }
@@ -44,7 +49,7 @@ class CardPayment extends Action
         $orderId = $this->checkoutSession->getLastRealOrderId();
 
         if ($orderId) {
-            $cardTransaction = new CardApiFacade($this->tpay, $this->tokensService, $this->tpayService);
+            $cardTransaction = new CardApiFacade($this->tpay, $this->tokensService, $this->tpayService, $this->storeManager);
             $redirectUrl = $cardTransaction->makeCardTransaction($orderId);
 
             return $this->_redirect($redirectUrl);

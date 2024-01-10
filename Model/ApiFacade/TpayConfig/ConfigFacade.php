@@ -4,6 +4,7 @@ namespace tpaycom\magento2basic\Model\ApiFacade\TpayConfig;
 
 use Exception;
 use Magento\Framework\View\Asset\Repository;
+use Magento\Store\Model\StoreManagerInterface;
 use tpaycom\magento2basic\Api\TpayInterface;
 use tpaycom\magento2basic\Service\TpayTokensService;
 
@@ -18,10 +19,10 @@ class ConfigFacade
     /** @var bool */
     private $useOpenApi;
 
-    public function __construct(TpayInterface $tpay, Repository $assetRepository, TpayTokensService $tokensService)
+    public function __construct(TpayInterface $tpay, Repository $assetRepository, TpayTokensService $tokensService, StoreManagerInterface $storeManager)
     {
         $this->originApi = new ConfigOrigin($tpay, $assetRepository, $tokensService);
-        $this->createOpenApiInstance($tpay, $assetRepository, $tokensService);
+        $this->createOpenApiInstance($tpay, $assetRepository, $tokensService, $storeManager);
     }
 
     public function getConfig(): array
@@ -34,8 +35,15 @@ class ConfigFacade
         return $this->useOpenApi ? $this->openApi : $this->originApi;
     }
 
-    private function createOpenApiInstance(TpayInterface $tpay, Repository $assetRepository, TpayTokensService $tokensService)
+    private function createOpenApiInstance(TpayInterface $tpay, Repository $assetRepository, TpayTokensService $tokensService, StoreManagerInterface $storeManager)
     {
+        if ($storeManager->getStore()->getCurrentCurrencyCode() !== 'PLN') {
+            $this->openApi = null;
+            $this->useOpenApi = false;
+
+            return;
+        }
+
         try {
             $this->openApi = new ConfigOpen($tpay, $assetRepository, $tokensService);
             $this->useOpenApi = true;
