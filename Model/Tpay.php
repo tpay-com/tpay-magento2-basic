@@ -145,7 +145,7 @@ class Tpay extends AbstractMethod implements TpayInterface
         return (bool) $this->getConfigData('blik_level_zero');
     }
 
-    public function getApiKey(): string
+    public function getApiKey(): ?string
     {
         return $this->getConfigData('api_key_tpay');
     }
@@ -155,7 +155,7 @@ class Tpay extends AbstractMethod implements TpayInterface
         return $this->getConfigData('card_api_key_tpay');
     }
 
-    public function getApiPassword(): string
+    public function getApiPassword(): ?string
     {
         return $this->getConfigData('api_password');
     }
@@ -214,7 +214,7 @@ class Tpay extends AbstractMethod implements TpayInterface
         ];
     }
 
-    public function getMerchantId(): int
+    public function getMerchantId(): ?int
     {
         return (int) $this->getConfigData('merchant_id');
     }
@@ -224,7 +224,7 @@ class Tpay extends AbstractMethod implements TpayInterface
         return $this->getConfigData('open_api_client_id') ?? '';
     }
 
-    public function getSecurityCode(): string
+    public function getSecurityCode(): ?string
     {
         return $this->getConfigData('security_code');
     }
@@ -435,7 +435,7 @@ class Tpay extends AbstractMethod implements TpayInterface
         return $this->validateCardCurrency($orderCurrency);
     }
 
-    public function getClientId(): string
+    public function getClientId(): ?string
     {
         return $this->getConfigData('client_id');
     }

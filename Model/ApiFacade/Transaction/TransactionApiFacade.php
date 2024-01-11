@@ -28,8 +28,8 @@ class TransactionApiFacade
 
     public function __construct(TpayInterface $tpay, CacheInterface $cache)
     {
-        $this->originApi = new TransactionOriginApi($tpay->getApiPassword(), $tpay->getApiKey(), $tpay->getMerchantId(), $tpay->getSecurityCode(), !$tpay->useSandboxMode());
-        $this->createOpenApiInstance($tpay->getClientId(), $tpay->getOpenApiPassword(), !$tpay->useSandboxMode());
+        $this->createOriginApiInstance($tpay);
+        $this->createOpenApiInstance($tpay);
         $this->cache = $cache;
     }
 
@@ -84,10 +84,19 @@ class TransactionApiFacade
         return $this->useOpenApi ? $this->openApi : $this->originApi;
     }
 
-    private function createOpenApiInstance(string $clientId, string $apiPassword, bool $isProd)
+    private function createOriginApiInstance(TpayInterface $tpay)
     {
         try {
-            $this->openApi = new OpenApi($clientId, $apiPassword, $isProd);
+            $this->originApi = new TransactionOriginApi($tpay->getApiPassword(), $tpay->getApiKey(), $tpay->getMerchantId(), $tpay->getSecurityCode(), !$tpay->useSandboxMode());
+        } catch (Exception $exception) {
+            $this->originApi = null;
+        }
+    }
+
+    private function createOpenApiInstance(TpayInterface $tpay)
+    {
+        try {
+            $this->openApi = new OpenApi($tpay->getClientId(), $tpay->getOpenApiPassword(), !$tpay->useSandboxMode());
             $this->useOpenApi = true;
         } catch (Exception $exception) {
             $this->openApi = null;

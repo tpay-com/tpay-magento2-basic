@@ -26,15 +26,15 @@ interface TpayInterface
     /** Return data for form */
     public function getTpayFormData(?string $orderId = null): array;
 
-    public function getApiPassword(): string;
+    public function getApiPassword(): ?string;
 
-    public function getApiKey(): string;
+    public function getApiKey(): ?string;
 
-    public function getSecurityCode(): string;
+    public function getSecurityCode(): ?string;
 
     public function getOpenApiSecurityCode(): ?string;
 
-    public function getMerchantId(): int;
+    public function getMerchantId(): ?int;
 
     /** Check that the BLIK Level 0 should be active on a payment channels list */
     public function checkBlikLevel0Settings(): bool;
@@ -68,13 +68,13 @@ interface TpayInterface
 
     public function getCheckoutCustomerId(): ?string;
 
-    public function getRSAKey(): string;
+    public function getRSAKey(): ?string;
 
     public function isCustomerLoggedIn(): bool;
 
-    public function getHashType(): string;
+    public function getHashType(): ?string;
 
-    public function getVerificationCode(): string;
+    public function getVerificationCode(): ?string;
 
     /** @param string $orderId */
     public function getCustomerId($orderId);
