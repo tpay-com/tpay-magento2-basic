@@ -30,6 +30,7 @@ class CardOpen
         $this->tokensService = $tokensService;
         $this->tpayService = $tpayService;
         $this->tpayApi = new TpayApi($tpay->getOpenApiClientId(), $tpay->getOpenApiPassword(), !$tpay->useSandboxMode());
+        $this->tpayApi->authorization();
     }
 
     public function makeCardTransaction(string $orderId): string

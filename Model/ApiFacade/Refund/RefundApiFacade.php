@@ -49,6 +49,7 @@ class RefundApiFacade
     {
         try {
             $this->openApi = new OpenApi($clientId, $apiPassword, $isProd);
+            $this->openApi->authorization();
             $this->useOpenApi = true;
         } catch (Exception $exception) {
             $this->openApi = null;

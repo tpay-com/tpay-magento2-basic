@@ -46,6 +46,7 @@ class ConfigFacade
 
         try {
             $this->openApi = new ConfigOpen($tpay, $assetRepository, $tokensService);
+            $this->openApi->authorization();
             $this->useOpenApi = true;
         } catch (Exception $exception) {
             $this->openApi = null;
