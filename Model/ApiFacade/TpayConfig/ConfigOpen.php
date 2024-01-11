@@ -85,7 +85,8 @@ class ConfigOpen extends TpayApi
     public function getCardConfig()
     {
         $customerTokensData = [];
-        if ($this->tpay->getCardSaveEnabled()) {
+
+        if ($this->tpay->getCardSaveEnabled() && $this->tpay->isCustomerLoggedIn()) {
             $customerTokens = $this->tokensService->getCustomerTokens($this->tpay->getCheckoutCustomerId(), true);
             foreach ($customerTokens as $value) {
                 $customerTokensData[] = [
