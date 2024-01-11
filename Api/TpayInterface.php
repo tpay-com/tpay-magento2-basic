@@ -32,6 +32,8 @@ interface TpayInterface
 
     public function getSecurityCode(): ?string;
 
+    public function getOpenApiClientId(): ?string;
+
     public function getOpenApiSecurityCode(): ?string;
 
     public function getMerchantId(): ?int;

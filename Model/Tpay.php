@@ -219,9 +219,9 @@ class Tpay extends AbstractMethod implements TpayInterface
         return (int) $this->getConfigData('merchant_id');
     }
 
-    public function getOpenApiClientId()
+    public function getOpenApiClientId(): ?string
     {
-        return $this->getConfigData('open_api_client_id') ?? '';
+        return $this->getConfigData('open_api_client_id');
     }
 
     public function getSecurityCode(): ?string

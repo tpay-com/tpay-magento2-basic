@@ -96,7 +96,7 @@ class TransactionApiFacade
     private function createOpenApiInstance(TpayInterface $tpay)
     {
         try {
-            $this->openApi = new OpenApi($tpay->getClientId(), $tpay->getOpenApiPassword(), !$tpay->useSandboxMode());
+            $this->openApi = new OpenApi($tpay->getOpenApiClientId(), $tpay->getOpenApiPassword(), !$tpay->useSandboxMode());
             $this->openApi->authorization();
             $this->useOpenApi = true;
         } catch (Exception $exception) {
