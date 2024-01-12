@@ -15,8 +15,8 @@
         "magento/module-checkout": "^100.0",
         "magento/module-payment": "^100.0",
         "magento/module-sales": "^100.0",
-        "tpay-com/tpay-openapi-php": "^1.3",
-        "tpay-com/tpay-php": "^2.3"
+        "tpay-com/tpay-openapi-php": "^1.6.4",
+        "tpay-com/tpay-php": "^2.4.3"
     },
     "autoload": {
         "psr-4": {

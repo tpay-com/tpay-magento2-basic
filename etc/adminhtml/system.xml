@@ -18,47 +18,20 @@
                     <label>Active</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
+            <group id="general_settings" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General settings</label>
+                <attribute type="expanded">1</attribute>
                 <field id="title" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Description</label>
-                </field>
-                <field id="merchant_id" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Merchant ID</label>
-                    <validate>validate-number validate-length maximum-length-10</validate>
-                </field>
-                <field id="security_code" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Secure code</label>
-                    <validate>validate-length maximum-length-32</validate>
-                </field>
-                <field id="api_key_tpay" translate="label comment" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>API key</label>
-                    <validate>no-whitespace validate-length maximum-length-126</validate>
-                </field>
-                <field id="api_password" translate="label comment" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>API password</label>
-                    <validate>no-whitespace validate-length maximum-length-40</validate>
-                </field>
-                <field id="card_api_key_tpay" translate="label comment" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Card API key</label>
-                    <validate>no-whitespace validate-length maximum-length-126</validate>
-                </field>
-                <field id="card_api_password" translate="label comment" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Card API password</label>
-                    <validate>no-whitespace validate-length maximum-length-40</validate>
-                </field>
-                <field id="rsa_key" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>RSA key</label>
-                </field>
-                <field id="verification_code" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Verification code</label>
-                </field>
-                <field id="card_save_enabled" translate="label" type="select" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Enable credit card saving</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                </field>
-                <field id="hash_type" translate="label" type="select" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Hash type</label>
-                    <source_model>tpaycom\magento2basic\Model\Config\Source\HashTypes</source_model>
-                </field>
+                        <label>Description</label>
+                    </field>
+                    <field id="merchant_id" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Merchant ID</label>
+                        <validate>validate-number validate-length maximum-length-10</validate>
+                    </field>
+                    <field id="security_code" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Secure code</label>
+                        <validate>validate-length maximum-length-32</validate>
+                    </field>
                 <field id="show_payment_channels_online" translate="label" type="select" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Only online methods</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -71,48 +44,91 @@
                     <label>BLIK level zero</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="send_invoice_email" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Send new invoice email to customer</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                </field>
                 <field id="use_sandbox" translate="label" type="select" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Use sandbox mode (avoid using it in real production store)</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="sort_order" translate="label" type="text" sortOrder="13" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Sort order</label>
-                    <validate>validate-number</validate>
-                </field>
-                <field id="allowspecific" translate="label" type="allowspecific" sortOrder="14" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>All or allowed countries</label>
-                    <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
-                </field>
-                <field id="specificcountry" translate="label" type="multiselect" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Allowed countries</label>
-                    <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
-                </field>
-                <field id="min_order_total" translate="label" type="text" sortOrder="16" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Minimal amount for method</label>
-                    <validate>validate-number</validate>
-                </field>
-                <field id="max_order_total" translate="label" type="text" sortOrder="17" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Maximal amount for method</label>
-                    <comment>Leave empty for no limit</comment>
-                    <validate>validate-number</validate>
-                </field>
-                <field id="onsite_channels" translate="label" type="multiselect" sortOrder="18" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Generic onsites</label>
-                    <can_be_empty>1</can_be_empty>
-                    <source_model>tpaycom\magento2basic\Model\Config\Source\OnsiteChannels</source_model>
-                </field>
-                <field id="open_api_client_id" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Client ID OPEN API</label>
-                    <validate>validate-length maximum-length-64</validate>
-                </field>
-                <field id="open_api_password" translate="label comment" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>API password OPEN API</label>
-                    <validate>validate-length maximum-length-64</validate>
-                </field>
+            </group>
+                <group id="openapi_settings" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Open Api</label>
+                    <field id="open_api_client_id" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Client ID OPEN API</label>
+                        <validate>validate-length maximum-length-64</validate>
+                    </field>
+                    <field id="open_api_password" translate="label comment" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>API password OPEN API</label>
+                        <validate>validate-length maximum-length-64</validate>
+                    </field>
+                    <field id="onsite_channels" translate="label" type="multiselect" sortOrder="18" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Generic onsites</label>
+                        <can_be_empty>1</can_be_empty>
+                        <source_model>tpaycom\magento2basic\Model\Config\Source\OnsiteChannels</source_model>
+                    </field>
+                </group>
+                <group id="originapi_settings" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Origin Api</label>
+                    <field id="api_key_tpay" translate="label comment" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>API key</label>
+                        <validate>no-whitespace validate-length maximum-length-126</validate>
+                    </field>
+                    <field id="api_password" translate="label comment" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>API password</label>
+                        <validate>no-whitespace validate-length maximum-length-40</validate>
+                    </field>
+                    <field id="card_api_key_tpay" translate="label comment" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Card API key</label>
+                        <validate>no-whitespace validate-length maximum-length-126</validate>
+                    </field>
+                    <field id="card_api_password" translate="label comment" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Card API password</label>
+                        <validate>no-whitespace validate-length maximum-length-40</validate>
+                    </field>
+                </group>
+                <group id="cardpayment_settings" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Card payment settings</label>
+                    <field id="rsa_key" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>RSA key</label>
+                    </field>
+                    <field id="verification_code" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Verification code</label>
+                    </field>
+                    <field id="card_save_enabled" translate="label" type="select" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Enable credit card saving</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+                    <field id="hash_type" translate="label" type="select" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Hash type</label>
+                        <source_model>tpaycom\magento2basic\Model\Config\Source\HashTypes</source_model>
+                    </field>
+                </group>
+                <group id="sale_settings" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Sale settings</label>
+                    <field id="send_invoice_email" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Send new invoice email to customer</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+                    <field id="sort_order" translate="label" type="text" sortOrder="13" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Sort order</label>
+                        <validate>validate-number</validate>
+                    </field>
+                    <field id="allowspecific" translate="label" type="allowspecific" sortOrder="14" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>All or allowed countries</label>
+                        <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
+                    </field>
+                    <field id="specificcountry" translate="label" type="multiselect" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Allowed countries</label>
+                        <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
+                    </field>
+                    <field id="min_order_total" translate="label" type="text" sortOrder="16" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Minimal amount for method</label>
+                        <validate>validate-number</validate>
+                    </field>
+                    <field id="max_order_total" translate="label" type="text" sortOrder="17" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Maximal amount for method</label>
+                        <comment>Leave empty for no limit</comment>
+                        <validate>validate-number</validate>
+                    </field>
+                </group>
             </group>
         </section>
     </system>
