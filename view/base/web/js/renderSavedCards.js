@@ -14,11 +14,11 @@ require(['jquery', 'mage/translate'], function ($, $t) {
             $('#saved_card_payment').css('display', 'none');
             return;
         }
-        $("#tpaycom_magento2cards_submit").removeClass('disabled');
+
         $('input[name=savedId]').each(function () {
             if ($(this).val() !== 'new') {
                 $(this).click(function () {
-                    if ($(this).is(":checked")) {
+                    if ($(this).is(":checked") && $('#card_accept_tos').is(':checked')) {
                         $('#card_form').css({opacity: 1.0}).animate({opacity: 0.0}, 500);
                         setTimeout(
                             function () {
@@ -48,7 +48,6 @@ require(['jquery', 'mage/translate'], function ($, $t) {
                 }
             }
         });
-
     }
 
     function generateHtml() {
@@ -75,7 +74,14 @@ require(['jquery', 'mage/translate'], function ($, $t) {
     }
 
     $('document').ready(function () {
+        var tos = $('#card_accept_tos');
+
         renderForm();
+        tos.on('change', function () {
+            if (tos.is(':checked')) {
+                $("#tpaycom_magento2cards_submit").removeClass('disabled');
+            }
+        });
     });
 
 });

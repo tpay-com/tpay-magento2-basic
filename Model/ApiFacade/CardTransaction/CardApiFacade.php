@@ -25,7 +25,7 @@ class CardApiFacade
     public function __construct(TpayInterface $tpay, TpayTokensService $tokensService, TpayService $tpayService, StoreManagerInterface $storeManager)
     {
         $this->storeManager = $storeManager;
-        $this->cardOrigin = new CardOrigin($tpay, $tokensService, $tpayService);
+        $this->createCardOriginApiInstance($tpay, $tokensService, $tpayService);
         $this->createOpenApiInstance($tpay, $tokensService, $tpayService);
     }
 
@@ -37,6 +37,15 @@ class CardApiFacade
     private function getCurrent()
     {
         return $this->useOpenCard ? $this->cardOpen : $this->cardOrigin;
+    }
+
+    private function createCardOriginApiInstance(TpayInterface $tpay, TpayTokensService $tokensService, TpayService $tpayService)
+    {
+        try {
+            $this->cardOrigin = new CardOrigin($tpay, $tokensService, $tpayService);
+        } catch (Exception $exception) {
+            $this->cardOrigin = null;
+        }
     }
 
     private function createOpenApiInstance(TpayInterface $tpay, TpayTokensService $tokensService, TpayService $tpayService)

@@ -24,7 +24,7 @@ class RefundApiFacade
     public function __construct(TpayInterface $tpay)
     {
         $this->tpay = $tpay;
-        $this->originApi = new RefundOriginApi($tpay);
+        $this->createRefundOriginApiInstance($tpay);
         $this->createOpenApiInstance($tpay->getOpenApiClientId(), $tpay->getOpenApiPassword(), !$tpay->useSandboxMode());
     }
 
@@ -43,6 +43,15 @@ class RefundApiFacade
     private function getCurrentApi()
     {
         return $this->useOpenApi ? $this->openApi : $this->originApi;
+    }
+
+    private function createRefundOriginApiInstance(TpayInterface $tpay)
+    {
+        try {
+            $this->originApi = new RefundOriginApi($tpay);
+        } catch (Exception $exception) {
+            $this->originApi = null;
+        }
     }
 
     private function createOpenApiInstance(string $clientId, string $apiPassword, bool $isProd)

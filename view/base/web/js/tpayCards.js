@@ -1,15 +1,17 @@
 require(['jquery', 'mage/translate'], function ($, $t) {
     function CardPayment() {
-        var numberInput = $('#card_number'),
+        var payButton = $('#tpaycom_magento2cards_submit'),
+            numberInput = $('#card_number'),
             expiryInput = $('#expiry_date'),
             cvcInput = $('#cvc'),
-            RSA = $('#tpayRSA').text();
+            RSA = $('#tpayRSA').text(),
+            tos = $('#card_accept_tos');
 
         const TRIGGER_EVENTS = 'input change blur';
 
         function setWrong($elem) {
             $elem.addClass('wrong').removeClass('valid');
-            $("#tpaycom_magento2cards_submit").addClass('disabled');
+            payButton.addClass('disabled');
         }
 
         function setValid($elem) {
@@ -90,12 +92,14 @@ require(['jquery', 'mage/translate'], function ($, $t) {
             if (cn.length === 0 || ed.length === 0 || cvc.length === 0) {
                 isValid = false;
             }
-            if (isValid) {
+            if (isValid && tos.is(':checked')) {
                 encrypt.setPublicKey(decoded);
                 encrypted = encrypt.encrypt(cd);
                 $("#card_data").val(encrypted);
                 $("#card_short_code").val(cn.substr(-4));
-                $("#tpaycom_magento2cards_submit").removeClass('disabled');
+                payButton.removeClass('disabled');
+            } else {
+                payButton.addClass('disabled');
             }
         }
 
@@ -109,6 +113,9 @@ require(['jquery', 'mage/translate'], function ($, $t) {
             validateCvc($(this));
         });
 
+        tos.on('change', function () {
+            enablePayment();
+        });
     }
 
     $(document).ready(function () {

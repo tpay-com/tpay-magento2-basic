@@ -22,6 +22,10 @@ define(
                 window.location.replace(window.checkoutConfig.tpay.payment.redirectUrl);
             },
 
+            getTerms: function () {
+                return window.checkoutConfig.tpay.payment.getTerms;
+            },
+
             getLogoUrl: function (code) {
                 const id = code.slice(code.indexOf('-') + 1);
 

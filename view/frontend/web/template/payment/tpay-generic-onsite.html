@@ -11,10 +11,22 @@
     </div>
     <div class="payment-method-content">
         <input type="hidden" id="tpay-channel-input" name="tpay-channel-input"/>
+        <div class="checkout-agreements-block">
+            <!-- ko foreach: $parent.getRegion('before-place-order') -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+            <!--/ko-->
+            <div class="TpayRegulations">
+                <input type="checkbox" name="accept_tos" id="generic_accept_tos"/>
+                <label for="generic_accept_tos">
+                    <a target="_blank"
+                       data-bind="attr: {href: getTerms()}, text: $t('I do accept tpay.com service regulations')"></a>.
+                </label>
+            </div>
+        </div>
         <div class="actions-toolbar">
             <div class="primary">
                 <button class="action primary checkout"
-                        id="tpaycom_magento2basic_submit"
+                        id="tpaycom_magento2generic_submit"
                         type="submit"
                         data-bind="
                         click: placeOrder,

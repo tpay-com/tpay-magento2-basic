@@ -21,7 +21,7 @@ class ConfigFacade
 
     public function __construct(TpayInterface $tpay, Repository $assetRepository, TpayTokensService $tokensService, StoreManagerInterface $storeManager)
     {
-        $this->originApi = new ConfigOrigin($tpay, $assetRepository, $tokensService);
+        $this->createOriginApiInstance($tpay, $assetRepository, $tokensService);
         $this->createOpenApiInstance($tpay, $assetRepository, $tokensService, $storeManager);
     }
 
@@ -33,6 +33,15 @@ class ConfigFacade
     private function getCurrentApi()
     {
         return $this->useOpenApi ? $this->openApi : $this->originApi;
+    }
+
+    private function createOriginApiInstance(TpayInterface $tpay, Repository $assetRepository, TpayTokensService $tokensService)
+    {
+        try {
+            $this->originApi = new ConfigOrigin($tpay, $assetRepository, $tokensService);
+        } catch (Exception $exception) {
+            $this->originApi = null;
+        }
     }
 
     private function createOpenApiInstance(TpayInterface $tpay, Repository $assetRepository, TpayTokensService $tokensService, StoreManagerInterface $storeManager)

@@ -23,35 +23,33 @@
                 </field>
                 <field id="merchant_id" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Merchant ID</label>
-                    <validate>validate-no-empty validate-number validate-length maximum-length-10</validate>
+                    <validate>validate-number validate-length maximum-length-10</validate>
                 </field>
                 <field id="security_code" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Secure code</label>
-                    <validate>validate-no-empty validate-length maximum-length-32</validate>
+                    <validate>validate-length maximum-length-32</validate>
                 </field>
                 <field id="api_key_tpay" translate="label comment" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>API key</label>
-                    <validate>validate-no-empty no-whitespace validate-length maximum-length-126</validate>
+                    <validate>no-whitespace validate-length maximum-length-126</validate>
                 </field>
                 <field id="api_password" translate="label comment" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>API password</label>
-                    <validate>validate-no-empty no-whitespace validate-length maximum-length-40</validate>
+                    <validate>no-whitespace validate-length maximum-length-40</validate>
                 </field>
                 <field id="card_api_key_tpay" translate="label comment" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Card API key</label>
-                    <validate>validate-no-empty no-whitespace validate-length maximum-length-126</validate>
+                    <validate>no-whitespace validate-length maximum-length-126</validate>
                 </field>
                 <field id="card_api_password" translate="label comment" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Card API password</label>
-                    <validate>validate-no-empty no-whitespace validate-length maximum-length-40</validate>
+                    <validate>no-whitespace validate-length maximum-length-40</validate>
                 </field>
                 <field id="rsa_key" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>RSA key</label>
-                    <validate>validate-no-empty</validate>
                 </field>
                 <field id="verification_code" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Verification code</label>
-                    <validate>validate-no-empty</validate>
                 </field>
                 <field id="card_save_enabled" translate="label" type="select" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enable credit card saving</label>
@@ -115,13 +113,6 @@
                     <label>API password OPEN API</label>
                     <validate>validate-length maximum-length-64</validate>
                 </field>
-                <field id="open_api_security_code" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Open Api Secure code</label>
-                    <validate>validate-no-empty validate-length maximum-length-32</validate>
-                </field>
-
-
-
             </group>
         </section>
     </system>

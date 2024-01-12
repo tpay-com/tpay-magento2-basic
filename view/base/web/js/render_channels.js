@@ -156,5 +156,26 @@ require(['jquery', 'mage/translate'], function ($, $t) {
                 payButton.addClass('disabled');
             });
         });
+
+        $("#tpaycom_magento2generic_submit", '.payment-method').addClass('disabled');
+
+        $('input[name="payment[method]"]').on('click', function () {
+            var parent = $(this).closest('.payment-method');
+            $('input[name="accept_tos"]', parent).prop('checked', false);
+
+            var submitBtn = $("#tpaycom_magento2generic_submit", parent);
+            submitBtn.addClass('disabled');
+        });
+
+        $("input[name='accept_tos']").on("click", function () {
+            var parent = $(this).closest('.payment-method-content');
+            var submitBtn = $("#tpaycom_magento2generic_submit", parent);
+
+            if ($('#generic_accept_tos', parent).is(':checked')) {
+                submitBtn.removeClass('disabled');
+            } else {
+                submitBtn.addClass('disabled');
+            }
+        });
     }
 );
