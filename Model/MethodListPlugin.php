@@ -49,7 +49,7 @@ class MethodListPlugin
         $onsiteChannels = $this->scopeConfig->getValue(self::CONFIG_PATH, ScopeInterface::SCOPE_STORE);
         $channels = $onsiteChannels ? explode(',', $onsiteChannels) : [];
 
-        if (!$this->tpay->isCartValid((float)$this->checkoutSession->getQuote()->getGrandTotal())) {
+        if (!$this->tpay->isCartValid((float) $this->checkoutSession->getQuote()->getGrandTotal())) {
             return $result;
         }
 
