@@ -6,6 +6,7 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Payment\Helper\Data;
 use Magento\Payment\Model\MethodInterface;
 use Magento\Payment\Model\MethodList;
+use Magento\Quote\Api\Data\CartInterface;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use tpaycom\magento2basic\Api\TpayInterface;
@@ -27,18 +28,30 @@ class MethodListPlugin
     /** @var StoreManagerInterface */
     private $storeManager;
 
-    public function __construct(Data $data, ScopeConfigInterface $scopeConfig, OnsiteChannels $onsiteChannels, StoreManagerInterface $storeManager)
+    /** @var Tpay */
+    private $tpay;
+
+    /** @var CartInterface */
+    private $cartInterface;
+
+    public function __construct(Data $data, ScopeConfigInterface $scopeConfig, OnsiteChannels $onsiteChannels, StoreManagerInterface $storeManager, Tpay $tpay, CartInterface $cartInterface)
     {
         $this->data = $data;
         $this->scopeConfig = $scopeConfig;
         $this->onsiteChannels = $onsiteChannels;
         $this->storeManager = $storeManager;
+        $this->tpay = $tpay;
+        $this->cartInterface = $cartInterface;
     }
 
     public function afterGetAvailableMethods(MethodList $compiled, $result)
     {
         $onsiteChannels = $this->scopeConfig->getValue(self::CONFIG_PATH, ScopeInterface::SCOPE_STORE);
         $channels = $onsiteChannels ? explode(',', $onsiteChannels) : [];
+
+        if (!$this->tpay->isAvailable($this->cartInterface)) {
+            return $result;
+        }
 
         $result[] = $this->getMethodInstance('tpay.com - Płatność kartą', 'tpaycom_magento2basic_cards');
         $result = $this->filterResult($result);
