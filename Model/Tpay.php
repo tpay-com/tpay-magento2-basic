@@ -440,6 +440,22 @@ class Tpay extends AbstractMethod implements TpayInterface
         return $this->getConfigData('client_id');
     }
 
+    public function isCartValid(?float $grandTotal = null): bool
+    {
+        $minAmount = $this->getConfigData('min_order_total');
+        $maxAmount = $this->getConfigData('max_order_total');
+
+        if ($grandTotal && ($grandTotal < $minAmount || ($maxAmount && $grandTotal > $maxAmount))) {
+            return false;
+        }
+
+        if (!$this->getMerchantId()) {
+            return false;
+        }
+
+        return !is_null($grandTotal);
+    }
+
     /** Check that the  BLIK should be available for order/quote amount */
     protected function checkBlikAmount(): bool
     {
