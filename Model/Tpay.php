@@ -25,7 +25,7 @@ use Magento\Store\Model\StoreManager;
 use tpaycom\magento2basic\Api\Sales\OrderRepositoryInterface;
 use tpaycom\magento2basic\Api\TpayInterface;
 use tpaycom\magento2basic\Model\ApiFacade\Refund\RefundApiFacade;
-use tpayLibs\src\_class_tpay\Validators\FieldsValidator;
+use Tpay\OriginApi\Validators\FieldsValidator;
 
 class Tpay extends AbstractMethod implements TpayInterface
 {
@@ -142,32 +142,32 @@ class Tpay extends AbstractMethod implements TpayInterface
 
     public function getBlikLevelZeroStatus(): bool
     {
-        return (bool) $this->getConfigData('blik_level_zero');
+        return (bool) $this->getConfigData('general_settings/blik_level_zero');
     }
 
     public function getApiKey(): ?string
     {
-        return $this->getConfigData('api_key_tpay');
+        return $this->getConfigData('originapi_settings/api_key_tpay');
     }
 
     public function getCardApiKey(): ?string
     {
-        return $this->getConfigData('card_api_key_tpay');
+        return $this->getConfigData('originapi_settings/card_api_key_tpay');
     }
 
     public function getApiPassword(): ?string
     {
-        return $this->getConfigData('api_password');
+        return $this->getConfigData('originapi_settings/api_password');
     }
 
     public function getCardApiPassword(): ?string
     {
-        return $this->getConfigData('card_api_password');
+        return $this->getConfigData('originapi_settings/card_api_password');
     }
 
     public function getInvoiceSendMail(): string
     {
-        return $this->getConfigData('send_invoice_email');
+        return $this->getConfigData('sale_settings/send_invoice_email');
     }
 
     public function getTermsURL(): string
@@ -177,7 +177,7 @@ class Tpay extends AbstractMethod implements TpayInterface
 
     public function getOpenApiPassword()
     {
-        return $this->getConfigData('open_api_password');
+        return $this->getConfigData('openapi_settings/open_api_password');
     }
 
     public function getTpayFormData(?string $orderId = null): array
@@ -216,27 +216,22 @@ class Tpay extends AbstractMethod implements TpayInterface
 
     public function getMerchantId(): ?int
     {
-        return (int) $this->getConfigData('merchant_id');
+        return (int) $this->getConfigData('general_settings/merchant_id');
     }
 
     public function getOpenApiClientId(): ?string
     {
-        return $this->getConfigData('open_api_client_id');
+        return $this->getConfigData('openapi_settings/open_api_client_id');
     }
 
     public function getSecurityCode(): ?string
     {
-        return $this->getConfigData('security_code');
-    }
-
-    public function getOpenApiSecurityCode(): ?string
-    {
-        return $this->getConfigData('open_api_security_code');
+        return $this->getConfigData('general_settings/security_code');
     }
 
     public function onlyOnlineChannels(): bool
     {
-        return (bool) $this->getConfigData('show_payment_channels_online');
+        return (bool) $this->getConfigData('general_settings/show_payment_channels_online');
     }
 
     public function redirectToChannel(): bool
@@ -251,12 +246,12 @@ class Tpay extends AbstractMethod implements TpayInterface
 
     public function getTitle(): string
     {
-        return $this->_title ?? $this->getConfigData('title');
+        return $this->_title ?? $this->getConfigData('general_settings/title');
     }
 
     public function useSandboxMode(): bool
     {
-        return (bool) $this->getConfigData('use_sandbox');
+        return (bool) $this->getConfigData('general_settings/use_sandbox');
     }
 
     public function getPaymentRedirectUrl(): string
@@ -270,8 +265,8 @@ class Tpay extends AbstractMethod implements TpayInterface
      */
     public function isAvailable(?CartInterface $quote = null)
     {
-        $minAmount = $this->getConfigData('min_order_total');
-        $maxAmount = $this->getConfigData('max_order_total');
+        $minAmount = $this->getConfigData('sale_settings/min_order_total');
+        $maxAmount = $this->getConfigData('sale_settings/max_order_total');
 
         if ($quote && ($quote->getBaseGrandTotal() < $minAmount || ($maxAmount && $quote->getBaseGrandTotal() > $maxAmount))) {
             return false;
@@ -366,7 +361,7 @@ class Tpay extends AbstractMethod implements TpayInterface
     // KARTY
     public function getCardSaveEnabled(): bool
     {
-        return (bool) $this->getConfigData('card_save_enabled');
+        return (bool) $this->getConfigData('cardpayment_settings/card_save_enabled');
     }
 
     public function getCheckoutCustomerId(): ?string
@@ -381,7 +376,7 @@ class Tpay extends AbstractMethod implements TpayInterface
 
     public function getRSAKey(): string
     {
-        return $this->getConfigData('rsa_key');
+        return $this->getConfigData('cardpayment_settings/rsa_key');
     }
 
     public function isCustomerLoggedIn(): bool
@@ -396,12 +391,12 @@ class Tpay extends AbstractMethod implements TpayInterface
 
     public function getHashType(): string
     {
-        return $this->getConfigData('hash_type');
+        return $this->getConfigData('cardpayment_settings/hash_type');
     }
 
     public function getVerificationCode(): string
     {
-        return $this->getConfigData('verification_code');
+        return $this->getConfigData('cardpayment_settings/verification_code');
     }
 
     /**
@@ -435,15 +430,10 @@ class Tpay extends AbstractMethod implements TpayInterface
         return $this->validateCardCurrency($orderCurrency);
     }
 
-    public function getClientId(): ?string
-    {
-        return $this->getConfigData('client_id');
-    }
-
     public function isCartValid(?float $grandTotal = null): bool
     {
-        $minAmount = $this->getConfigData('min_order_total');
-        $maxAmount = $this->getConfigData('max_order_total');
+        $minAmount = $this->getConfigData('sale_settings/min_order_total');
+        $maxAmount = $this->getConfigData('sale_settings/max_order_total');
 
         if ($grandTotal && ($grandTotal < $minAmount || ($maxAmount && $grandTotal > $maxAmount))) {
             return false;

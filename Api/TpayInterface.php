@@ -34,8 +34,6 @@ interface TpayInterface
 
     public function getOpenApiClientId(): ?string;
 
-    public function getOpenApiSecurityCode(): ?string;
-
     public function getMerchantId(): ?int;
 
     /** Check that the BLIK Level 0 should be active on a payment channels list */

@@ -49,7 +49,7 @@ class Notification extends Action implements CsrfAwareActionInterface
     public function execute()
     {
         try {
-            $notification = $this->generateNotification();
+            $notification = (new JWSVerifiedPaymentNotification($this->tpay->getSecurityCode(), !$this->tpay->useSandboxMode()))->getNotification();
             $notification = $notification->getNotificationAssociative();
             $orderId = base64_decode($notification['tr_crc']);
 
@@ -119,15 +119,6 @@ class Notification extends Action implements CsrfAwareActionInterface
             if (!empty($token)) {
                 $this->tokensService->updateTokenById((int) $token['tokenId'], $notification['card_token']);
             }
-        }
-    }
-
-    private function generateNotification()
-    {
-        try {
-            return (new JWSVerifiedPaymentNotification($this->tpay->getSecurityCode(), !$this->tpay->useSandboxMode()))->getNotification();
-        } catch (Exception $e) {
-            return (new JWSVerifiedPaymentNotification($this->tpay->getOpenApiSecurityCode(), !$this->tpay->useSandboxMode()))->getNotification();
         }
     }
 }
