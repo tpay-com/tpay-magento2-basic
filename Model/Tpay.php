@@ -22,10 +22,10 @@ use Magento\Payment\Model\Method\Logger;
 use Magento\Quote\Api\Data\CartInterface;
 use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Store\Model\StoreManager;
+use Tpay\OriginApi\Validators\FieldsValidator;
 use tpaycom\magento2basic\Api\Sales\OrderRepositoryInterface;
 use tpaycom\magento2basic\Api\TpayInterface;
 use tpaycom\magento2basic\Model\ApiFacade\Refund\RefundApiFacade;
-use Tpay\OriginApi\Validators\FieldsValidator;
 
 class Tpay extends AbstractMethod implements TpayInterface
 {
