@@ -16,7 +16,7 @@
             <!-- ko template: getTemplate() --><!-- /ko -->
             <!--/ko-->
             <div class="TpayRegulations">
-                <input type="checkbox" name="accept_tos" id="generic_accept_tos"/>
+                <input type="checkbox" name="accept_tos" class="generic_accept_tos"/>
                 <label for="generic_accept_tos">
                     <a target="_blank"
                        data-bind="attr: {href: getTerms()}, text: $t('I do accept tpay.com service regulations')"></a>.
@@ -25,8 +25,7 @@
         </div>
         <div class="actions-toolbar">
             <div class="primary">
-                <button class="action primary checkout"
-                        id="tpaycom_magento2generic_submit"
+                <button class="action primary checkout tpaycom_magento2generic_submit"
                         type="submit"
                         data-bind="
                         click: placeOrder,

@@ -122,7 +122,9 @@ class ConfigOpen extends TpayApi
         $script[] = 'tpaycom_magento2basic::js/string_routines.js';
         $script[] = 'tpaycom_magento2basic::js/tpayCards.js';
         $script[] = 'tpaycom_magento2basic::js/renderSavedCards.js';
+        $script[] = 'tpaycom_magento2basic::js/tpayGeneric.js';
         $scripts = '';
+
         foreach ($script as $key => $value) {
             $scripts .= $this->createScript($value);
         }
