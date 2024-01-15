@@ -35,9 +35,10 @@ class OpenApi extends TpayApi
     public function channels(): array
     {
         $result = $this->transactions()->getChannels();
+        $channels = [];
 
-        return array_map(function (array $channel) {
-            return new Channel(
+        foreach ($result['channels'] ?? [] as $channel) {
+            $channels[$channel['id']] = new Channel(
                 $channel['id'],
                 $channel['name'],
                 $channel['fullName'],
@@ -48,7 +49,9 @@ class OpenApi extends TpayApi
                 $channel['groups'],
                 $channel['constraints']
             );
-        }, $result['channels'] ?? []);
+        }
+
+        return $channels;
     }
 
     private function handleDataStructure(array $data): array

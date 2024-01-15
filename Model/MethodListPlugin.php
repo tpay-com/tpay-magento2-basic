@@ -10,11 +10,12 @@ use Magento\Payment\Model\MethodList;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use tpaycom\magento2basic\Api\TpayInterface;
+use tpaycom\magento2basic\Model\ApiFacade\Transaction\TransactionApiFacade;
 use tpaycom\magento2basic\Model\Config\Source\OnsiteChannels;
 
 class MethodListPlugin
 {
-    private const CONFIG_PATH = 'payment/tpaycom_magento2basic/onsite_channels';
+    private const CONFIG_PATH = 'payment/tpaycom_magento2basic/openapi_settings/onsite_channels';
 
     /** @var Data */
     private $data;
@@ -34,31 +35,55 @@ class MethodListPlugin
     /** @var Session */
     private $checkoutSession;
 
-    public function __construct(Data $data, ScopeConfigInterface $scopeConfig, OnsiteChannels $onsiteChannels, StoreManagerInterface $storeManager, Tpay $tpay, Session $checkoutSession)
-    {
+    /** @var TransactionApiFacade */
+    private $transactions;
+
+    /** @var ConstraintValidator */
+    private $constraintValidator;
+
+    public function __construct(
+        Data $data,
+        ScopeConfigInterface $scopeConfig,
+        OnsiteChannels $onsiteChannels,
+        StoreManagerInterface $storeManager,
+        Tpay $tpay,
+        Session $checkoutSession,
+        TransactionApiFacade $transactions,
+        ConstraintValidator $constraintValidator
+    ) {
         $this->data = $data;
         $this->scopeConfig = $scopeConfig;
         $this->onsiteChannels = $onsiteChannels;
         $this->storeManager = $storeManager;
         $this->tpay = $tpay;
         $this->checkoutSession = $checkoutSession;
+        $this->transactions = $transactions;
+        $this->constraintValidator = $constraintValidator;
     }
 
     public function afterGetAvailableMethods(MethodList $compiled, $result)
     {
         $onsiteChannels = $this->scopeConfig->getValue(self::CONFIG_PATH, ScopeInterface::SCOPE_STORE);
-        $channels = $onsiteChannels ? explode(',', $onsiteChannels) : [];
+        $channelList = $onsiteChannels ? explode(',', $onsiteChannels) : [];
+        $channels = $this->transactions->channels();
 
-        if (!$this->tpay->isCartValid((float) $this->checkoutSession->getQuote()->getGrandTotal())) {
+        if (!$this->tpay->isCartValid($this->checkoutSession->getQuote()->getGrandTotal())) {
             return $result;
         }
 
         $result[] = $this->getMethodInstance('tpay.com - Płatność kartą', 'tpaycom_magento2basic_cards');
         $result = $this->filterResult($result);
 
-        foreach ($channels as $onsiteChannel) {
+        foreach ($channelList as $onsiteChannel) {
+            $channel = $channels[$onsiteChannel];
+
+            if (!empty($channel->constraints) && !$this->constraintValidator->validate($channel->constraints)) {
+                continue;
+            }
+
+            $title = $this->onsiteChannels->getLabelFromValue($onsiteChannel);
             $result[] = $this->getMethodInstance(
-                $this->onsiteChannels->getLabelFromValue($onsiteChannel),
+                $title,
                 "generic-{$onsiteChannel}"
             );
         }

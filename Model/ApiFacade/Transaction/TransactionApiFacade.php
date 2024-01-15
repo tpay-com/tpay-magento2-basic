@@ -71,7 +71,7 @@ class TransactionApiFacade
         }
 
         $channels = array_filter($this->openApi->channels(), function (Channel $channel) {
-            return true === $channel->available && true === empty($channel->constraints);
+            return true === $channel->available;
         });
 
         $this->cache->save(serialize($channels), self::CHANNELS_CACHE_KEY, [], self::CACHE_LIFETIME);
