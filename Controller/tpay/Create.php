@@ -119,6 +119,7 @@ class Create extends Action
 
         if (6 === strlen($additionalPaymentInformation['blik_code'] ?? '')) {
             $data['group'] = TransactionOriginApi::BLIK_CHANNEL;
+            $data['channel'] = null;
             $this->handleBlikData($data, $additionalPaymentInformation['blik_code']);
         } else {
             $data['group'] = (int) ($additionalPaymentInformation['group'] ?? null);
