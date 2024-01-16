@@ -41,7 +41,7 @@ class CardApiFacade
 
     private function createCardOriginApiInstance(TpayInterface $tpay, TpayTokensService $tokensService, TpayService $tpayService)
     {
-        if (!$tpay->isOriginApiEnabled()()){
+        if (!$tpay->isOriginApiEnabled()) {
             $this->cardOrigin = null;
 
             return;

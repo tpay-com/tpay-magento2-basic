@@ -86,7 +86,7 @@ class TransactionApiFacade
 
     private function createOriginApiInstance(TpayInterface $tpay)
     {
-        if (!$tpay->isOriginApiEnabled()){
+        if (!$tpay->isOriginApiEnabled()) {
             $this->originApi = null;
 
             return;

@@ -37,7 +37,7 @@ class ConfigFacade
 
     private function createOriginApiInstance(TpayInterface $tpay, Repository $assetRepository, TpayTokensService $tokensService)
     {
-        if (!$tpay->isOriginApiEnabled()){
+        if (!$tpay->isOriginApiEnabled()) {
             $this->originApi = null;
 
             return;
