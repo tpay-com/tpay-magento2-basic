@@ -41,6 +41,12 @@ class CardApiFacade
 
     private function createCardOriginApiInstance(TpayInterface $tpay, TpayTokensService $tokensService, TpayService $tpayService)
     {
+        if (!$tpay->isOriginApiEnabled()()){
+            $this->cardOrigin = null;
+
+            return;
+        }
+
         try {
             $this->cardOrigin = new CardOrigin($tpay, $tokensService, $tpayService);
         } catch (Exception $exception) {
@@ -50,7 +56,7 @@ class CardApiFacade
 
     private function createOpenApiInstance(TpayInterface $tpay, TpayTokensService $tokensService, TpayService $tpayService)
     {
-        if ('PLN' !== $this->storeManager->getStore()->getCurrentCurrencyCode()) {
+        if ('PLN' !== $this->storeManager->getStore()->getCurrentCurrencyCode() && !$tpay->isOpenApiEnabled()) {
             $this->cardOpen = null;
             $this->useOpenCard = false;
 

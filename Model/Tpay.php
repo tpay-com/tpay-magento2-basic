@@ -152,7 +152,7 @@ class Tpay extends AbstractMethod implements TpayInterface
 
     public function getCardApiKey(): ?string
     {
-        return $this->getConfigData('originapi_settings/card_api_key_tpay');
+        return $this->getConfigData('cardpayment_settings/cardpayment_originapi_settings/card_api_key_tpay');
     }
 
     public function getApiPassword(): ?string
@@ -162,7 +162,7 @@ class Tpay extends AbstractMethod implements TpayInterface
 
     public function getCardApiPassword(): ?string
     {
-        return $this->getConfigData('originapi_settings/card_api_password');
+        return $this->getConfigData('cardpayment_settings/cardpayment_originapi_settings/card_api_password');
     }
 
     public function getInvoiceSendMail(): string
@@ -175,7 +175,7 @@ class Tpay extends AbstractMethod implements TpayInterface
         return $this->termsURL;
     }
 
-    public function getOpenApiPassword()
+    public function getOpenApiPassword(): ?string
     {
         return $this->getConfigData('openapi_settings/open_api_password');
     }
@@ -247,6 +247,31 @@ class Tpay extends AbstractMethod implements TpayInterface
     public function getTitle(): string
     {
         return $this->_title ?? $this->getConfigData('general_settings/title');
+    }
+
+    public function getCardTitle(): ?string
+    {
+        return $this->getConfigData('cardpayment_settings/card_title') ?? '';
+    }
+
+    public function isOriginApiEnabled(): bool
+    {
+        return (bool) $this->getConfigData('originapi_settings/origin_api_active');
+    }
+
+    public function isOpenApiEnabled(): bool
+    {
+        return (bool) $this->getConfigData('openapi_settings/open_api_active');
+    }
+
+    public function isCardEnabled(): bool
+    {
+        return (bool) $this->getConfigData('cardpayment_settings/cardpayment_api_active');
+    }
+
+    public function isOriginApiCardUse(): bool
+    {
+        return (bool) $this->getConfigData('cardpayment_settings/cardpayment_origin_api_use');
     }
 
     public function useSandboxMode(): bool
@@ -391,12 +416,12 @@ class Tpay extends AbstractMethod implements TpayInterface
 
     public function getHashType(): string
     {
-        return $this->getConfigData('cardpayment_settings/hash_type');
+        return $this->getConfigData('cardpayment_settings/cardpayment_originapi_settings/hash_type');
     }
 
     public function getVerificationCode(): string
     {
-        return $this->getConfigData('cardpayment_settings/verification_code');
+        return $this->getConfigData('cardpayment_settings/cardpayment_originapi_settings/verification_code');
     }
 
     /**

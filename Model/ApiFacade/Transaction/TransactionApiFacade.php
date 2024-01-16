@@ -86,6 +86,12 @@ class TransactionApiFacade
 
     private function createOriginApiInstance(TpayInterface $tpay)
     {
+        if (!$tpay->isOriginApiEnabled()){
+            $this->originApi = null;
+
+            return;
+        }
+
         try {
             $this->originApi = new TransactionOriginApi($tpay->getApiPassword(), $tpay->getApiKey(), $tpay->getMerchantId(), $tpay->getSecurityCode(), !$tpay->useSandboxMode());
         } catch (Exception $exception) {
@@ -95,6 +101,13 @@ class TransactionApiFacade
 
     private function createOpenApiInstance(TpayInterface $tpay)
     {
+        if (!$tpay->isOpenApiEnabled()) {
+            $this->openApi = null;
+            $this->useOpenApi = false;
+
+            return;
+        }
+
         try {
             $this->openApi = new OpenApi($tpay->getOpenApiClientId(), $tpay->getOpenApiPassword(), !$tpay->useSandboxMode());
             $this->openApi->authorization();

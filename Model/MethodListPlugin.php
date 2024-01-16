@@ -71,7 +71,7 @@ class MethodListPlugin
             return $result;
         }
 
-        $result[] = $this->getMethodInstance('tpay.com - Płatność kartą', 'tpaycom_magento2basic_cards');
+        $result = $this->addCardMethod($result);
         $result = $this->filterResult($result);
 
         foreach ($channelList as $onsiteChannel) {
@@ -98,6 +98,15 @@ class MethodListPlugin
         $method->setCode($code);
 
         return $method;
+    }
+
+    private function addCardMethod(array $result): array
+    {
+        if ($this->tpay->isCardEnabled()) {
+            $result[] = $this->getMethodInstance($this->tpay->getCardTitle(), 'tpaycom_magento2basic_cards');
+        }
+
+        return $result;
     }
 
     private function filterResult(array $result): array

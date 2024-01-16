@@ -37,6 +37,12 @@ class ConfigFacade
 
     private function createOriginApiInstance(TpayInterface $tpay, Repository $assetRepository, TpayTokensService $tokensService)
     {
+        if (!$tpay->isOriginApiEnabled()){
+            $this->originApi = null;
+
+            return;
+        }
+
         try {
             $this->originApi = new ConfigOrigin($tpay, $assetRepository, $tokensService);
         } catch (Exception $exception) {
@@ -46,7 +52,7 @@ class ConfigFacade
 
     private function createOpenApiInstance(TpayInterface $tpay, Repository $assetRepository, TpayTokensService $tokensService, StoreManagerInterface $storeManager)
     {
-        if ('PLN' !== $storeManager->getStore()->getCurrentCurrencyCode()) {
+        if ('PLN' !== $storeManager->getStore()->getCurrentCurrencyCode() && !$tpay->isOpenApiEnabled()) {
             $this->openApi = null;
             $this->useOpenApi = false;
 

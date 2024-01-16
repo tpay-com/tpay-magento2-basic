@@ -26,7 +26,19 @@ interface TpayInterface
     /** Return data for form */
     public function getTpayFormData(?string $orderId = null): array;
 
+    public function getCardTitle(): ?string;
+
+    public function isOriginApiEnabled(): bool;
+
+    public function isOpenApiEnabled(): bool;
+
+    public function isCardEnabled(): bool;
+
+    public function isOriginApiCardUse(): bool;
+
     public function getApiPassword(): ?string;
+
+    public function getOpenApiPassword(): ?string;
 
     public function getApiKey(): ?string;
 

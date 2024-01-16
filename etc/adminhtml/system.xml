@@ -18,11 +18,12 @@
                     <label>Active</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-            <group id="general_settings" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>General settings</label>
-                <attribute type="expanded">1</attribute>
-                <field id="title" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                <group id="general_settings" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>General settings</label>
+                    <attribute type="expanded">1</attribute>
+                    <field id="title" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Description</label>
+                        <validate>validate-no-empty</validate>
                     </field>
                     <field id="merchant_id" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Merchant ID</label>
@@ -32,73 +33,101 @@
                         <label>Secure code</label>
                         <validate>validate-length maximum-length-32</validate>
                     </field>
-                <field id="show_payment_channels_online" translate="label" type="select" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Only online methods</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                </field>
-                <field id="redirect_directly_to_channel" translate="label" type="select" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Redirect directly to bank</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                </field>
-                <field id="blik_level_zero" translate="label" type="select" sortOrder="9" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>BLIK level zero</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                </field>
-                <field id="use_sandbox" translate="label" type="select" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Use sandbox mode (avoid using it in real production store)</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                </field>
-            </group>
+                    <field id="show_payment_channels_online" translate="label" type="select" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Only online methods</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+                    <field id="redirect_directly_to_channel" translate="label" type="select" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Redirect directly to bank</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+                    <field id="blik_level_zero" translate="label" type="select" sortOrder="9" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>BLIK level zero</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+                    <field id="use_sandbox" translate="label" type="select" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Use sandbox mode (avoid using it in real production store)</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+                </group>
                 <group id="openapi_settings" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Open Api</label>
+                    <field id="open_api_active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Active</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
                     <field id="open_api_client_id" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Client ID OPEN API</label>
                         <validate>validate-length maximum-length-64</validate>
+                        <depends><field id="open_api_active">1</field></depends>
                     </field>
                     <field id="open_api_password" translate="label comment" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>API password OPEN API</label>
                         <validate>validate-length maximum-length-64</validate>
+                        <depends><field id="open_api_active">1</field></depends>
                     </field>
                     <field id="onsite_channels" translate="label" type="multiselect" sortOrder="18" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Generic onsites</label>
                         <can_be_empty>1</can_be_empty>
                         <source_model>tpaycom\magento2basic\Model\Config\Source\OnsiteChannels</source_model>
+                        <depends><field id="open_api_active">1</field></depends>
                     </field>
                 </group>
                 <group id="originapi_settings" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Origin Api</label>
+                    <field id="origin_api_active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Active</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
                     <field id="api_key_tpay" translate="label comment" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>API key</label>
                         <validate>no-whitespace validate-length maximum-length-126</validate>
+                        <depends><field id="origin_api_active">1</field></depends>
                     </field>
                     <field id="api_password" translate="label comment" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>API password</label>
                         <validate>no-whitespace validate-length maximum-length-40</validate>
-                    </field>
-                    <field id="card_api_key_tpay" translate="label comment" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Card API key</label>
-                        <validate>no-whitespace validate-length maximum-length-126</validate>
-                    </field>
-                    <field id="card_api_password" translate="label comment" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Card API password</label>
-                        <validate>no-whitespace validate-length maximum-length-40</validate>
+                        <depends><field id="origin_api_active">1</field></depends>
                     </field>
                 </group>
                 <group id="cardpayment_settings" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Card payment settings</label>
+                    <field id="cardpayment_api_active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Active</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+                    <group id="cardpayment_originapi_settings"  translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Origin Api card payment settings</label>
+                        <depends><field id="cardpayment_api_active">1</field></depends>
+                        <field id="hash_type" translate="label" type="select" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Hash type</label>
+                            <source_model>tpaycom\magento2basic\Model\Config\Source\HashTypes</source_model>
+                        </field>
+                        <field id="verification_code" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Verification code</label>
+                        </field>
+                        <field id="card_api_key_tpay" translate="label comment" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Card API key</label>
+                            <validate>no-whitespace validate-length maximum-length-126</validate>
+                        </field>
+                        <field id="card_api_password" translate="label comment" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Card API password</label>
+                            <validate>no-whitespace validate-length maximum-length-40</validate>
+                        </field>
+                    </group>
+                    <field id="card_title" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Card description</label>
+                        <validate>validate-no-empty</validate>
+                        <depends><field id="cardpayment_api_active">1</field></depends>
+                    </field>
                     <field id="rsa_key" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>RSA key</label>
-                    </field>
-                    <field id="verification_code" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Verification code</label>
+                        <depends><field id="cardpayment_api_active">1</field></depends>
                     </field>
                     <field id="card_save_enabled" translate="label" type="select" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Enable credit card saving</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    </field>
-                    <field id="hash_type" translate="label" type="select" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Hash type</label>
-                        <source_model>tpaycom\magento2basic\Model\Config\Source\HashTypes</source_model>
+                        <depends><field id="cardpayment_api_active">1</field></depends>
                     </field>
                 </group>
                 <group id="sale_settings" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
