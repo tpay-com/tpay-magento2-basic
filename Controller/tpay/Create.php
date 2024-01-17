@@ -69,14 +69,14 @@ class Create extends Action
 
             $this->handleOpenApiTrId($paymentData, $transaction);
 
-            $this->tpayService->addCommentToHistory($orderId, 'Transaction title ' .$transaction['title']);
+            $this->tpayService->addCommentToHistory($orderId, 'Transaction title '.$transaction['title']);
             $transactionUrl = $transaction['url'];
 
             if (true === $this->tpay->redirectToChannel()) {
                 $transactionUrl = str_replace('gtitle', 'title', $transactionUrl);
             }
 
-            $this->tpayService->addCommentToHistory($orderId, 'Transaction link ' .$transactionUrl);
+            $this->tpayService->addCommentToHistory($orderId, 'Transaction link '.$transactionUrl);
             $paymentData['additional_information']['transaction_url'] = $transactionUrl;
             $payment->setData($paymentData)->save();
 
