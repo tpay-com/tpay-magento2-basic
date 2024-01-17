@@ -32,12 +32,13 @@ class Create extends Action
     private $cache;
 
     public function __construct(
-        Context $context,
-        TpayInterface $tpayModel,
-        TpayService $tpayService,
-        Session $checkoutSession,
+        Context        $context,
+        TpayInterface  $tpayModel,
+        TpayService    $tpayService,
+        Session        $checkoutSession,
         CacheInterface $cache
-    ) {
+    )
+    {
         $this->tpay = $tpayModel;
         $this->tpayService = $tpayService;
         $this->checkoutSession = $checkoutSession;
@@ -69,14 +70,14 @@ class Create extends Action
 
             $this->handleOpenApiTrId($paymentData, $transaction);
 
-            $this->tpayService->addCommentToHistory($orderId, 'Transaction title '.$transaction['title']);
+            $this->tpayService->addCommentToHistory($orderId, 'Transaction title ' . $transaction['title']);
             $transactionUrl = $transaction['url'];
 
             if (true === $this->tpay->redirectToChannel()) {
                 $transactionUrl = str_replace('gtitle', 'title', $transactionUrl);
             }
 
-            $this->tpayService->addCommentToHistory($orderId, 'Transaction link '.$transactionUrl);
+            $this->tpayService->addCommentToHistory($orderId, 'Transaction link ' . $transactionUrl);
             $paymentData['additional_information']['transaction_url'] = $transactionUrl;
             $payment->setData($paymentData)->save();
 
@@ -84,9 +85,9 @@ class Create extends Action
                 if (true === $this->transaction->isOpenApiUse()) {
                     if (isset($transaction['payments']['errors']) && count($transaction['payments']['errors']) > 0) {
                         return $this->_redirect('magento2basic/tpay/error');
-                    } else {
-                        return $this->_redirect('magento2basic/tpay/success');
                     }
+
+                    return $this->_redirect('magento2basic/tpay/success');
                 }
                 $result = $this->blikPay($transaction['title'], $additionalPaymentInformation['blik_code']);
                 $this->checkoutSession->unsQuoteId();
@@ -131,8 +132,8 @@ class Create extends Action
             $data['channel'] = null;
             $this->handleBlikData($data, $additionalPaymentInformation['blik_code']);
         } else {
-            $data['group'] = (int) ($additionalPaymentInformation['group'] ?? null);
-            $data['channel'] = (int) ($additionalPaymentInformation['channel'] ?? null);
+            $data['group'] = (int)($additionalPaymentInformation['group'] ?? null);
+            $data['channel'] = (int)($additionalPaymentInformation['channel'] ?? null);
 
             if ($this->tpay->redirectToChannel()) {
                 $data['direct'] = 1;
