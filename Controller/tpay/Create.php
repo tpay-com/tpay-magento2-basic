@@ -11,6 +11,7 @@ use Tpay\OriginApi\Utilities\Util;
 use tpaycom\magento2basic\Api\TpayInterface;
 use tpaycom\magento2basic\Model\ApiFacade\Transaction\TransactionApiFacade;
 use tpaycom\magento2basic\Model\ApiFacade\Transaction\TransactionOriginApi;
+use tpaycom\magento2basic\Model\Tpay;
 use tpaycom\magento2basic\Service\TpayService;
 
 class Create extends Action
@@ -55,6 +56,10 @@ class Create extends Action
             $paymentData = $payment->getData();
             $this->transaction = new TransactionApiFacade($this->tpay, $this->cache);
             $additionalPaymentInformation = $paymentData['additional_information'];
+
+            if (!$additionalPaymentInformation[Tpay::TERMS_ACCEPT]) {
+                return $this->_redirect('magento2basic/tpay/error');
+            }
 
             $transaction = $this->prepareTransaction($orderId, $additionalPaymentInformation);
 

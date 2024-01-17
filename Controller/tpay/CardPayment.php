@@ -12,6 +12,7 @@ use Magento\Store\Model\StoreManagerInterface;
 use Tpay\OriginApi\Utilities\Util;
 use tpaycom\magento2basic\Api\TpayInterface;
 use tpaycom\magento2basic\Model\ApiFacade\CardTransaction\CardApiFacade;
+use tpaycom\magento2basic\Model\Tpay;
 use tpaycom\magento2basic\Service\TpayService;
 use tpaycom\magento2basic\Service\TpayTokensService;
 
@@ -49,6 +50,13 @@ class CardPayment extends Action
         $orderId = $this->checkoutSession->getLastRealOrderId();
 
         if ($orderId) {
+            $payment = $this->tpayService->getPayment($orderId);
+            $additionalPaymentInformation = $payment->getData()['additional_information'];
+
+            if (!$additionalPaymentInformation[Tpay::TERMS_ACCEPT]) {
+                return $this->_redirect('magento2basic/tpay/error');
+            }
+
             $cardTransaction = new CardApiFacade($this->tpay, $this->tokensService, $this->tpayService, $this->storeManager);
             $redirectUrl = $cardTransaction->makeCardTransaction($orderId);
 

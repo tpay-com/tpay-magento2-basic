@@ -33,6 +33,15 @@ define(
 
             redirectAfterPlaceOrder: false,
 
+            getData: function () {
+                var parent = this._super(),
+                    paymentData = {};
+
+                paymentData['accept_tos'] = $('input[name="accept_tos"]').is(':checked');
+
+                return $.extend(true, parent, {'additional_data': paymentData});
+            },
+
             isActive: function () {
                 return true;
             }

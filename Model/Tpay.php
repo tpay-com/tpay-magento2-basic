@@ -315,9 +315,7 @@ class Tpay extends AbstractMethod implements TpayInterface
 
         $info->setAdditionalInformation('channel', $additionalData['channel'] ?? null);
 
-        if (array_key_exists(static::TERMS_ACCEPT, $additionalData) && 1 === $additionalData[static::TERMS_ACCEPT]) {
-            $info->setAdditionalInformation(static::TERMS_ACCEPT, 1);
-        }
+        $info->setAdditionalInformation(static::TERMS_ACCEPT, isset($additionalData[static::TERMS_ACCEPT]) ? '1' === $additionalData[static::TERMS_ACCEPT] : false);
 
         // KARTY
         $info->setAdditionalInformation(static::CARDDATA, $additionalData[static::CARDDATA] ?? '');
