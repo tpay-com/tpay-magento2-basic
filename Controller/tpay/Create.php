@@ -82,7 +82,11 @@ class Create extends Action
 
             if (6 === strlen($additionalPaymentInformation['blik_code'] ?? '') && $this->tpay->checkBlikLevel0Settings()) {
                 if (true === $this->transaction->isOpenApiUse()) {
-                    return $this->_redirect('magento2basic/tpay/success');
+                    if (isset($transaction['payments']['errors']) && count($transaction['payments']['errors']) > 0) {
+                        return $this->_redirect('magento2basic/tpay/error');
+                    } else {
+                        return $this->_redirect('magento2basic/tpay/success');
+                    }
                 }
                 $result = $this->blikPay($transaction['title'], $additionalPaymentInformation['blik_code']);
                 $this->checkoutSession->unsQuoteId();
@@ -93,7 +97,7 @@ class Create extends Action
                         'User has typed wrong blik code and has been redirected to transaction panel in order to finish payment'
                     );
 
-                    return $this->_redirect($transactionUrl);
+                    return $this->_redirect('magento2basic/tpay/error');
                 }
 
                 return $this->_redirect('magento2basic/tpay/success');
@@ -135,7 +139,7 @@ class Create extends Action
             }
         }
 
-        if ($data['channel']) {
+        if (isset($data['channel']) && $data['channel']) {
             return $this->transaction->createWithInstantRedirection($data);
         }
 
@@ -148,6 +152,11 @@ class Create extends Action
             $data['blikPaymentData'] = [
                 'blikToken' => $blikCode,
             ];
+        }
+        if (!$this->transaction->isOpenApiUse()) {
+            unset($data['channel']);
+            unset($data['currency']);
+            unset($data['language']);
         }
     }
 
