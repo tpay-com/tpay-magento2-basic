@@ -42,7 +42,7 @@ interface TpayInterface
 
     public function getApiKey(): ?string;
 
-    public function getSecurityCode(): ?string;
+    public function getSecurityCode(?int $storeId = null): ?string;
 
     public function getOpenApiClientId(): ?string;
 
@@ -66,7 +66,7 @@ interface TpayInterface
     /** Check if send an email about the new invoice to customer */
     public function getInvoiceSendMail(): string;
 
-    public function useSandboxMode(): bool;
+    public function useSandboxMode(?int $storeId = null): bool;
 
     /** Check if checkout amount is in range of installments payment channel */
     public function getInstallmentsAmountValid(): bool;

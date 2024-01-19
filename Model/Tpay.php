@@ -224,9 +224,9 @@ class Tpay extends AbstractMethod implements TpayInterface
         return $this->getConfigData('openapi_settings/open_api_client_id');
     }
 
-    public function getSecurityCode(): ?string
+    public function getSecurityCode(?int $storeId = null): ?string
     {
-        return $this->getConfigData('general_settings/security_code');
+        return $this->getConfigData('general_settings/security_code', $storeId);
     }
 
     public function onlyOnlineChannels(): bool
@@ -274,9 +274,9 @@ class Tpay extends AbstractMethod implements TpayInterface
         return (bool) $this->getConfigData('cardpayment_settings/cardpayment_origin_api_use');
     }
 
-    public function useSandboxMode(): bool
+    public function useSandboxMode(?int $storeId = null): bool
     {
-        return (bool) $this->getConfigData('general_settings/use_sandbox');
+        return (bool) $this->getConfigData('general_settings/use_sandbox', $storeId);
     }
 
     public function getPaymentRedirectUrl(): string
