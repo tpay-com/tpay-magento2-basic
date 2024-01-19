@@ -109,7 +109,7 @@ class Notification extends Action implements CsrfAwareActionInterface
         }
     }
 
-    public function getNotification()
+    private function getNotification()
     {
         $returnData = null;
         foreach ($this->storeManager->getStores() as $store) {
@@ -122,7 +122,7 @@ class Notification extends Action implements CsrfAwareActionInterface
         return $returnData;
     }
 
-    public function extractNotification(StoreInterface $store): array
+    private function extractNotification(StoreInterface $store): array
     {
         $storeId = (int) $store->getStoreId();
         try {
