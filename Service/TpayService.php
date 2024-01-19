@@ -145,7 +145,6 @@ class TpayService extends RegisterCaptureNotificationOperation
         return $this->orderRepository->getByIncrementId($orderId);
     }
 
-    // KARTY
     public function setCardOrderStatus($orderId, array $validParams, $tpayModel)
     {
         /** @var Order $order */

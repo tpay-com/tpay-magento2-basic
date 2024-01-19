@@ -71,7 +71,6 @@ interface TpayInterface
     /** Check if checkout amount is in range of installments payment channel */
     public function getInstallmentsAmountValid(): bool;
 
-    // KARTY
     public function getCardApiKey(): ?string;
 
     public function getCardApiPassword(): ?string;
@@ -87,6 +86,10 @@ interface TpayInterface
     public function getHashType(): ?string;
 
     public function getVerificationCode(): ?string;
+
+    public function isAllowSpecific(): bool;
+
+    public function getSpecificCountry(): array;
 
     /** @param string $orderId */
     public function getCustomerId($orderId);

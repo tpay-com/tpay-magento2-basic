@@ -40,6 +40,11 @@ class ConstraintValidator
         return true;
     }
 
+    public function isClientCountryValid(bool $isAllowed, string $clientCountry, array $specificCountry): bool
+    {
+        return $isAllowed && !in_array($clientCountry, $specificCountry);
+    }
+
     private function validateMinimalTotal(float $minimal): bool
     {
         return $this->checkoutSession->getQuote()->getGrandTotal() > $minimal;

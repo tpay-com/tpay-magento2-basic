@@ -32,7 +32,6 @@
                                     </div>
                                     <input id="blik_code"
                                            name="blik_code"
-                                           pattern="\d*"
                                            type="tel"
                                            autocomplete="off"
                                            maxlength="6"
@@ -41,6 +40,7 @@
                                            tabindex="1"
                                            value=""
                                            class="tpay-input-value tpay-blik-input"
+                                           oninput="this.value = this.value.replace(/\D/g, '')"
                                     />
                                 </div>
                             </div>

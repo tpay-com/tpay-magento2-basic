@@ -67,12 +67,20 @@ class MethodListPlugin
         $channelList = $onsiteChannels ? explode(',', $onsiteChannels) : [];
         $channels = $this->transactions->channels();
 
+        if ($this->constraintValidator->isClientCountryValid($this->tpay->isAllowSpecific(), $this->checkoutSession->getQuote()->getBillingAddress()->getCountryId(), $this->tpay->getSpecificCountry())) {
+            return [];
+        }
+
         if (!$this->tpay->isCartValid($this->checkoutSession->getQuote()->getGrandTotal())) {
             return $result;
         }
 
         $result = $this->addCardMethod($result);
         $result = $this->filterResult($result);
+
+        if (!$this->transactions->isOpenApiUse() || !$this->isPlnPayment()) {
+            return $result;
+        }
 
         foreach ($channelList as $onsiteChannel) {
             $channel = $channels[$onsiteChannel];
@@ -111,12 +119,17 @@ class MethodListPlugin
 
     private function filterResult(array $result): array
     {
-        if ('PLN' === $this->storeManager->getStore()->getCurrentCurrencyCode()) {
+        if ($this->isPlnPayment()) {
             return $result;
         }
 
         return array_filter($result, function ($method) {
             return 'tpaycom_magento2basic' !== $method->getCode();
         });
+    }
+
+    private function isPlnPayment(): bool
+    {
+        return 'PLN' === $this->storeManager->getStore()->getCurrentCurrencyCode();
     }
 }

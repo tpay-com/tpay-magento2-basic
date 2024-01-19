@@ -75,7 +75,7 @@
                                             <!-- ko i18n: 'CVC' --><!-- /ko -->
                                         </div>
                                         <input id="cvc"
-                                               maxlength="4"
+                                               maxlength="3"
                                                type="tel"
                                                autocomplete="off"
                                                autocompletetype="cc-cvc"
@@ -90,6 +90,7 @@
                             <span data-bind="html: cardShowSaveBox()"></span>
                             <input type="hidden" name="card_data" id="card_data"/>
                             <input type="hidden" name="card_vendor" id="card_vendor"/>
+                            <input type="hidden" name="card_short_code" id="card_short_code"/>
                         </div>
                         <div class="tpay-amPmCheckbox" id="tpay-card-save-checkbox" style="display: none">
                             <input type="checkbox" id="card_save" name="card_save"/>

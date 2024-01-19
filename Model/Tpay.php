@@ -317,7 +317,6 @@ class Tpay extends AbstractMethod implements TpayInterface
 
         $info->setAdditionalInformation(static::TERMS_ACCEPT, isset($additionalData[static::TERMS_ACCEPT]) ? '1' === $additionalData[static::TERMS_ACCEPT] : false);
 
-        // KARTY
         $info->setAdditionalInformation(static::CARDDATA, $additionalData[static::CARDDATA] ?? '');
         $info->setAdditionalInformation(static::CARD_VENDOR, isset($additionalData[static::CARD_VENDOR]) && in_array($additionalData[static::CARD_VENDOR], $this->supportedVendors) ? $additionalData[static::CARD_VENDOR] : 'undefined');
         $info->setAdditionalInformation(static::CARD_SAVE, isset($additionalData[static::CARD_SAVE]) ? '1' === $additionalData[static::CARD_SAVE] : false);
@@ -381,7 +380,6 @@ class Tpay extends AbstractMethod implements TpayInterface
         return parent::getConfigData($field, $storeId);
     }
 
-    // KARTY
     public function getCardSaveEnabled(): bool
     {
         return (bool) $this->getConfigData('cardpayment_settings/card_save_enabled');
@@ -420,6 +418,16 @@ class Tpay extends AbstractMethod implements TpayInterface
     public function getVerificationCode(): string
     {
         return $this->getConfigData('cardpayment_settings/cardpayment_originapi_settings/verification_code');
+    }
+
+    public function isAllowSpecific(): bool
+    {
+        return (bool) $this->getConfigData('sale_settings/allowspecific') ?? false;
+    }
+
+    public function getSpecificCountry(): array
+    {
+        return $this->getConfigData('sale_settings/specificcountry') ? explode(',', $this->getConfigData('sale_settings/specificcountry')) : [];
     }
 
     /**
