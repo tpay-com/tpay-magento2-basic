@@ -13,6 +13,8 @@ use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\Response\Http;
 use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
 use Magento\Sales\Model\Order;
+use Magento\Store\Api\Data\StoreInterface;
+use Magento\Store\Model\StoreManagerInterface;
 use Tpay\OriginApi\Utilities\Util;
 use tpaycom\magento2basic\Api\TpayInterface;
 use tpaycom\magento2basic\Service\TpayService;
@@ -35,12 +37,16 @@ class Notification extends Action implements CsrfAwareActionInterface
     /** @var TpayTokensService */
     private $tokensService;
 
-    public function __construct(Context $context, RemoteAddress $remoteAddress, TpayInterface $tpayModel, TpayService $tpayService, TpayTokensService $tokensService)
+    /** @var StoreManagerInterface */
+    private $storeManager;
+
+    public function __construct(Context $context, RemoteAddress $remoteAddress, TpayInterface $tpayModel, TpayService $tpayService, TpayTokensService $tokensService, StoreManagerInterface $storeManager)
     {
         $this->tpay = $tpayModel;
         $this->remoteAddress = $remoteAddress;
         $this->tpayService = $tpayService;
         $this->tokensService = $tokensService;
+        $this->storeManager = $storeManager;
         Util::$loggingEnabled = false;
 
         parent::__construct($context);
@@ -48,26 +54,7 @@ class Notification extends Action implements CsrfAwareActionInterface
 
     public function execute()
     {
-        try {
-            $notification = (new JWSVerifiedPaymentNotification($this->tpay->getSecurityCode(), !$this->tpay->useSandboxMode()))->getNotification();
-            $notification = $notification->getNotificationAssociative();
-            $orderId = base64_decode($notification['tr_crc']);
-
-            if ('PAID' === $notification['tr_status']) {
-                $response = $this->getPaidTransactionResponse($orderId);
-
-                return $this->getResponse()->setStatusCode(Http::STATUS_CODE_200)->setContent($response);
-            }
-
-            $this->saveCard($notification, $orderId);
-            $this->tpayService->SetOrderStatus($orderId, $notification, $this->tpay);
-
-            return $this->getResponse()->setStatusCode(Http::STATUS_CODE_200)->setContent('TRUE');
-        } catch (Exception $e) {
-            Util::log('Notification exception', "{$e->getMessage()} in file {$e->getFile()} line: {$e->getLine()} \n\n {$e->getTraceAsString()}");
-
-            return $this->getResponse()->setStatusCode(Http::STATUS_CODE_500)->setContent('FALSE');
-        }
+        return $this->getNotification();
     }
 
     /**
@@ -120,5 +107,49 @@ class Notification extends Action implements CsrfAwareActionInterface
                 $this->tokensService->updateTokenById((int) $token['tokenId'], $notification['card_token']);
             }
         }
+    }
+
+    public function getNotification()
+    {
+        $returnData = null;
+        foreach ($this->storeManager->getStores() as $store) {
+            [$returnData, $isPassed] = $this->extractNotification($store);
+            if ($isPassed) {
+                break;
+            }
+        }
+
+        return $returnData;
+    }
+
+    public function extractNotification(StoreInterface $store): array
+    {
+        $storeId = (int) $store->getStoreId();
+        try {
+            $notification = (new JWSVerifiedPaymentNotification($this->tpay->getSecurityCode($storeId), !$this->tpay->useSandboxMode($storeId)))->getNotification();
+            $notification = $notification->getNotificationAssociative();
+            $orderId = base64_decode($notification['tr_crc']);
+
+            if ('PAID' === $notification['tr_status']) {
+                $response = $this->getPaidTransactionResponse($orderId);
+
+                $returnData = $this->getResponse()->setStatusCode(Http::STATUS_CODE_200)->setContent($response);
+
+                return [$returnData, true];
+            }
+
+            $this->saveCard($notification, $orderId);
+            $this->tpayService->SetOrderStatus($orderId, $notification, $this->tpay);
+
+            $returnData = $this->getResponse()->setStatusCode(Http::STATUS_CODE_200)->setContent('TRUE');
+            $isPassed = true;
+        } catch (Exception $e) {
+            Util::log('Notification exception', "{$e->getMessage()} in file {$e->getFile()} line: {$e->getLine()} \n\n {$e->getTraceAsString()}");
+
+            $returnData = $this->getResponse()->setStatusCode(Http::STATUS_CODE_500)->setContent('FALSE');
+            $isPassed = false;
+        }
+
+        return [$returnData, $isPassed];
     }
 }
