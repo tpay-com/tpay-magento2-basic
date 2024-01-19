@@ -106,7 +106,7 @@
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     </field>
                     <group id="cardpayment_originapi_settings"  translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Cards payments Origin API settings </label>
+                        <label>Cards payments Origin API settings</label>
                         <depends><field id="cardpayment_api_active">1</field></depends>
                         <field id="hash_type" translate="label" type="select" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
                             <label>Digest algorithm</label>
