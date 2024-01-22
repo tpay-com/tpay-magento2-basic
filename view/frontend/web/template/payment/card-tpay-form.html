@@ -81,11 +81,12 @@
                                     </div>
                                 </div>
                             </div>
-                            <span data-bind="html: cardShowSaveBox()"></span>
+                            <span style="display: none;" data-bind="html: cardShowSaveBox()"></span>
                             <input type="hidden" name="card_data" id="card_data"/>
                             <input type="hidden" name="card_vendor" id="card_vendor"/>
                             <input type="hidden" name="card_short_code" id="card_short_code"/>
                         </div>
+                        <p id="info_msg"></p>
                         <div class="tpay-amPmCheckbox" id="tpay-card-save-checkbox" style="display: none">
                             <input type="checkbox" id="card_save" name="card_save"/>
                             <label for="card_save" class="tpay-info-label" data-bind="
@@ -95,7 +96,6 @@
                             </label>
                         </div>
 
-                        <p id="info_msg"></p>
                         <div id="loading_scr" style="display:none"><img
                             data-bind="
                         attr: {src: cardGetTpayLoadingGif()}"

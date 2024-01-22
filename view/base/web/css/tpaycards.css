@@ -109,11 +109,6 @@
     padding-top: 7px;
 }
 
-.tpay-amPmCheckbox {
-    text-align: center;
-    padding-top: 16px;
-}
-
 .tpay-amPmCheckbox input[type="checkbox"] {
     display: none;
 }
@@ -413,28 +408,12 @@ form select.wrong
     margin-left: -1%;
 }
 
-.tpay-channel-form-wrapper .tpay-col {
-    width: 48%;
-    margin: 0 1%;
-}
-
-.tpay-channel-form-wrapper .tpay-input-wrapper {
-    width: 100%;
-    margin-top: 10px;
-    margin-bottom: 20px;
-}
-
 .tpay-channel-form-wrapper .tpay-input-wrapper.tpay-expiration-date-input {
-    width: 47%;
     display: inline-block;
-    padding-right: 4%;
-    margin-bottom: 10px;
 }
 
 .tpay-channel-form-wrapper .tpay-input-wrapper.tpay-cvv-input {
-    width: 47%;
     display: inline-block;
-    margin-bottom: 10px;
 }
 
 .tpay-channel-form-wrapper .tpay-input-wrapper.tpay-postcode {
@@ -458,13 +437,6 @@ form select.wrong
 
 .tpay-channel-form-wrapper .tpay-button-wrapper .tpay-btn {
     width: 100%;
-}
-
-@media only screen and (max-width: 650px) {
-    .tpay-channel-form-wrapper .tpay-col {
-        width: 100%;
-        margin: 0;
-    }
 }
 
 .tpay-input-wrapper {
@@ -575,20 +547,6 @@ form select.wrong
     cursor: help;
 }
 
-.tpay-row {
-    overflow: hidden;
-}
-
-.tpay-col {
-    float: left;
-}
-
-.tpay-input-credit-card-number {
-    padding-left: 1%;
-    padding-right: 1%;
-    width: 98%;
-}
-
 .tpay-input-blik-code {
     padding: 0 25% 5px 25%;
 }
@@ -609,4 +567,32 @@ form select.wrong
 .tpay-blik-input {
     text-align: center;
     letter-spacing: 10px;
+}
+
+#card_payment {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-bottom: 16px;
+}
+
+.tpay-col {
+    width: 100%;
+    flex: 1;
+}
+
+.tpay-row {
+    display: flex;
+    width: 100%;
+    gap: 24px;
+}
+
+.tpay-row > div {
+    flex: 1;
+}
+
+@media (min-width: 956px) {
+    #card_payment {
+        flex-direction: row;
+    }
 }
