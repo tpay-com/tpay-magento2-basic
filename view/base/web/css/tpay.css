@@ -612,5 +612,5 @@ form select.wrong
 }
 
 .tpay-payment-method .payment-method-title .label .payment-icon {
-    max-width: 200px;
+    width: 170px;
 }
