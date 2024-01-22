@@ -586,7 +586,6 @@ form select.wrong
 .TpayRegulations {
     display: flex;
     align-items: center;
-    max-width: 630px;
     margin: 0 auto;
     padding: 16px 0;
     gap: 8px;
@@ -595,4 +594,8 @@ form select.wrong
 .TpayRegulations input {
     margin: 0;
     position: static;
+}
+
+.tpay-regulations-offset {
+    max-width: 630px;
 }
