@@ -600,3 +600,17 @@ form select.wrong
     text-align: center;
     letter-spacing: 10px;
 }
+
+.tpay-payment-method .payment-method-title {
+    display: flex;
+    align-items: center;
+}
+
+.tpay-payment-method .payment-method-title .label {
+    display: flex;
+    align-items: center;
+}
+
+.tpay-payment-method .payment-method-title .label .payment-icon {
+    max-width: 200px;
+}
