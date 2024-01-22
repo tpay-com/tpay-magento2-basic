@@ -15,28 +15,26 @@
                 <div class="tpay-panel-inside-content">
                     <div class="tpay-channel-form-wrapper tpay-content-wrapper-class">
                         <img src="https://secure.tpay.com/_/banks/b64.png"/>
-                        <div class="tpay-row">
-                            <p>
-                                <!-- ko i18n: 'Type in 6 digit code and press pay to commit blik payment.'--><!--/ko-->
-                            </p>
-                            <div class="tpay-input-blik-code">
-                                <div class="tpay-input-wrapper">
-                                    <div class="tpay-input-label">
-                                        <!-- ko i18n: 'BLIK code'--><!--/ko-->
-                                    </div>
-                                    <input id="blik_code"
-                                           name="blik_code"
-                                           type="tel"
-                                           autocomplete="off"
-                                           maxlength="6"
-                                           minlength="6"
-                                           placeholder="000000"
-                                           tabindex="1"
-                                           value=""
-                                           class="tpay-input-value tpay-blik-input"
-                                           oninput="this.value = this.value.replace(/\D/g, '')"
-                                    />
+                        <p>
+                            <!-- ko i18n: 'Type in 6 digit code and press pay to commit blik payment.'--><!--/ko-->
+                        </p>
+                        <div class="tpay-input-blik-code">
+                            <div class="tpay-input-wrapper">
+                                <div class="tpay-input-label">
+                                    <!-- ko i18n: 'BLIK code'--><!--/ko-->
                                 </div>
+                                <input id="blik_code"
+                                        name="blik_code"
+                                        type="tel"
+                                        autocomplete="off"
+                                        maxlength="6"
+                                        minlength="6"
+                                        placeholder="000000"
+                                        tabindex="1"
+                                        value=""
+                                        class="tpay-input-value tpay-blik-input"
+                                        oninput="this.value = this.value.replace(/\D/g, '')"
+                                />
                             </div>
                         </div>
                     </div>
