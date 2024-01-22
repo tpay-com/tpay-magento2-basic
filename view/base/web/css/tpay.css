@@ -4,6 +4,7 @@
     margin: 0 auto;
     box-sizing: border-box;
     background: #F7F7FA;
+    padding: 30px;
 }
 
 #blik_img {
@@ -363,7 +364,6 @@ form select.wrong
 }
 
 .tpay-panel-inside-content {
-    margin: 30px;
     text-align: center;
 }
 
@@ -612,5 +612,10 @@ form select.wrong
 }
 
 .tpay-payment-method .payment-method-title .label .payment-icon {
-    width: 170px;
+    max-width: 170px;
+}
+
+#tpay-basic-main-payment p {
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
