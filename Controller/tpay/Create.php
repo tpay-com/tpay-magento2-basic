@@ -139,6 +139,9 @@ class Create extends Action
             }
         }
 
+        $data = $this->transaction->originApiFieldCorrect($data);
+        $data = $this->transaction->translateGroupToChannel($data, $this->tpay->redirectToChannel());
+
         if (isset($data['channel']) && $data['channel']) {
             return $this->transaction->createWithInstantRedirection($data);
         }

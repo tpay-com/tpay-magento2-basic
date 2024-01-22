@@ -79,6 +79,34 @@ class TransactionApiFacade
         return $channels;
     }
 
+    public function translateGroupToChannel(array $data, bool $redirectToChannel): array
+    {
+        if ($redirectToChannel && $this->useOpenApi && $data['group'] && !$data['channel']) {
+            foreach ($this->openApi->channels() as $channel) {
+                $group = $channel->groups[0];
+                if ($group['id'] == $data['group']) {
+                    $data['channel'] = $channel->id;
+                    $data['group'] = null;
+
+                    return $data;
+                }
+            }
+        }
+
+        return $data;
+    }
+
+    public function originApiFieldCorrect(array $data): array
+    {
+        if (!$this->isOpenApiUse() && (int) $data['group'] != TransactionOriginApi::BLIK_CHANNEL) {
+            unset($data['channel']);
+            unset($data['currency']);
+            unset($data['language']);
+        }
+
+        return $data;
+    }
+
     private function getCurrentApi()
     {
         return $this->useOpenApi ? $this->openApi : $this->originApi;

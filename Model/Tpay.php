@@ -236,7 +236,7 @@ class Tpay extends AbstractMethod implements TpayInterface
 
     public function redirectToChannel(): bool
     {
-        return true;
+        return (bool) $this->getConfigData('general_settings/redirect_directly_to_channel');
     }
 
     public function setTitle(string $title): void
