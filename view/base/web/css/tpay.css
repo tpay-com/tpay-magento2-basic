@@ -619,3 +619,17 @@ form select.wrong
     margin-top: 10px;
     margin-bottom: 10px;
 }
+
+.TpayRegulations {
+    display: flex;
+    align-items: center;
+    max-width: 630px;
+    margin: 0 auto;
+    padding: 16px 0;
+    gap: 8px;
+}
+
+.TpayRegulations input {
+    margin: 0;
+    position: static;
+}
