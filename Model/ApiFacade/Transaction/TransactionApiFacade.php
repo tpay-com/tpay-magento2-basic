@@ -98,7 +98,7 @@ class TransactionApiFacade
 
     public function originApiFieldCorrect(array $data): array
     {
-        if (!$this->isOpenApiUse() && (int) $data['group'] != TransactionOriginApi::BLIK_CHANNEL) {
+        if (!$this->isOpenApiUse() && TransactionOriginApi::BLIK_CHANNEL != (int) $data['group']) {
             unset($data['channel']);
             unset($data['currency']);
             unset($data['language']);
