@@ -576,6 +576,7 @@ form select.wrong
 
 .tpay-payment-method .payment-method-title .label .payment-icon {
     width: 170px;
+    max-height: 54px;
 }
 
 #tpay-basic-main-payment p {
