@@ -81,7 +81,7 @@ class TransactionApiFacade
 
     public function translateGroupToChannel(array $data, bool $redirectToChannel): array
     {
-        if ($redirectToChannel && $this->useOpenApi && $data['group'] && !$data['channel']) {
+        if ($redirectToChannel && $this->useOpenApi && $data['group'] && !$data['channel'] && TransactionOriginApi::BLIK_CHANNEL != (int) $data['group']) {
             foreach ($this->openApi->channels() as $channel) {
                 $group = $channel->groups[0];
                 if ($group['id'] == $data['group']) {
