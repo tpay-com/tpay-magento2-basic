@@ -126,11 +126,7 @@ class Tpay extends AbstractMethod implements TpayInterface
             return false;
         }
 
-        $apiKey = $this->getApiKey();
-
-        $apiPassword = $this->getApiPassword();
-
-        return !(empty($apiKey) || strlen($apiKey) < 8 || empty($apiPassword) || strlen($apiPassword) < 4);
+        return true;
     }
 
     public function getInstallmentsAmountValid(): bool
