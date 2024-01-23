@@ -34,10 +34,10 @@ class CardOpen
         $this->tpayApi->authorization()->setClientName(implode(
             '|',
             [
-                'magento2:' . $this->getMagentoVersion(),
-                'tpay-com/tpay-openapi-php:' . $versions[0],
-                'tpay-com/tpay-php:' . $versions[1],
-                'PHP:' . phpversion()
+                'magento2:'.$this->getMagentoVersion(),
+                'tpay-com/tpay-openapi-php:'.$versions[0],
+                'tpay-com/tpay-php:'.$versions[1],
+                'PHP:'.phpversion(),
             ]
         ));
     }
@@ -89,9 +89,9 @@ class CardOpen
                 $paymentResult = $result['payments'] ?? [];
 
                 if (isset($paymentResult['status']) && 'declined' === $paymentResult['status']) {
-                    $this->tpayService->addCommentToHistory($orderId, 'Failed to pay by saved card, Elavon rejection code: ' .$paymentResult['reason']);
+                    $this->tpayService->addCommentToHistory($orderId, 'Failed to pay by saved card, Elavon rejection code: '.$paymentResult['reason']);
                 } else {
-                    $this->tpayService->addCommentToHistory($orderId, 'Failed to pay by saved card, error: ' .$paymentResult['err_desc']);
+                    $this->tpayService->addCommentToHistory($orderId, 'Failed to pay by saved card, error: '.$paymentResult['err_desc']);
                 }
             } catch (Exception $e) {
                 return 'magento2basic/tpay/error';
@@ -132,7 +132,7 @@ class CardOpen
 
         if (isset($result['transactionPaymentUrl']) && 'pending' === $result['payments']['status']) {
             $url3ds = $result['transactionPaymentUrl'];
-            $this->tpayService->addCommentToHistory($orderId, '3DS Transaction link ' .$url3ds);
+            $this->tpayService->addCommentToHistory($orderId, '3DS Transaction link '.$url3ds);
             $this->addToPaymentData($orderId, 'transaction_url', $url3ds);
             $this->saveCard($orderId, $saveCard, $additionalPaymentInformation);
 
@@ -204,10 +204,11 @@ class CardOpen
 
     private function getPackagesVersions()
     {
-        $dir = __DIR__ .'/../../composer.json';
+        $dir = __DIR__.'/../../composer.json';
         if (file_exists($dir)) {
             $composerJson = json_decode(
-                file_get_contents(__DIR__ .'/../../composer.json'), true
+                file_get_contents(__DIR__.'/../../composer.json'),
+                true
             )['require'] ?? [];
 
             return [$composerJson['tpay-com/tpay-openapi-php'], $composerJson['tpay-com/tpay-php']];

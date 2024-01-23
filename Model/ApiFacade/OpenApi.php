@@ -20,10 +20,10 @@ class OpenApi
         $this->tpayApi->authorization()->setClientName(implode(
             '|',
             [
-                'magento2:' . $this->getMagentoVersion(),
-                'tpay-com/tpay-openapi-php:' . $versions[0],
-                'tpay-com/tpay-php:' . $versions[1],
-                'PHP:' . phpversion()
+                'magento2:'.$this->getMagentoVersion(),
+                'tpay-com/tpay-openapi-php:'.$versions[0],
+                'tpay-com/tpay-php:'.$versions[1],
+                'PHP:'.phpversion(),
             ]
         ));
     }
@@ -195,10 +195,11 @@ class OpenApi
 
     private function getPackagesVersions()
     {
-        $dir = __DIR__ .'/../../composer.json';
+        $dir = __DIR__.'/../../composer.json';
         if (file_exists($dir)) {
             $composerJson = json_decode(
-                file_get_contents(__DIR__ .'/../../composer.json'), true
+                file_get_contents(__DIR__.'/../../composer.json'),
+                true
             )['require'] ?? [];
 
             return [$composerJson['tpay-com/tpay-openapi-php'], $composerJson['tpay-com/tpay-php']];
