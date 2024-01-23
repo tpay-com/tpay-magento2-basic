@@ -83,8 +83,8 @@ class TransactionApiFacade
     {
         if ($redirectToChannel && $this->useOpenApi && $data['group'] && !$data['channel'] && TransactionOriginApi::BLIK_CHANNEL != (int) $data['group']) {
             foreach ($this->openApi->channels() as $channel) {
-                $group = $channel->groups[0];
-                if ($group['id'] == $data['group']) {
+                $group = $channel->groups[0] ?? null;
+                if (isset($group['id']) && $group['id'] == $data['group']) {
                     $data['channel'] = $channel->id;
                     $data['group'] = null;
 
