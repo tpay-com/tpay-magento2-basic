@@ -25,7 +25,7 @@ class RefundApiFacade
     {
         $this->tpay = $tpay;
         $this->createRefundOriginApiInstance($tpay);
-        $this->createOpenApiInstance($tpay->getOpenApiClientId(), $tpay->getOpenApiPassword(), !$tpay->useSandboxMode());
+        $this->createOpenApiInstance($tpay);
     }
 
     public function makeRefund(InfoInterface $payment, float $amount)
@@ -54,11 +54,10 @@ class RefundApiFacade
         }
     }
 
-    private function createOpenApiInstance(string $clientId, string $apiPassword, bool $isProd)
+    private function createOpenApiInstance(TpayInterface $tpay)
     {
         try {
-            $this->openApi = new OpenApi($clientId, $apiPassword, $isProd);
-            $this->openApi->authorization();
+            $this->openApi = new OpenApi($tpay);
             $this->useOpenApi = true;
         } catch (Exception $exception) {
             $this->openApi = null;

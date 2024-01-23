@@ -137,8 +137,7 @@ class TransactionApiFacade
         }
 
         try {
-            $this->openApi = new OpenApi($tpay->getOpenApiClientId(), $tpay->getOpenApiPassword(), !$tpay->useSandboxMode());
-            $this->openApi->authorization();
+            $this->openApi = new OpenApi($tpay);
             $this->useOpenApi = true;
         } catch (Exception $exception) {
             $this->openApi = null;
