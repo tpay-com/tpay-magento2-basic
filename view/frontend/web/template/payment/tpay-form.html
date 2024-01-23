@@ -1,4 +1,4 @@
-<div class="payment-method" data-bind="css: {'_active': (getCode() == isChecked())}">
+<div class="payment-method tpay-payment-method" data-bind="css: {'_active': (getCode() == isChecked())}">
     <div class="payment-method-title field choice">
         <input type="radio"
                name="payment[method]"
@@ -12,49 +12,35 @@
     <div class="payment-method-content">
         <div class="tpay-insidebg">
             <div class="blik">
-                <div class="tpay-header-wrapper">
-                    <div class="tpay-header-logo">
-                        <img class="tpay-logo" src="https://tpay.com/img/banners/tpay_logo_white.svg"/>
-                    </div>
-                    <div class="tpay-header-belt"></div>
-                </div>
                 <div class="tpay-panel-inside-content">
                     <div class="tpay-channel-form-wrapper tpay-content-wrapper-class">
                         <img src="https://secure.tpay.com/_/banks/b64.png"/>
-                        <div class="tpay-row">
-                            <p>
-                                <!-- ko i18n: 'Type in 6 digit code and press pay to commit blik payment.'--><!--/ko-->
-                            </p>
-                            <div class="tpay-input-blik-code">
-                                <div class="tpay-input-wrapper">
-                                    <div class="tpay-input-label">
-                                        <!-- ko i18n: 'BLIK code'--><!--/ko-->
-                                    </div>
-                                    <input id="blik_code"
-                                           name="blik_code"
-                                           type="tel"
-                                           autocomplete="off"
-                                           maxlength="6"
-                                           minlength="6"
-                                           placeholder="000000"
-                                           tabindex="1"
-                                           value=""
-                                           class="tpay-input-value tpay-blik-input"
-                                           oninput="this.value = this.value.replace(/\D/g, '')"
-                                    />
+                        <p>
+                            <!-- ko i18n: 'Type in 6 digit code and press pay to commit blik payment.'--><!--/ko-->
+                        </p>
+                        <div class="tpay-input-blik-code">
+                            <div class="tpay-input-wrapper">
+                                <div class="tpay-input-label">
+                                    <!-- ko i18n: 'BLIK code'--><!--/ko-->
                                 </div>
+                                <input id="blik_code"
+                                       name="blik_code"
+                                       type="tel"
+                                       autocomplete="off"
+                                       maxlength="6"
+                                       minlength="6"
+                                       placeholder="000000"
+                                       tabindex="1"
+                                       value=""
+                                       class="tpay-input-value tpay-blik-input"
+                                       oninput="this.value = this.value.replace(/\D/g, '')"
+                                />
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div id="tpay-basic-main-payment">
-                <div class="tpay-header-wrapper">
-                    <div class="tpay-header-logo">
-                        <img class="tpay-logo" src="https://tpay.com/img/banners/tpay_logo_white.svg"/>
-                    </div>
-                    <div class="tpay-header-belt"></div>
-                </div>
                 <p><!-- ko i18n: 'Choose a payment method'--><!--/ko--></p>
                 <div id="groups_v" class="tpay-panel-inside-content">
                     <div id="bank-selection-form" class="tpay-groups-wrapper">
@@ -77,7 +63,7 @@
             <!-- ko foreach: $parent.getRegion('before-place-order') -->
             <!-- ko template: getTemplate() --><!-- /ko -->
             <!--/ko-->
-            <div class="TpayRegulations">
+            <div class="TpayRegulations tpay-regulations-offset">
                 <input type="checkbox" name="accept_tos" id="accept_tos"/>
                 <label for="accept_tos">
                     <a target="_blank"
