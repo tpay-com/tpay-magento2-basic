@@ -122,7 +122,7 @@ class Tpay extends AbstractMethod implements TpayInterface
 
     public function checkBlikLevel0Settings(): bool
     {
-        return !(!$this->getBlikLevelZeroStatus() || !$this->checkBlikAmount());
+        return $this->getBlikLevelZeroStatus() && $this->checkBlikAmount();
     }
 
     public function getInstallmentsAmountValid(): bool
