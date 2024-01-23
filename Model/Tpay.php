@@ -387,7 +387,7 @@ class Tpay extends AbstractMethod implements TpayInterface
         return $customerSession->getCustomerId();
     }
 
-    public function getRSAKey(): string
+    public function getRSAKey(): ?string
     {
         return $this->getConfigData('cardpayment_settings/rsa_key');
     }
