@@ -31,14 +31,15 @@ class CardOpen
         $this->tpayService = $tpayService;
         $this->tpayApi = new TpayApi($tpay->getOpenApiClientId(), $tpay->getOpenApiPassword(), !$tpay->useSandboxMode());
         $versions = $this->getPackagesVersions();
-        $this->tpayApi->authorization()->setClientName(implode('|', [
+        $this->tpayApi->authorization()->setClientName(implode(
+            '|',
+            [
                 'magento2:' . $this->getMagentoVersion(),
                 'tpay-com/tpay-openapi-php:' . $versions[0],
                 'tpay-com/tpay-php:' . $versions[1],
                 'PHP:' . phpversion()
             ]
         ));
-        $this->tpayApi->authorization();
     }
 
     public function makeCardTransaction(string $orderId): string
@@ -52,7 +53,7 @@ class CardOpen
         $this->tpayPaymentConfig = $this->tpay->getTpayFormData($orderId);
 
         if (isset($additionalPaymentInformation['card_id']) && false !== $additionalPaymentInformation['card_id'] && $this->tpay->getCardSaveEnabled()) {
-            $cardId = (int)$additionalPaymentInformation['card_id'];
+            $cardId = (int) $additionalPaymentInformation['card_id'];
 
             return $this->processSavedCardPayment($orderId, $cardId);
         }
@@ -88,9 +89,9 @@ class CardOpen
                 $paymentResult = $result['payments'] ?? [];
 
                 if (isset($paymentResult['status']) && 'declined' === $paymentResult['status']) {
-                    $this->tpayService->addCommentToHistory($orderId, 'Failed to pay by saved card, Elavon rejection code: ' . $paymentResult['reason']);
+                    $this->tpayService->addCommentToHistory($orderId, 'Failed to pay by saved card, Elavon rejection code: ' .$paymentResult['reason']);
                 } else {
-                    $this->tpayService->addCommentToHistory($orderId, 'Failed to pay by saved card, error: ' . $paymentResult['err_desc']);
+                    $this->tpayService->addCommentToHistory($orderId, 'Failed to pay by saved card, error: ' .$paymentResult['err_desc']);
                 }
             } catch (Exception $e) {
                 return 'magento2basic/tpay/error';
@@ -112,7 +113,7 @@ class CardOpen
 
     private function processNewCardPayment(string $orderId, array $additionalPaymentInformation): string
     {
-        $saveCard = isset($additionalPaymentInformation['card_save']) && $this->tpay->getCardSaveEnabled() ? (bool)$additionalPaymentInformation['card_save'] : false;
+        $saveCard = isset($additionalPaymentInformation['card_save']) && $this->tpay->getCardSaveEnabled() ? (bool) $additionalPaymentInformation['card_save'] : false;
         try {
             $transaction = $this->tpayApi->Transactions->createTransaction($this->handleDataStructure());
             $request = [
@@ -131,7 +132,7 @@ class CardOpen
 
         if (isset($result['transactionPaymentUrl']) && 'pending' === $result['payments']['status']) {
             $url3ds = $result['transactionPaymentUrl'];
-            $this->tpayService->addCommentToHistory($orderId, '3DS Transaction link ' . $url3ds);
+            $this->tpayService->addCommentToHistory($orderId, '3DS Transaction link ' .$url3ds);
             $this->addToPaymentData($orderId, 'transaction_url', $url3ds);
             $this->saveCard($orderId, $saveCard, $additionalPaymentInformation);
 
@@ -157,7 +158,7 @@ class CardOpen
     private function handleDataStructure(): array
     {
         return [
-            'amount' => (float)$this->tpayPaymentConfig['amount'],
+            'amount' => (float) $this->tpayPaymentConfig['amount'],
             'description' => $this->tpayPaymentConfig['description'],
             'hiddenDescription' => $this->tpayPaymentConfig['crc'],
             'payer' => [
@@ -197,19 +198,21 @@ class CardOpen
     {
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $productMetadata = $objectManager->get('\Magento\Framework\App\ProductMetadataInterface');
+
         return $productMetadata->getVersion();
     }
 
     private function getPackagesVersions()
     {
-        $dir = __DIR__ . '/../../../composer.json';
+        $dir = __DIR__ .'/../../composer.json';
         if (file_exists($dir)) {
             $composerJson = json_decode(
-                file_get_contents(__DIR__ . '/../../../composer.json'), true
+                file_get_contents(__DIR__ .'/../../composer.json'), true
             )['require'] ?? [];
 
             return [$composerJson['tpay-com/tpay-openapi-php'], $composerJson['tpay-com/tpay-php']];
         }
+
         return ['n/a', 'n/a'];
     }
 }
