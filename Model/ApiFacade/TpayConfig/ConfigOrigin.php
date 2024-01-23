@@ -32,6 +32,7 @@ class ConfigOrigin
                 'payment' => [
                     'redirectUrl' => $this->tpay->getPaymentRedirectUrl(),
                     'tpayLogoUrl' => $this->generateURL('tpaycom_magento2basic::images/logo_tpay.png'),
+                    'tpayCardsLogoUrl' => $this->generateURL('tpaycom_magento2basic::images/card.svg'),
                     'merchantId' => $this->tpay->getMerchantId(),
                     'showPaymentChannels' => $this->showChannels(),
                     'getTerms' => $this->getTerms(),
