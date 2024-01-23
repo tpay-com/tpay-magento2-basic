@@ -60,7 +60,7 @@ define(
                 return window.checkoutConfig.tpaycards.payment.getRSAkey;
             },
             cardGetLogoUrl: function () {
-                return window.checkoutConfig.tpaycards.payment.tpayCardsLogoUrl;
+                return window.checkoutConfig.tpaycards.payment.tpayLogoUrl;
             },
             cardGetTpayLoadingGif: function () {
                 return window.checkoutConfig.tpaycards.payment.getTpayLoadingGif;
