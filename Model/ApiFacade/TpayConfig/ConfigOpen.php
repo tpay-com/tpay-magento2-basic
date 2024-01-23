@@ -34,6 +34,7 @@ class ConfigOpen extends TpayApi
                 'payment' => [
                     'redirectUrl' => $this->tpay->getPaymentRedirectUrl(),
                     'tpayLogoUrl' => $this->generateURL('tpaycom_magento2basic::images/logo_tpay.png'),
+                    'tpayCardsLogoUrl' => $this->generateURL('tpaycom_magento2basic::images/card.png'),
                     'showPaymentChannels' => $this->showChannels(),
                     'getTerms' => $this->getTerms(),
                     'addCSS' => $this->createCSS('tpaycom_magento2basic::css/tpay.css'),
