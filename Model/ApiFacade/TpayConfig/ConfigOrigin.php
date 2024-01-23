@@ -101,7 +101,6 @@ class ConfigOrigin
             'tpaycards' => [
                 'payment' => [
                     'tpayLogoUrl' => $this->generateURL('tpaycom_magento2basic::images/logo_tpay.png'),
-                    'tpayCardsLogoUrl' => $this->generateURL('tpaycom_magento2basic::images/card.svg'),
                     'getTpayLoadingGif' => $this->generateURL('tpaycom_magento2basic::images/loading.gif'),
                     'getRSAkey' => $this->tpay->getRSAKey(),
                     'fetchJavaScripts' => $this->fetchJavaScripts(),
