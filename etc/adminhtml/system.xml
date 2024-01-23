@@ -115,7 +115,7 @@
                         </field>
                         <field id="verification_code" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
                             <label>Verification code</label>
-                            <comment>Find in Merchant’s panel: Credit cards payment -> API</comment>
+                            <comment>Find in Merchant’s panel: Credit cards payment -> API. In case of Sandbox, put not empty string.</comment>
                         </field>
                         <field id="card_api_key_tpay" translate="label comment" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
                             <label>Card API key</label>

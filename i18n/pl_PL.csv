@@ -49,6 +49,7 @@
 "Select the payment methods that you want to be displayed separately","Zaznacz metody płatności, które chcesz by wyświetlały sie jako osobne"
 "Find in Merchant’s panel: Integration -> API -> Old API Keys","Znajdziesz w Panelu Akceptanta: Integracje -> API -> Klucze do starego API"
 "Find in Merchant’s panel: Credit cards payment -> API","Znajdziesz w Panelu Akceptanta: Płatności kartami -> API"
+"Find in Merchant’s panel: Credit cards payment -> API. In case of Sandbox, put not empty string.","Znajdziesz w Panelu Akceptanta: Płatności kartami -> API. W przypadku Sandbox, wpisz dowolny ciąg znaków."
 "Only available for logged in users","Możliwe tylko dla zalogowanych użytkowników"
 "General settings","Ustawienia główne"
 "Standard payments (Open API)","Płatności standardowe (Open API)"
