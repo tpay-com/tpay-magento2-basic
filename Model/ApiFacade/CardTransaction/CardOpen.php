@@ -31,13 +31,13 @@ class CardOpen
         $this->tpayService = $tpayService;
         $this->tpayApi = new TpayApi($tpay->getOpenApiClientId(), $tpay->getOpenApiPassword(), !$tpay->useSandboxMode());
         $versions = $this->getPackagesVersions();
-        $this->tpayApi->setClientName(implode('|', [
+        $this->tpayApi->authorization()->setClientName(implode('|', [
                 'magento2:' . $this->getMagentoVersion(),
                 'tpay-com/tpay-openapi-php:' . $versions[0],
                 'tpay-com/tpay-php:' . $versions[1],
                 'PHP:' . phpversion()
             ]
-        );
+        ));
         $this->tpayApi->authorization();
     }
 

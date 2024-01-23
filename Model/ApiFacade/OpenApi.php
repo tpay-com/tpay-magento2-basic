@@ -3,25 +3,27 @@
 namespace tpaycom\magento2basic\Model\ApiFacade;
 
 use Magento\Payment\Model\InfoInterface;
+use tpaycom\magento2basic\Api\TpayInterface;
 use tpaycom\magento2basic\Model\ApiFacade\Transaction\Dto\Channel;
 use tpaySDK\Api\TpayApi;
 
-class OpenApi extends TpayApi
+class OpenApi
 {
-    public function __construct($clientId, $clientSecret, $productionMode = false, $scope = 'read')
+    /** @var TpayApi */
+    private $tpayApi;
+
+    public function __construct(TpayInterface $tpay)
     {
-        $this->clientId = $clientId;
-        $this->clientSecret = $clientSecret;
-        $this->productionMode = $productionMode;
-        $this->scope = $scope;
+        $this->tpayApi = new TpayApi($tpay->getOpenApiClientId(), $tpay->getOpenApiPassword(), !$tpay->useSandboxMode());
+        $this->tpayApi->authorization();
         $versions = $this->getPackagesVersions();
-        $this->setClientName(implode('|', [
+        $this->tpayApi->authorization()->setClientName(implode('|', [
                 'magento2:' . $this->getMagentoVersion(),
                 'tpay-com/tpay-openapi-php:' . $versions[0],
                 'tpay-com/tpay-php:' . $versions[1],
                 'PHP:' . phpversion()
             ]
-        );
+        ));
     }
 
     public function create(array $data): array
@@ -31,7 +33,7 @@ class OpenApi extends TpayApi
         }
 
         $transactionData = $this->handleDataStructure($data);
-        $transaction = $this->transactions()->createTransaction($transactionData);
+        $transaction = $this->tpayApi->transactions()->createTransaction($transactionData);
 
         return $this->updateRedirectUrl($transaction);
     }
@@ -39,7 +41,7 @@ class OpenApi extends TpayApi
     public function createWithInstantRedirect(array $data): array
     {
         $transactionData = $this->handleDataStructure($data);
-        $transaction = $this->transactions()->createTransactionWithInstantRedirection($transactionData);
+        $transaction = $this->tpayApi->transactions()->createTransactionWithInstantRedirection($transactionData);
 
         return $this->updateRedirectUrl($transaction);
     }
@@ -49,7 +51,7 @@ class OpenApi extends TpayApi
         $transactionData = $this->handleDataStructure($data);
         unset($transactionData['pay']);
 
-        $transaction = $this->transactions()->createTransactionWithInstantRedirection($transactionData);
+        $transaction = $this->tpayApi->transactions()->createTransactionWithInstantRedirection($transactionData);
 
         $additional_payment_data = [
             'channelId' => 64,
@@ -60,14 +62,14 @@ class OpenApi extends TpayApi
             ],
         ];
 
-        $result = $this->transactions()->createInstantPaymentByTransactionId($additional_payment_data, $transaction['transactionId']);
+        $result = $this->tpayApi->transactions()->createInstantPaymentByTransactionId($additional_payment_data, $transaction['transactionId']);
 
         return $this->updateRedirectUrl($this->waitForBlikAccept($result));
     }
 
     public function makeRefund(InfoInterface $payment, float $amount): array
     {
-        return $this->transactions()->createRefundByTransactionId(
+        return $this->tpayApi->transactions()->createRefundByTransactionId(
             ['amount' => $amount],
             $payment->getAdditionalInformation('transaction_id')
         );
@@ -75,7 +77,7 @@ class OpenApi extends TpayApi
 
     public function channels(): array
     {
-        $result = $this->transactions()->getChannels();
+        $result = $this->tpayApi->transactions()->getChannels();
         $channels = [];
 
         foreach ($result['channels'] ?? [] as $channel) {
@@ -148,7 +150,7 @@ class OpenApi extends TpayApi
             $i = 0;
             do {
                 $correct = false;
-                $tpayStatus = $this->transactions()->getTransactionById($result['transactionId']);
+                $tpayStatus = $this->tpayApi->transactions()->getTransactionById($result['transactionId']);
                 $errors = 0;
 
                 foreach ($tpayStatus['payments']['attempts'] as $error) {
@@ -193,7 +195,7 @@ class OpenApi extends TpayApi
         $dir = __DIR__ . '/../../composer.json';
         if (file_exists($dir)) {
             $composerJson = json_decode(
-                file_get_contents(__DIR__ . '/../../../composer.json'), true
+                file_get_contents(__DIR__ . '/../../composer.json'), true
             )['require'] ?? [];
 
             return [$composerJson['tpay-com/tpay-openapi-php'], $composerJson['tpay-com/tpay-php']];
