@@ -8,6 +8,22 @@ use tpaySDK\Api\TpayApi;
 
 class OpenApi extends TpayApi
 {
+    public function __construct($clientId, $clientSecret, $productionMode = false, $scope = 'read')
+    {
+        $this->clientId = $clientId;
+        $this->clientSecret = $clientSecret;
+        $this->productionMode = $productionMode;
+        $this->scope = $scope;
+        $versions = $this->getPackagesVersions();
+        $this->setClientName(implode('|', [
+                'magento2:' . $this->getMagentoVersion(),
+                'tpay-com/tpay-openapi-php:' . $versions[0],
+                'tpay-com/tpay-php:' . $versions[1],
+                'PHP:' . phpversion()
+            ]
+        );
+    }
+
     public function create(array $data): array
     {
         if (!empty($data['blikPaymentData'])) {
@@ -163,5 +179,25 @@ class OpenApi extends TpayApi
         $result['payments']['errors'] = [1];
 
         return $result;
+    }
+
+    private function getMagentoVersion()
+    {
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $productMetadata = $objectManager->get('\Magento\Framework\App\ProductMetadataInterface');
+        return $productMetadata->getVersion();
+    }
+
+    private function getPackagesVersions()
+    {
+        $dir = __DIR__ . '/../../composer.json';
+        if (file_exists($dir)) {
+            $composerJson = json_decode(
+                file_get_contents(__DIR__ . '/../../../composer.json'), true
+            )['require'] ?? [];
+
+            return [$composerJson['tpay-com/tpay-openapi-php'], $composerJson['tpay-com/tpay-php']];
+        }
+        return ['n/a', 'n/a'];
     }
 }
