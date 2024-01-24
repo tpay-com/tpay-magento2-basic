@@ -26,10 +26,6 @@ define(
             },
 
             afterPlaceOrder: function () {
-                $("#card_number").val('');
-                $("#cvc").val('');
-                $("#expiry_date").val('');
-                $("#loading_scr").fadeIn();
                 window.location.replace(window.checkoutConfig.tpay.payment.redirectUrl);
             },
 
