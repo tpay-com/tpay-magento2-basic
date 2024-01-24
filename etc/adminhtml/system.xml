@@ -138,6 +138,12 @@
                         <comment>Find in Merchant’s panel: Credit cards payment -> API</comment>
                         <depends><field id="cardpayment_api_active">1</field></depends>
                     </field>
+                    <field id="card_save_enabled" translate="label" type="select" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Enable credit card saving</label>
+                        <comment>Only available for logged in users</comment>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <depends><field id="cardpayment_api_active">1</field></depends>
+                    </field>
                 </group>
                 <group id="sale_settings" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Additional settings</label>

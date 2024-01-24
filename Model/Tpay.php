@@ -374,7 +374,7 @@ class Tpay extends AbstractMethod implements TpayInterface
 
     public function getCardSaveEnabled(): bool
     {
-        return false;
+        return (bool) $this->getConfigData('cardpayment_settings/card_save_enabled');
     }
 
     public function getCheckoutCustomerId(): ?string
