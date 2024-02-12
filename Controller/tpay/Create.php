@@ -5,12 +5,14 @@ namespace tpaycom\magento2basic\Controller\tpay;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
-use Magento\Framework\DataObject;
+use Magento\Framework\App\CacheInterface;
+use Magento\Framework\App\ResponseInterface;
+use Tpay\OriginApi\Utilities\Util;
 use tpaycom\magento2basic\Api\TpayInterface;
-use tpaycom\magento2basic\Model\TransactionModel;
-use tpaycom\magento2basic\Model\TransactionModelFactory;
+use tpaycom\magento2basic\Model\ApiFacade\Transaction\TransactionApiFacade;
+use tpaycom\magento2basic\Model\ApiFacade\Transaction\TransactionOriginApi;
+use tpaycom\magento2basic\Model\Tpay;
 use tpaycom\magento2basic\Service\TpayService;
-use tpayLibs\src\_class_tpay\Utilities\Util;
 
 class Create extends Action
 {
@@ -23,77 +25,79 @@ class Create extends Action
     /** @var TpayInterface */
     private $tpay;
 
-    /** @var TransactionModel */
+    /** @var TransactionApiFacade */
     private $transaction;
 
-    /** @var TransactionModelFactory */
-    private $transactionFactory;
+    /** @var CacheInterface */
+    private $cache;
 
     public function __construct(
         Context $context,
         TpayInterface $tpayModel,
-        TransactionModelFactory $transactionModelFactory,
         TpayService $tpayService,
-        Session $checkoutSession
+        Session $checkoutSession,
+        CacheInterface $cache
     ) {
         $this->tpay = $tpayModel;
-        $this->transactionFactory = $transactionModelFactory;
         $this->tpayService = $tpayService;
         $this->checkoutSession = $checkoutSession;
+        $this->cache = $cache;
         Util::$loggingEnabled = false;
 
         parent::__construct($context);
     }
 
-    public function execute()
+    public function execute(): ResponseInterface
     {
-        /** @var int $orderId */
         $orderId = $this->checkoutSession->getLastRealOrderId();
 
         if ($orderId) {
-            /** @var DataObject $payment */
             $payment = $this->tpayService->getPayment($orderId);
-
-            /** @var array<string> $paymentData */
             $paymentData = $payment->getData();
-
-            $this->transaction = $this->transactionFactory->create(
-                [
-                    'apiPassword' => $this->tpay->getApiPassword(),
-                    'apiKey' => $this->tpay->getApiKey(),
-                    'merchantId' => $this->tpay->getMerchantId(),
-                    'merchantSecret' => $this->tpay->getSecurityCode(),
-                ]
-            );
+            $this->transaction = new TransactionApiFacade($this->tpay, $this->cache);
             $additionalPaymentInformation = $paymentData['additional_information'];
 
-            /** @var array<string> $transaction */
+            if (!$additionalPaymentInformation[Tpay::TERMS_ACCEPT]) {
+                return $this->_redirect('magento2basic/tpay/error');
+            }
+
             $transaction = $this->prepareTransaction($orderId, $additionalPaymentInformation);
 
             if (!isset($transaction['title'], $transaction['url'])) {
                 return $this->_redirect('magento2basic/tpay/error');
             }
+
+            $this->handleOpenApiTrId($paymentData, $transaction);
+
             $this->tpayService->addCommentToHistory($orderId, 'Transaction title '.$transaction['title']);
             $transactionUrl = $transaction['url'];
+
             if (true === $this->tpay->redirectToChannel()) {
                 $transactionUrl = str_replace('gtitle', 'title', $transactionUrl);
             }
+
             $this->tpayService->addCommentToHistory($orderId, 'Transaction link '.$transactionUrl);
             $paymentData['additional_information']['transaction_url'] = $transactionUrl;
             $payment->setData($paymentData)->save();
 
-            if (6 === strlen($additionalPaymentInformation['blik_code'])
-                && $this->tpay->checkBlikLevel0Settings()
-            ) {
+            if (6 === strlen($additionalPaymentInformation['blik_code'] ?? '') && $this->tpay->checkBlikLevel0Settings()) {
+                if (true === $this->transaction->isOpenApiUse()) {
+                    if (isset($transaction['payments']['errors']) && count($transaction['payments']['errors']) > 0) {
+                        return $this->_redirect('magento2basic/tpay/error');
+                    }
+
+                    return $this->_redirect('magento2basic/tpay/success');
+                }
                 $result = $this->blikPay($transaction['title'], $additionalPaymentInformation['blik_code']);
                 $this->checkoutSession->unsQuoteId();
+
                 if (!$result) {
                     $this->tpayService->addCommentToHistory(
                         $orderId,
                         'User has typed wrong blik code and has been redirected to transaction panel in order to finish payment'
                     );
 
-                    return $this->_redirect($transactionUrl);
+                    return $this->_redirect('magento2basic/tpay/error');
                 }
 
                 return $this->_redirect('magento2basic/tpay/success');
@@ -101,6 +105,8 @@ class Create extends Action
 
             return $this->_redirect($transactionUrl);
         }
+
+        return $this->_redirect('magento2basic/tpay/error');
     }
 
     /**
@@ -108,30 +114,59 @@ class Create extends Action
      *
      * @param string $blikTransactionId
      * @param string $blikCode
-     *
-     * @return bool
      */
-    protected function blikPay($blikTransactionId, $blikCode)
+    protected function blikPay($blikTransactionId, $blikCode): bool
     {
-        /** @var array<string, mixed> $apiResult */
         $apiResult = $this->transaction->blik($blikTransactionId, $blikCode);
 
         return isset($apiResult['result']) && 1 === $apiResult['result'];
     }
 
-    /**
-     * @param mixed                                       $orderId
-     * @param array{blik_code: string, group: int|string} $additionalPaymentInformation
-     */
     private function prepareTransaction($orderId, array $additionalPaymentInformation)
     {
         $data = $this->tpay->getTpayFormData($orderId);
-        if (6 === strlen($additionalPaymentInformation['blik_code'])) {
-            $data['group'] = TransactionModel::BLIK_CHANNEL;
+
+        if (6 === strlen($additionalPaymentInformation['blik_code'] ?? '')) {
+            $data['group'] = TransactionOriginApi::BLIK_CHANNEL;
+            $data['channel'] = null;
+            $this->handleBlikData($data, $additionalPaymentInformation['blik_code']);
         } else {
-            $data['group'] = (int) $additionalPaymentInformation['group'];
+            $data['group'] = (int) ($additionalPaymentInformation['group'] ?? null);
+            $data['channel'] = (int) ($additionalPaymentInformation['channel'] ?? null);
+
+            if ($this->tpay->redirectToChannel()) {
+                $data['direct'] = 1;
+            }
+        }
+
+        $data = $this->transaction->originApiFieldCorrect($data);
+        $data = $this->transaction->translateGroupToChannel($data, $this->tpay->redirectToChannel());
+
+        if (isset($data['channel']) && $data['channel']) {
+            return $this->transaction->createWithInstantRedirection($data);
         }
 
         return $this->transaction->create($data);
+    }
+
+    private function handleBlikData(array &$data, string $blikCode)
+    {
+        if ($this->transaction->isOpenApiUse() && $this->tpay->checkBlikLevel0Settings()) {
+            $data['blikPaymentData'] = [
+                'blikToken' => $blikCode,
+            ];
+        }
+        if (!$this->transaction->isOpenApiUse()) {
+            unset($data['channel']);
+            unset($data['currency']);
+            unset($data['language']);
+        }
+    }
+
+    private function handleOpenApiTrId(array &$paymentData, array $transaction)
+    {
+        if (isset($transaction['transactionId'])) {
+            $paymentData['additional_information']['transaction_id'] = $transaction['transactionId'];
+        }
     }
 }

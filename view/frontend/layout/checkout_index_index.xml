@@ -32,6 +32,9 @@
                                                                         <item name="tpaycom_magento2basic" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">false</item>
                                                                         </item>
+                                                                        <item name="generic" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">false</item>
+                                                                        </item>
                                                                     </item>
                                                                 </item>
                                                             </item>
@@ -50,3 +53,4 @@
         </referenceBlock>
     </body>
 </page>
+

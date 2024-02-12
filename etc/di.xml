@@ -11,4 +11,10 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="tpaycom\magento2basic\Api\TpayInterface" type="tpaycom\magento2basic\Model\Tpay" />
     <preference for="tpaycom\magento2basic\Api\Sales\OrderRepositoryInterface" type="tpaycom\magento2basic\Model\Sales\OrderRepository" />
+    <type name="Magento\Payment\Model\MethodList">
+        <plugin name="tpay_generic_onsite" type="tpaycom\magento2basic\Model\MethodListPlugin" />
+    </type>
+    <type name="Magento\Quote\Model\Quote\Payment">
+        <plugin name="tpay_generic_payment" type="tpaycom\magento2basic\Model\GenericPaymentPlugin" />
+    </type>
 </config>

@@ -6,6 +6,7 @@
         "php-cs-fixer/shim": "^3.23",
         "phpstan/phpstan": "^1.10.30",
         "tpay-com/coding-standards": "^1.0.1",
+        "tpay-com/tpay-openapi-php": "^1.3",
         "tpay-com/tpay-php": "^2.3.4",
         "vimeo/psalm": "^5.15.0"
     },
@@ -15,12 +16,18 @@
             "url": "https://github.com/magento/magento2.git"
         }
     ],
+    "scripts": {
+        "cs:fixer": "./vendor/bin/php-cs-fixer fix -vvv --diff",
+        "cs:phpstan": "./vendor/bin/phpstan",
+        "cs:psalm": "./vendor/bin/psalm"
+    },
     "config": {
         "allow-plugins": {
             "ergebnis/composer-normalize": true,
             "kubawerlos/composer-smaller-lock": true,
             "magento/composer-dependency-version-audit-plugin": false,
-            "magento/magento-composer-installer": false
+            "magento/magento-composer-installer": false,
+            "php-http/discovery": false
         }
     }
 }

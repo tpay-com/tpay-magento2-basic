@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace tpaycom\magento2basic\Controller\tpay;
 
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
+use tpaycom\magento2basic\Api\TpayInterface;
 use tpaycom\magento2basic\Service\TpayService;
 
 class Redirect extends Action
@@ -15,11 +18,8 @@ class Redirect extends Action
     /** @var TpayService */
     protected $tpayService;
 
-    public function __construct(
-        Context $context,
-        TpayService $tpayService,
-        Session $checkoutSession
-    ) {
+    public function __construct(Context $context, TpayService $tpayService, Session $checkoutSession)
+    {
         $this->tpayService = $tpayService;
         $this->checkoutSession = $checkoutSession;
 
@@ -28,25 +28,22 @@ class Redirect extends Action
 
     public function execute()
     {
-        /** @var string $uid */
         $uid = $this->getRequest()->getParam('uid');
-
-        /** @var int $orderId */
         $orderId = $this->checkoutSession->getLastRealOrderId();
 
         if (!$orderId || !$uid) {
             return $this->_redirect('checkout/cart');
         }
+
         $payment = $this->tpayService->getPayment($orderId);
-
-        /** @var array<string> $paymentData */
         $paymentData = $payment->getData();
-
         $additionalPaymentInfo = $paymentData['additional_information'];
-        if (
-            (!isset($additionalPaymentInfo['group']) || (int) $additionalPaymentInfo['group'] < 1)
-            && (!isset($additionalPaymentInfo['blik_code']) || 6 !== strlen($additionalPaymentInfo['blik_code']))
-        ) {
+
+        if (!empty($additionalPaymentInfo[TpayInterface::CARDDATA]) || !empty($additionalPaymentInfo[TpayInterface::CARD_ID])) {
+            return $this->_redirect('magento2basic/tpay/CardPayment');
+        }
+
+        if (empty(array_intersect(array_keys($additionalPaymentInfo), [TpayInterface::GROUP, TpayInterface::CHANNEL])) && (!array_key_exists(TpayInterface::BLIK_CODE, $additionalPaymentInfo) || 6 !== strlen($additionalPaymentInfo[TpayInterface::BLIK_CODE]))) {
             return $this->_redirect('checkout/cart');
         }
         $this->tpayService->setOrderStatePendingPayment($orderId, true);
