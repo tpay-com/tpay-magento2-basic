@@ -5,9 +5,6 @@ namespace tpaycom\magento2basic\Controller\tpay;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
-use Magento\Framework\App\ResourceConnection;
-use Magento\Framework\Model\Context as ModelContext;
-use Magento\Framework\Registry;
 use Magento\Store\Model\StoreManagerInterface;
 use Tpay\OriginApi\Utilities\Util;
 use tpaycom\magento2basic\Api\TpayInterface;
@@ -33,12 +30,12 @@ class CardPayment extends Action
     /** @var StoreManagerInterface */
     private $storeManager;
 
-    public function __construct(Context $context, TpayInterface $tpayModel, TpayService $tpayService, Session $checkoutSession, ModelContext $modelContext, Registry $registry, ResourceConnection $resourceConnection, StoreManagerInterface $storeManager)
+    public function __construct(Context $context, TpayInterface $tpayModel, TpayService $tpayService, Session $checkoutSession, TpayTokensService $tokensService, StoreManagerInterface $storeManager)
     {
         $this->tpay = $tpayModel;
         $this->tpayService = $tpayService;
         $this->checkoutSession = $checkoutSession;
-        $this->tokensService = new TpayTokensService($modelContext, $registry, $resourceConnection);
+        $this->tokensService = $tokensService;
         $this->storeManager = $storeManager;
         Util::$loggingEnabled = false;
         parent::__construct($context);

@@ -4,15 +4,15 @@ namespace tpaycom\magento2basic\Model\Api\Data;
 
 interface TokensInterface
 {
-    public function setCustomerId($id);
+    public function setCustomerId(string $id);
 
-    public function getToken($customerId);
+    public function setToken(string $token);
 
-    public function setToken($token);
-
-    public function setShortCode($shortCode);
+    public function setShortCode(string $shortCode);
 
     public function setCreationTime();
 
-    public function setCrc($crc);
+    public function setCrc(?string $crc = null);
+
+    public function setVendor(?string $vendor = null);
 }
