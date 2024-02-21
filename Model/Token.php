@@ -5,7 +5,7 @@ namespace tpaycom\magento2basic\Model;
 use Magento\Framework\Model\AbstractModel;
 use tpaycom\magento2basic\Model\Api\Data\TokensInterface;
 
-class Token  extends AbstractModel implements TokensInterface
+class Token extends AbstractModel implements TokensInterface
 {
     protected function _construct()
     {
