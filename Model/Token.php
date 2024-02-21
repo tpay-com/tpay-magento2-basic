@@ -7,11 +7,6 @@ use tpaycom\magento2basic\Model\Api\Data\TokensInterface;
 
 class Token extends AbstractModel implements TokensInterface
 {
-    protected function _construct()
-    {
-        $this->_init(ResourceModel\Token::class);
-    }
-
     public function setCustomerId(string $id): self
     {
         $this->setData('cli_id', $id);
@@ -52,5 +47,10 @@ class Token extends AbstractModel implements TokensInterface
         $this->setData('vendor', $vendor);
 
         return $this;
+    }
+
+    protected function _construct()
+    {
+        $this->_init(ResourceModel\Token::class);
     }
 }
