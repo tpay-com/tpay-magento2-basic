@@ -82,25 +82,24 @@ class TpayPayment extends Adapter implements TpayInterface
     private $_title;
 
     public function __construct(
-        UrlInterface              $urlBuilder,
-        Session                   $checkoutSession,
-        OrderRepositoryInterface  $orderRepository,
-        Escaper                   $escaper,
-        StoreManager              $storeManager,
-        ConfigurationProvider     $configurationProvider,
-        PaymentInterface          $infoInstance,
-        ManagerInterface          $eventManager,
+        UrlInterface $urlBuilder,
+        Session $checkoutSession,
+        OrderRepositoryInterface $orderRepository,
+        Escaper $escaper,
+        StoreManager $storeManager,
+        ConfigurationProvider $configurationProvider,
+        PaymentInterface $infoInstance,
+        ManagerInterface $eventManager,
         ValueHandlerPoolInterface $valueHandlerPool,
-        PaymentDataObjectFactory  $paymentDataObjectFactory,
-        string                    $code,
-        string                    $formBlockType,
-        string                    $infoBlockType,
-        CommandPoolInterface      $commandPool = null,
-        ValidatorPoolInterface    $validatorPool = null,
-        CommandManagerInterface   $commandExecutor = null,
-        LoggerInterface           $logger = null
-    )
-    {
+        PaymentDataObjectFactory $paymentDataObjectFactory,
+        string $code,
+        string $formBlockType,
+        string $infoBlockType,
+        ?CommandPoolInterface $commandPool = null,
+        ?ValidatorPoolInterface $validatorPool = null,
+        ?CommandManagerInterface $commandExecutor = null,
+        ?LoggerInterface $logger = null
+    ) {
         $this->urlBuilder = $urlBuilder;
         $this->escaper = $escaper;
         $this->checkoutSession = $checkoutSession;
@@ -124,7 +123,7 @@ class TpayPayment extends Adapter implements TpayInterface
 
     public function getPaymentRedirectUrl(): string
     {
-        return $this->urlBuilder->getUrl('magento2basic/tpay/redirect', ['uid' => time() . uniqid('', true)]);
+        return $this->urlBuilder->getUrl('magento2basic/tpay/redirect', ['uid' => time().uniqid('', true)]);
     }
 
     public function setCode(string $code)
@@ -151,9 +150,9 @@ class TpayPayment extends Adapter implements TpayInterface
     {
         $order = $this->getOrder($orderId);
         $billingAddress = $order->getBillingAddress();
-        $amount = number_format((float)$order->getGrandTotal(), 2, '.', '');
+        $amount = number_format((float) $order->getGrandTotal(), 2, '.', '');
         $crc = base64_encode($orderId);
-        $name = $billingAddress->getData('firstname') . ' ' . $billingAddress->getData('lastname');
+        $name = $billingAddress->getData('firstname').' '.$billingAddress->getData('lastname');
         $phone = $billingAddress->getData('telephone');
 
         $om = ObjectManager::getInstance();
@@ -164,7 +163,7 @@ class TpayPayment extends Adapter implements TpayInterface
             'email' => $this->escaper->escapeHtml($order->getCustomerEmail()),
             'name' => $this->escaper->escapeHtml($name),
             'amount' => $amount,
-            'description' => 'Zamówienie ' . $orderId,
+            'description' => 'Zamówienie '.$orderId,
             'crc' => $crc,
             'address' => $this->escaper->escapeHtml($order->getBillingAddress()->getData('street')),
             'city' => $this->escaper->escapeHtml($order->getBillingAddress()->getData('city')),
@@ -175,7 +174,7 @@ class TpayPayment extends Adapter implements TpayInterface
             'return_url' => $this->urlBuilder->getUrl('magento2basic/tpay/success'),
             'phone' => $phone,
             'online' => $this->configurationProvider->onlyOnlineChannels() ? 1 : 0,
-            'module' => 'Magento ' . $this->getMagentoVersion(),
+            'module' => 'Magento '.$this->getMagentoVersion(),
             'currency' => $this->getISOCurrencyCode($order->getOrderCurrencyCode()),
             'language' => $language,
         ];
@@ -206,7 +205,6 @@ class TpayPayment extends Adapter implements TpayInterface
         $additionalData = $data->getData('additional_data');
 
         $info = $this->getInfoInstance();
-//        $info = $this->infoInstance;
         $info->setAdditionalInformation(static::GROUP, array_key_exists(static::GROUP, $additionalData) ? $additionalData[static::GROUP] : '');
         $info->setAdditionalInformation(static::BLIK_CODE, array_key_exists(static::BLIK_CODE, $additionalData) ? $additionalData[static::BLIK_CODE] : '');
         $info->setAdditionalInformation('channel', $additionalData['channel'] ?? null);
@@ -215,21 +213,23 @@ class TpayPayment extends Adapter implements TpayInterface
         $info->setAdditionalInformation(static::CARD_VENDOR, isset($additionalData[static::CARD_VENDOR]) && in_array($additionalData[static::CARD_VENDOR], $this->supportedVendors) ? $additionalData[static::CARD_VENDOR] : 'undefined');
         $info->setAdditionalInformation(static::CARD_SAVE, isset($additionalData[static::CARD_SAVE]) ? '1' === $additionalData[static::CARD_SAVE] : false);
         $info->setAdditionalInformation(static::CARD_ID, isset($additionalData[static::CARD_ID]) && is_numeric($additionalData[static::CARD_ID]) ? $additionalData[static::CARD_ID] : false);
-        $info->setAdditionalInformation(static::SHORT_CODE, isset($additionalData[static::SHORT_CODE]) && is_numeric($additionalData[static::SHORT_CODE]) ? '****' . $additionalData[static::SHORT_CODE] : false);
+        $info->setAdditionalInformation(static::SHORT_CODE, isset($additionalData[static::SHORT_CODE]) && is_numeric($additionalData[static::SHORT_CODE]) ? '****'.$additionalData[static::SHORT_CODE] : false);
 
         return $this;
     }
 
     /**
      * @param float $amount
-     * @return $this
+     *
      * @throws \Exception
+     *
+     * @return $this
      */
     public function refund(InfoInterface $payment, $amount)
     {
         $refundService = new RefundApiFacade($this->configurationProvider);
 
-        $refundResult = $refundService->makeRefund($payment, (float)$amount);
+        $refundResult = $refundService->makeRefund($payment, (float) $amount);
         try {
             if ($refundResult) {
                 $payment
@@ -249,7 +249,7 @@ class TpayPayment extends Adapter implements TpayInterface
     /** @return float current cart total */
     public function getCheckoutTotal()
     {
-        $amount = (float)$this->getCheckout()->getQuote()->getBaseGrandTotal();
+        $amount = (float) $this->getCheckout()->getQuote()->getBaseGrandTotal();
 
         if (!$amount) {
             $orderId = $this->getCheckout()->getLastRealOrderId();
@@ -282,6 +282,7 @@ class TpayPayment extends Adapter implements TpayInterface
 
     /**
      * @param string $orderId
+     *
      * @return string
      */
     public function getCustomerId($orderId)
@@ -293,6 +294,7 @@ class TpayPayment extends Adapter implements TpayInterface
 
     /**
      * @param string $orderId
+     *
      * @return bool
      */
     public function isCustomerGuest($orderId)
@@ -325,7 +327,7 @@ class TpayPayment extends Adapter implements TpayInterface
 
     protected function checkBlikAmount(): bool
     {
-        return (bool)($this->getCheckoutTotal() >= $this->minAmountBlik);
+        return (bool) ($this->getCheckoutTotal() >= $this->minAmountBlik);
     }
 
     protected function getCheckout(): Session

@@ -46,15 +46,15 @@ class MethodListPlugin
     private $constraintValidator;
 
     public function __construct(
-        Data                  $data,
-        ScopeConfigInterface  $scopeConfig,
-        OnsiteChannels        $onsiteChannels,
+        Data $data,
+        ScopeConfigInterface $scopeConfig,
+        OnsiteChannels $onsiteChannels,
         StoreManagerInterface $storeManager,
-        TpayPayment           $tpay,
-        TpayConfigInterface   $tpayConfig,
-        Session               $checkoutSession,
-        TransactionApiFacade  $transactions,
-        ConstraintValidator   $constraintValidator
+        TpayPayment $tpay,
+        TpayConfigInterface $tpayConfig,
+        Session $checkoutSession,
+        TransactionApiFacade $transactions,
+        ConstraintValidator $constraintValidator
     ) {
         $this->data = $data;
         $this->scopeConfig = $scopeConfig;

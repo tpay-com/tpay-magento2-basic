@@ -24,14 +24,14 @@ class RefundCardOriginApi extends CardRefunds
     {
         $transactionId = $payment->getParentTransactionId();
         $this->setAmount($amount)->setCurrency($currency);
-        $result = $this->refund($transactionId, __('Zwrot do zamówienia ') . $payment->getOrder()->getRealOrderId());
+        $result = $this->refund($transactionId, __('Zwrot do zamówienia ').$payment->getOrder()->getRealOrderId());
 
-        if (1 === (int)$result['result'] && isset($result['status']) && 'correct' === $result['status']) {
+        if (1 === (int) $result['result'] && isset($result['status']) && 'correct' === $result['status']) {
             return $result['sale_auth'];
         }
-        $errDesc = isset($result['err_desc']) ? ' error description: ' . $result['err_desc'] : '';
-        $errCode = isset($result['err_code']) ? ' error code: ' . $result['err_code'] : '';
-        $reason = isset($result['reason']) ? ' reason: ' . $result['reason'] : '';
-        throw new Exception(__('Payment refunding error. -' . $errCode . $errDesc . $reason));
+        $errDesc = isset($result['err_desc']) ? ' error description: '.$result['err_desc'] : '';
+        $errCode = isset($result['err_code']) ? ' error code: '.$result['err_code'] : '';
+        $reason = isset($result['reason']) ? ' reason: '.$result['reason'] : '';
+        throw new Exception(__('Payment refunding error. -'.$errCode.$errDesc.$reason));
     }
 }

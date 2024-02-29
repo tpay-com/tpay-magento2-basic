@@ -12,6 +12,7 @@ use tpaycom\magento2basic\Api\TpayConfigInterface;
 class ConfigurationProvider implements TpayConfigInterface
 {
     private const BASE_CONFIG_PATH = 'payment/tpaycom_magento2basic/';
+
     protected $termsURL = 'https://secure.tpay.com/regulamin.pdf';
 
     /** @var ScopeConfigInterface */
@@ -24,7 +25,7 @@ class ConfigurationProvider implements TpayConfigInterface
 
     public function getBlikLevelZeroStatus(): bool
     {
-        return (bool)$this->getConfigData('general_settings/blik_level_zero');
+        return (bool) $this->getConfigData('general_settings/blik_level_zero');
     }
 
     public function getApiKey(): ?string
@@ -64,7 +65,7 @@ class ConfigurationProvider implements TpayConfigInterface
 
     public function getMerchantId(): ?int
     {
-        return (int)$this->getConfigData('general_settings/merchant_id');
+        return (int) $this->getConfigData('general_settings/merchant_id');
     }
 
     public function getOpenApiClientId(): ?string
@@ -79,12 +80,12 @@ class ConfigurationProvider implements TpayConfigInterface
 
     public function onlyOnlineChannels(): bool
     {
-        return (bool)$this->getConfigData('general_settings/show_payment_channels_online');
+        return (bool) $this->getConfigData('general_settings/show_payment_channels_online');
     }
 
     public function redirectToChannel(): bool
     {
-        return (bool)$this->getConfigData('general_settings/redirect_directly_to_channel');
+        return (bool) $this->getConfigData('general_settings/redirect_directly_to_channel');
     }
 
     public function getCardTitle(): ?string
@@ -94,42 +95,42 @@ class ConfigurationProvider implements TpayConfigInterface
 
     public function isOriginApiEnabled(): bool
     {
-        return (bool)$this->getConfigData('originapi_settings/origin_api_active');
+        return (bool) $this->getConfigData('originapi_settings/origin_api_active');
     }
 
     public function isOpenApiEnabled(): bool
     {
-        return (bool)$this->getConfigData('openapi_settings/open_api_active');
+        return (bool) $this->getConfigData('openapi_settings/open_api_active');
     }
 
     public function isCardEnabled(): bool
     {
-        return (bool)$this->getConfigData('cardpayment_settings/cardpayment_api_active');
+        return (bool) $this->getConfigData('cardpayment_settings/cardpayment_api_active');
     }
 
     public function isOriginApiCardUse(): bool
     {
-        return (bool)$this->getConfigData('cardpayment_settings/cardpayment_origin_api_use');
+        return (bool) $this->getConfigData('cardpayment_settings/cardpayment_origin_api_use');
     }
 
     public function useSandboxMode(?int $storeId = null): bool
     {
-        return (bool)$this->getConfigData('general_settings/use_sandbox', $storeId);
+        return (bool) $this->getConfigData('general_settings/use_sandbox', $storeId);
     }
 
     public function getMinOrderTotal()
     {
-        return (bool)$this->getConfigData('sale_settings/min_order_total');
+        return (bool) $this->getConfigData('sale_settings/min_order_total');
     }
 
     public function getMaxOrderTotal()
     {
-        return (bool)$this->getConfigData('sale_settings/max_order_total');
+        return (bool) $this->getConfigData('sale_settings/max_order_total');
     }
 
     public function getCardSaveEnabled(): bool
     {
-        return (bool)$this->getConfigData('cardpayment_settings/card_save_enabled');
+        return (bool) $this->getConfigData('cardpayment_settings/card_save_enabled');
     }
 
     public function getRSAKey(): ?string
@@ -149,7 +150,7 @@ class ConfigurationProvider implements TpayConfigInterface
 
     public function isAllowSpecific(): bool
     {
-        return (bool)$this->getConfigData('sale_settings/allowspecific') ?? false;
+        return (bool) $this->getConfigData('sale_settings/allowspecific') ?? false;
     }
 
     public function getSpecificCountry(): array
@@ -183,6 +184,6 @@ class ConfigurationProvider implements TpayConfigInterface
 
     public function getConfigData($field, $storeId = null)
     {
-        return $this->scopeConfig->getValue(self::BASE_CONFIG_PATH . $field, ScopeInterface::SCOPE_STORE, $storeId);
+        return $this->scopeConfig->getValue(self::BASE_CONFIG_PATH.$field, ScopeInterface::SCOPE_STORE, $storeId);
     }
 }

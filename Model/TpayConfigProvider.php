@@ -29,14 +29,13 @@ class TpayConfigProvider implements ConfigProviderInterface
     protected $transactionApi;
 
     public function __construct(
-        PaymentHelper         $paymentHelper,
-        Repository            $assetRepository,
+        PaymentHelper $paymentHelper,
+        Repository $assetRepository,
         StoreManagerInterface $storeManager,
-        TpayTokensService     $tokensService,
-        TransactionApiFacade  $transactionApiFacade,
-        TpayConfigInterface   $tpayConfig
-    )
-    {
+        TpayTokensService $tokensService,
+        TransactionApiFacade $transactionApiFacade,
+        TpayConfigInterface $tpayConfig
+    ) {
         $this->paymentHelper = $paymentHelper;
         $this->transactionApi = $transactionApiFacade;
         $this->configFacade = new ConfigFacade($this->getPaymentMethodInstance(), $tpayConfig, $assetRepository, $tokensService, $storeManager);

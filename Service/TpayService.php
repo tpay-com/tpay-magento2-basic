@@ -37,16 +37,15 @@ class TpayService extends RegisterCaptureNotificationOperation
     protected $invoiceService;
 
     public function __construct(
-        OrderRepositoryInterface        $orderRepository,
+        OrderRepositoryInterface $orderRepository,
         OrderPaymentRepositoryInterface $orderPaymentRepository,
-        BuilderInterface                $builder,
-        CommandInterface                $stateCommand,
-        BuilderInterface                $transactionBuilder,
-        ManagerInterface                $transactionManager,
-        EventManagerInterface           $eventManager,
-        InvoiceService                  $invoiceService
-    )
-    {
+        BuilderInterface $builder,
+        CommandInterface $stateCommand,
+        BuilderInterface $transactionBuilder,
+        ManagerInterface $transactionManager,
+        EventManagerInterface $eventManager,
+        InvoiceService $invoiceService
+    ) {
         $this->orderRepository = $orderRepository;
         $this->orderPaymentRepository = $orderPaymentRepository;
         $this->builder = $builder;
@@ -93,8 +92,9 @@ class TpayService extends RegisterCaptureNotificationOperation
     }
 
     /**
-     * @return bool|OrderInterface
      * @throws Exception
+     *
+     * @return bool|OrderInterface
      */
     public function SetOrderStatus(string $orderId, array $validParams, TpayConfigInterface $tpayConfig)
     {
@@ -104,12 +104,12 @@ class TpayService extends RegisterCaptureNotificationOperation
             return false;
         }
 
-        $sendNewInvoiceMail = (bool)$tpayConfig->getInvoiceSendMail();
-        $orderAmount = (float)number_format((float)$order->getGrandTotal(), 2, '.', '');
+        $sendNewInvoiceMail = (bool) $tpayConfig->getInvoiceSendMail();
+        $orderAmount = (float) number_format((float) $order->getGrandTotal(), 2, '.', '');
         $trStatus = $validParams['tr_status'];
         $emailNotify = false;
 
-        if ('TRUE' === $trStatus && ((float)number_format($validParams['tr_paid'], 2, '.', '') === $orderAmount)) {
+        if ('TRUE' === $trStatus && ((float) number_format($validParams['tr_paid'], 2, '.', '') === $orderAmount)) {
             if (Order::STATE_PROCESSING !== $order->getState()) {
                 $emailNotify = true;
             }
@@ -124,7 +124,7 @@ class TpayService extends RegisterCaptureNotificationOperation
             if (Order::STATE_HOLDED !== $order->getState()) {
                 $emailNotify = true;
             }
-            $comment = __('The order has been holded: ') . '</br>' . $this->getTransactionDesc($validParams);
+            $comment = __('The order has been holded: ').'</br>'.$this->getTransactionDesc($validParams);
             $status = Order::STATE_HOLDED;
             $order->addStatusToHistory($status, $comment, true);
         }
@@ -159,15 +159,15 @@ class TpayService extends RegisterCaptureNotificationOperation
             return false;
         }
 
-        $sendNewInvoiceMail = (bool)$tpayConfig->getInvoiceSendMail();
+        $sendNewInvoiceMail = (bool) $tpayConfig->getInvoiceSendMail();
         $transactionDesc = $this->getCardTransactionDesc($validParams);
-        $orderAmount = (float)number_format((float)$order->getGrandTotal(), 2, '.', '');
+        $orderAmount = (float) number_format((float) $order->getGrandTotal(), 2, '.', '');
         $emailNotify = false;
 
         $order = $this->updateTransactionId($order, $validParams);
 
-        if (!isset($validParams['status']) || 'correct' !== $validParams['status'] || ((float)number_format((float)$validParams['amount'], 2, '.', '') !== $orderAmount)) {
-            $comment = __('Payment has been declined. ') . '</br>' . $transactionDesc;
+        if (!isset($validParams['status']) || 'correct' !== $validParams['status'] || ((float) number_format((float) $validParams['amount'], 2, '.', '') !== $orderAmount)) {
+            $comment = __('Payment has been declined. ').'</br>'.$transactionDesc;
             $this->addCommentToHistory($orderId, $comment);
         } else {
             if (Order::STATE_PROCESSING != $order->getState()) {
@@ -207,8 +207,8 @@ class TpayService extends RegisterCaptureNotificationOperation
         $error = $validParams['tr_error'];
         $paid = $validParams['tr_paid'];
         $status = $validParams['tr_status'];
-        $transactionDesc = '<b>' . $validParams['tr_id'] . '</b> ';
-        $transactionDesc .= 'none' === $error ? ' ' : ' Error:  <b>' . strtoupper($error) . '</b> (' . $paid . ')';
+        $transactionDesc = '<b>'.$validParams['tr_id'].'</b> ';
+        $transactionDesc .= 'none' === $error ? ' ' : ' Error:  <b>'.strtoupper($error).'</b> ('.$paid.')';
 
         if ('CHARGEBACK' === $status) {
             $transactionDesc .= __('Transaction has been refunded');
@@ -227,29 +227,29 @@ class TpayService extends RegisterCaptureNotificationOperation
             return false;
         }
         if (isset($validParams['err_desc'])) {
-            return 'Payment error: ' . $validParams['err_desc'] . ', error code: ' . $validParams['err_code'];
+            return 'Payment error: '.$validParams['err_desc'].', error code: '.$validParams['err_code'];
         }
         $error = null;
         if ('declined' === $validParams['status']) {
             $error = $validParams['reason'];
         }
 
-        $transactionDesc = (is_null($error)) ? ' ' : ' Reason:  <b>' . $error . '</b>';
-        $transactionDesc .= (isset($validParams['test_mode'])) && 1 === (int)$validParams['test_mode'] ? '<b> TEST </b>' : ' ';
+        $transactionDesc = (is_null($error)) ? ' ' : ' Reason:  <b>'.$error.'</b>';
+        $transactionDesc .= (isset($validParams['test_mode'])) && 1 === (int) $validParams['test_mode'] ? '<b> TEST </b>' : ' ';
 
         return $transactionDesc;
     }
 
     /**
      * @param float|string $amount
-     * @param bool|int $skipFraudDetection
+     * @param bool|int     $skipFraudDetection
      */
     private function registerCaptureNotificationTpay(OrderPaymentInterface $payment, $amount, array $validParams, $skipFraudDetection = false)
     {
         $payment->setTransactionId($this->transactionManager->generateTransactionId($payment, TransactionInterface::TYPE_CAPTURE, $payment->getAuthorizationTransaction()));
 
         $order = $payment->getOrder();
-        $amount = (float)$amount;
+        $amount = (float) $amount;
         $invoice = $this->getInvoiceForTransactionId($order, $payment->getTransactionId());
 
         if (!$invoice && $payment->isCaptureFinal($amount)) {
@@ -285,7 +285,7 @@ class TpayService extends RegisterCaptureNotificationOperation
         $payment->setTransactionId($this->transactionManager->generateTransactionId($payment, TransactionInterface::TYPE_CAPTURE, $payment->getAuthorizationTransaction()));
 
         $order = $payment->getOrder();
-        $amount = (float)$amount;
+        $amount = (float) $amount;
         $invoice = $this->getInvoiceForTransactionId($order, $payment->getTransactionId());
         $orderCurrencyCode = $order->getOrderCurrency()->getCode();
 
@@ -294,7 +294,7 @@ class TpayService extends RegisterCaptureNotificationOperation
         }
         $orderCurrency = array_search($orderCurrencyCode, CurrencyCodesDictionary::CODES);
 
-        if (!$invoice && $payment->isCaptureFinal($amount) && ($orderCurrency === (int)$validParams['currency'] || $orderCurrencyCode === $validParams['currency'])) {
+        if (!$invoice && $payment->isCaptureFinal($amount) && ($orderCurrency === (int) $validParams['currency'] || $orderCurrencyCode === $validParams['currency'])) {
             $invoice = $order->prepareInvoice()->register();
             $invoice->setOrder($order);
             $order->addRelatedObject($invoice);
