@@ -33,7 +33,8 @@ class TpayPayment extends Adapter implements TpayInterface
 {
     use FieldsValidator;
 
-    protected $_code = self::CODE;
+    protected $code;
+    protected $title;
     protected $_isGateway = true;
     protected $_canCapture = false;
     protected $_canCapturePartial = false;
@@ -77,9 +78,6 @@ class TpayPayment extends Adapter implements TpayInterface
         'amex',
         'mastercard',
     ];
-
-    /** @var string */
-    private $_title;
 
     public function __construct(
         UrlInterface $urlBuilder,
@@ -128,12 +126,30 @@ class TpayPayment extends Adapter implements TpayInterface
 
     public function setCode(string $code)
     {
-        $this->_code = $code;
+        $this->code = $code;
+    }
+
+    public function getCode(): string
+    {
+        if ($this->code) {
+            return $this->code;
+        }
+
+        return parent::getCode();
+    }
+
+    public function getTitle(): string
+    {
+        if ($this->title) {
+            return $this->title;
+        }
+
+        return parent::getTitle();
     }
 
     public function setTitle(string $title): void
     {
-        $this->_title = $title;
+        $this->title = $title;
     }
 
     public function checkBlikLevel0Settings(): bool
