@@ -1,0 +1,74 @@
+<?php
+
+declare(strict_types=1);
+
+namespace tpaycom\magento2basic\Api;
+
+/**
+ * @api
+ */
+interface TpayConfigInterface
+{
+    public const CODE = 'tpaycom_magento2basic';
+    public const GROUP = 'group';
+    public const CHANNEL = 'channel';
+    public const BLIK_CODE = 'blik_code';
+    public const TERMS_ACCEPT = 'accept_tos';
+    public const CARDDATA = 'card_data';
+    public const CARD_SAVE = 'card_save';
+    public const CARD_ID = 'card_id';
+    public const CARD_VENDOR = 'card_vendor';
+    public const SHORT_CODE = 'short_code';
+
+    public function getCardTitle(): ?string;
+
+    public function isOriginApiEnabled(): bool;
+
+    public function isOpenApiEnabled(): bool;
+
+    public function isCardEnabled(): bool;
+
+    public function isOriginApiCardUse(): bool;
+
+    public function getApiPassword(): ?string;
+
+    public function getOpenApiPassword(): ?string;
+
+    public function getApiKey(): ?string;
+
+    public function getSecurityCode(?int $storeId = null): ?string;
+
+    public function getOpenApiClientId(): ?string;
+
+    public function getMerchantId(): ?int;
+
+    public function getBlikLevelZeroStatus(): bool;
+
+    public function onlyOnlineChannels(): bool;
+
+    public function redirectToChannel(): bool;
+
+    /** Return url for a tpay.com terms */
+    public function getTermsURL(): string;
+
+    /** Check if send an email about the new invoice to customer */
+    public function getInvoiceSendMail(): string;
+
+    public function useSandboxMode(?int $storeId = null): bool;
+
+    public function getCardApiKey(): ?string;
+
+    public function getCardApiPassword(): ?string;
+
+    public function getCardSaveEnabled(): bool;
+
+    public function getRSAKey(): ?string;
+
+    public function getHashType(): ?string;
+
+    public function getVerificationCode(): ?string;
+
+    public function isAllowSpecific(): bool;
+
+    public function getSpecificCountry(): array;
+}

@@ -5,11 +5,11 @@ namespace tpaycom\magento2basic\Model\ApiFacade\Refund;
 use Magento\Framework\Validator\Exception;
 use Tpay\OriginApi\Refunds\CardRefunds;
 use Tpay\OriginApi\Utilities\Util;
-use tpaycom\magento2basic\Api\TpayInterface;
+use tpaycom\magento2basic\Api\TpayConfigInterface;
 
 class RefundCardOriginApi extends CardRefunds
 {
-    public function __construct(TpayInterface $tpay)
+    public function __construct(TpayConfigInterface $tpay)
     {
         Util::$loggingEnabled = false;
         $this->cardApiKey = $tpay->getCardApiKey();
@@ -24,14 +24,14 @@ class RefundCardOriginApi extends CardRefunds
     {
         $transactionId = $payment->getParentTransactionId();
         $this->setAmount($amount)->setCurrency($currency);
-        $result = $this->refund($transactionId, __('Zwrot do zamówienia ').$payment->getOrder()->getRealOrderId());
+        $result = $this->refund($transactionId, __('Zwrot do zamówienia ') . $payment->getOrder()->getRealOrderId());
 
-        if (1 === (int) $result['result'] && isset($result['status']) && 'correct' === $result['status']) {
+        if (1 === (int)$result['result'] && isset($result['status']) && 'correct' === $result['status']) {
             return $result['sale_auth'];
         }
-        $errDesc = isset($result['err_desc']) ? ' error description: '.$result['err_desc'] : '';
-        $errCode = isset($result['err_code']) ? ' error code: '.$result['err_code'] : '';
-        $reason = isset($result['reason']) ? ' reason: '.$result['reason'] : '';
-        throw new Exception(__('Payment refunding error. -'.$errCode.$errDesc.$reason));
+        $errDesc = isset($result['err_desc']) ? ' error description: ' . $result['err_desc'] : '';
+        $errCode = isset($result['err_code']) ? ' error code: ' . $result['err_code'] : '';
+        $reason = isset($result['reason']) ? ' reason: ' . $result['reason'] : '';
+        throw new Exception(__('Payment refunding error. -' . $errCode . $errDesc . $reason));
     }
 }

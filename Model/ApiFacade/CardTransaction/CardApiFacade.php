@@ -4,6 +4,7 @@ namespace tpaycom\magento2basic\Model\ApiFacade\CardTransaction;
 
 use Exception;
 use Magento\Store\Model\StoreManagerInterface;
+use tpaycom\magento2basic\Api\TpayConfigInterface;
 use tpaycom\magento2basic\Api\TpayInterface;
 use tpaycom\magento2basic\Service\TpayService;
 use tpaycom\magento2basic\Service\TpayTokensService;
@@ -22,11 +23,11 @@ class CardApiFacade
     /** @var bool */
     private $useOpenCard;
 
-    public function __construct(TpayInterface $tpay, TpayTokensService $tokensService, TpayService $tpayService, StoreManagerInterface $storeManager)
+    public function __construct(TpayInterface $tpay, TpayConfigInterface $tpayConfig, TpayTokensService $tokensService, TpayService $tpayService, StoreManagerInterface $storeManager)
     {
         $this->storeManager = $storeManager;
-        $this->createCardOriginApiInstance($tpay, $tokensService, $tpayService);
-        $this->createOpenApiInstance($tpay, $tokensService, $tpayService);
+        $this->createCardOriginApiInstance($tpay, $tpayConfig, $tokensService, $tpayService);
+        $this->createOpenApiInstance($tpay, $tpayConfig, $tokensService, $tpayService);
     }
 
     public function makeCardTransaction(string $orderId): string
@@ -39,24 +40,24 @@ class CardApiFacade
         return $this->useOpenCard ? $this->cardOpen : $this->cardOrigin;
     }
 
-    private function createCardOriginApiInstance(TpayInterface $tpay, TpayTokensService $tokensService, TpayService $tpayService)
+    private function createCardOriginApiInstance(TpayInterface $tpay, TpayConfigInterface $tpayConfig, TpayTokensService $tokensService, TpayService $tpayService)
     {
-        if (!$tpay->isOriginApiEnabled()) {
+        if (!$tpayConfig->isOriginApiEnabled()) {
             $this->cardOrigin = null;
 
             return;
         }
 
         try {
-            $this->cardOrigin = new CardOrigin($tpay, $tokensService, $tpayService);
+            $this->cardOrigin = new CardOrigin($tpay, $tpayConfig, $tokensService, $tpayService);
         } catch (Exception $exception) {
             $this->cardOrigin = null;
         }
     }
 
-    private function createOpenApiInstance(TpayInterface $tpay, TpayTokensService $tokensService, TpayService $tpayService)
+    private function createOpenApiInstance(TpayInterface $tpay, TpayConfigInterface $tpayConfig, TpayTokensService $tokensService, TpayService $tpayService)
     {
-        if ('PLN' !== $this->storeManager->getStore()->getCurrentCurrencyCode() || !$tpay->isOpenApiEnabled()) {
+        if ('PLN' !== $this->storeManager->getStore()->getCurrentCurrencyCode() || !$tpayConfig->isOpenApiEnabled()) {
             $this->cardOpen = null;
             $this->useOpenCard = false;
 
@@ -64,7 +65,7 @@ class CardApiFacade
         }
 
         try {
-            $this->cardOpen = new CardOpen($tpay, $tokensService, $tpayService);
+            $this->cardOpen = new CardOpen($tpay, $tpayConfig, $tokensService, $tpayService);
             $this->useOpenCard = true;
         } catch (Exception $exception) {
             $this->cardOpen = null;

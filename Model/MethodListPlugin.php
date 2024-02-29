@@ -9,6 +9,7 @@ use Magento\Payment\Model\MethodInterface;
 use Magento\Payment\Model\MethodList;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use tpaycom\magento2basic\Api\TpayConfigInterface;
 use tpaycom\magento2basic\Api\TpayInterface;
 use tpaycom\magento2basic\Model\ApiFacade\Transaction\TransactionApiFacade;
 use tpaycom\magento2basic\Model\Config\Source\OnsiteChannels;
@@ -29,8 +30,11 @@ class MethodListPlugin
     /** @var StoreManagerInterface */
     private $storeManager;
 
-    /** @var Tpay */
+    /** @var TpayPayment */
     private $tpay;
+
+    /** @var TpayConfigInterface */
+    private $tpayConfig;
 
     /** @var Session */
     private $checkoutSession;
@@ -42,20 +46,22 @@ class MethodListPlugin
     private $constraintValidator;
 
     public function __construct(
-        Data $data,
-        ScopeConfigInterface $scopeConfig,
-        OnsiteChannels $onsiteChannels,
+        Data                  $data,
+        ScopeConfigInterface  $scopeConfig,
+        OnsiteChannels        $onsiteChannels,
         StoreManagerInterface $storeManager,
-        Tpay $tpay,
-        Session $checkoutSession,
-        TransactionApiFacade $transactions,
-        ConstraintValidator $constraintValidator
+        TpayPayment           $tpay,
+        TpayConfigInterface   $tpayConfig,
+        Session               $checkoutSession,
+        TransactionApiFacade  $transactions,
+        ConstraintValidator   $constraintValidator
     ) {
         $this->data = $data;
         $this->scopeConfig = $scopeConfig;
         $this->onsiteChannels = $onsiteChannels;
         $this->storeManager = $storeManager;
         $this->tpay = $tpay;
+        $this->tpayConfig = $tpayConfig;
         $this->checkoutSession = $checkoutSession;
         $this->transactions = $transactions;
         $this->constraintValidator = $constraintValidator;
@@ -67,7 +73,7 @@ class MethodListPlugin
         $channelList = $onsiteChannels ? explode(',', $onsiteChannels) : [];
         $channels = $this->transactions->channels();
 
-        if ($this->constraintValidator->isClientCountryValid($this->tpay->isAllowSpecific(), $this->checkoutSession->getQuote()->getBillingAddress()->getCountryId(), $this->tpay->getSpecificCountry())) {
+        if ($this->constraintValidator->isClientCountryValid($this->tpayConfig->isAllowSpecific(), $this->checkoutSession->getQuote()->getBillingAddress()->getCountryId(), $this->tpayConfig->getSpecificCountry())) {
             return [];
         }
 
@@ -110,8 +116,8 @@ class MethodListPlugin
 
     private function addCardMethod(array $result): array
     {
-        if ($this->tpay->isCardEnabled()) {
-            $result[] = $this->getMethodInstance($this->tpay->getCardTitle(), 'tpaycom_magento2basic_cards');
+        if ($this->tpayConfig->isCardEnabled()) {
+            $result[] = $this->getMethodInstance($this->tpayConfig->getCardTitle(), 'tpaycom_magento2basic_cards');
         }
 
         return $result;

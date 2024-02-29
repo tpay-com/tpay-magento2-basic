@@ -6,11 +6,11 @@ use Magento\Framework\Validator\Exception;
 use Magento\Payment\Model\InfoInterface;
 use Tpay\OriginApi\Refunds\BasicRefunds;
 use Tpay\OriginApi\Utilities\Util;
-use tpaycom\magento2basic\Api\TpayInterface;
+use tpaycom\magento2basic\Api\TpayConfigInterface;
 
 class RefundOriginApi extends BasicRefunds
 {
-    public function __construct(TpayInterface $tpay)
+    public function __construct(TpayConfigInterface $tpay)
     {
         $this->trApiKey = $tpay->getApiPassword();
         $this->trApiPass = $tpay->getApiKey();

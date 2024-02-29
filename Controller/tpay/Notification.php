@@ -16,6 +16,7 @@ use Magento\Sales\Model\Order;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Tpay\OriginApi\Utilities\Util;
+use tpaycom\magento2basic\Api\TpayConfigInterface;
 use tpaycom\magento2basic\Api\TpayInterface;
 use tpaycom\magento2basic\Service\TpayService;
 use tpaycom\magento2basic\Service\TpayTokensService;
@@ -25,6 +26,9 @@ class Notification extends Action implements CsrfAwareActionInterface
 {
     /** @var TpayInterface */
     protected $tpay;
+
+    /** @var TpayConfigInterface */
+    protected $tpayConfig;
 
     /** @var RemoteAddress */
     protected $remoteAddress;
@@ -40,9 +44,10 @@ class Notification extends Action implements CsrfAwareActionInterface
     /** @var StoreManagerInterface */
     private $storeManager;
 
-    public function __construct(Context $context, RemoteAddress $remoteAddress, TpayInterface $tpayModel, TpayService $tpayService, TpayTokensService $tokensService, StoreManagerInterface $storeManager)
+    public function __construct(Context $context, RemoteAddress $remoteAddress, TpayInterface $tpayModel, TpayConfigInterface $tpayConfig, TpayService $tpayService, TpayTokensService $tokensService, StoreManagerInterface $storeManager)
     {
         $this->tpay = $tpayModel;
+        $this->tpayConfig = $tpayConfig;
         $this->remoteAddress = $remoteAddress;
         $this->tpayService = $tpayService;
         $this->tokensService = $tokensService;
@@ -126,7 +131,7 @@ class Notification extends Action implements CsrfAwareActionInterface
     {
         $storeId = (int) $store->getStoreId();
         try {
-            $notification = (new JWSVerifiedPaymentNotification($this->tpay->getSecurityCode($storeId), !$this->tpay->useSandboxMode($storeId)))->getNotification();
+            $notification = (new JWSVerifiedPaymentNotification($this->tpayConfig->getSecurityCode($storeId), !$this->tpayConfig->useSandboxMode($storeId)))->getNotification();
             $notification = $notification->getNotificationAssociative();
             $orderId = base64_decode($notification['tr_crc']);
 
@@ -139,7 +144,7 @@ class Notification extends Action implements CsrfAwareActionInterface
             }
 
             $this->saveCard($notification, $orderId);
-            $this->tpayService->SetOrderStatus($orderId, $notification, $this->tpay);
+            $this->tpayService->SetOrderStatus($orderId, $notification, $this->tpayConfig);
 
             $returnData = $this->getResponse()->setStatusCode(Http::STATUS_CODE_200)->setContent('TRUE');
             $isPassed = true;

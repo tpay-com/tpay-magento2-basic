@@ -4,6 +4,7 @@ namespace tpaycom\magento2basic\Model\ApiFacade\Refund;
 
 use Exception;
 use Magento\Payment\Model\InfoInterface;
+use tpaycom\magento2basic\Api\TpayConfigInterface;
 use tpaycom\magento2basic\Api\TpayInterface;
 use tpaycom\magento2basic\Model\ApiFacade\OpenApi;
 
@@ -21,7 +22,7 @@ class RefundApiFacade
     /** @var bool */
     private $useOpenApi;
 
-    public function __construct(TpayInterface $tpay)
+    public function __construct(TpayConfigInterface $tpay)
     {
         $this->tpay = $tpay;
         $this->createRefundOriginApiInstance($tpay);
@@ -45,7 +46,7 @@ class RefundApiFacade
         return $this->useOpenApi ? $this->openApi : $this->originApi;
     }
 
-    private function createRefundOriginApiInstance(TpayInterface $tpay)
+    private function createRefundOriginApiInstance(TpayConfigInterface $tpay)
     {
         try {
             $this->originApi = new RefundOriginApi($tpay);
@@ -54,7 +55,7 @@ class RefundApiFacade
         }
     }
 
-    private function createOpenApiInstance(TpayInterface $tpay)
+    private function createOpenApiInstance(TpayConfigInterface $tpay)
     {
         try {
             $this->openApi = new OpenApi($tpay);

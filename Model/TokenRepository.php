@@ -3,8 +3,8 @@
 namespace tpaycom\magento2basic\Model;
 
 use tpaycom\magento2basic\Model\Api\Data\TokensInterface;
-use tpaycom\magento2basic\Model\Api\TokenRepositoryInterface;
 use tpaycom\magento2basic\Model\TokenFactory;
+use tpaycom\magento2basic\Model\Api\TokenRepositoryInterface;
 use tpaycom\magento2basic\Model\ResourceModel\Token as TokenResourceModel;
 
 class TokenRepository implements TokenRepositoryInterface

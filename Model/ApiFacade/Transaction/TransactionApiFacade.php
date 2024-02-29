@@ -5,7 +5,7 @@ namespace tpaycom\magento2basic\Model\ApiFacade\Transaction;
 use Exception;
 use Magento\Framework\App\CacheInterface;
 use Tpay\OpenApi\Utilities\TpayException;
-use tpaycom\magento2basic\Api\TpayInterface;
+use tpaycom\magento2basic\Api\TpayConfigInterface;
 use tpaycom\magento2basic\Model\ApiFacade\OpenApi;
 use tpaycom\magento2basic\Model\ApiFacade\Transaction\Dto\Channel;
 
@@ -26,7 +26,7 @@ class TransactionApiFacade
     /** @var CacheInterface */
     private $cache;
 
-    public function __construct(TpayInterface $tpay, CacheInterface $cache)
+    public function __construct(TpayConfigInterface $tpay, CacheInterface $cache)
     {
         $this->createOriginApiInstance($tpay);
         $this->createOpenApiInstance($tpay);
@@ -112,7 +112,7 @@ class TransactionApiFacade
         return $this->useOpenApi ? $this->openApi : $this->originApi;
     }
 
-    private function createOriginApiInstance(TpayInterface $tpay)
+    private function createOriginApiInstance(TpayConfigInterface $tpay)
     {
         if (!$tpay->isOriginApiEnabled()) {
             $this->originApi = null;
@@ -127,7 +127,7 @@ class TransactionApiFacade
         }
     }
 
-    private function createOpenApiInstance(TpayInterface $tpay)
+    private function createOpenApiInstance(TpayConfigInterface $tpay)
     {
         if (!$tpay->isOpenApiEnabled()) {
             $this->openApi = null;

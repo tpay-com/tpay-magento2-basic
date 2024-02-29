@@ -3,7 +3,7 @@
 namespace tpaycom\magento2basic\Model\ApiFacade;
 
 use Magento\Payment\Model\InfoInterface;
-use tpaycom\magento2basic\Api\TpayInterface;
+use tpaycom\magento2basic\Api\TpayConfigInterface;
 use tpaycom\magento2basic\Model\ApiFacade\Transaction\Dto\Channel;
 use tpaySDK\Api\TpayApi;
 
@@ -12,7 +12,7 @@ class OpenApi
     /** @var TpayApi */
     private $tpayApi;
 
-    public function __construct(TpayInterface $tpay)
+    public function __construct(TpayConfigInterface $tpay)
     {
         $this->tpayApi = new TpayApi($tpay->getOpenApiClientId(), $tpay->getOpenApiPassword(), !$tpay->useSandboxMode());
         $this->tpayApi->authorization();

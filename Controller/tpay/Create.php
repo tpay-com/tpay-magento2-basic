@@ -8,10 +8,11 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\CacheInterface;
 use Magento\Framework\App\ResponseInterface;
 use Tpay\OriginApi\Utilities\Util;
+use tpaycom\magento2basic\Api\TpayConfigInterface;
 use tpaycom\magento2basic\Api\TpayInterface;
 use tpaycom\magento2basic\Model\ApiFacade\Transaction\TransactionApiFacade;
 use tpaycom\magento2basic\Model\ApiFacade\Transaction\TransactionOriginApi;
-use tpaycom\magento2basic\Model\Tpay;
+use tpaycom\magento2basic\Model\TpayPayment;
 use tpaycom\magento2basic\Service\TpayService;
 
 class Create extends Action
@@ -25,6 +26,9 @@ class Create extends Action
     /** @var TpayInterface */
     private $tpay;
 
+    /** @var TpayConfigInterface */
+    private $tpayConfig;
+
     /** @var TransactionApiFacade */
     private $transaction;
 
@@ -34,11 +38,13 @@ class Create extends Action
     public function __construct(
         Context $context,
         TpayInterface $tpayModel,
+        TpayConfigInterface $tpayConfig,
         TpayService $tpayService,
         Session $checkoutSession,
         CacheInterface $cache
     ) {
         $this->tpay = $tpayModel;
+        $this->tpayConfig = $tpayConfig;
         $this->tpayService = $tpayService;
         $this->checkoutSession = $checkoutSession;
         $this->cache = $cache;
@@ -54,10 +60,10 @@ class Create extends Action
         if ($orderId) {
             $payment = $this->tpayService->getPayment($orderId);
             $paymentData = $payment->getData();
-            $this->transaction = new TransactionApiFacade($this->tpay, $this->cache);
+            $this->transaction = new TransactionApiFacade($this->tpayConfig, $this->cache);
             $additionalPaymentInformation = $paymentData['additional_information'];
 
-            if (!$additionalPaymentInformation[Tpay::TERMS_ACCEPT]) {
+            if (!$additionalPaymentInformation[TpayPayment::TERMS_ACCEPT]) {
                 return $this->_redirect('magento2basic/tpay/error');
             }
 
@@ -72,13 +78,14 @@ class Create extends Action
             $this->tpayService->addCommentToHistory($orderId, 'Transaction title '.$transaction['title']);
             $transactionUrl = $transaction['url'];
 
-            if (true === $this->tpay->redirectToChannel()) {
+            if (true === $this->tpayConfig->redirectToChannel()) {
                 $transactionUrl = str_replace('gtitle', 'title', $transactionUrl);
             }
 
             $this->tpayService->addCommentToHistory($orderId, 'Transaction link '.$transactionUrl);
             $paymentData['additional_information']['transaction_url'] = $transactionUrl;
-            $payment->setData($paymentData)->save();
+            $payment->setData($paymentData);
+            $this->tpayService->saveOrderPayment($payment);
 
             if (6 === strlen($additionalPaymentInformation['blik_code'] ?? '') && $this->tpay->checkBlikLevel0Settings()) {
                 if (true === $this->transaction->isOpenApiUse()) {
@@ -134,13 +141,13 @@ class Create extends Action
             $data['group'] = (int) ($additionalPaymentInformation['group'] ?? null);
             $data['channel'] = (int) ($additionalPaymentInformation['channel'] ?? null);
 
-            if ($this->tpay->redirectToChannel()) {
+            if ($this->tpayConfig->redirectToChannel()) {
                 $data['direct'] = 1;
             }
         }
 
         $data = $this->transaction->originApiFieldCorrect($data);
-        $data = $this->transaction->translateGroupToChannel($data, $this->tpay->redirectToChannel());
+        $data = $this->transaction->translateGroupToChannel($data, $this->tpayConfig->redirectToChannel());
 
         if (isset($data['channel']) && $data['channel']) {
             return $this->transaction->createWithInstantRedirection($data);

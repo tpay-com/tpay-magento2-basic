@@ -14,7 +14,7 @@
             <tpaycom_magento2basic>
                 <order_status>pending_payment</order_status>
                 <active>1</active>
-                <model>tpaycom\magento2basic\Model\Tpay</model>
+                <model>tpaycom\magento2basic\Model\TpayPayment</model>
                 <title>tpay.com - szybkie płatności online</title>
                 <allowspecific>0</allowspecific>
                 <blik_level_zero>0</blik_level_zero>

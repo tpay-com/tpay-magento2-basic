@@ -3,6 +3,7 @@
 namespace tpaycom\magento2basic\Model\ApiFacade\TpayConfig;
 
 use Magento\Framework\View\Asset\Repository;
+use tpaycom\magento2basic\Api\TpayConfigInterface;
 use tpaycom\magento2basic\Api\TpayInterface;
 use tpaycom\magento2basic\Model\ApiFacade\Transaction\TransactionOriginApi;
 use tpaycom\magento2basic\Service\TpayTokensService;
@@ -16,15 +17,19 @@ class ConfigOpen extends TpayApi
     /** @var TpayInterface */
     private $tpay;
 
+    /** @var TpayConfigInterface */
+    private $tpayConfig;
+
     /** @var Repository */
     private $assetRepository;
 
-    public function __construct(TpayInterface $tpay, Repository $assetRepository, TpayTokensService $tokensService)
+    public function __construct(TpayInterface $tpay, TpayConfigInterface $tpayConfig, Repository $assetRepository, TpayTokensService $tokensService)
     {
         $this->tpay = $tpay;
+        $this->tpayConfig = $tpayConfig;
         $this->assetRepository = $assetRepository;
         $this->tokensService = $tokensService;
-        parent::__construct($tpay->getOpenApiClientId(), $tpay->getOpenApiPassword(), !$tpay->useSandboxMode());
+        parent::__construct($tpayConfig->getOpenApiClientId(), $tpayConfig->getOpenApiPassword(), !$tpayConfig->useSandboxMode());
     }
 
     public function getConfig(): array
@@ -40,9 +45,9 @@ class ConfigOpen extends TpayApi
                     'addCSS' => $this->createCSS('tpaycom_magento2basic::css/tpay.css'),
                     'blikStatus' => $this->tpay->checkBlikLevel0Settings(),
                     'getBlikChannelID' => TransactionOriginApi::BLIK_CHANNEL,
-                    'useSandbox' => $this->tpay->useSandboxMode(),
+                    'useSandbox' => $this->tpayConfig->useSandboxMode(),
                     'grandTotal' => number_format($this->tpay->getCheckoutTotal(), 2, '.', ''),
-                    'groups' => $this->transactions()->getBankGroups((bool) $this->tpay->onlyOnlineChannels())['groups'],
+                    'groups' => $this->transactions()->getBankGroups((bool) $this->tpayConfig->onlyOnlineChannels())['groups'],
                 ],
             ],
         ];
@@ -87,7 +92,7 @@ class ConfigOpen extends TpayApi
     {
         $customerTokensData = [];
 
-        if ($this->tpay->getCardSaveEnabled() && $this->tpay->isCustomerLoggedIn()) {
+        if ($this->tpayConfig->getCardSaveEnabled() && $this->tpay->isCustomerLoggedIn()) {
             $customerTokens = $this->tokensService->getCustomerTokens($this->tpay->getCheckoutCustomerId(), true);
             foreach ($customerTokens as $value) {
                 $customerTokensData[] = [
@@ -104,13 +109,13 @@ class ConfigOpen extends TpayApi
                     'tpayLogoUrl' => $this->generateURL('tpaycom_magento2basic::images/logo_tpay.png'),
                     'tpayCardsLogoUrl' => $this->generateURL('tpaycom_magento2basic::images/card.svg'),
                     'getTpayLoadingGif' => $this->generateURL('tpaycom_magento2basic::images/loading.gif'),
-                    'getRSAkey' => $this->tpay->getRSAKey(),
+                    'getRSAkey' => $this->tpayConfig->getRSAKey(),
                     'fetchJavaScripts' => $this->fetchJavaScripts(),
                     'addCSS' => $this->createCSS('tpaycom_magento2basic::css/tpaycards.css'),
                     'redirectUrl' => $this->tpay->getPaymentRedirectUrl(),
                     'isCustomerLoggedIn' => $this->tpay->isCustomerLoggedIn(),
                     'customerTokens' => $customerTokensData,
-                    'isSavingEnabled' => $this->tpay->getCardSaveEnabled(),
+                    'isSavingEnabled' => $this->tpayConfig->getCardSaveEnabled(),
                 ],
             ],
         ];

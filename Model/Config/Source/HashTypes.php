@@ -2,9 +2,9 @@
 
 namespace tpaycom\magento2basic\Model\Config\Source;
 
-use Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Data\OptionSourceInterface;
 
-class HashTypes implements ArrayInterface
+class HashTypes implements OptionSourceInterface
 {
     public function toOptionArray()
     {

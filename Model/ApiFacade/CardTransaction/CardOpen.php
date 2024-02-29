@@ -3,6 +3,7 @@
 namespace tpaycom\magento2basic\Model\ApiFacade\CardTransaction;
 
 use Exception;
+use tpaycom\magento2basic\Api\TpayConfigInterface;
 use tpaycom\magento2basic\Api\TpayInterface;
 use tpaycom\magento2basic\Service\TpayService;
 use tpaycom\magento2basic\Service\TpayTokensService;
@@ -22,14 +23,18 @@ class CardOpen
     /** @var TpayApi */
     private $tpayApi;
 
+    /** @var TpayConfigInterface */
+    private $tpayConfig;
+
     private $tpayPaymentConfig;
 
-    public function __construct(TpayInterface $tpay, TpayTokensService $tokensService, TpayService $tpayService)
+    public function __construct(TpayInterface $tpay, TpayConfigInterface $tpayConfig, TpayTokensService $tokensService, TpayService $tpayService)
     {
         $this->tpay = $tpay;
+        $this->tpayConfig = $tpayConfig;
         $this->tokensService = $tokensService;
         $this->tpayService = $tpayService;
-        $this->tpayApi = new TpayApi($tpay->getOpenApiClientId(), $tpay->getOpenApiPassword(), !$tpay->useSandboxMode());
+        $this->tpayApi = new TpayApi($tpayConfig->getOpenApiClientId(), $tpayConfig->getOpenApiPassword(), !$tpayConfig->useSandboxMode());
         $versions = $this->getPackagesVersions();
         $this->tpayApi->authorization()->setClientName(implode(
             '|',
@@ -52,7 +57,7 @@ class CardOpen
 
         $this->tpayPaymentConfig = $this->tpay->getTpayFormData($orderId);
 
-        if (isset($additionalPaymentInformation['card_id']) && false !== $additionalPaymentInformation['card_id'] && $this->tpay->getCardSaveEnabled()) {
+        if (isset($additionalPaymentInformation['card_id']) && false !== $additionalPaymentInformation['card_id'] && $this->tpayConfig->getCardSaveEnabled()) {
             $cardId = (int) $additionalPaymentInformation['card_id'];
 
             return $this->processSavedCardPayment($orderId, $cardId);
@@ -67,7 +72,7 @@ class CardOpen
 
         if ($customerToken) {
             try {
-                $transaction = $this->tpayApi->Transactions->createTransaction($this->handleDataStructure());
+                $transaction = $this->tpayApi->transactions()->createTransaction($this->handleDataStructure());
 
                 $request = [
                     'groupId' => 103,
@@ -77,10 +82,10 @@ class CardOpen
                     'method' => 'sale',
                 ];
 
-                $result = $this->tpayApi->Transactions->createPaymentByTransactionId($request, $transaction['transactionId']);
+                $result = $this->tpayApi->transactions()->createPaymentByTransactionId($request, $transaction['transactionId']);
 
                 if ('success' === $result['result'] && isset($result['payments']['status']) && 'correct' === $result['payments']['status']) {
-                    $this->tpayService->setCardOrderStatus($orderId, $this->handleValidParams($result), $this->tpay);
+                    $this->tpayService->setCardOrderStatus($orderId, $this->handleValidParams($result), $this->tpayConfig);
                     $this->tpayService->addCommentToHistory($orderId, 'Successful payment by saved card');
 
                     return 'magento2basic/tpay/success';
@@ -108,14 +113,15 @@ class CardOpen
         $payment = $this->tpayService->getPayment($orderId);
         $paymentData = $payment->getData();
         $paymentData['additional_information'][$key] = $value;
-        $payment->setData($paymentData)->save();
+        $payment->setData($paymentData);
+        $this->tpayService->saveOrderPayment($payment);
     }
 
     private function processNewCardPayment(string $orderId, array $additionalPaymentInformation): string
     {
-        $saveCard = isset($additionalPaymentInformation['card_save']) && $this->tpay->getCardSaveEnabled() ? (bool) $additionalPaymentInformation['card_save'] : false;
+        $saveCard = isset($additionalPaymentInformation['card_save']) && $this->tpayConfig->getCardSaveEnabled() ? (bool) $additionalPaymentInformation['card_save'] : false;
         try {
-            $transaction = $this->tpayApi->Transactions->createTransaction($this->handleDataStructure());
+            $transaction = $this->tpayApi->transactions()->createTransaction($this->handleDataStructure());
             $request = [
                 'groupId' => 103,
                 'cardPaymentData' => [
@@ -124,8 +130,8 @@ class CardOpen
                 ],
                 'method' => 'pay_by_link',
             ];
-            $result = $this->tpayApi->Transactions->createPaymentByTransactionId($request, $transaction['transactionId']);
-            $this->tpayService->setCardOrderStatus($orderId, $this->handleValidParams($result), $this->tpay);
+            $result = $this->tpayApi->transactions()->createPaymentByTransactionId($request, $transaction['transactionId']);
+            $this->tpayService->setCardOrderStatus($orderId, $this->handleValidParams($result), $this->tpayConfig);
         } catch (Exception $e) {
             return 'magento2basic/tpay/error';
         }
