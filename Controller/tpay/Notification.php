@@ -9,7 +9,6 @@ use Laminas\Http\Response;
 use Magento\Framework\App\CsrfAwareActionInterface;
 use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Framework\App\RequestInterface;
-use Magento\Framework\Controller\ResultInterface;
 use Magento\Sales\Model\Order;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
@@ -46,24 +45,26 @@ class Notification implements CsrfAwareActionInterface
         Util::$loggingEnabled = false;
     }
 
-    public function execute(): ResultInterface
+    public function execute(): ?Response
     {
-        return $this->getNotification();
+        $response = null;
+
+        foreach ($this->storeManager->getStores() as $store) {
+            $response = $this->extractNotification($store);
+
+            if ($response->getStatusCode() === Response::STATUS_CODE_200) {
+                break;
+            }
+        }
+
+        return $response;
     }
 
-    /**
-     * Create exception in case CSRF validation failed.
-     * Return null if default exception will suffice.
-     */
     public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
     {
         return null;
     }
 
-    /**
-     * Perform custom request validation.
-     * Return null if default validation is needed.
-     */
     public function validateForCsrf(RequestInterface $request): ?bool
     {
         return true;
@@ -72,9 +73,7 @@ class Notification implements CsrfAwareActionInterface
     /**
      * Check if the order has been canceled and get response to Tpay server.
      *
-     * @return string response for Tpay server
      * @throws Exception
-     *
      */
     protected function getPaidTransactionResponse(string $orderId): string
     {
@@ -97,29 +96,17 @@ class Notification implements CsrfAwareActionInterface
 
         if (isset($notification['card_token']) && !$this->tpay->isCustomerGuest($orderId)) {
             $token = $this->tokensService->getWithoutAuthCustomerTokens(
-                (int) $order->getCustomerId(),
+                $order->getCustomerId(),
                 $notification['tr_crc']
             );
+
             if (!empty($token)) {
                 $this->tokensService->updateTokenById((int) $token['tokenId'], $notification['card_token']);
             }
         }
     }
 
-    private function getNotification()
-    {
-        $returnData = null;
-        foreach ($this->storeManager->getStores() as $store) {
-            [$returnData, $isPassed] = $this->extractNotification($store);
-            if ($isPassed) {
-                break;
-            }
-        }
-
-        return $returnData;
-    }
-
-    private function extractNotification(StoreInterface $store): array
+    private function extractNotification(StoreInterface $store): Response
     {
         $storeId = $store->getStoreId();
 
@@ -134,16 +121,13 @@ class Notification implements CsrfAwareActionInterface
             if ('PAID' === $notification['tr_status']) {
                 $response = $this->getPaidTransactionResponse($orderId);
 
-                $returnData = (new Response())->setStatusCode(Response::STATUS_CODE_200)->setContent($response);
-
-                return [$returnData, true];
+                return (new Response())->setStatusCode(Response::STATUS_CODE_200)->setContent($response);
             }
 
             $this->saveCard($notification, $orderId);
             $this->tpayService->SetOrderStatus($orderId, $notification, $this->tpay);
 
-            $returnData = (new Response())->setStatusCode(Response::STATUS_CODE_200)->setContent('TRUE');
-            $isPassed = true;
+            return (new Response())->setStatusCode(Response::STATUS_CODE_200)->setContent('TRUE');
         } catch (Exception $e) {
             Util::log(
                 'Notification exception',
@@ -156,10 +140,7 @@ class Notification implements CsrfAwareActionInterface
                 )
             );
 
-            $returnData = (new Response())->setStatusCode(Response::STATUS_CODE_200)->setContent('FALSE');
-            $isPassed = false;
+            return (new Response())->setStatusCode(Response::STATUS_CODE_400)->setContent('FALSE');
         }
-
-        return [$returnData, $isPassed];
     }
 }
