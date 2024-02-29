@@ -52,7 +52,7 @@ class Notification implements CsrfAwareActionInterface
         foreach ($this->storeManager->getStores() as $store) {
             $response = $this->extractNotification($store);
 
-            if ($response->getStatusCode() === Response::STATUS_CODE_200) {
+            if (Response::STATUS_CODE_200 === $response->getStatusCode()) {
                 break;
             }
         }
