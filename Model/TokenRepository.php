@@ -6,6 +6,7 @@ use TpayCom\Magento2Basic\Model\Api\Data\TokensInterface;
 use TpayCom\Magento2Basic\Model\Api\TokenRepositoryInterface;
 use TpayCom\Magento2Basic\Model\ResourceModel\Token as TokenResourceModel;
 
+/** @throws \Exception */
 class TokenRepository implements TokenRepositoryInterface
 {
     private $tokenFactory;
