@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace tpaycom\magento2basic\Model;
+namespace TpayCom\Magento2Basic\Model;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Framework\View\Asset\Repository;
 use Magento\Payment\Helper\Data as PaymentHelper;
 use Magento\Store\Model\StoreManagerInterface;
-use tpaycom\magento2basic\Api\TpayConfigInterface;
-use tpaycom\magento2basic\Api\TpayInterface;
-use tpaycom\magento2basic\Model\ApiFacade\TpayConfig\ConfigFacade;
-use tpaycom\magento2basic\Model\ApiFacade\Transaction\TransactionApiFacade;
-use tpaycom\magento2basic\Service\TpayTokensService;
+use TpayCom\Magento2Basic\Api\TpayConfigInterface;
+use TpayCom\Magento2Basic\Api\TpayInterface;
+use TpayCom\Magento2Basic\Model\ApiFacade\TpayConfig\ConfigFacade;
+use TpayCom\Magento2Basic\Model\ApiFacade\Transaction\TransactionApiFacade;
+use TpayCom\Magento2Basic\Service\TpayTokensService;
 
 class TpayConfigProvider implements ConfigProviderInterface
 {

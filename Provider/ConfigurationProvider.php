@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace tpaycom\magento2basic\Provider;
+namespace TpayCom\Magento2Basic\Provider;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ObjectManager;
 use Magento\Store\Model\ScopeInterface;
-use tpaycom\magento2basic\Api\TpayConfigInterface;
+use TpayCom\Magento2Basic\Api\TpayConfigInterface;
 
 class ConfigurationProvider implements TpayConfigInterface
 {

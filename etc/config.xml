@@ -11,10 +11,10 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
     <default>
         <payment>
-            <tpaycom_magento2basic>
+            <TpayCom_Magento2Basic>
                 <order_status>pending_payment</order_status>
                 <active>1</active>
-                <model>tpaycom\magento2basic\Model\TpayPayment</model>
+                <model>TpayCom\Magento2Basic\Model\TpayPayment</model>
                 <title>tpay.com - szybkie płatności online</title>
                 <allowspecific>0</allowspecific>
                 <blik_level_zero>0</blik_level_zero>
@@ -28,7 +28,7 @@
                 <can_cancel>1</can_cancel>
                 <currency>PLN</currency>
                 <use_sandbox>0</use_sandbox>
-            </tpaycom_magento2basic>
+            </TpayCom_Magento2Basic>
         </payment>
         <csp>
             <mode>

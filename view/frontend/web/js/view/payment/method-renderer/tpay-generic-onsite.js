@@ -15,7 +15,7 @@ define(
 
         return Component.extend({
             defaults: {
-                template: 'tpaycom_magento2basic/payment/tpay-generic-onsite'
+                template: 'TpayCom_Magento2Basic/payment/tpay-generic-onsite'
             },
 
             afterPlaceOrder: function () {

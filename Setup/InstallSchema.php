@@ -1,6 +1,6 @@
 <?php
 
-namespace tpaycom\magento2basic\Setup;
+namespace TpayCom\Magento2Basic\Setup;
 
 use Magento\Framework\DB\Ddl\Table;
 use Magento\Framework\Setup\InstallSchemaInterface;

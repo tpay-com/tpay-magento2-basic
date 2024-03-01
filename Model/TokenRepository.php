@@ -1,10 +1,10 @@
 <?php
 
-namespace tpaycom\magento2basic\Model;
+namespace TpayCom\Magento2Basic\Model;
 
-use tpaycom\magento2basic\Model\Api\Data\TokensInterface;
-use tpaycom\magento2basic\Model\Api\TokenRepositoryInterface;
-use tpaycom\magento2basic\Model\ResourceModel\Token as TokenResourceModel;
+use TpayCom\Magento2Basic\Model\Api\Data\TokensInterface;
+use TpayCom\Magento2Basic\Model\Api\TokenRepositoryInterface;
+use TpayCom\Magento2Basic\Model\ResourceModel\Token as TokenResourceModel;
 
 class TokenRepository implements TokenRepositoryInterface
 {

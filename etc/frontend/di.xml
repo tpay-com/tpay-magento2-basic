@@ -13,7 +13,7 @@
     <type name="Magento\Checkout\Model\CompositeConfigProvider">
         <arguments>
             <argument name="configProviders" xsi:type="array">
-                <item name="tpay_payment_config_provider" xsi:type="object">tpaycom\magento2basic\Model\TpayConfigProvider</item>
+                <item name="tpay_payment_config_provider" xsi:type="object">TpayCom\Magento2Basic\Model\TpayConfigProvider</item>
             </argument>
         </arguments>
     </type>

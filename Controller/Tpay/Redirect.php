@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace tpaycom\magento2basic\Controller\tpay;
+namespace TpayCom\Magento2Basic\Controller\Tpay;
 
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
-use tpaycom\magento2basic\Api\TpayInterface;
-use tpaycom\magento2basic\Service\TpayService;
+use TpayCom\Magento2Basic\Api\TpayInterface;
+use TpayCom\Magento2Basic\Service\TpayService;
 
 class Redirect extends Action
 {

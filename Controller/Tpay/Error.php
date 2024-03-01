@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace tpaycom\magento2basic\Controller\tpay;
+namespace TpayCom\Magento2Basic\Controller\Tpay;
 
 use Magento\Framework\App\Action\Action;
 

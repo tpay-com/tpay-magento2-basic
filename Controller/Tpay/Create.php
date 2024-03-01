@@ -1,6 +1,6 @@
 <?php
 
-namespace tpaycom\magento2basic\Controller\tpay;
+namespace TpayCom\Magento2Basic\Controller\Tpay;
 
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
@@ -8,12 +8,12 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\CacheInterface;
 use Magento\Framework\App\ResponseInterface;
 use Tpay\OriginApi\Utilities\Util;
-use tpaycom\magento2basic\Api\TpayConfigInterface;
-use tpaycom\magento2basic\Api\TpayInterface;
-use tpaycom\magento2basic\Model\ApiFacade\Transaction\TransactionApiFacade;
-use tpaycom\magento2basic\Model\ApiFacade\Transaction\TransactionOriginApi;
-use tpaycom\magento2basic\Model\TpayPayment;
-use tpaycom\magento2basic\Service\TpayService;
+use TpayCom\Magento2Basic\Api\TpayConfigInterface;
+use TpayCom\Magento2Basic\Api\TpayInterface;
+use TpayCom\Magento2Basic\Model\ApiFacade\Transaction\TransactionApiFacade;
+use TpayCom\Magento2Basic\Model\ApiFacade\Transaction\TransactionOriginApi;
+use TpayCom\Magento2Basic\Model\TpayPayment;
+use TpayCom\Magento2Basic\Service\TpayService;
 
 class Create extends Action
 {

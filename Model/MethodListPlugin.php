@@ -1,6 +1,6 @@
 <?php
 
-namespace tpaycom\magento2basic\Model;
+namespace TpayCom\Magento2Basic\Model;
 
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Config\ScopeConfigInterface;
@@ -9,10 +9,10 @@ use Magento\Payment\Model\MethodInterface;
 use Magento\Payment\Model\MethodList;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
-use tpaycom\magento2basic\Api\TpayConfigInterface;
-use tpaycom\magento2basic\Api\TpayInterface;
-use tpaycom\magento2basic\Model\ApiFacade\Transaction\TransactionApiFacade;
-use tpaycom\magento2basic\Model\Config\Source\OnsiteChannels;
+use TpayCom\Magento2Basic\Api\TpayConfigInterface;
+use TpayCom\Magento2Basic\Api\TpayInterface;
+use TpayCom\Magento2Basic\Model\ApiFacade\Transaction\TransactionApiFacade;
+use TpayCom\Magento2Basic\Model\Config\Source\OnsiteChannels;
 
 class MethodListPlugin
 {
@@ -117,7 +117,7 @@ class MethodListPlugin
     private function addCardMethod(array $result): array
     {
         if ($this->tpayConfig->isCardEnabled()) {
-            $result[] = $this->getMethodInstance($this->tpayConfig->getCardTitle(), 'tpaycom_magento2basic_cards');
+            $result[] = $this->getMethodInstance($this->tpayConfig->getCardTitle(), 'TpayCom_Magento2Basic_Cards');
         }
 
         return $result;
@@ -130,7 +130,7 @@ class MethodListPlugin
         }
 
         return array_filter($result, function ($method) {
-            return 'tpaycom_magento2basic' !== $method->getCode();
+            return 'TpayCom_Magento2Basic' !== $method->getCode();
         });
     }
 

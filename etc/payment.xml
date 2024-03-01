@@ -10,10 +10,10 @@
 -->
 <payment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Payment:etc/payment.xsd">
     <methods>
-        <method name="tpaycom_magento2basic">
+        <method name="TpayCom_Magento2Basic">
             <allow_multiple_address>1</allow_multiple_address>
         </method>
-        <method name="tpaycom_magento2basic_cards">
+        <method name="TpayCom_Magento2Basic_Cards">
             <allow_multiple_address>1</allow_multiple_address>
         </method>
         <method name="generic">

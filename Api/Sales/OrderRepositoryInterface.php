@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace tpaycom\magento2basic\Api\Sales;
+namespace TpayCom\Magento2Basic\Api\Sales;
 
 use Magento\Sales\Api\OrderRepositoryInterface as MagentoOrderRepositoryInterface;
 

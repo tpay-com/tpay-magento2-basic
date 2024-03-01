@@ -1,6 +1,6 @@
 <?php
 
-namespace tpaycom\magento2basic\Setup;
+namespace TpayCom\Magento2Basic\Setup;
 
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;

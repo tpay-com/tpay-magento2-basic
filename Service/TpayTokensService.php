@@ -1,10 +1,10 @@
 <?php
 
-namespace tpaycom\magento2basic\Service;
+namespace TpayCom\Magento2Basic\Service;
 
 use Magento\Framework\App\ResourceConnection;
-use tpaycom\magento2basic\Model\Api\TokenRepositoryInterface;
-use tpaycom\magento2basic\Model\ResourceModel\Token\Collection;
+use TpayCom\Magento2Basic\Model\Api\TokenRepositoryInterface;
+use TpayCom\Magento2Basic\Model\ResourceModel\Token\Collection;
 use Zend_Db_Expr;
 
 class TpayTokensService

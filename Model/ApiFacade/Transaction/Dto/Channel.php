@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace tpaycom\magento2basic\Model\ApiFacade\Transaction\Dto;
+namespace TpayCom\Magento2Basic\Model\ApiFacade\Transaction\Dto;
 
 class Channel
 {

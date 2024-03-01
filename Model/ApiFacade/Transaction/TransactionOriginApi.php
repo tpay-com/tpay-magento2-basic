@@ -1,6 +1,6 @@
 <?php
 
-namespace tpaycom\magento2basic\Model\ApiFacade\Transaction;
+namespace TpayCom\Magento2Basic\Model\ApiFacade\Transaction;
 
 use Tpay\OriginApi\PaymentBlik;
 

@@ -1,18 +1,18 @@
 <?php
 
-namespace tpaycom\magento2basic\Controller\tpay;
+namespace TpayCom\Magento2Basic\Controller\Tpay;
 
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Store\Model\StoreManagerInterface;
 use Tpay\OriginApi\Utilities\Util;
-use tpaycom\magento2basic\Api\TpayConfigInterface;
-use tpaycom\magento2basic\Api\TpayInterface;
-use tpaycom\magento2basic\Model\ApiFacade\CardTransaction\CardApiFacade;
-use tpaycom\magento2basic\Model\TpayPayment;
-use tpaycom\magento2basic\Service\TpayService;
-use tpaycom\magento2basic\Service\TpayTokensService;
+use TpayCom\Magento2Basic\Api\TpayConfigInterface;
+use TpayCom\Magento2Basic\Api\TpayInterface;
+use TpayCom\Magento2Basic\Model\ApiFacade\CardTransaction\CardApiFacade;
+use TpayCom\Magento2Basic\Model\TpayPayment;
+use TpayCom\Magento2Basic\Service\TpayService;
+use TpayCom\Magento2Basic\Service\TpayTokensService;
 
 class CardPayment extends Action
 {

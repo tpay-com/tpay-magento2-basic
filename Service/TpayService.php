@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace tpaycom\magento2basic\Service;
+namespace TpayCom\Magento2Basic\Service;
 
 use Exception;
 use Magento\Framework\Event\ManagerInterface as EventManagerInterface;
@@ -18,8 +18,8 @@ use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface;
 use Magento\Sales\Model\Order\Payment\Transaction\ManagerInterface;
 use Magento\Sales\Model\Service\InvoiceService;
-use tpaycom\magento2basic\Api\Sales\OrderRepositoryInterface;
-use tpaycom\magento2basic\Api\TpayConfigInterface;
+use TpayCom\Magento2Basic\Api\Sales\OrderRepositoryInterface;
+use TpayCom\Magento2Basic\Api\TpayConfigInterface;
 use tpayLibs\src\Dictionaries\ISO_codes\CurrencyCodesDictionary;
 
 class TpayService extends RegisterCaptureNotificationOperation

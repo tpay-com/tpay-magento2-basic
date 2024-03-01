@@ -1,12 +1,12 @@
 <?php
 
-namespace tpaycom\magento2basic\Model\ApiFacade\TpayConfig;
+namespace TpayCom\Magento2Basic\Model\ApiFacade\TpayConfig;
 
 use Magento\Framework\View\Asset\Repository;
-use tpaycom\magento2basic\Api\TpayConfigInterface;
-use tpaycom\magento2basic\Api\TpayInterface;
-use tpaycom\magento2basic\Model\ApiFacade\Transaction\TransactionOriginApi;
-use tpaycom\magento2basic\Service\TpayTokensService;
+use TpayCom\Magento2Basic\Api\TpayConfigInterface;
+use TpayCom\Magento2Basic\Api\TpayInterface;
+use TpayCom\Magento2Basic\Model\ApiFacade\Transaction\TransactionOriginApi;
+use TpayCom\Magento2Basic\Service\TpayTokensService;
 
 class ConfigOrigin
 {
@@ -36,12 +36,12 @@ class ConfigOrigin
             'tpay' => [
                 'payment' => [
                     'redirectUrl' => $this->tpay->getPaymentRedirectUrl(),
-                    'tpayLogoUrl' => $this->generateURL('tpaycom_magento2basic::images/logo_tpay.png'),
-                    'tpayCardsLogoUrl' => $this->generateURL('tpaycom_magento2basic::images/card.svg'),
+                    'tpayLogoUrl' => $this->generateURL('TpayCom_Magento2Basic::images/logo_tpay.png'),
+                    'tpayCardsLogoUrl' => $this->generateURL('TpayCom_Magento2Basic::images/card.svg'),
                     'merchantId' => $this->tpayConfig->getMerchantId(),
                     'showPaymentChannels' => $this->showChannels(),
                     'getTerms' => $this->getTerms(),
-                    'addCSS' => $this->createCSS('tpaycom_magento2basic::css/tpay.css'),
+                    'addCSS' => $this->createCSS('TpayCom_Magento2Basic::css/tpay.css'),
                     'blikStatus' => $this->tpay->checkBlikLevel0Settings(),
                     'onlyOnlineChannels' => $this->tpayConfig->onlyOnlineChannels(),
                     'getBlikChannelID' => TransactionOriginApi::BLIK_CHANNEL,
@@ -63,7 +63,7 @@ class ConfigOrigin
 
     public function showChannels(): ?string
     {
-        $script = 'tpaycom_magento2basic::js/render_channels.js';
+        $script = 'TpayCom_Magento2Basic::js/render_channels.js';
 
         return $this->createScript($script);
     }
@@ -106,12 +106,12 @@ class ConfigOrigin
         return [
             'tpaycards' => [
                 'payment' => [
-                    'tpayLogoUrl' => $this->generateURL('tpaycom_magento2basic::images/logo_tpay.png'),
-                    'tpayCardsLogoUrl' => $this->generateURL('tpaycom_magento2basic::images/card.svg'),
-                    'getTpayLoadingGif' => $this->generateURL('tpaycom_magento2basic::images/loading.gif'),
+                    'tpayLogoUrl' => $this->generateURL('TpayCom_Magento2Basic::images/logo_tpay.png'),
+                    'tpayCardsLogoUrl' => $this->generateURL('TpayCom_Magento2Basic::images/card.svg'),
+                    'getTpayLoadingGif' => $this->generateURL('TpayCom_Magento2Basic::images/loading.gif'),
                     'getRSAkey' => $this->tpayConfig->getRSAKey(),
                     'fetchJavaScripts' => $this->fetchJavaScripts(),
-                    'addCSS' => $this->createCSS('tpaycom_magento2basic::css/tpaycards.css'),
+                    'addCSS' => $this->createCSS('TpayCom_Magento2Basic::css/tpaycards.css'),
                     'redirectUrl' => $this->tpay->getPaymentRedirectUrl(),
                     'isCustomerLoggedIn' => $this->tpay->isCustomerLoggedIn(),
                     'customerTokens' => $customerTokensData,
@@ -124,11 +124,11 @@ class ConfigOrigin
     private function fetchJavaScripts(): string
     {
         $script = [];
-        $script[] = 'tpaycom_magento2basic::js/jquery.payment.min.js';
-        $script[] = 'tpaycom_magento2basic::js/jsencrypt.min.js';
-        $script[] = 'tpaycom_magento2basic::js/string_routines.js';
-        $script[] = 'tpaycom_magento2basic::js/tpayCards.js';
-        $script[] = 'tpaycom_magento2basic::js/renderSavedCards.js';
+        $script[] = 'TpayCom_Magento2Basic::js/jquery.payment.min.js';
+        $script[] = 'TpayCom_Magento2Basic::js/jsencrypt.min.js';
+        $script[] = 'TpayCom_Magento2Basic::js/string_routines.js';
+        $script[] = 'TpayCom_Magento2Basic::js/tpayCards.js';
+        $script[] = 'TpayCom_Magento2Basic::js/renderSavedCards.js';
         $scripts = '';
         foreach ($script as $value) {
             $scripts .= $this->createScript($value);

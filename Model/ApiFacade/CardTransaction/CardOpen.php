@@ -1,12 +1,12 @@
 <?php
 
-namespace tpaycom\magento2basic\Model\ApiFacade\CardTransaction;
+namespace TpayCom\Magento2Basic\Model\ApiFacade\CardTransaction;
 
 use Exception;
-use tpaycom\magento2basic\Api\TpayConfigInterface;
-use tpaycom\magento2basic\Api\TpayInterface;
-use tpaycom\magento2basic\Service\TpayService;
-use tpaycom\magento2basic\Service\TpayTokensService;
+use TpayCom\Magento2Basic\Api\TpayConfigInterface;
+use TpayCom\Magento2Basic\Api\TpayInterface;
+use TpayCom\Magento2Basic\Service\TpayService;
+use TpayCom\Magento2Basic\Service\TpayTokensService;
 use tpaySDK\Api\TpayApi;
 
 class CardOpen

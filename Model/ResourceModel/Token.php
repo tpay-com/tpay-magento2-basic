@@ -1,6 +1,6 @@
 <?php
 
-namespace tpaycom\magento2basic\Model\ResourceModel;
+namespace TpayCom\Magento2Basic\Model\ResourceModel;
 
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 

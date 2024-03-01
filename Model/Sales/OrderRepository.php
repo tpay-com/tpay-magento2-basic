@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace tpaycom\magento2basic\Model\Sales;
+namespace TpayCom\Magento2Basic\Model\Sales;
 
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\OrderRepository as MagentoOrderRepository;
-use tpaycom\magento2basic\Api\Sales\OrderRepositoryInterface;
+use TpayCom\Magento2Basic\Api\Sales\OrderRepositoryInterface;
 
 class OrderRepository extends MagentoOrderRepository implements OrderRepositoryInterface
 {

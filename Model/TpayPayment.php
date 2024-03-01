@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace tpaycom\magento2basic\Model;
+namespace TpayCom\Magento2Basic\Model;
 
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\ObjectManager;
@@ -24,10 +24,10 @@ use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Store\Model\StoreManager;
 use Psr\Log\LoggerInterface;
 use Tpay\OriginApi\Validators\FieldsValidator;
-use tpaycom\magento2basic\Api\Sales\OrderRepositoryInterface;
-use tpaycom\magento2basic\Api\TpayInterface;
-use tpaycom\magento2basic\Model\ApiFacade\Refund\RefundApiFacade;
-use tpaycom\magento2basic\Provider\ConfigurationProvider;
+use TpayCom\Magento2Basic\Api\Sales\OrderRepositoryInterface;
+use TpayCom\Magento2Basic\Api\TpayInterface;
+use TpayCom\Magento2Basic\Model\ApiFacade\Refund\RefundApiFacade;
+use TpayCom\Magento2Basic\Provider\ConfigurationProvider;
 
 class TpayPayment extends Adapter implements TpayInterface
 {

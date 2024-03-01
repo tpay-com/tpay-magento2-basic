@@ -75,7 +75,7 @@
                         <label>Signalize payment</label>
                         <comment>Select the payment methods that you want to be displayed separately</comment>
                         <can_be_empty>1</can_be_empty>
-                        <source_model>tpaycom\magento2basic\Model\Config\Source\OnsiteChannels</source_model>
+                        <source_model>TpayCom\Magento2Basic\Model\Config\Source\OnsiteChannels</source_model>
                         <depends><field id="open_api_active">1</field></depends>
                     </field>
                 </group>
@@ -111,7 +111,7 @@
                         <field id="hash_type" translate="label" type="select" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
                             <label>Digest algorithm</label>
                             <comment>Find in Merchant’s panel: Credit cards payment -> API</comment>
-                            <source_model>tpaycom\magento2basic\Model\Config\Source\HashTypes</source_model>
+                            <source_model>TpayCom\Magento2Basic\Model\Config\Source\HashTypes</source_model>
                         </field>
                         <field id="verification_code" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
                             <label>Verification code</label>
