@@ -2,17 +2,16 @@
 
 namespace TpayCom\Magento2Basic\Model;
 
-use Exception;
 use TpayCom\Magento2Basic\Model\Api\Data\TokensInterface;
 use TpayCom\Magento2Basic\Model\Api\TokenRepositoryInterface;
 use TpayCom\Magento2Basic\Model\ResourceModel\Token as TokenResourceModel;
 
-/** @throws Exception */
 class TokenRepository implements TokenRepositoryInterface
 {
     private $tokenFactory;
     private $tokenResourceModel;
 
+    /** @phpstan-ignore-next-line */
     public function __construct(TokenFactory $tokenFactory, TokenResourceModel $tokenResourceModel)
     {
         $this->tokenResourceModel = $tokenResourceModel;
