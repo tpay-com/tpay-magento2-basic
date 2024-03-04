@@ -18,7 +18,7 @@
     },
     "autoload": {
         "psr-4": {
-            "tpaycom\\magento2basic\\": ""
+            "TpayCom\\Magento2Basic\\": ""
         },
         "files": [
             "registration.php"
