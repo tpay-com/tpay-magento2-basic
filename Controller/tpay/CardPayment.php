@@ -3,20 +3,14 @@
 namespace tpaycom\magento2basic\Controller\tpay;
 
 use Magento\Checkout\Model\Session;
-use Magento\Framework\App\Action\Action;
-use Magento\Framework\App\Action\Context;
-use Magento\Framework\App\ResourceConnection;
-use Magento\Framework\Model\Context as ModelContext;
-use Magento\Framework\Registry;
-use Magento\Store\Model\StoreManagerInterface;
+use Magento\Framework\App\ActionInterface;
+use Magento\Framework\Controller\Result\RedirectFactory;
 use Tpay\OriginApi\Utilities\Util;
 use tpaycom\magento2basic\Api\TpayInterface;
 use tpaycom\magento2basic\Model\ApiFacade\CardTransaction\CardApiFacade;
-use tpaycom\magento2basic\Model\Tpay;
 use tpaycom\magento2basic\Service\TpayService;
-use tpaycom\magento2basic\Service\TpayTokensService;
 
-class CardPayment extends Action
+class CardPayment implements ActionInterface
 {
     /** @var TpayService */
     protected $tpayService;
@@ -24,24 +18,23 @@ class CardPayment extends Action
     /** @var Session */
     protected $checkoutSession;
 
-    /** @var TpayInterface */
-    private $tpay;
+    /** @var CardApiFacade */
+    private $cardApiFacade;
 
-    /** @var TpayTokensService */
-    private $tokensService;
+    /** @var RedirectFactory */
+    private $redirectFactory;
 
-    /** @var StoreManagerInterface */
-    private $storeManager;
-
-    public function __construct(Context $context, TpayInterface $tpayModel, TpayService $tpayService, Session $checkoutSession, ModelContext $modelContext, Registry $registry, ResourceConnection $resourceConnection, StoreManagerInterface $storeManager)
-    {
-        $this->tpay = $tpayModel;
+    public function __construct(
+        TpayService $tpayService,
+        Session $checkoutSession,
+        CardApiFacade $cardApiFacade,
+        RedirectFactory $redirectFactory
+    ) {
         $this->tpayService = $tpayService;
         $this->checkoutSession = $checkoutSession;
-        $this->tokensService = new TpayTokensService($modelContext, $registry, $resourceConnection);
-        $this->storeManager = $storeManager;
+        $this->cardApiFacade = $cardApiFacade;
+        $this->redirectFactory = $redirectFactory;
         Util::$loggingEnabled = false;
-        parent::__construct($context);
     }
 
     public function execute()
@@ -53,17 +46,17 @@ class CardPayment extends Action
             $payment = $this->tpayService->getPayment($orderId);
             $additionalPaymentInformation = $payment->getData()['additional_information'];
 
-            if (!$additionalPaymentInformation[Tpay::TERMS_ACCEPT]) {
-                return $this->_redirect('magento2basic/tpay/error');
+            if (!$additionalPaymentInformation[TpayInterface::TERMS_ACCEPT]) {
+                return $this->redirectFactory->create()->setPath('magento2basic/tpay/error');
             }
 
-            $cardTransaction = new CardApiFacade($this->tpay, $this->tokensService, $this->tpayService, $this->storeManager);
-            $redirectUrl = $cardTransaction->makeCardTransaction($orderId);
+            $redirectUrl = $this->cardApiFacade->makeCardTransaction($orderId);
 
-            return $this->_redirect($redirectUrl);
+            return $this->redirectFactory->create()->setPath($redirectUrl);
         }
+
         $this->checkoutSession->unsQuoteId();
 
-        return $this->_redirect('magento2basic/tpay/error');
+        return $this->redirectFactory->create()->setPath('magento2basic/tpay/error');
     }
 }

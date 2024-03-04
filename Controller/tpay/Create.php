@@ -2,19 +2,19 @@
 
 namespace tpaycom\magento2basic\Controller\tpay;
 
+use Magento\Backend\Model\View\Result\RedirectFactory;
 use Magento\Checkout\Model\Session;
-use Magento\Framework\App\Action\Action;
-use Magento\Framework\App\Action\Context;
-use Magento\Framework\App\CacheInterface;
-use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\App\ActionInterface;
+use Magento\Framework\Controller\ResultInterface;
 use Tpay\OriginApi\Utilities\Util;
 use tpaycom\magento2basic\Api\TpayInterface;
 use tpaycom\magento2basic\Model\ApiFacade\Transaction\TransactionApiFacade;
 use tpaycom\magento2basic\Model\ApiFacade\Transaction\TransactionOriginApi;
 use tpaycom\magento2basic\Model\Tpay;
 use tpaycom\magento2basic\Service\TpayService;
+use tpaycom\magento2basic\Validator\AdditionalPaymentInfoValidator;
 
-class Create extends Action
+class Create implements ActionInterface
 {
     /** @var TpayService */
     protected $tpayService;
@@ -28,43 +28,46 @@ class Create extends Action
     /** @var TransactionApiFacade */
     private $transaction;
 
-    /** @var CacheInterface */
-    private $cache;
+    /** @var RedirectFactory */
+    private $redirectFactory;
+
+    /** @var AdditionalPaymentInfoValidator */
+    private $additionalPaymentInfoValidator;
 
     public function __construct(
-        Context $context,
         TpayInterface $tpayModel,
         TpayService $tpayService,
         Session $checkoutSession,
-        CacheInterface $cache
+        TransactionApiFacade $transactionApiFacade,
+        RedirectFactory $redirectFactory,
+        AdditionalPaymentInfoValidator $additionalPaymentInfoValidator
     ) {
         $this->tpay = $tpayModel;
         $this->tpayService = $tpayService;
         $this->checkoutSession = $checkoutSession;
-        $this->cache = $cache;
+        $this->transaction = $transactionApiFacade;
+        $this->redirectFactory = $redirectFactory;
+        $this->additionalPaymentInfoValidator = $additionalPaymentInfoValidator;
         Util::$loggingEnabled = false;
-
-        parent::__construct($context);
     }
 
-    public function execute(): ResponseInterface
+    public function execute(): ResultInterface
     {
         $orderId = $this->checkoutSession->getLastRealOrderId();
 
         if ($orderId) {
             $payment = $this->tpayService->getPayment($orderId);
             $paymentData = $payment->getData();
-            $this->transaction = new TransactionApiFacade($this->tpay, $this->cache);
             $additionalPaymentInformation = $paymentData['additional_information'];
 
             if (!$additionalPaymentInformation[Tpay::TERMS_ACCEPT]) {
-                return $this->_redirect('magento2basic/tpay/error');
+                return $this->redirectFactory->create()->setPath('magento2basic/tpay/error');
             }
 
             $transaction = $this->prepareTransaction($orderId, $additionalPaymentInformation);
 
             if (!isset($transaction['title'], $transaction['url'])) {
-                return $this->_redirect('magento2basic/tpay/error');
+                return $this->redirectFactory->create()->setPath('magento2basic/tpay/error');
             }
 
             $this->handleOpenApiTrId($paymentData, $transaction);
@@ -80,14 +83,15 @@ class Create extends Action
             $paymentData['additional_information']['transaction_url'] = $transactionUrl;
             $payment->setData($paymentData)->save();
 
-            if (6 === strlen($additionalPaymentInformation['blik_code'] ?? '') && $this->tpay->checkBlikLevel0Settings()) {
+            if ($this->additionalPaymentInfoValidator->validateBlikIfPresent($additionalPaymentInformation) && $this->tpay->checkBlikLevel0Settings()) {
                 if (true === $this->transaction->isOpenApiUse()) {
                     if (isset($transaction['payments']['errors']) && count($transaction['payments']['errors']) > 0) {
-                        return $this->_redirect('magento2basic/tpay/error');
+                        return $this->redirectFactory->create()->setPath('magento2basic/tpay/error');
                     }
 
-                    return $this->_redirect('magento2basic/tpay/success');
+                    return $this->redirectFactory->create()->setPath('magento2basic/tpay/success');
                 }
+
                 $result = $this->blikPay($transaction['title'], $additionalPaymentInformation['blik_code']);
                 $this->checkoutSession->unsQuoteId();
 
@@ -97,16 +101,16 @@ class Create extends Action
                         'User has typed wrong blik code and has been redirected to transaction panel in order to finish payment'
                     );
 
-                    return $this->_redirect('magento2basic/tpay/error');
+                    return $this->redirectFactory->create()->setPath('magento2basic/tpay/error');
                 }
 
-                return $this->_redirect('magento2basic/tpay/success');
+                return $this->redirectFactory->create()->setPath('magento2basic/tpay/success');
             }
 
-            return $this->_redirect($transactionUrl);
+            return $this->redirectFactory->create()->setPath($transactionUrl);
         }
 
-        return $this->_redirect('magento2basic/tpay/error');
+        return $this->redirectFactory->create()->setPath('magento2basic/tpay/error');
     }
 
     /**
@@ -126,7 +130,7 @@ class Create extends Action
     {
         $data = $this->tpay->getTpayFormData($orderId);
 
-        if (6 === strlen($additionalPaymentInformation['blik_code'] ?? '')) {
+        if ($this->additionalPaymentInfoValidator->validateBlikIfPresent($additionalPaymentInformation)) {
             $data['group'] = TransactionOriginApi::BLIK_CHANNEL;
             $data['channel'] = null;
             $this->handleBlikData($data, $additionalPaymentInformation['blik_code']);
