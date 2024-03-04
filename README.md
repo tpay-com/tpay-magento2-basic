@@ -32,7 +32,7 @@
 
 1. Execute following command to download module:
     ```console
-    composer require TpayCom/Magento2Basic
+    composer require tpaycom/magento2basic
     ```
 
 2. Execute following commands to enable module:

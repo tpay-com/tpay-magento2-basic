@@ -4,21 +4,9 @@ declare(strict_types=1);
 
 namespace TpayCom\Magento2Basic\Api;
 
-/**
- * @api
- */
+/** @api */
 interface TpayConfigInterface
 {
-    public const GROUP = 'group';
-    public const CHANNEL = 'channel';
-    public const BLIK_CODE = 'blik_code';
-    public const TERMS_ACCEPT = 'accept_tos';
-    public const CARDDATA = 'card_data';
-    public const CARD_SAVE = 'card_save';
-    public const CARD_ID = 'card_id';
-    public const CARD_VENDOR = 'card_vendor';
-    public const SHORT_CODE = 'short_code';
-
     public function getCardTitle(): ?string;
 
     public function isOriginApiEnabled(): bool;

@@ -32,7 +32,7 @@ Moduł Magento2 bramki płatności [Tpay](https://tpay.com).
 
 1. Wykonaj następujące polecenie, aby pobrać moduł:
     ```console
-    composer require TpayCom/Magento2Basic
+    composer require tpaycom/magento2basic
     ```
 
 2. Wykonaj następujące polecenia, aby włączyć moduł:
