@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace TpayCom\Magento2Basic\Controller\Tpay;
 
+use Laminas\Http\Request;
+use Magento\Backend\Model\View\Result\RedirectFactory;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use TpayCom\Magento2Basic\Api\TpayInterface;
 use TpayCom\Magento2Basic\Service\TpayService;
 
-class Redirect extends Action
+class Redirect implements ActionInterface
 {
     /** @var Session */
     protected $checkoutSession;
@@ -18,36 +20,50 @@ class Redirect extends Action
     /** @var TpayService */
     protected $tpayService;
 
-    public function __construct(Context $context, TpayService $tpayService, Session $checkoutSession)
-    {
+    /** @var RedirectFactory */
+    protected $redirectFactory;
+
+    /** @var Request */
+    protected $request;
+
+    /** @var AdditionalPaymentInfoValidator */
+    protected $additionalPaymentInfoValidator;
+
+    public function __construct(
+        TpayService $tpayService,
+        Session $checkoutSession,
+        RedirectFactory $redirectFactory,
+        Request $request,
+        AdditionalPaymentInfoValidator $additionalPaymentInfoValidator
+    ) {
         $this->tpayService = $tpayService;
         $this->checkoutSession = $checkoutSession;
-
-        parent::__construct($context);
+        $this->redirectFactory = $redirectFactory;
+        $this->request = $request;
+        $this->additionalPaymentInfoValidator = $additionalPaymentInfoValidator;
     }
 
-    public function execute()
+    public function execute(): ResultInterface
     {
-        $uid = $this->getRequest()->getParam('uid');
+        $uid = $this->request->getQuery('uid');
         $orderId = $this->checkoutSession->getLastRealOrderId();
 
         if (!$orderId || !$uid) {
-            return $this->_redirect('checkout/cart');
+            return $this->redirectFactory->create()->setPath('checkout/cart');
         }
 
-        $payment = $this->tpayService->getPayment($orderId);
-        $paymentData = $payment->getData();
-        $additionalPaymentInfo = $paymentData['additional_information'];
+        $additionalPaymentInfo = $this->tpayService->getPayment($orderId)->getData()['additional_information'];
 
-        if (!empty($additionalPaymentInfo[TpayInterface::CARDDATA]) || !empty($additionalPaymentInfo[TpayInterface::CARD_ID])) {
-            return $this->_redirect('magento2basic/tpay/CardPayment');
+        if ($this->additionalPaymentInfoValidator->validateCardData($additionalPaymentInfo)) {
+            return $this->redirectFactory->create()->setPath('magento2basic/tpay/CardPayment');
         }
 
-        if (empty(array_intersect(array_keys($additionalPaymentInfo), [TpayInterface::GROUP, TpayInterface::CHANNEL])) && (!array_key_exists(TpayInterface::BLIK_CODE, $additionalPaymentInfo) || 6 !== strlen($additionalPaymentInfo[TpayInterface::BLIK_CODE]))) {
-            return $this->_redirect('checkout/cart');
+        if ($this->additionalPaymentInfoValidator->validatePresenceOfGroupOrChannel($additionalPaymentInfo) && $this->additionalPaymentInfoValidator->validateBlikIfPresent($additionalPaymentInfo)) {
+            return $this->redirectFactory->create()->setPath('checkout/cart');
         }
+
         $this->tpayService->setOrderStatePendingPayment($orderId, true);
 
-        return $this->_redirect('magento2basic/tpay/Create');
+        return $this->redirectFactory->create()->setPath('magento2basic/tpay/Create');
     }
 }
