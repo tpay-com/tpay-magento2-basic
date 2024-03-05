@@ -14,14 +14,25 @@ class TpayTokensService extends Tokens
     /** @var ResourceConnection */
     private $resourceConnection;
 
-    public function __construct(Context $context, Registry $registry, ResourceConnection $resourceConnection, $resource = null, ?AbstractDb $resourceCollection = null, array $data = [])
-    {
+    public function __construct(
+        Context $context,
+        Registry $registry,
+        ResourceConnection $resourceConnection,
+        $resource = null,
+        ?AbstractDb $resourceCollection = null,
+        array $data = []
+    ) {
         $this->resourceConnection = $resourceConnection;
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
     }
 
-    public function setCustomerToken(string $customerId, ?string $token, string $shortCode, string $vendor, ?string $crc = null)
-    {
+    public function setCustomerToken(
+        string $customerId,
+        ?string $token,
+        string $shortCode,
+        string $vendor,
+        ?string $crc = null
+    ) {
         $tokenEntity = $this->load($token, 'cli_auth');
 
         if (!$tokenEntity->getId()) {

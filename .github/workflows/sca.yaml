@@ -28,6 +28,9 @@ jobs:
         run: composer cs:fixer -- --dry-run
 
       - working-directory: .dev-tools
+        run: composer cs:sniffer
+
+      - working-directory: .dev-tools
         run: composer cs:phpstan
 
       - working-directory: .dev-tools
