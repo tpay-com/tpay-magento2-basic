@@ -113,7 +113,7 @@ class Tokens extends AbstractModel implements TokensInterface
         return $this;
     }
 
-    protected function _construct()
+    protected function _construct() // phpcs:ignore
     {
         $this->_init('tpaycom\magento2basic\Model\ResourceModel\Token');
     }
