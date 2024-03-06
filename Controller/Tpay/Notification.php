@@ -131,7 +131,7 @@ class Notification implements CsrfAwareActionInterface
             }
 
             $this->saveCard($notification, $orderId);
-            $this->tpayService->SetOrderStatus($orderId, $notification, $this->tpayConfig);
+            $this->tpayService->setOrderStatus($orderId, $notification, $this->tpayConfig);
 
             return (new Response())->setStatusCode(Response::STATUS_CODE_200)->setContent('TRUE');
         } catch (Exception $e) {

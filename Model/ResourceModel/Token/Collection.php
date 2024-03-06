@@ -8,7 +8,7 @@ use Tpay\Magento2\Model\Token;
 
 class Collection extends AbstractCollection
 {
-    protected function _construct()
+    protected function _construct()// phpcs:ignore
     {
         $this->_init(Token::class, TokenResourceModel::class);
     }
