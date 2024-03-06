@@ -12,7 +12,7 @@
     "require": {
         "php": ">=7.1",
         "ext-json": "*",
-        "magento/framework": "^102.0|^103.0",
+        "magento/framework": "^102.0 || ^103.0",
         "tpay-com/tpay-openapi-php": "^1.6.6",
         "tpay-com/tpay-php": "^2.4.3"
     },
