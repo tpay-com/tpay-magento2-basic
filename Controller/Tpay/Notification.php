@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TpayCom\Magento2Basic\Controller\Tpay;
+namespace Tpay\Magento2\Controller\Tpay;
 
 use Exception;
 use Laminas\Http\Response;
@@ -12,11 +12,11 @@ use Magento\Framework\App\RequestInterface;
 use Magento\Sales\Model\Order;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use Tpay\Magento2\Api\TpayConfigInterface;
+use Tpay\Magento2\Api\TpayInterface;
+use Tpay\Magento2\Service\TpayService;
+use Tpay\Magento2\Service\TpayTokensService;
 use Tpay\OriginApi\Utilities\Util;
-use TpayCom\Magento2Basic\Api\TpayConfigInterface;
-use TpayCom\Magento2Basic\Api\TpayInterface;
-use TpayCom\Magento2Basic\Service\TpayService;
-use TpayCom\Magento2Basic\Service\TpayTokensService;
 use tpaySDK\Webhook\JWSVerifiedPaymentNotification;
 
 class Notification implements CsrfAwareActionInterface
@@ -26,9 +26,6 @@ class Notification implements CsrfAwareActionInterface
 
     /** @var TpayConfigInterface */
     protected $tpayConfig;
-
-    /** @var RemoteAddress */
-    protected $remoteAddress;
 
     /** @var TpayService */
     protected $tpayService;
@@ -41,15 +38,13 @@ class Notification implements CsrfAwareActionInterface
 
     public function __construct(
         TpayInterface $tpayModel,
+        TpayConfigInterface $tpayConfig,
         TpayService $tpayService,
         TpayTokensService $tokensService,
         StoreManagerInterface $storeManager
     ) {
-    public function __construct(Context $context, RemoteAddress $remoteAddress, TpayInterface $tpayModel, TpayConfigInterface $tpayConfig, TpayService $tpayService, TpayTokensService $tokensService, StoreManagerInterface $storeManager)
-    {
         $this->tpay = $tpayModel;
         $this->tpayConfig = $tpayConfig;
-        $this->remoteAddress = $remoteAddress;
         $this->tpayService = $tpayService;
         $this->tokensService = $tokensService;
         $this->storeManager = $storeManager;
@@ -123,10 +118,9 @@ class Notification implements CsrfAwareActionInterface
 
         try {
             $notification = (new JWSVerifiedPaymentNotification(
-                $this->tpay->getSecurityCode($storeId),
-                !$this->tpay->useSandboxMode($storeId)
+                $this->tpayConfig->getSecurityCode($storeId),
+                !$this->tpayConfig->useSandboxMode($storeId)
             ))->getNotification();
-            $notification = (new JWSVerifiedPaymentNotification($this->tpayConfig->getSecurityCode($storeId), !$this->tpayConfig->useSandboxMode($storeId)))->getNotification();
             $notification = $notification->getNotificationAssociative();
             $orderId = base64_decode($notification['tr_crc']);
 
@@ -137,7 +131,7 @@ class Notification implements CsrfAwareActionInterface
             }
 
             $this->saveCard($notification, $orderId);
-            $this->tpayService->SetOrderStatus($orderId, $notification, $this->tpay);
+            $this->tpayService->SetOrderStatus($orderId, $notification, $this->tpayConfig);
 
             return (new Response())->setStatusCode(Response::STATUS_CODE_200)->setContent('TRUE');
         } catch (Exception $e) {

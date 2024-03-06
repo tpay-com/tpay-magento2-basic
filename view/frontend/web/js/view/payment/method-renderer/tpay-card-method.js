@@ -16,13 +16,13 @@ define(
 
         return Component.extend({
             defaults: {
-                template: 'TpayCom_Magento2Basic/payment/card-tpay-form'
+                template: 'Tpay_Magento2/payment/card-tpay-form'
             },
 
             redirectAfterPlaceOrder: false,
 
             getCode: function () {
-                return 'TpayCom_Magento2Basic_Cards';
+                return 'Tpay_Magento2_Cards';
             },
 
             afterPlaceOrder: function () {

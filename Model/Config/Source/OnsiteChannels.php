@@ -1,12 +1,12 @@
 <?php
 
-namespace TpayCom\Magento2Basic\Model\Config\Source;
+namespace Tpay\Magento2\Model\Config\Source;
 
 use Magento\Framework\App\CacheInterface;
 use Magento\Framework\Data\OptionSourceInterface;
-use TpayCom\Magento2Basic\Api\TpayConfigInterface;
-use TpayCom\Magento2Basic\Model\ApiFacade\Transaction\Dto\Channel;
-use TpayCom\Magento2Basic\Model\ApiFacade\Transaction\TransactionApiFacade;
+use Tpay\Magento2\Api\TpayConfigInterface;
+use Tpay\Magento2\Model\ApiFacade\Transaction\Dto\Channel;
+use Tpay\Magento2\Model\ApiFacade\Transaction\TransactionApiFacade;
 
 class OnsiteChannels implements OptionSourceInterface
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace TpayCom\Magento2Basic\Model;
+namespace Tpay\Magento2\Model;
 
 use Magento\Quote\Model\Quote\Payment;
-use TpayCom\Magento2Basic\Api\TpayInterface;
+use Tpay\Magento2\Api\TpayInterface;
 
 class GenericPaymentPlugin
 {
@@ -14,7 +14,7 @@ class GenericPaymentPlugin
             $data['method'] = TpayInterface::CODE;
         }
 
-        if ('TpayCom_Magento2Basic_Cards' == $data['method']) {
+        if ('Tpay_Magento2_Cards' == $data['method']) {
             $data['method'] = TpayInterface::CODE;
         }
 

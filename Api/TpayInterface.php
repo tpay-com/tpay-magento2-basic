@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace TpayCom\Magento2Basic\Api;
+namespace Tpay\Magento2\Api;
 
 /** @api */
 interface TpayInterface
 {
-    public const CODE = 'TpayCom_Magento2Basic';
+    public const CODE = 'Tpay_Magento2';
     public const GROUP = 'group';
     public const CHANNEL = 'channel';
     public const BLIK_CODE = 'blik_code';

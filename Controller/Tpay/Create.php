@@ -1,18 +1,18 @@
 <?php
 
-namespace TpayCom\Magento2Basic\Controller\Tpay;
+namespace Tpay\Magento2\Controller\Tpay;
 
-use Magento\Backend\Model\View\Result\RedirectFactory;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\ActionInterface;
 use Magento\Framework\Controller\ResultInterface;
+use Tpay\Magento2\Api\TpayConfigInterface;
+use Tpay\Magento2\Api\TpayInterface;
+use Tpay\Magento2\Model\ApiFacade\Transaction\TransactionApiFacade;
+use Tpay\Magento2\Model\ApiFacade\Transaction\TransactionOriginApi;
+use Tpay\Magento2\Service\RedirectHandler;
+use Tpay\Magento2\Service\TpayService;
+use Tpay\Magento2\Validator\AdditionalPaymentInfoValidator;
 use Tpay\OriginApi\Utilities\Util;
-use TpayCom\Magento2Basic\Api\TpayConfigInterface;
-use TpayCom\Magento2Basic\Api\TpayInterface;
-use TpayCom\Magento2Basic\Model\ApiFacade\Transaction\TransactionApiFacade;
-use TpayCom\Magento2Basic\Model\ApiFacade\Transaction\TransactionOriginApi;
-use TpayCom\Magento2Basic\Model\TpayPayment;
-use TpayCom\Magento2Basic\Service\TpayService;
 
 class Create implements ActionInterface
 {
@@ -31,7 +31,7 @@ class Create implements ActionInterface
     /** @var TransactionApiFacade */
     private $transaction;
 
-    /** @var RedirectFactory */
+    /** @var RedirectHandler */
     private $redirectFactory;
 
     /** @var AdditionalPaymentInfoValidator */
@@ -43,7 +43,7 @@ class Create implements ActionInterface
         TpayService $tpayService,
         Session $checkoutSession,
         TransactionApiFacade $transactionApiFacade,
-        RedirectFactory $redirectFactory,
+        RedirectHandler $redirectFactory,
         AdditionalPaymentInfoValidator $additionalPaymentInfoValidator
     ) {
         $this->tpay = $tpayModel;
@@ -65,14 +65,14 @@ class Create implements ActionInterface
             $paymentData = $payment->getData();
             $additionalPaymentInformation = $paymentData['additional_information'];
 
-            if (!$additionalPaymentInformation[Tpay::TERMS_ACCEPT]) {
-                return $this->redirectFactory->create()->setPath('magento2basic/tpay/error');
+            if (!$additionalPaymentInformation[TpayInterface::TERMS_ACCEPT]) {
+                return $this->redirectFactory->redirectError();
             }
 
             $transaction = $this->prepareTransaction($orderId, $additionalPaymentInformation);
 
             if (!isset($transaction['title'], $transaction['url'])) {
-                return $this->redirectFactory->create()->setPath('magento2basic/tpay/error');
+                return $this->redirectFactory->redirectError();
             }
 
             $this->handleOpenApiTrId($paymentData, $transaction);
@@ -92,10 +92,10 @@ class Create implements ActionInterface
             if ($this->additionalPaymentInfoValidator->validateBlikIfPresent($additionalPaymentInformation) && $this->tpay->checkBlikLevel0Settings()) {
                 if (true === $this->transaction->isOpenApiUse()) {
                     if (isset($transaction['payments']['errors']) && count($transaction['payments']['errors']) > 0) {
-                        return $this->redirectFactory->create()->setPath('magento2basic/tpay/error');
+                        return $this->redirectFactory->redirectError();
                     }
 
-                    return $this->redirectFactory->create()->setPath('magento2basic/tpay/success');
+                    return $this->redirectFactory->redirectSuccess();
                 }
 
                 $result = $this->blikPay($transaction['title'], $additionalPaymentInformation['blik_code']);
@@ -107,16 +107,16 @@ class Create implements ActionInterface
                         'User has typed wrong blik code and has been redirected to transaction panel in order to finish payment'
                     );
 
-                    return $this->redirectFactory->create()->setPath('magento2basic/tpay/error');
+                    return $this->redirectFactory->redirectError();
                 }
 
-                return $this->redirectFactory->create()->setPath('magento2basic/tpay/success');
+                return $this->redirectFactory->redirectSuccess();
             }
 
-            return $this->redirectFactory->create()->setPath($transactionUrl);
+            return $this->redirectFactory->redirectTransaction($transactionUrl);
         }
 
-        return $this->redirectFactory->create()->setPath('magento2basic/tpay/error');
+        return $this->redirectFactory->redirectError();
     }
 
     /**

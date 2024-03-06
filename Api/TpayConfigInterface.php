@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TpayCom\Magento2Basic\Api;
+namespace Tpay\Magento2\Api;
 
 /** @api */
 interface TpayConfigInterface

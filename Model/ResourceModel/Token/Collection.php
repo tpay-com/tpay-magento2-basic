@@ -1,10 +1,10 @@
 <?php
 
-namespace TpayCom\Magento2Basic\Model\ResourceModel\Token;
+namespace Tpay\Magento2\Model\ResourceModel\Token;
 
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
-use TpayCom\Magento2Basic\Model\ResourceModel\Token as TokenResourceModel;
-use TpayCom\Magento2Basic\Model\Token;
+use Tpay\Magento2\Model\ResourceModel\Token as TokenResourceModel;
+use Tpay\Magento2\Model\Token;
 
 class Collection extends AbstractCollection
 {

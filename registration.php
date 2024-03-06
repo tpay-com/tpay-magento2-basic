@@ -2,6 +2,6 @@
 
 Magento\Framework\Component\ComponentRegistrar::register(
     Magento\Framework\Component\ComponentRegistrar::MODULE,
-    'TpayCom_Magento2Basic',
+    'Tpay_Magento2',
     __DIR__
 );

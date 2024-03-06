@@ -1,13 +1,13 @@
 <?php
 
-namespace TpayCom\Magento2Basic\Model\ApiFacade\Transaction;
+namespace Tpay\Magento2\Model\ApiFacade\Transaction;
 
 use Exception;
 use Magento\Framework\App\CacheInterface;
+use Tpay\Magento2\Api\TpayConfigInterface;
+use Tpay\Magento2\Model\ApiFacade\OpenApi;
+use Tpay\Magento2\Model\ApiFacade\Transaction\Dto\Channel;
 use Tpay\OpenApi\Utilities\TpayException;
-use TpayCom\Magento2Basic\Api\TpayConfigInterface;
-use TpayCom\Magento2Basic\Model\ApiFacade\OpenApi;
-use TpayCom\Magento2Basic\Model\ApiFacade\Transaction\Dto\Channel;
 
 class TransactionApiFacade
 {

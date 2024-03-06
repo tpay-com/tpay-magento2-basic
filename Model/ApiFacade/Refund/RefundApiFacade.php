@@ -1,12 +1,12 @@
 <?php
 
-namespace TpayCom\Magento2Basic\Model\ApiFacade\Refund;
+namespace Tpay\Magento2\Model\ApiFacade\Refund;
 
 use Exception;
 use Magento\Payment\Model\InfoInterface;
-use TpayCom\Magento2Basic\Api\TpayConfigInterface;
-use TpayCom\Magento2Basic\Api\TpayInterface;
-use TpayCom\Magento2Basic\Model\ApiFacade\OpenApi;
+use Tpay\Magento2\Api\TpayConfigInterface;
+use Tpay\Magento2\Api\TpayInterface;
+use Tpay\Magento2\Model\ApiFacade\OpenApi;
 
 class RefundApiFacade
 {

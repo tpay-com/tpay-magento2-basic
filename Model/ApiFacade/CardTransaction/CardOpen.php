@@ -1,12 +1,12 @@
 <?php
 
-namespace TpayCom\Magento2Basic\Model\ApiFacade\CardTransaction;
+namespace Tpay\Magento2\Model\ApiFacade\CardTransaction;
 
 use Exception;
-use TpayCom\Magento2Basic\Api\TpayConfigInterface;
-use TpayCom\Magento2Basic\Api\TpayInterface;
-use TpayCom\Magento2Basic\Service\TpayService;
-use TpayCom\Magento2Basic\Service\TpayTokensService;
+use Tpay\Magento2\Api\TpayConfigInterface;
+use Tpay\Magento2\Api\TpayInterface;
+use Tpay\Magento2\Service\TpayService;
+use Tpay\Magento2\Service\TpayTokensService;
 use tpaySDK\Api\TpayApi;
 
 class CardOpen
@@ -99,13 +99,13 @@ class CardOpen
                     $this->tpayService->addCommentToHistory($orderId, 'Failed to pay by saved card, error: '.$paymentResult['err_desc']);
                 }
             } catch (Exception $e) {
-                return 'magento2basic/tpay/error';
+                return 'magento2basic/tpay';
             }
         } else {
             $this->tpayService->addCommentToHistory($orderId, 'Attempt of payment by not owned card has been blocked!');
         }
 
-        return 'magento2basic/tpay/error';
+        return 'magento2basic/tpay';
     }
 
     private function addToPaymentData(string $orderId, string $key, $value)
@@ -133,7 +133,7 @@ class CardOpen
             $result = $this->tpayApi->transactions()->createPaymentByTransactionId($request, $transaction['transactionId']);
             $this->tpayService->setCardOrderStatus($orderId, $this->handleValidParams($result), $this->tpayConfig);
         } catch (Exception $e) {
-            return 'magento2basic/tpay/error';
+            return 'magento2basic/tpay';
         }
 
         if (isset($result['transactionPaymentUrl']) && 'pending' === $result['payments']['status']) {
@@ -145,7 +145,7 @@ class CardOpen
             return $url3ds;
         }
 
-        return 'magento2basic/tpay/error';
+        return 'magento2basic/tpay';
     }
 
     private function saveCard(string $orderId, bool $saveCard, array $additionalPaymentInformation)

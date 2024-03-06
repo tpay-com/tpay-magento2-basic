@@ -11,7 +11,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
     <router id="standard">
         <route id="magento2basic" frontName="magento2basic">
-            <module name="TpayCom_Magento2Basic" />
+            <module name="Tpay_Magento2" />
         </route>
     </router>
 </config>

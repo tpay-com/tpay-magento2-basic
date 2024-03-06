@@ -1,12 +1,12 @@
 <?php
 
-namespace TpayCom\Magento2Basic\Model\ApiFacade\Refund;
+namespace Tpay\Magento2\Model\ApiFacade\Refund;
 
 use Magento\Framework\Validator\Exception;
 use Magento\Payment\Model\InfoInterface;
+use Tpay\Magento2\Api\TpayConfigInterface;
 use Tpay\OriginApi\Refunds\BasicRefunds;
 use Tpay\OriginApi\Utilities\Util;
-use TpayCom\Magento2Basic\Api\TpayConfigInterface;
 
 class RefundOriginApi extends BasicRefunds
 {

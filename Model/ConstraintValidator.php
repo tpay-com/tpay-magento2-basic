@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TpayCom\Magento2Basic\Model;
+namespace Tpay\Magento2\Model;
 
 use Magento\Checkout\Model\Session;
 

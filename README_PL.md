@@ -21,7 +21,7 @@ Moduł Magento2 bramki płatności [Tpay](https://tpay.com).
 
 4. Wykonaj następujące polecenia, aby włączyć moduł:
     ```console
-    php bin/magento module:enable TpayCom_Magento2Basic
+    php bin/magento module:enable Tpay_Magento2
     php bin/magento setup:upgrade
     ```
 
@@ -37,7 +37,7 @@ Moduł Magento2 bramki płatności [Tpay](https://tpay.com).
 
 2. Wykonaj następujące polecenia, aby włączyć moduł:
     ```console
-    php bin/magento module:enable TpayCom_Magento2Basic
+    php bin/magento module:enable Tpay_Magento2
     php bin/magento setup:upgrade
     ```
 

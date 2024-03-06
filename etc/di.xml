@@ -9,21 +9,21 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <preference for="TpayCom\Magento2Basic\Api\TpayInterface" type="TpayCom\Magento2Basic\Model\TpayPayment" />
-    <preference for="TpayCom\Magento2Basic\Api\TpayConfigInterface" type="TpayCom\Magento2Basic\Provider\ConfigurationProvider" />
-    <preference for="TpayCom\Magento2Basic\Api\Sales\OrderRepositoryInterface" type="TpayCom\Magento2Basic\Model\Sales\OrderRepository" />
-    <preference for="TpayCom\Magento2Basic\Model\Api\Data\TokensInterface" type="TpayCom\Magento2Basic\Model\Token"/>
-    <preference for="TpayCom\Magento2Basic\Model\Api\TokenRepositoryInterface" type="TpayCom\Magento2Basic\Model\TokenRepository"/>
+    <preference for="Tpay\Magento2\Api\TpayInterface" type="Tpay\Magento2\Model\TpayPayment" />
+    <preference for="Tpay\Magento2\Api\TpayConfigInterface" type="Tpay\Magento2\Provider\ConfigurationProvider" />
+    <preference for="Tpay\Magento2\Api\Sales\OrderRepositoryInterface" type="Tpay\Magento2\Model\Sales\OrderRepository" />
+    <preference for="Tpay\Magento2\Model\Api\Data\TokensInterface" type="Tpay\Magento2\Model\Token"/>
+    <preference for="Tpay\Magento2\Model\Api\TokenRepositoryInterface" type="Tpay\Magento2\Model\TokenRepository"/>
     <preference for="Magento\Sales\Api\OrderPaymentRepositoryInterface" type="Magento\Sales\Model\Order\Payment\Repository"/>
     <type name="Magento\Payment\Model\MethodList">
-        <plugin name="tpay_generic_onsite" type="TpayCom\Magento2Basic\Model\MethodListPlugin" />
+        <plugin name="tpay_generic_onsite" type="Tpay\Magento2\Model\MethodListPlugin" />
     </type>
     <type name="Magento\Quote\Model\Quote\Payment">
-        <plugin name="tpay_generic_payment" type="TpayCom\Magento2Basic\Model\GenericPaymentPlugin" />
+        <plugin name="tpay_generic_payment" type="Tpay\Magento2\Model\GenericPaymentPlugin" />
     </type>
-    <type name="TpayCom\Magento2Basic\Model\TpayPayment">
+    <type name="Tpay\Magento2\Model\TpayPayment">
         <arguments>
-            <argument name="code" xsi:type="string">TpayCom_Magento2Basic</argument>
+            <argument name="code" xsi:type="string">Tpay_Magento2</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\ConfigurableInfo</argument>
             <argument name="valueHandlerPool" xsi:type="object">TpayPaymentMethodValueHandlerPool</argument>
@@ -31,7 +31,7 @@
     </type>
     <virtualType name="TpayPaymentMethodConfig" type="Magento\Payment\Gateway\Config\Config">
         <arguments>
-            <argument name="methodCode" xsi:type="string">TpayCom_Magento2Basic</argument>
+            <argument name="methodCode" xsi:type="string">Tpay_Magento2</argument>
         </arguments>
     </virtualType>
     <virtualType name="TpayPaymentMethodValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">

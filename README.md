@@ -21,7 +21,7 @@
 
 4. Execute following commands to enable module:
     ```console
-    php bin/magento module:enable TpayCom_Magento2Basic
+    php bin/magento module:enable Tpay_Magento2
     php bin/magento setup:upgrade
     ```
 
@@ -37,7 +37,7 @@
 
 2. Execute following commands to enable module:
     ```console
-    php bin/magento module:enable TpayCom_Magento2Basic
+    php bin/magento module:enable Tpay_Magento2
     php bin/magento setup:upgrade
     ```
 

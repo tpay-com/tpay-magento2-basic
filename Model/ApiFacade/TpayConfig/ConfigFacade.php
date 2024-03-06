@@ -1,13 +1,13 @@
 <?php
 
-namespace TpayCom\Magento2Basic\Model\ApiFacade\TpayConfig;
+namespace Tpay\Magento2\Model\ApiFacade\TpayConfig;
 
 use Exception;
 use Magento\Framework\View\Asset\Repository;
 use Magento\Store\Model\StoreManagerInterface;
-use TpayCom\Magento2Basic\Api\TpayConfigInterface;
-use TpayCom\Magento2Basic\Api\TpayInterface;
-use TpayCom\Magento2Basic\Service\TpayTokensService;
+use Tpay\Magento2\Api\TpayConfigInterface;
+use Tpay\Magento2\Api\TpayInterface;
+use Tpay\Magento2\Service\TpayTokensService;
 
 class ConfigFacade
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace TpayCom\Magento2Basic\Model;
+namespace Tpay\Magento2\Model;
 
 use Magento\Framework\Model\AbstractModel;
-use TpayCom\Magento2Basic\Model\Api\Data\TokensInterface;
+use Tpay\Magento2\Model\Api\Data\TokensInterface;
 
 class Token extends AbstractModel implements TokensInterface
 {

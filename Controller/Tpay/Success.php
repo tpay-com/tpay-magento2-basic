@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace TpayCom\Magento2Basic\Controller\Tpay;
+namespace Tpay\Magento2\Controller\Tpay;
 
 use Magento\Framework\App\ActionInterface;
-use Magento\Framework\Controller\Result\RedirectFactory;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Message\ManagerInterface;
+use Tpay\Magento2\Service\RedirectHandler;
 
 class Success implements ActionInterface
 {
     /** @var ManagerInterface */
     private $messageManager;
 
-    /** @var RedirectFactory */
+    /** @var RedirectHandler */
     private $redirectFactory;
 
-    public function __construct(ManagerInterface $messageManager, RedirectFactory $redirectFactory)
+    public function __construct(ManagerInterface $messageManager, RedirectHandler $redirectFactory)
     {
         $this->messageManager = $messageManager;
         $this->redirectFactory = $redirectFactory;
@@ -27,6 +27,6 @@ class Success implements ActionInterface
     {
         $this->messageManager->addSuccessMessage(__('Thank you for your payment!'));
 
-        return $this->redirectFactory->create()->setPath('checkout/onepage/success');
+        return $this->redirectFactory->redirectCheckoutSuccess();
     }
 }

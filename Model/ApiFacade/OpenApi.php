@@ -1,10 +1,10 @@
 <?php
 
-namespace TpayCom\Magento2Basic\Model\ApiFacade;
+namespace Tpay\Magento2\Model\ApiFacade;
 
 use Magento\Payment\Model\InfoInterface;
-use TpayCom\Magento2Basic\Api\TpayConfigInterface;
-use TpayCom\Magento2Basic\Model\ApiFacade\Transaction\Dto\Channel;
+use Tpay\Magento2\Api\TpayConfigInterface;
+use Tpay\Magento2\Model\ApiFacade\Transaction\Dto\Channel;
 use tpaySDK\Api\TpayApi;
 
 class OpenApi

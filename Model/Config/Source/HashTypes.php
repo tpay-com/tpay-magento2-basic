@@ -1,6 +1,6 @@
 <?php
 
-namespace TpayCom\Magento2Basic\Model\Config\Source;
+namespace Tpay\Magento2\Model\Config\Source;
 
 use Magento\Framework\Data\OptionSourceInterface;
 
