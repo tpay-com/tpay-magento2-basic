@@ -133,7 +133,7 @@ class Notification implements CsrfAwareActionInterface
             if ('PAID' === $notification['tr_status']) {
                 $response = $this->getPaidTransactionResponse($orderId);
 
-                return (new Response())->setStatusCode(Response::STATUS_CODE_200)->setContent($response);
+                return $this->response->setStatusCode(Response::STATUS_CODE_200)->setContent($response);
             }
 
             $this->saveCard($notification, $orderId);
@@ -152,7 +152,7 @@ class Notification implements CsrfAwareActionInterface
                 )
             );
 
-            return (new Response())->setStatusCode(Response::STATUS_CODE_400)->setContent('FALSE');
+            return $this->response->setStatusCode(Response::STATUS_CODE_400)->setContent('FALSE');
         }
     }
 }
