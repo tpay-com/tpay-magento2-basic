@@ -14,6 +14,7 @@ define(
     function (Component,
               rendererList) {
         'use strict';
+
         rendererList.push(
             {
                 type: 'Tpay_Magento2',

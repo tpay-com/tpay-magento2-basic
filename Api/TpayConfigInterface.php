@@ -60,4 +60,8 @@ interface TpayConfigInterface
     public function isAllowSpecific(): bool;
 
     public function getSpecificCountry(): array;
+
+    public function getMinOrderTotal(): int;
+
+    public function getMaxOrderTotal(): int;
 }
