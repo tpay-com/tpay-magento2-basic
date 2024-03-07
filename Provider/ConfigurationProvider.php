@@ -28,6 +28,11 @@ class ConfigurationProvider implements TpayConfigInterface
         return (bool) $this->getConfigData('general_settings/blik_level_zero');
     }
 
+    public function getTitle(): ?string
+    {
+        return $this->getConfigData('general_settings/title');
+    }
+
     public function getApiKey(): ?string
     {
         return $this->getConfigData('originapi_settings/api_key_tpay');

@@ -47,11 +47,11 @@ class ConstraintValidator
 
     private function validateMinimalTotal(float $minimal): bool
     {
-        return $this->checkoutSession->getQuote()->getGrandTotal() > $minimal;
+        return $this->checkoutSession->getQuote()->getGrandTotal() >= $minimal;
     }
 
     private function validateMaximalTotal(float $maximal): bool
     {
-        return $this->checkoutSession->getQuote()->getGrandTotal() < $maximal;
+        return $this->checkoutSession->getQuote()->getGrandTotal() <= $maximal;
     }
 }

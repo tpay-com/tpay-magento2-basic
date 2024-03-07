@@ -144,7 +144,7 @@ class TpayPayment extends Adapter implements TpayInterface
             return $this->title;
         }
 
-        return parent::getTitle();
+        return $this->configurationProvider->getTitle() ?? parent::getTitle();
     }
 
     public function setTitle(string $title): void
