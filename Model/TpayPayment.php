@@ -119,6 +119,11 @@ class TpayPayment extends Adapter implements TpayInterface
         );
     }
 
+    public function isActive($storeId = null): bool
+    {
+        return (bool) $this->configurationProvider->getConfigData('active', $storeId);
+    }
+
     public function getPaymentRedirectUrl(): string
     {
         return $this->urlBuilder->getUrl('magento2basic/tpay/redirect', ['uid' => time().uniqid('', true)]);
