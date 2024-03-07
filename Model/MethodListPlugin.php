@@ -72,8 +72,11 @@ class MethodListPlugin
         $onsiteChannels = $this->scopeConfig->getValue(self::CONFIG_PATH, ScopeInterface::SCOPE_STORE);
         $channelList = $onsiteChannels ? explode(',', $onsiteChannels) : [];
         $channels = $this->transactions->channels();
-
-        if ($this->constraintValidator->isClientCountryValid($this->tpayConfig->isAllowSpecific(), $this->checkoutSession->getQuote()->getBillingAddress()->getCountryId(), $this->tpayConfig->getSpecificCountry())) {
+        $conutryId = $this->checkoutSession->getQuote()->getBillingAddress()->getCountryId();
+        if ($conutryId && $this->constraintValidator->isClientCountryValid(
+            $this->tpayConfig->isAllowSpecific(),
+            $conutryId,
+            $this->tpayConfig->getSpecificCountry())) {
             return [];
         }
 
