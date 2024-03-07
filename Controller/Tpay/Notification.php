@@ -9,6 +9,7 @@ use Laminas\Http\Response;
 use Magento\Framework\App\CsrfAwareActionInterface;
 use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Framework\App\RequestInterface;
+use Magento\Framework\App\ResponseInterface;
 use Magento\Sales\Model\Order;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
@@ -36,18 +37,23 @@ class Notification implements CsrfAwareActionInterface
     /** @var StoreManagerInterface */
     private $storeManager;
 
+    /** @var ResponseInterface */
+    private $response;
+
     public function __construct(
         TpayInterface $tpayModel,
         TpayConfigInterface $tpayConfig,
         TpayService $tpayService,
         TpayTokensService $tokensService,
-        StoreManagerInterface $storeManager
+        StoreManagerInterface $storeManager,
+        ResponseInterface $response
     ) {
         $this->tpay = $tpayModel;
         $this->tpayConfig = $tpayConfig;
         $this->tpayService = $tpayService;
         $this->tokensService = $tokensService;
         $this->storeManager = $storeManager;
+        $this->response = $response;
         Util::$loggingEnabled = false;
     }
 
@@ -114,7 +120,7 @@ class Notification implements CsrfAwareActionInterface
 
     private function extractNotification(StoreInterface $store): Response
     {
-        $storeId = $store->getStoreId();
+        $storeId = (int) $store->getStoreId();
 
         try {
             $notification = (new JWSVerifiedPaymentNotification(
@@ -133,7 +139,7 @@ class Notification implements CsrfAwareActionInterface
             $this->saveCard($notification, $orderId);
             $this->tpayService->setOrderStatus($orderId, $notification, $this->tpayConfig);
 
-            return (new Response())->setStatusCode(Response::STATUS_CODE_200)->setContent('TRUE');
+            return $this->response->setStatusCode(Response::STATUS_CODE_200)->setContent('TRUE');
         } catch (Exception $e) {
             Util::log(
                 'Notification exception',
