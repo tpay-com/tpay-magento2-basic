@@ -73,10 +73,12 @@ class MethodListPlugin
         $channelList = $onsiteChannels ? explode(',', $onsiteChannels) : [];
         $channels = $this->transactions->channels();
         $conutryId = $this->checkoutSession->getQuote()->getBillingAddress()->getCountryId();
+
         if ($conutryId && $this->constraintValidator->isClientCountryValid(
             $this->tpayConfig->isAllowSpecific(),
             $conutryId,
-            $this->tpayConfig->getSpecificCountry())) {
+            $this->tpayConfig->getSpecificCountry()
+        )) {
             return [];
         }
 
