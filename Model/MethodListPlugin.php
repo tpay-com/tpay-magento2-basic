@@ -74,11 +74,7 @@ class MethodListPlugin
         $channels = $this->transactions->channels();
         $conutryId = $this->checkoutSession->getQuote()->getBillingAddress()->getCountryId();
 
-        if ($conutryId && $this->constraintValidator->isClientCountryValid(
-            $this->tpayConfig->isAllowSpecific(),
-            $conutryId,
-            $this->tpayConfig->getSpecificCountry()
-        )) {
+        if ($conutryId && $this->constraintValidator->isClientCountryValid($this->tpayConfig->isAllowSpecific(), $conutryId, $this->tpayConfig->getSpecificCountry())) {
             return [];
         }
 
