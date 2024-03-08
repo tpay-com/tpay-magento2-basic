@@ -32,7 +32,7 @@ class CardApiFacade
 
     public function makeCardTransaction(string $orderId): string
     {
-        return $this->getCurrent()->makeCardTransaction($orderId);
+        return $this->getCurrent()->makeFullCardTransactionProcess($orderId);
     }
 
     private function getCurrent()

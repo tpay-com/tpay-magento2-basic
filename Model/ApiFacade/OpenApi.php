@@ -40,6 +40,18 @@ class OpenApi
         return $this->updateRedirectUrl($transaction);
     }
 
+    public function createTransaction(array $data): array
+    {
+        if (!empty($data['blikPaymentData'])) {
+            return $this->createBlikZeroTransaction($data);
+        }
+
+        $transactionData = $this->handleDataStructure($data);
+        $transaction = $this->tpayApi->transactions()->createTransaction($transactionData);
+
+        return $this->updateRedirectUrl($transaction);
+    }
+
     public function createWithInstantRedirect(array $data): array
     {
         $transactionData = $this->handleDataStructure($data);
@@ -48,25 +60,37 @@ class OpenApi
         return $this->updateRedirectUrl($transaction);
     }
 
-    public function createBlikZero(array $data): array
+    public function createBlikZeroTransaction(array $data): array
     {
         $transactionData = $this->handleDataStructure($data);
         unset($transactionData['pay']);
 
         $transaction = $this->tpayApi->transactions()->createTransactionWithInstantRedirection($transactionData);
 
+        return $this->updateRedirectUrl($transaction);
+    }
+
+    public function blik(string $blikCode, string $transactionId): array
+    {
         $additional_payment_data = [
             'channelId' => 64,
             'method' => 'pay_by_link',
             'blikPaymentData' => [
                 'type' => 0,
-                'blikToken' => $data['blikPaymentData']['blikToken'],
+                'blikToken' => $blikCode,
             ],
         ];
 
-        $result = $this->tpayApi->transactions()->createInstantPaymentByTransactionId($additional_payment_data, $transaction['transactionId']);
+        $result = $this->tpayApi->transactions()->createInstantPaymentByTransactionId($additional_payment_data, $transactionId);
 
         return $this->updateRedirectUrl($this->waitForBlikAccept($result));
+    }
+
+    public function createBlikZero(array $data): array
+    {
+        $transaction = $this->createBlikZeroTransaction($data);
+
+        return $this->blik($data['blikPaymentData']['blikToken'], $transaction['transactionId']);
     }
 
     public function makeRefund(InfoInterface $payment, float $amount): array

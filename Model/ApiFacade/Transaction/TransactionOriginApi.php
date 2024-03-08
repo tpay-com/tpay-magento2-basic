@@ -25,4 +25,9 @@ class TransactionOriginApi extends PaymentBlik
             $this->apiURL = 'https://secure.sandbox.tpay.com/api/gw/';
         }
     }
+
+    public function createTransaction(array $data): array
+    {
+        return $this->create($data);
+    }
 }

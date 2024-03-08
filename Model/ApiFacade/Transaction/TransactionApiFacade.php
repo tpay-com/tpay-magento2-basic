@@ -43,6 +43,11 @@ class TransactionApiFacade
         return $this->getCurrentApi()->create($config);
     }
 
+    public function createTransaction(array $config): array
+    {
+        return $this->getCurrentApi()->createTransaction($config);
+    }
+
     public function createWithInstantRedirection(array $config): array
     {
         if (!$this->useOpenApi) {
@@ -54,7 +59,7 @@ class TransactionApiFacade
 
     public function blik($blikTransactionId, $blikCode): array
     {
-        return $this->originApi->blik($blikTransactionId, $blikCode);
+        return $this->getCurrentApi()->blik($blikTransactionId, $blikCode);
     }
 
     /** @return list<Channel> */

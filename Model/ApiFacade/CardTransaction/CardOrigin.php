@@ -39,7 +39,7 @@ class CardOrigin extends CardNotificationHandler
         parent::__construct();
     }
 
-    public function makeCardTransaction(string $orderId): string
+    public function makeFullCardTransactionProcess(string $orderId): string
     {
         $payment = $this->tpayService->getPayment($orderId);
         $paymentData = $payment->getData();
