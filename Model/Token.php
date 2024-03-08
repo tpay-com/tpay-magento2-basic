@@ -14,7 +14,7 @@ class Token extends AbstractModel implements TokensInterface
         return $this;
     }
 
-    public function setToken(string $token): self
+    public function setToken(?string $token = null): self
     {
         $this->setData('cli_auth', $token);
 

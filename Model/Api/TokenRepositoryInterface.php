@@ -8,7 +8,7 @@ interface TokenRepositoryInterface
 {
     public function getById(int $tokenId): TokensInterface;
 
-    public function getByToken(string $tokenValue): TokensInterface;
+    public function getByToken(?string $tokenValue): TokensInterface;
 
     public function save(TokensInterface $token): TokensInterface;
 

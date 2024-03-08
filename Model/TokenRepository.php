@@ -26,7 +26,7 @@ class TokenRepository implements TokenRepositoryInterface
         return $token;
     }
 
-    public function getByToken(string $tokenValue): TokensInterface
+    public function getByToken(?string $tokenValue = null): TokensInterface
     {
         $token = $this->tokenFactory->create();
         $this->tokenResourceModel->load($token, $tokenValue, 'cli_auth');
