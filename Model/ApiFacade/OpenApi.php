@@ -61,7 +61,7 @@ class OpenApi
         return $this->updateRedirectUrl($transaction);
     }
 
-    public function blik(string $blikCode, string $transactionId): array
+    public function blik(string $transactionId, string $blikCode): array
     {
         $additional_payment_data = [
             'channelId' => 64,
@@ -81,7 +81,7 @@ class OpenApi
     {
         $transaction = $this->createBlikZeroTransaction($data);
 
-        return $this->blik($data['blikPaymentData']['blikToken'], $transaction['transactionId']);
+        return $this->blik($transaction['transactionId'], $data['blikPaymentData']['blikToken']);
     }
 
     public function makeRefund(InfoInterface $payment, float $amount): array
