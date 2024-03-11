@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tpay\Magento2\Model;
 
 use Magento\Checkout\Model\Session;
+use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\DataObject;
 use Magento\Framework\Escaper;
 use Magento\Framework\Event\ManagerInterface;
@@ -52,7 +53,7 @@ class TpayPayment extends Adapter implements TpayInterface
     /** @var Session */
     protected $checkoutSession;
 
-    /** @var \Magento\Customer\Model\Session */
+    /** @var CustomerSession */
     protected $customerSession;
 
     /** @var OrderRepositoryInterface */
@@ -88,7 +89,7 @@ class TpayPayment extends Adapter implements TpayInterface
     public function __construct(
         UrlInterface $urlBuilder,
         Session $checkoutSession,
-        \Magento\Customer\Model\Session $customerSession,
+        CustomerSession $customerSession,
         OrderRepositoryInterface $orderRepository,
         Escaper $escaper,
         StoreManager $storeManager,
