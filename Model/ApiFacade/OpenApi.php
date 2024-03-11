@@ -16,16 +16,7 @@ class OpenApi
     {
         $this->tpayApi = new TpayApi($tpay->getOpenApiClientId(), $tpay->getOpenApiPassword(), !$tpay->useSandboxMode());
         $this->tpayApi->authorization();
-        $versions = $this->getPackagesVersions();
-        $this->tpayApi->authorization()->setClientName(implode(
-            '|',
-            [
-                'magento2:'.$this->getMagentoVersion(),
-                'tpay-com/tpay-openapi-php:'.$versions[0],
-                'tpay-com/tpay-php:'.$versions[1],
-                'PHP:'.phpversion(),
-            ]
-        ));
+        $this->tpayApi->authorization()->setClientName($tpay->buildMagentoInfo());
     }
 
     public function create(array $data): array
@@ -207,28 +198,5 @@ class OpenApi
         $result['payments']['errors'] = [1];
 
         return $result;
-    }
-
-    private function getMagentoVersion()
-    {
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $productMetadata = $objectManager->get('\Magento\Framework\App\ProductMetadataInterface');
-
-        return $productMetadata->getVersion();
-    }
-
-    private function getPackagesVersions()
-    {
-        $dir = __DIR__.'/../../composer.json';
-        if (file_exists($dir)) {
-            $composerJson = json_decode(
-                file_get_contents(__DIR__.'/../../composer.json'),
-                true
-            )['require'] ?? [];
-
-            return [$composerJson['tpay-com/tpay-openapi-php'], $composerJson['tpay-com/tpay-php']];
-        }
-
-        return ['n/a', 'n/a'];
     }
 }

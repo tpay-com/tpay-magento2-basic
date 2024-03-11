@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Tpay\Magento2\Model;
 
 use Magento\Checkout\Model\Session;
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\DataObject;
 use Magento\Framework\Escaper;
 use Magento\Framework\Event\ManagerInterface;
+use Magento\Framework\Locale\Resolver;
 use Magento\Framework\UrlInterface;
 use Magento\Framework\Validator\Exception;
 use Magento\Payment\Gateway\Command\CommandManagerInterface;
@@ -52,6 +52,9 @@ class TpayPayment extends Adapter implements TpayInterface
     /** @var Session */
     protected $checkoutSession;
 
+    /** @var \Magento\Customer\Model\Session */
+    protected $customerSession;
+
     /** @var OrderRepositoryInterface */
     protected $orderRepository;
 
@@ -66,6 +69,9 @@ class TpayPayment extends Adapter implements TpayInterface
 
     /** @var PaymentInterface */
     protected $infoInstance;
+
+    /** @var Resolver */
+    protected $resolver;
 
     /** @var LoggerInterface */
     protected $logger;
@@ -82,11 +88,13 @@ class TpayPayment extends Adapter implements TpayInterface
     public function __construct(
         UrlInterface $urlBuilder,
         Session $checkoutSession,
+        \Magento\Customer\Model\Session $customerSession,
         OrderRepositoryInterface $orderRepository,
         Escaper $escaper,
         StoreManager $storeManager,
         ConfigurationProvider $configurationProvider,
         PaymentInterface $infoInstance,
+        Resolver $resolver,
         ManagerInterface $eventManager,
         ValueHandlerPoolInterface $valueHandlerPool,
         PaymentDataObjectFactory $paymentDataObjectFactory,
@@ -101,10 +109,12 @@ class TpayPayment extends Adapter implements TpayInterface
         $this->urlBuilder = $urlBuilder;
         $this->escaper = $escaper;
         $this->checkoutSession = $checkoutSession;
+        $this->customerSession = $customerSession;
         $this->orderRepository = $orderRepository;
         $this->storeManager = $storeManager;
         $this->configurationProvider = $configurationProvider;
         $this->infoInstance = $infoInstance;
+        $this->resolver = $resolver;
         parent::__construct(
             $eventManager,
             $valueHandlerPool,
@@ -175,10 +185,7 @@ class TpayPayment extends Adapter implements TpayInterface
         $crc = base64_encode($orderId);
         $name = $billingAddress->getData('firstname').' '.$billingAddress->getData('lastname');
         $phone = $billingAddress->getData('telephone');
-
-        $om = ObjectManager::getInstance();
-        $resolver = $om->get('Magento\Framework\Locale\Resolver');
-        $language = $this->validateCardLanguage($resolver->getLocale());
+        $language = $this->validateCardLanguage($this->resolver->getLocale());
 
         return [
             'email' => $this->escaper->escapeHtml($order->getCustomerEmail()),
@@ -195,7 +202,7 @@ class TpayPayment extends Adapter implements TpayInterface
             'return_url' => $this->urlBuilder->getUrl('magento2basic/tpay/success'),
             'phone' => $phone,
             'online' => $this->configurationProvider->onlyOnlineChannels() ? 1 : 0,
-            'module' => 'Magento '.$this->getMagentoVersion(),
+            'module' => 'Magento '.$this->configurationProvider->getMagentoVersion(),
             'currency' => $this->getISOCurrencyCode($order->getOrderCurrencyCode()),
             'language' => $language,
         ];
@@ -280,22 +287,12 @@ class TpayPayment extends Adapter implements TpayInterface
 
     public function getCheckoutCustomerId(): ?string
     {
-        $objectManager = ObjectManager::getInstance();
-
-        /** @var \Magento\Customer\Model\Session $customerSession */
-        $customerSession = $objectManager->get('Magento\Customer\Model\Session');
-
-        return $customerSession->getCustomerId();
+        return $this->customerSession->getCustomerId();
     }
 
     public function isCustomerLoggedIn(): bool
     {
-        $objectManager = ObjectManager::getInstance();
-
-        /** @var \Magento\Customer\Model\Session $customerSession */
-        $customerSession = $objectManager->get('Magento\Customer\Model\Session');
-
-        return $customerSession->isLoggedIn();
+        return $this->customerSession->isLoggedIn();
     }
 
     /**
@@ -360,13 +357,5 @@ class TpayPayment extends Adapter implements TpayInterface
         }
 
         return $this->orderRepository->getByIncrementId($orderId);
-    }
-
-    private function getMagentoVersion()
-    {
-        $objectManager = ObjectManager::getInstance();
-        $productMetadata = $objectManager->get('Magento\Framework\App\ProductMetadataInterface');
-
-        return $productMetadata->getVersion();
     }
 }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tpay\Magento2\Provider;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Framework\App\ObjectManager;
+use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Store\Model\ScopeInterface;
 use Tpay\Magento2\Api\TpayConfigInterface;
 
@@ -18,9 +18,13 @@ class ConfigurationProvider implements TpayConfigInterface
     /** @var ScopeConfigInterface */
     protected $scopeConfig;
 
-    public function __construct(ScopeConfigInterface $scopeConfig)
+    /** @var ProductMetadataInterface */
+    protected $productMetadataInterface;
+
+    public function __construct(ScopeConfigInterface $scopeConfig, ProductMetadataInterface $productMetadataInterface)
     {
         $this->scopeConfig = $scopeConfig;
+        $this->productMetadataInterface = $productMetadataInterface;
     }
 
     public function getBlikLevelZeroStatus(): bool
@@ -179,16 +183,43 @@ class ConfigurationProvider implements TpayConfigInterface
         return !is_null($grandTotal);
     }
 
-    public function getMagentoVersion()
+    public function getMagentoVersion(): string
     {
-        $objectManager = ObjectManager::getInstance();
-        $productMetadata = $objectManager->get('Magento\Framework\App\ProductMetadataInterface');
+        return $this->productMetadataInterface->getVersion();
+    }
 
-        return $productMetadata->getVersion();
+    public function buildMagentoInfo(): string
+    {
+        $versions = $this->getPackagesVersions();
+
+        return implode(
+            '|',
+            [
+                'magento2:'.$this->getMagentoVersion(),
+                'tpay-com/tpay-openapi-php:'.$versions[0],
+                'tpay-com/tpay-php:'.$versions[1],
+                'PHP:'.phpversion(),
+            ]
+        );
     }
 
     public function getConfigData($field, $storeId = null)
     {
         return $this->scopeConfig->getValue(self::BASE_CONFIG_PATH.$field, ScopeInterface::SCOPE_STORE, $storeId);
+    }
+
+    private function getPackagesVersions(): array
+    {
+        $dir = __DIR__.'/../../composer.json';
+        if (file_exists($dir)) {
+            $composerJson = json_decode(
+                file_get_contents(__DIR__.'/../../composer.json'),
+                true
+            )['require'] ?? [];
+
+            return [$composerJson['tpay-com/tpay-openapi-php'], $composerJson['tpay-com/tpay-php']];
+        }
+
+        return ['n/a', 'n/a'];
     }
 }

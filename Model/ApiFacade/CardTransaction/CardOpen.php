@@ -35,16 +35,7 @@ class CardOpen
         $this->tokensService = $tokensService;
         $this->tpayService = $tpayService;
         $this->tpayApi = new TpayApi($tpayConfig->getOpenApiClientId(), $tpayConfig->getOpenApiPassword(), !$tpayConfig->useSandboxMode());
-        $versions = $this->getPackagesVersions();
-        $this->tpayApi->authorization()->setClientName(implode(
-            '|',
-            [
-                'magento2:'.$this->getMagentoVersion(),
-                'tpay-com/tpay-openapi-php:'.$versions[0],
-                'tpay-com/tpay-php:'.$versions[1],
-                'PHP:'.phpversion(),
-            ]
-        ));
+        $this->tpayApi->authorization()->setClientName($tpayConfig->buildMagentoInfo());
     }
 
     public function makeFullCardTransactionProcess(string $orderId): string
@@ -232,28 +223,5 @@ class CardOpen
         $response['sale_auth'] = $response['transactionId'];
 
         return $response;
-    }
-
-    private function getMagentoVersion()
-    {
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $productMetadata = $objectManager->get('\Magento\Framework\App\ProductMetadataInterface');
-
-        return $productMetadata->getVersion();
-    }
-
-    private function getPackagesVersions()
-    {
-        $dir = __DIR__.'/../../composer.json';
-        if (file_exists($dir)) {
-            $composerJson = json_decode(
-                file_get_contents(__DIR__.'/../../composer.json'),
-                true
-            )['require'] ?? [];
-
-            return [$composerJson['tpay-com/tpay-openapi-php'], $composerJson['tpay-com/tpay-php']];
-        }
-
-        return ['n/a', 'n/a'];
     }
 }

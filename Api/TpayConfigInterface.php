@@ -64,4 +64,8 @@ interface TpayConfigInterface
     public function getMinOrderTotal(): int;
 
     public function getMaxOrderTotal(): int;
+
+    public function getMagentoVersion(): string;
+
+    public function buildMagentoInfo(): string;
 }
