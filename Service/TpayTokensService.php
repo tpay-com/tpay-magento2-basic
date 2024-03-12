@@ -74,7 +74,7 @@ class TpayTokensService
         return $this->tokenRepository->delete($token);
     }
 
-    public function getWithoutAuthCustomerTokens(int $customerId, string $crc): array
+    public function getWithoutAuthCustomerTokens(string $customerId, string $crc): array
     {
         foreach ($this->getToken($customerId) as $token) {
             if (empty($token['crc'])) {
@@ -95,7 +95,7 @@ class TpayTokensService
         $this->tokenRepository->save($token);
     }
 
-    public function getTokenById(int $tokenId, int $customerId, bool $crcRequired = true): ?array
+    public function getTokenById(int $tokenId, string $customerId, bool $crcRequired = true): ?array
     {
         $connection = $this->resourceConnection->getConnection();
         $tableName = $connection->getTableName('tpay_credit_cards');
