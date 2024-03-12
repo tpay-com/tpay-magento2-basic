@@ -59,7 +59,7 @@ class RedirectHandler
 
     public function redirectTransaction(string $transactionUrl): ResultInterface
     {
-        return $this->redirectFactory->create()->setPath($transactionUrl);
+        return $this->redirect($transactionUrl);
     }
 
     private function redirect(string $path): ResultInterface
