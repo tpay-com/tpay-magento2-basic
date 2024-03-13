@@ -7,60 +7,56 @@ use Magento\Framework\View\Asset\Repository;
 use Magento\Store\Model\StoreManagerInterface;
 use Tpay\Magento2\Api\TpayConfigInterface;
 use Tpay\Magento2\Api\TpayInterface;
-use Tpay\Magento2\Model\ApiFacade\Transaction\TransactionOriginApi;
+use Tpay\Magento2\Model\ApiFacade\CardTransaction\CardOrigin;
 use Tpay\Magento2\Service\TpayService;
 use Tpay\Magento2\Service\TpayTokensService;
 
-class ConfigFacade
+class CardConfigFacade
 {
     /** @var ConfigOrigin */
-    private $originConfig;
+    private $originApi;
 
     /** @var ConfigOpen */
     private $openApi;
-
-    /** @var CardConfigFacade */
-    private $cardConfig;
 
     /** @var bool */
     private $useOpenApi;
 
     public function __construct(TpayInterface $tpay, TpayConfigInterface $tpayConfig, Repository $assetRepository, TpayTokensService $tokensService, StoreManagerInterface $storeManager, TpayService $tpayService)
     {
-        $this->createOriginApiInstance($tpay, $tpayConfig, $assetRepository, $tokensService);
+        $this->createOriginApiInstance($tpay, $tpayConfig, $assetRepository, $tokensService, $tpayService);
         $this->createOpenApiInstance($tpay, $tpayConfig, $assetRepository, $tokensService, $storeManager);
-        $this->cardConfig = new CardConfigFacade($tpay, $tpayConfig, $assetRepository, $tokensService, $storeManager, $tpayService);
     }
 
     public function getConfig(): array
     {
-        return array_merge($this->getCurrentApi() ? $this->getCurrentApi()->getConfig() : [], $this->cardConfig->getConfig());
+        return $this->getCurrentApi() ? $this->getCurrentApi()->getCardConfig() : [];
     }
 
     private function getCurrentApi()
     {
-        return $this->useOpenApi ? $this->openApi : $this->originConfig;
+        return $this->useOpenApi ? $this->openApi : $this->originApi;
     }
 
-    private function createOriginApiInstance(TpayInterface $tpay, TpayConfigInterface $tpayConfig, Repository $assetRepository, TpayTokensService $tokensService)
+    private function createOriginApiInstance(TpayInterface $tpay, TpayConfigInterface $tpayConfig, Repository $assetRepository, TpayTokensService $tokensService, TpayService $tpayService)
     {
-        if (!$tpayConfig->isOriginApiEnabled()) {
-            $this->originConfig = null;
+        if (!$tpayConfig->isCardEnabled()) {
+            $this->originApi = null;
 
             return;
         }
 
         try {
-            new TransactionOriginApi($tpayConfig->getApiPassword(), $tpayConfig->getApiKey(), $tpayConfig->getMerchantId(), $tpayConfig->getSecurityCode(), !$tpayConfig->useSandboxMode());
-            $this->originConfig = new ConfigOrigin($tpay, $tpayConfig, $assetRepository, $tokensService);
+            new CardOrigin($tpay, $tpayConfig, $tokensService, $tpayService);
+            $this->originApi = new ConfigOrigin($tpay, $tpayConfig, $assetRepository, $tokensService);
         } catch (Exception $exception) {
-            $this->originConfig = null;
+            $this->originApi = null;
         }
     }
 
     private function createOpenApiInstance(TpayInterface $tpay, TpayConfigInterface $tpayConfig, Repository $assetRepository, TpayTokensService $tokensService, StoreManagerInterface $storeManager)
     {
-        if ('PLN' !== $storeManager->getStore()->getCurrentCurrencyCode() || !$tpayConfig->isOpenApiEnabled()) {
+        if ('PLN' !== $storeManager->getStore()->getCurrentCurrencyCode()) {
             $this->openApi = null;
             $this->useOpenApi = false;
 

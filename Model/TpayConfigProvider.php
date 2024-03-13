@@ -12,6 +12,7 @@ use Tpay\Magento2\Api\TpayConfigInterface;
 use Tpay\Magento2\Api\TpayInterface;
 use Tpay\Magento2\Model\ApiFacade\TpayConfig\ConfigFacade;
 use Tpay\Magento2\Model\ApiFacade\Transaction\TransactionApiFacade;
+use Tpay\Magento2\Service\TpayService;
 use Tpay\Magento2\Service\TpayTokensService;
 
 class TpayConfigProvider implements ConfigProviderInterface
@@ -34,11 +35,12 @@ class TpayConfigProvider implements ConfigProviderInterface
         StoreManagerInterface $storeManager,
         TpayTokensService $tokensService,
         TransactionApiFacade $transactionApiFacade,
+        TpayService $tpayService,
         TpayConfigInterface $tpayConfig
     ) {
         $this->paymentHelper = $paymentHelper;
         $this->transactionApi = $transactionApiFacade;
-        $this->configFacade = new ConfigFacade($this->getPaymentMethodInstance(), $tpayConfig, $assetRepository, $tokensService, $storeManager);
+        $this->configFacade = new ConfigFacade($this->getPaymentMethodInstance(), $tpayConfig, $assetRepository, $tokensService, $storeManager, $tpayService);
     }
 
     public function getConfig(): array

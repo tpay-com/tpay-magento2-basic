@@ -126,17 +126,26 @@ class MethodListPlugin
 
     private function filterResult(array $result): array
     {
+        if (!$this->tpayConfig->isOpenApiEnabled() && !$this->tpayConfig->isOriginApiEnabled()) {
+            return $this->filterTransaction($result);
+        }
+
         if ($this->isPlnPayment()) {
             return $result;
         }
 
-        return array_filter($result, function ($method) {
-            return 'Tpay_Magento2' !== $method->getCode();
-        });
+        return $this->filterTransaction($result);
     }
 
     private function isPlnPayment(): bool
     {
         return 'PLN' === $this->storeManager->getStore()->getCurrentCurrencyCode();
+    }
+
+    private function filterTransaction(array $result): array
+    {
+        return array_filter($result, function ($method) {
+            return 'Tpay_Magento2' !== $method->getCode();
+        });
     }
 }

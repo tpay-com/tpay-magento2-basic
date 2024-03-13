@@ -34,7 +34,7 @@ class ConfigOpen extends TpayApi
 
     public function getConfig(): array
     {
-        $config = [
+        return [
             'tpay' => [
                 'payment' => [
                     'redirectUrl' => $this->tpay->getPaymentRedirectUrl(),
@@ -51,8 +51,6 @@ class ConfigOpen extends TpayApi
                 ],
             ],
         ];
-
-        return array_merge($config, $this->getCardConfig());
     }
 
     public function generateURL(string $name): string
@@ -116,6 +114,7 @@ class ConfigOpen extends TpayApi
                     'isCustomerLoggedIn' => $this->tpay->isCustomerLoggedIn(),
                     'customerTokens' => $customerTokensData,
                     'isSavingEnabled' => $this->tpayConfig->getCardSaveEnabled(),
+                    'getTerms' => $this->getTerms(),
                 ],
             ],
         ];

@@ -51,8 +51,6 @@ class ConfigOrigin
             ],
         ];
 
-        $config = array_merge($config, $this->getCardConfig());
-
         return $this->tpay->isAvailable() ? $config : [];
     }
 
@@ -89,10 +87,10 @@ class ConfigOrigin
         return "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$this->generateURL($css)}\">";
     }
 
-    private function getCardConfig()
+    public function getCardConfig()
     {
         $customerTokensData = [];
-        if ($this->tpayConfig->getCardSaveEnabled()) {
+        if ($this->tpayConfig->getCardSaveEnabled() && $this->tpay->isCustomerLoggedIn()) {
             $customerTokens = $this->tokensService->getCustomerTokens($this->tpay->getCheckoutCustomerId());
             foreach ($customerTokens as $key => $value) {
                 $customerTokensData[] = [
@@ -116,6 +114,7 @@ class ConfigOrigin
                     'isCustomerLoggedIn' => $this->tpay->isCustomerLoggedIn(),
                     'customerTokens' => $customerTokensData,
                     'isSavingEnabled' => $this->tpayConfig->getCardSaveEnabled(),
+                    'getTerms' => $this->getTerms(),
                 ],
             ],
         ];

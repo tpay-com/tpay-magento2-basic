@@ -22,8 +22,9 @@ define(
             }
         );
 
+        if (typeof(window.checkoutConfig.generic) != "undefined"){
          Object.values(window.checkoutConfig.generic).forEach((element) => rendererList.push({type: `generic-${element.id}`, component: 'Tpay_Magento2/js/view/payment/method-renderer/tpay-generic-onsite'}))
-
+        }
 
         rendererList.push({type: 'Tpay_Magento2_Cards', component: 'Tpay_Magento2/js/view/payment/method-renderer/tpay-card-method'});
 

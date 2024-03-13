@@ -30,41 +30,29 @@ define(
                 $("#cvc").val('');
                 $("#expiry_date").val('');
                 $("#loading_scr").fadeIn();
-                window.location.replace(window.checkoutConfig.tpay.payment.redirectUrl);
-            },
-
-            showPaymentChannels: function () {
-                return window.checkoutConfig.tpay.payment.showPaymentChannels;
+                window.location.replace(window.checkoutConfig.tpaycards.payment.redirectUrl);
             },
 
             getTerms: function () {
-                return window.checkoutConfig.tpay.payment.getTerms;
-            },
-
-            getLogoUrl: function () {
-                return window.checkoutConfig.tpay.payment.tpayLogoUrl;
-            },
-
-            blikStatus: function () {
-                return window.checkoutConfig.tpay.payment.blikStatus;
-            },
-
-            addCSS: function () {
-                return window.checkoutConfig.tpay.payment.addCSS;
+                return window.checkoutConfig.tpaycards.payment.getTerms;
             },
 
             cardFetchJavaScripts: function () {
                 return window.checkoutConfig.tpaycards.payment.fetchJavaScripts;
             },
+
             cardGetRSAkey: function () {
                 return window.checkoutConfig.tpaycards.payment.getRSAkey;
             },
+
             cardGetLogoUrl: function () {
-                return window.checkoutConfig.tpay.payment.tpayCardsLogoUrl;
+                return window.checkoutConfig.tpaycards.payment.tpayCardsLogoUrl;
             },
+
             cardGetTpayLoadingGif: function () {
                 return window.checkoutConfig.tpaycards.payment.getTpayLoadingGif;
             },
+
             cardAddCSS: function () {
                 return window.checkoutConfig.tpaycards.payment.addCSS;
             },

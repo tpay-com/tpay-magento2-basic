@@ -51,7 +51,7 @@ class TpayTokensService
             ->from($tableName)
             ->where('cli_id = ?', $customerId)
             ->where(new Zend_Db_Expr('cli_auth IS NOT NULL'))
-            ->where(new Zend_Db_Expr($crcRequired ? 'crc IS NOT NULL' : 'crc IS NULL'));
+            ->where(new Zend_Db_Expr($crcRequired ? 'LENGTH(crc) > 1' : 'LENGTH(crc) < 1'));
 
         $results = [];
         foreach ($connection->fetchAll($select) as $token) {
@@ -104,7 +104,7 @@ class TpayTokensService
             ->from($tableName)
             ->where('id = ?', $tokenId)
             ->where('cli_id = ?', $customerId)
-            ->where(new Zend_Db_Expr($crcRequired ? 'crc IS NOT NULL' : 'crc IS NULL'));
+            ->where(new Zend_Db_Expr($crcRequired ? 'LENGTH(crc) > 1' : 'LENGTH(crc) < 1'));
 
         $result = $connection->fetchAll($select);
 
