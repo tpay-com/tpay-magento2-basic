@@ -1,11 +1,12 @@
 <?php
 
-namespace tpaycom\magento2basic\Model\ApiFacade\TpayConfig;
+namespace Tpay\Magento2\Model\ApiFacade\TpayConfig;
 
 use Magento\Framework\View\Asset\Repository;
-use tpaycom\magento2basic\Api\TpayInterface;
-use tpaycom\magento2basic\Model\ApiFacade\Transaction\TransactionOriginApi;
-use tpaycom\magento2basic\Service\TpayTokensService;
+use Tpay\Magento2\Api\TpayConfigInterface;
+use Tpay\Magento2\Api\TpayInterface;
+use Tpay\Magento2\Model\ApiFacade\Transaction\TransactionOriginApi;
+use Tpay\Magento2\Service\TpayTokensService;
 use tpaySDK\Api\TpayApi;
 
 class ConfigOpen extends TpayApi
@@ -16,38 +17,40 @@ class ConfigOpen extends TpayApi
     /** @var TpayInterface */
     private $tpay;
 
+    /** @var TpayConfigInterface */
+    private $tpayConfig;
+
     /** @var Repository */
     private $assetRepository;
 
-    public function __construct(TpayInterface $tpay, Repository $assetRepository, TpayTokensService $tokensService)
+    public function __construct(TpayInterface $tpay, TpayConfigInterface $tpayConfig, Repository $assetRepository, TpayTokensService $tokensService)
     {
         $this->tpay = $tpay;
+        $this->tpayConfig = $tpayConfig;
         $this->assetRepository = $assetRepository;
         $this->tokensService = $tokensService;
-        parent::__construct($tpay->getOpenApiClientId(), $tpay->getOpenApiPassword(), !$tpay->useSandboxMode());
+        parent::__construct($tpayConfig->getOpenApiClientId(), $tpayConfig->getOpenApiPassword(), !$tpayConfig->useSandboxMode());
     }
 
     public function getConfig(): array
     {
-        $config = [
+        return [
             'tpay' => [
                 'payment' => [
                     'redirectUrl' => $this->tpay->getPaymentRedirectUrl(),
-                    'tpayLogoUrl' => $this->generateURL('tpaycom_magento2basic::images/logo_tpay.png'),
-                    'tpayCardsLogoUrl' => $this->generateURL('tpaycom_magento2basic::images/card.svg'),
+                    'tpayLogoUrl' => $this->generateURL('Tpay_Magento2::images/logo_tpay.png'),
+                    'tpayCardsLogoUrl' => $this->generateURL('Tpay_Magento2::images/card.svg'),
                     'showPaymentChannels' => $this->showChannels(),
                     'getTerms' => $this->getTerms(),
-                    'addCSS' => $this->createCSS('tpaycom_magento2basic::css/tpay.css'),
+                    'addCSS' => $this->createCSS('Tpay_Magento2::css/tpay.css'),
                     'blikStatus' => $this->tpay->checkBlikLevel0Settings(),
                     'getBlikChannelID' => TransactionOriginApi::BLIK_CHANNEL,
-                    'useSandbox' => $this->tpay->useSandboxMode(),
+                    'useSandbox' => $this->tpayConfig->useSandboxMode(),
                     'grandTotal' => number_format($this->tpay->getCheckoutTotal(), 2, '.', ''),
-                    'groups' => $this->transactions()->getBankGroups((bool) $this->tpay->onlyOnlineChannels())['groups'],
+                    'groups' => $this->transactions()->getBankGroups((bool) $this->tpayConfig->onlyOnlineChannels())['groups'],
                 ],
             ],
         ];
-
-        return array_merge($config, $this->getCardConfig());
     }
 
     public function generateURL(string $name): string
@@ -57,7 +60,7 @@ class ConfigOpen extends TpayApi
 
     public function showChannels(): ?string
     {
-        $script = 'tpaycom_magento2basic::js/open_render_channels.js';
+        $script = 'Tpay_Magento2::js/open_render_channels.js';
 
         return $this->createScript($script);
     }
@@ -87,7 +90,7 @@ class ConfigOpen extends TpayApi
     {
         $customerTokensData = [];
 
-        if ($this->tpay->getCardSaveEnabled() && $this->tpay->isCustomerLoggedIn()) {
+        if ($this->tpayConfig->getCardSaveEnabled() && $this->tpay->isCustomerLoggedIn()) {
             $customerTokens = $this->tokensService->getCustomerTokens($this->tpay->getCheckoutCustomerId(), true);
             foreach ($customerTokens as $value) {
                 $customerTokensData[] = [
@@ -101,16 +104,17 @@ class ConfigOpen extends TpayApi
         return [
             'tpaycards' => [
                 'payment' => [
-                    'tpayLogoUrl' => $this->generateURL('tpaycom_magento2basic::images/logo_tpay.png'),
-                    'tpayCardsLogoUrl' => $this->generateURL('tpaycom_magento2basic::images/card.svg'),
-                    'getTpayLoadingGif' => $this->generateURL('tpaycom_magento2basic::images/loading.gif'),
-                    'getRSAkey' => $this->tpay->getRSAKey(),
+                    'tpayLogoUrl' => $this->generateURL('Tpay_Magento2::images/logo_tpay.png'),
+                    'tpayCardsLogoUrl' => $this->generateURL('Tpay_Magento2::images/card.svg'),
+                    'getTpayLoadingGif' => $this->generateURL('Tpay_Magento2::images/loading.gif'),
+                    'getRSAkey' => $this->tpayConfig->getRSAKey(),
                     'fetchJavaScripts' => $this->fetchJavaScripts(),
-                    'addCSS' => $this->createCSS('tpaycom_magento2basic::css/tpaycards.css'),
+                    'addCSS' => $this->createCSS('Tpay_Magento2::css/tpaycards.css'),
                     'redirectUrl' => $this->tpay->getPaymentRedirectUrl(),
                     'isCustomerLoggedIn' => $this->tpay->isCustomerLoggedIn(),
                     'customerTokens' => $customerTokensData,
-                    'isSavingEnabled' => $this->tpay->getCardSaveEnabled(),
+                    'isSavingEnabled' => $this->tpayConfig->getCardSaveEnabled(),
+                    'getTerms' => $this->getTerms(),
                 ],
             ],
         ];
@@ -119,12 +123,12 @@ class ConfigOpen extends TpayApi
     public function fetchJavaScripts()
     {
         $script = [];
-        $script[] = 'tpaycom_magento2basic::js/jquery.payment.min.js';
-        $script[] = 'tpaycom_magento2basic::js/jsencrypt.min.js';
-        $script[] = 'tpaycom_magento2basic::js/string_routines.js';
-        $script[] = 'tpaycom_magento2basic::js/tpayCards.js';
-        $script[] = 'tpaycom_magento2basic::js/renderSavedCards.js';
-        $script[] = 'tpaycom_magento2basic::js/tpayGeneric.js';
+        $script[] = 'Tpay_Magento2::js/jquery.payment.min.js';
+        $script[] = 'Tpay_Magento2::js/jsencrypt.min.js';
+        $script[] = 'Tpay_Magento2::js/string_routines.js';
+        $script[] = 'Tpay_Magento2::js/tpayCards.js';
+        $script[] = 'Tpay_Magento2::js/renderSavedCards.js';
+        $script[] = 'Tpay_Magento2::js/tpayGeneric.js';
         $scripts = '';
 
         foreach ($script as $key => $value) {

@@ -1,6 +1,6 @@
 <?php
 
-namespace tpaycom\magento2basic\Model\ApiFacade\Transaction;
+namespace Tpay\Magento2\Model\ApiFacade\Transaction;
 
 use Tpay\OriginApi\PaymentBlik;
 
@@ -24,5 +24,10 @@ class TransactionOriginApi extends PaymentBlik
         if (!$isProd) {
             $this->apiURL = 'https://secure.sandbox.tpay.com/api/gw/';
         }
+    }
+
+    public function createTransaction(array $data): array
+    {
+        return $this->create($data);
     }
 }

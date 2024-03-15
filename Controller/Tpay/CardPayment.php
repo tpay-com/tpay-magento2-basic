@@ -1,14 +1,14 @@
 <?php
 
-namespace tpaycom\magento2basic\Controller\tpay;
+namespace Tpay\Magento2\Controller\Tpay;
 
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\ActionInterface;
-use Magento\Framework\Controller\Result\RedirectFactory;
+use Tpay\Magento2\Api\TpayInterface;
+use Tpay\Magento2\Model\ApiFacade\CardTransaction\CardApiFacade;
+use Tpay\Magento2\Service\RedirectHandler;
+use Tpay\Magento2\Service\TpayService;
 use Tpay\OriginApi\Utilities\Util;
-use tpaycom\magento2basic\Api\TpayInterface;
-use tpaycom\magento2basic\Model\ApiFacade\CardTransaction\CardApiFacade;
-use tpaycom\magento2basic\Service\TpayService;
 
 class CardPayment implements ActionInterface
 {
@@ -21,14 +21,14 @@ class CardPayment implements ActionInterface
     /** @var CardApiFacade */
     private $cardApiFacade;
 
-    /** @var RedirectFactory */
+    /** @var RedirectHandler */
     private $redirectFactory;
 
     public function __construct(
         TpayService $tpayService,
         Session $checkoutSession,
         CardApiFacade $cardApiFacade,
-        RedirectFactory $redirectFactory
+        RedirectHandler $redirectFactory
     ) {
         $this->tpayService = $tpayService;
         $this->checkoutSession = $checkoutSession;
@@ -47,16 +47,16 @@ class CardPayment implements ActionInterface
             $additionalPaymentInformation = $payment->getData()['additional_information'];
 
             if (!$additionalPaymentInformation[TpayInterface::TERMS_ACCEPT]) {
-                return $this->redirectFactory->create()->setPath('magento2basic/tpay/error');
+                return $this->redirectFactory->redirectError();
             }
 
             $redirectUrl = $this->cardApiFacade->makeCardTransaction($orderId);
 
-            return $this->redirectFactory->create()->setPath($redirectUrl);
+            return $this->redirectFactory->redirectTransaction($redirectUrl);
         }
 
         $this->checkoutSession->unsQuoteId();
 
-        return $this->redirectFactory->create()->setPath('magento2basic/tpay/error');
+        return $this->redirectFactory->redirectError();
     }
 }

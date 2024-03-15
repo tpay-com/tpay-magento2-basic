@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace tpaycom\magento2basic\Model;
+namespace Tpay\Magento2\Model;
 
 use Magento\Checkout\Model\Session;
 
@@ -47,11 +47,11 @@ class ConstraintValidator
 
     private function validateMinimalTotal(float $minimal): bool
     {
-        return $this->checkoutSession->getQuote()->getGrandTotal() > $minimal;
+        return $this->checkoutSession->getQuote()->getGrandTotal() >= $minimal;
     }
 
     private function validateMaximalTotal(float $maximal): bool
     {
-        return $this->checkoutSession->getQuote()->getGrandTotal() < $maximal;
+        return $this->checkoutSession->getQuote()->getGrandTotal() <= $maximal;
     }
 }

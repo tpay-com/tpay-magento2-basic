@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace tpaycom\magento2basic\Validator;
+namespace Tpay\Magento2\Validator;
 
-use tpaycom\magento2basic\Api\TpayInterface;
+use Tpay\Magento2\Api\TpayInterface;
 
 class AdditionalPaymentInfoValidator
 {
@@ -15,7 +15,7 @@ class AdditionalPaymentInfoValidator
 
     public function validateBlikIfPresent(array $data): bool
     {
-        return !array_key_exists(TpayInterface::BLIK_CODE, $data) || 6 !== strlen($data[TpayInterface::BLIK_CODE]);
+        return 6 === strlen($data[TpayInterface::BLIK_CODE]);
     }
 
     public function validatePresenceOfGroupOrChannel(array $data): bool

@@ -14,17 +14,19 @@ define(
     function (Component,
               rendererList) {
         'use strict';
+
         rendererList.push(
             {
-                type: 'tpaycom_magento2basic',
-                component: 'tpaycom_magento2basic/js/view/payment/method-renderer/tpay-method'
+                type: 'Tpay_Magento2',
+                component: 'Tpay_Magento2/js/view/payment/method-renderer/tpay-method'
             }
         );
 
-         Object.values(window.checkoutConfig.generic).forEach((element) => rendererList.push({type: `generic-${element.id}`, component: 'tpaycom_magento2basic/js/view/payment/method-renderer/tpay-generic-onsite'}))
+        if (typeof(window.checkoutConfig.generic) != "undefined"){
+         Object.values(window.checkoutConfig.generic).forEach((element) => rendererList.push({type: `generic-${element.id}`, component: 'Tpay_Magento2/js/view/payment/method-renderer/tpay-generic-onsite'}))
+        }
 
-
-        rendererList.push({type: 'tpaycom_magento2basic_cards', component: 'tpaycom_magento2basic/js/view/payment/method-renderer/tpay-card-method'});
+        rendererList.push({type: 'Tpay_Magento2_Cards', component: 'Tpay_Magento2/js/view/payment/method-renderer/tpay-card-method'});
 
         /** Add view logic here if needed */
         return Component.extend({});

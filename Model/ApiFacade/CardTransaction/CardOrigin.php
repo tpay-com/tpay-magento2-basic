@@ -1,12 +1,13 @@
 <?php
 
-namespace tpaycom\magento2basic\Model\ApiFacade\CardTransaction;
+namespace Tpay\Magento2\Model\ApiFacade\CardTransaction;
 
 use Exception;
+use Tpay\Magento2\Api\TpayConfigInterface;
+use Tpay\Magento2\Api\TpayInterface;
+use Tpay\Magento2\Service\TpayService;
+use Tpay\Magento2\Service\TpayTokensService;
 use Tpay\OriginApi\Notifications\CardNotificationHandler;
-use tpaycom\magento2basic\Api\TpayInterface;
-use tpaycom\magento2basic\Service\TpayService;
-use tpaycom\magento2basic\Service\TpayTokensService;
 
 class CardOrigin extends CardNotificationHandler
 {
@@ -19,22 +20,26 @@ class CardOrigin extends CardNotificationHandler
     /** @var TpayService */
     private $tpayService;
 
+    /** @var TpayConfigInterface */
+    private $tpayConfig;
+
     private $tpayPaymentConfig;
 
-    public function __construct(TpayInterface $tpay, TpayTokensService $tokensService, TpayService $tpayService)
+    public function __construct(TpayInterface $tpay, TpayConfigInterface $tpayConfig, TpayTokensService $tokensService, TpayService $tpayService)
     {
         $this->tpay = $tpay;
+        $this->tpayConfig = $tpayConfig;
         $this->tokensService = $tokensService;
         $this->tpayService = $tpayService;
-        $this->cardApiKey = $tpay->getCardApiKey();
-        $this->cardApiPass = $tpay->getCardApiPassword();
-        $this->cardVerificationCode = $tpay->getVerificationCode();
-        $this->cardKeyRSA = $tpay->getRSAKey();
-        $this->cardHashAlg = $tpay->getHashType();
+        $this->cardApiKey = $tpayConfig->getCardApiKey();
+        $this->cardApiPass = $tpayConfig->getCardApiPassword();
+        $this->cardVerificationCode = $tpayConfig->getVerificationCode();
+        $this->cardKeyRSA = $tpayConfig->getRSAKey();
+        $this->cardHashAlg = $tpayConfig->getHashType();
         parent::__construct();
     }
 
-    public function makeCardTransaction(string $orderId): string
+    public function makeFullCardTransactionProcess(string $orderId): string
     {
         $payment = $this->tpayService->getPayment($orderId);
         $paymentData = $payment->getData();
@@ -53,7 +58,7 @@ class CardOrigin extends CardNotificationHandler
             ->setOrderID($this->tpayPaymentConfig['crc'])
             ->setModuleName($this->tpayPaymentConfig['module']);
 
-        if (isset($additionalPaymentInformation['card_id']) && false !== $additionalPaymentInformation['card_id'] && $this->tpay->getCardSaveEnabled()) {
+        if (isset($additionalPaymentInformation['card_id']) && false !== $additionalPaymentInformation['card_id'] && $this->tpayConfig->getCardSaveEnabled()) {
             $cardId = (int) $additionalPaymentInformation['card_id'];
 
             return $this->processSavedCardPayment($orderId, $cardId);
@@ -83,7 +88,7 @@ class CardOrigin extends CardNotificationHandler
                 }
 
                 if (1 === (int) $paymentResult['result'] && isset($paymentResult['status']) && 'correct' === $paymentResult['status']) {
-                    $this->tpayService->setOrderStatus($orderId, $paymentResult, $this->tpay);
+                    $this->tpayService->setOrderStatus($orderId, $paymentResult, $this->tpayConfig);
                     $this->tpayService->addCommentToHistory($orderId, 'Successful payment by saved card');
 
                     return 'magento2basic/tpay/success';
@@ -132,12 +137,13 @@ class CardOrigin extends CardNotificationHandler
         $payment = $this->tpayService->getPayment($orderId);
         $paymentData = $payment->getData();
         $paymentData['additional_information'][$key] = $value;
-        $payment->setData($paymentData)->save();
+        $payment->setData($paymentData);
+        $this->tpayService->saveOrderPayment($payment);
     }
 
     private function processNewCardPayment(string $orderId, array $additionalPaymentInformation): string
     {
-        $saveCard = isset($additionalPaymentInformation['card_save']) && $this->tpay->getCardSaveEnabled() ? (bool) $additionalPaymentInformation['card_save'] : false;
+        $saveCard = isset($additionalPaymentInformation['card_save']) && $this->tpayConfig->getCardSaveEnabled() ? (bool) $additionalPaymentInformation['card_save'] : false;
         if (true === $saveCard) {
             $this->setOneTimer(false);
         }
@@ -155,7 +161,7 @@ class CardOrigin extends CardNotificationHandler
         }
         if (isset($result['status']) && 'correct' === $result['status']) {
             $this->validateNon3dsSign($result);
-            $this->tpayService->setCardOrderStatus($orderId, $result, $this->tpay);
+            $this->tpayService->setCardOrderStatus($orderId, $result, $this->tpayConfig);
         }
 
         if (isset($result['cli_auth'], $result['card']) && !$this->tpay->isCustomerGuest($orderId)) {
@@ -188,7 +194,7 @@ class CardOrigin extends CardNotificationHandler
         $testMode = isset($tpayResponse['test_mode']) ? '1' : '';
         $cliAuth = $tpayResponse['cli_auth'] ?? '';
         $localHash = hash(
-            $this->tpay->getHashType(),
+            $this->tpayConfig->getHashType(),
             $testMode
             .$tpayResponse['sale_auth']
             .$cliAuth
@@ -197,7 +203,7 @@ class CardOrigin extends CardNotificationHandler
             .$this->tpayPaymentConfig['amount']
             .$tpayResponse['date']
             .$tpayResponse['status']
-            .$this->tpay->getVerificationCode()
+            .$this->tpayConfig->getVerificationCode()
         );
         if ($tpayResponse['sign'] !== $localHash) {
             throw new Exception('Card payment - invalid checksum');

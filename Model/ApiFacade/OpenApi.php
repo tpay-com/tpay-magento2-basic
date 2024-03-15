@@ -1,10 +1,10 @@
 <?php
 
-namespace tpaycom\magento2basic\Model\ApiFacade;
+namespace Tpay\Magento2\Model\ApiFacade;
 
 use Magento\Payment\Model\InfoInterface;
-use tpaycom\magento2basic\Api\TpayInterface;
-use tpaycom\magento2basic\Model\ApiFacade\Transaction\Dto\Channel;
+use Tpay\Magento2\Api\TpayConfigInterface;
+use Tpay\Magento2\Model\ApiFacade\Transaction\Dto\Channel;
 use tpaySDK\Api\TpayApi;
 
 class OpenApi
@@ -12,26 +12,29 @@ class OpenApi
     /** @var TpayApi */
     private $tpayApi;
 
-    public function __construct(TpayInterface $tpay)
+    public function __construct(TpayConfigInterface $tpay)
     {
         $this->tpayApi = new TpayApi($tpay->getOpenApiClientId(), $tpay->getOpenApiPassword(), !$tpay->useSandboxMode());
         $this->tpayApi->authorization();
-        $versions = $this->getPackagesVersions();
-        $this->tpayApi->authorization()->setClientName(implode(
-            '|',
-            [
-                'magento2:'.$this->getMagentoVersion(),
-                'tpay-com/tpay-openapi-php:'.$versions[0],
-                'tpay-com/tpay-php:'.$versions[1],
-                'PHP:'.phpversion(),
-            ]
-        ));
+        $this->tpayApi->authorization()->setClientName($tpay->buildMagentoInfo());
     }
 
     public function create(array $data): array
     {
         if (!empty($data['blikPaymentData'])) {
             return $this->createBlikZero($data);
+        }
+
+        $transactionData = $this->handleDataStructure($data);
+        $transaction = $this->tpayApi->transactions()->createTransaction($transactionData);
+
+        return $this->updateRedirectUrl($transaction);
+    }
+
+    public function createTransaction(array $data): array
+    {
+        if (!empty($data['blikPaymentData'])) {
+            return $this->createBlikZeroTransaction($data);
         }
 
         $transactionData = $this->handleDataStructure($data);
@@ -48,25 +51,37 @@ class OpenApi
         return $this->updateRedirectUrl($transaction);
     }
 
-    public function createBlikZero(array $data): array
+    public function createBlikZeroTransaction(array $data): array
     {
         $transactionData = $this->handleDataStructure($data);
         unset($transactionData['pay']);
 
         $transaction = $this->tpayApi->transactions()->createTransactionWithInstantRedirection($transactionData);
 
+        return $this->updateRedirectUrl($transaction);
+    }
+
+    public function blik(string $transactionId, string $blikCode): array
+    {
         $additional_payment_data = [
             'channelId' => 64,
             'method' => 'pay_by_link',
             'blikPaymentData' => [
                 'type' => 0,
-                'blikToken' => $data['blikPaymentData']['blikToken'],
+                'blikToken' => $blikCode,
             ],
         ];
 
-        $result = $this->tpayApi->transactions()->createInstantPaymentByTransactionId($additional_payment_data, $transaction['transactionId']);
+        $result = $this->tpayApi->transactions()->createInstantPaymentByTransactionId($additional_payment_data, $transactionId);
 
         return $this->updateRedirectUrl($this->waitForBlikAccept($result));
+    }
+
+    public function createBlikZero(array $data): array
+    {
+        $transaction = $this->createBlikZeroTransaction($data);
+
+        return $this->blik($transaction['transactionId'], $data['blikPaymentData']['blikToken']);
     }
 
     public function makeRefund(InfoInterface $payment, float $amount): array
@@ -183,28 +198,5 @@ class OpenApi
         $result['payments']['errors'] = [1];
 
         return $result;
-    }
-
-    private function getMagentoVersion()
-    {
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $productMetadata = $objectManager->get('\Magento\Framework\App\ProductMetadataInterface');
-
-        return $productMetadata->getVersion();
-    }
-
-    private function getPackagesVersions()
-    {
-        $dir = __DIR__.'/../../composer.json';
-        if (file_exists($dir)) {
-            $composerJson = json_decode(
-                file_get_contents(__DIR__.'/../../composer.json'),
-                true
-            )['require'] ?? [];
-
-            return [$composerJson['tpay-com/tpay-openapi-php'], $composerJson['tpay-com/tpay-php']];
-        }
-
-        return ['n/a', 'n/a'];
     }
 }

@@ -27,9 +27,9 @@
                                                             <!-- merge payment method renders here -->
                                                             <item name="children" xsi:type="array">
                                                                 <item name="tpay-payments" xsi:type="array">
-                                                                    <item name="component" xsi:type="string">tpaycom_magento2basic/js/view/payment/tpay-payments</item>
+                                                                    <item name="component" xsi:type="string">Tpay_Magento2/js/view/payment/tpay-payments</item>
                                                                     <item name="methods" xsi:type="array">
-                                                                        <item name="tpaycom_magento2basic" xsi:type="array">
+                                                                        <item name="Tpay_Magento2" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">false</item>
                                                                         </item>
                                                                         <item name="generic" xsi:type="array">

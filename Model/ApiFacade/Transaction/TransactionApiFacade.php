@@ -1,13 +1,13 @@
 <?php
 
-namespace tpaycom\magento2basic\Model\ApiFacade\Transaction;
+namespace Tpay\Magento2\Model\ApiFacade\Transaction;
 
 use Exception;
 use Magento\Framework\App\CacheInterface;
+use Tpay\Magento2\Api\TpayConfigInterface;
+use Tpay\Magento2\Model\ApiFacade\OpenApi;
+use Tpay\Magento2\Model\ApiFacade\Transaction\Dto\Channel;
 use Tpay\OpenApi\Utilities\TpayException;
-use tpaycom\magento2basic\Api\TpayInterface;
-use tpaycom\magento2basic\Model\ApiFacade\OpenApi;
-use tpaycom\magento2basic\Model\ApiFacade\Transaction\Dto\Channel;
 
 class TransactionApiFacade
 {
@@ -26,7 +26,7 @@ class TransactionApiFacade
     /** @var CacheInterface */
     private $cache;
 
-    public function __construct(TpayInterface $tpay, CacheInterface $cache)
+    public function __construct(TpayConfigInterface $tpay, CacheInterface $cache)
     {
         $this->createOriginApiInstance($tpay);
         $this->createOpenApiInstance($tpay);
@@ -43,6 +43,11 @@ class TransactionApiFacade
         return $this->getCurrentApi()->create($config);
     }
 
+    public function createTransaction(array $config): array
+    {
+        return $this->getCurrentApi()->createTransaction($config);
+    }
+
     public function createWithInstantRedirection(array $config): array
     {
         if (!$this->useOpenApi) {
@@ -54,7 +59,7 @@ class TransactionApiFacade
 
     public function blik($blikTransactionId, $blikCode): array
     {
-        return $this->originApi->blik($blikTransactionId, $blikCode);
+        return $this->getCurrentApi()->blik($blikTransactionId, $blikCode);
     }
 
     /** @return list<Channel> */
@@ -112,7 +117,7 @@ class TransactionApiFacade
         return $this->useOpenApi ? $this->openApi : $this->originApi;
     }
 
-    private function createOriginApiInstance(TpayInterface $tpay)
+    private function createOriginApiInstance(TpayConfigInterface $tpay)
     {
         if (!$tpay->isOriginApiEnabled()) {
             $this->originApi = null;
@@ -127,7 +132,7 @@ class TransactionApiFacade
         }
     }
 
-    private function createOpenApiInstance(TpayInterface $tpay)
+    private function createOpenApiInstance(TpayConfigInterface $tpay)
     {
         if (!$tpay->isOpenApiEnabled()) {
             $this->openApi = null;

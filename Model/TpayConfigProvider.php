@@ -2,16 +2,18 @@
 
 declare(strict_types=1);
 
-namespace tpaycom\magento2basic\Model;
+namespace Tpay\Magento2\Model;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Framework\View\Asset\Repository;
 use Magento\Payment\Helper\Data as PaymentHelper;
 use Magento\Store\Model\StoreManagerInterface;
-use tpaycom\magento2basic\Api\TpayInterface;
-use tpaycom\magento2basic\Model\ApiFacade\TpayConfig\ConfigFacade;
-use tpaycom\magento2basic\Model\ApiFacade\Transaction\TransactionApiFacade;
-use tpaycom\magento2basic\Service\TpayTokensService;
+use Tpay\Magento2\Api\TpayConfigInterface;
+use Tpay\Magento2\Api\TpayInterface;
+use Tpay\Magento2\Model\ApiFacade\TpayConfig\ConfigFacade;
+use Tpay\Magento2\Model\ApiFacade\Transaction\TransactionApiFacade;
+use Tpay\Magento2\Service\TpayService;
+use Tpay\Magento2\Service\TpayTokensService;
 
 class TpayConfigProvider implements ConfigProviderInterface
 {
@@ -32,11 +34,13 @@ class TpayConfigProvider implements ConfigProviderInterface
         Repository $assetRepository,
         StoreManagerInterface $storeManager,
         TpayTokensService $tokensService,
-        TransactionApiFacade $transactionApiFacade
+        TransactionApiFacade $transactionApiFacade,
+        TpayService $tpayService,
+        TpayConfigInterface $tpayConfig
     ) {
         $this->paymentHelper = $paymentHelper;
         $this->transactionApi = $transactionApiFacade;
-        $this->configFacade = new ConfigFacade($this->getPaymentMethodInstance(), $assetRepository, $tokensService, $storeManager);
+        $this->configFacade = new ConfigFacade($this->getPaymentMethodInstance(), $tpayConfig, $assetRepository, $tokensService, $storeManager, $tpayService);
     }
 
     public function getConfig(): array

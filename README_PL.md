@@ -14,14 +14,14 @@ Moduł Magento2 bramki płatności [Tpay](https://tpay.com).
 
 1. Przejdź do katalogu głównego Magento2.
 
-2. Skopiuj pliki wtyczki do `app/code/tpaycom/magento2basic`.
+2. Skopiuj pliki wtyczki do `app/code/TpayCom/Magento2Basic`.
 
 3. Jeśli masz już zainstalowany moduł [`magento2cards`](https://github.com/tpay-com/tpay-magento2-cards), możesz pominąć ten krok.
-   Pobierz i skopiuj wymaganą bibliotekę [`tpay-php`](https://github.com/tpay-com/tpay-php) do katalogu `app/code`. W rezultacie powinieneś/powinnaś mieć 2 katalogi w `app/code` - `tpaycom` oraz `tpayLibs`.
+   Pobierz i skopiuj wymaganą bibliotekę [`tpay-php`](https://github.com/tpay-com/tpay-php) do katalogu `app/code`. W rezultacie powinieneś/powinnaś mieć 2 katalogi w `app/code` - `TpayCom` oraz `tpayLibs`.
 
 4. Wykonaj następujące polecenia, aby włączyć moduł:
     ```console
-    php bin/magento module:enable tpaycom_magento2basic
+    php bin/magento module:enable Tpay_Magento2
     php bin/magento setup:upgrade
     ```
 
@@ -37,7 +37,7 @@ Moduł Magento2 bramki płatności [Tpay](https://tpay.com).
 
 2. Wykonaj następujące polecenia, aby włączyć moduł:
     ```console
-    php bin/magento module:enable tpaycom_magento2basic
+    php bin/magento module:enable Tpay_Magento2
     php bin/magento setup:upgrade
     ```
 

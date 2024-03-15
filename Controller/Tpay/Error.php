@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace tpaycom\magento2basic\Controller\tpay;
+namespace Tpay\Magento2\Controller\Tpay;
 
 use Magento\Framework\App\ActionInterface;
-use Magento\Framework\Controller\Result\RedirectFactory;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Message\ManagerInterface;
+use Tpay\Magento2\Service\RedirectHandler;
 
 class Error implements ActionInterface
 {
     /** @var ManagerInterface */
     private $messageManager;
 
-    /** @var RedirectFactory */
+    /** @var RedirectHandler */
     private $redirectFactory;
 
-    public function __construct(ManagerInterface $messageManager, RedirectFactory $redirectFactory)
+    public function __construct(ManagerInterface $messageManager, RedirectHandler $redirectFactory)
     {
         $this->messageManager = $messageManager;
         $this->redirectFactory = $redirectFactory;
@@ -27,6 +27,6 @@ class Error implements ActionInterface
     {
         $this->messageManager->addWarningMessage(__('There was an error during your payment.'));
 
-        return $this->redirectFactory->create()->setPath('checkout/onepage/failure');
+        return $this->redirectFactory->redirectFailure();
     }
 }

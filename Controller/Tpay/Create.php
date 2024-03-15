@@ -1,18 +1,18 @@
 <?php
 
-namespace tpaycom\magento2basic\Controller\tpay;
+namespace Tpay\Magento2\Controller\Tpay;
 
-use Magento\Backend\Model\View\Result\RedirectFactory;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\ActionInterface;
 use Magento\Framework\Controller\ResultInterface;
+use Tpay\Magento2\Api\TpayConfigInterface;
+use Tpay\Magento2\Api\TpayInterface;
+use Tpay\Magento2\Model\ApiFacade\Transaction\TransactionApiFacade;
+use Tpay\Magento2\Model\ApiFacade\Transaction\TransactionOriginApi;
+use Tpay\Magento2\Service\RedirectHandler;
+use Tpay\Magento2\Service\TpayService;
+use Tpay\Magento2\Validator\AdditionalPaymentInfoValidator;
 use Tpay\OriginApi\Utilities\Util;
-use tpaycom\magento2basic\Api\TpayInterface;
-use tpaycom\magento2basic\Model\ApiFacade\Transaction\TransactionApiFacade;
-use tpaycom\magento2basic\Model\ApiFacade\Transaction\TransactionOriginApi;
-use tpaycom\magento2basic\Model\Tpay;
-use tpaycom\magento2basic\Service\TpayService;
-use tpaycom\magento2basic\Validator\AdditionalPaymentInfoValidator;
 
 class Create implements ActionInterface
 {
@@ -25,10 +25,13 @@ class Create implements ActionInterface
     /** @var TpayInterface */
     private $tpay;
 
+    /** @var TpayConfigInterface */
+    private $tpayConfig;
+
     /** @var TransactionApiFacade */
     private $transaction;
 
-    /** @var RedirectFactory */
+    /** @var RedirectHandler */
     private $redirectFactory;
 
     /** @var AdditionalPaymentInfoValidator */
@@ -36,13 +39,15 @@ class Create implements ActionInterface
 
     public function __construct(
         TpayInterface $tpayModel,
+        TpayConfigInterface $tpayConfig,
         TpayService $tpayService,
         Session $checkoutSession,
         TransactionApiFacade $transactionApiFacade,
-        RedirectFactory $redirectFactory,
+        RedirectHandler $redirectFactory,
         AdditionalPaymentInfoValidator $additionalPaymentInfoValidator
     ) {
         $this->tpay = $tpayModel;
+        $this->tpayConfig = $tpayConfig;
         $this->tpayService = $tpayService;
         $this->checkoutSession = $checkoutSession;
         $this->transaction = $transactionApiFacade;
@@ -60,14 +65,14 @@ class Create implements ActionInterface
             $paymentData = $payment->getData();
             $additionalPaymentInformation = $paymentData['additional_information'];
 
-            if (!$additionalPaymentInformation[Tpay::TERMS_ACCEPT]) {
-                return $this->redirectFactory->create()->setPath('magento2basic/tpay/error');
+            if (!$additionalPaymentInformation[TpayInterface::TERMS_ACCEPT]) {
+                return $this->redirectFactory->redirectError();
             }
 
             $transaction = $this->prepareTransaction($orderId, $additionalPaymentInformation);
 
             if (!isset($transaction['title'], $transaction['url'])) {
-                return $this->redirectFactory->create()->setPath('magento2basic/tpay/error');
+                return $this->redirectFactory->redirectError();
             }
 
             $this->handleOpenApiTrId($paymentData, $transaction);
@@ -75,21 +80,22 @@ class Create implements ActionInterface
             $this->tpayService->addCommentToHistory($orderId, 'Transaction title '.$transaction['title']);
             $transactionUrl = $transaction['url'];
 
-            if (true === $this->tpay->redirectToChannel()) {
+            if (true === $this->tpayConfig->redirectToChannel()) {
                 $transactionUrl = str_replace('gtitle', 'title', $transactionUrl);
             }
 
             $this->tpayService->addCommentToHistory($orderId, 'Transaction link '.$transactionUrl);
             $paymentData['additional_information']['transaction_url'] = $transactionUrl;
-            $payment->setData($paymentData)->save();
+            $payment->setData($paymentData);
+            $this->tpayService->saveOrderPayment($payment);
 
             if ($this->additionalPaymentInfoValidator->validateBlikIfPresent($additionalPaymentInformation) && $this->tpay->checkBlikLevel0Settings()) {
                 if (true === $this->transaction->isOpenApiUse()) {
                     if (isset($transaction['payments']['errors']) && count($transaction['payments']['errors']) > 0) {
-                        return $this->redirectFactory->create()->setPath('magento2basic/tpay/error');
+                        return $this->redirectFactory->redirectError();
                     }
 
-                    return $this->redirectFactory->create()->setPath('magento2basic/tpay/success');
+                    return $this->redirectFactory->redirectSuccess();
                 }
 
                 $result = $this->blikPay($transaction['title'], $additionalPaymentInformation['blik_code']);
@@ -101,16 +107,16 @@ class Create implements ActionInterface
                         'User has typed wrong blik code and has been redirected to transaction panel in order to finish payment'
                     );
 
-                    return $this->redirectFactory->create()->setPath('magento2basic/tpay/error');
+                    return $this->redirectFactory->redirectError();
                 }
 
-                return $this->redirectFactory->create()->setPath('magento2basic/tpay/success');
+                return $this->redirectFactory->redirectSuccess();
             }
 
-            return $this->redirectFactory->create()->setPath($transactionUrl);
+            return $this->redirectFactory->redirectTransaction($transactionUrl);
         }
 
-        return $this->redirectFactory->create()->setPath('magento2basic/tpay/error');
+        return $this->redirectFactory->redirectError();
     }
 
     /**
@@ -138,13 +144,13 @@ class Create implements ActionInterface
             $data['group'] = (int) ($additionalPaymentInformation['group'] ?? null);
             $data['channel'] = (int) ($additionalPaymentInformation['channel'] ?? null);
 
-            if ($this->tpay->redirectToChannel()) {
+            if ($this->tpayConfig->redirectToChannel()) {
                 $data['direct'] = 1;
             }
         }
 
         $data = $this->transaction->originApiFieldCorrect($data);
-        $data = $this->transaction->translateGroupToChannel($data, $this->tpay->redirectToChannel());
+        $data = $this->transaction->translateGroupToChannel($data, $this->tpayConfig->redirectToChannel());
 
         if (isset($data['channel']) && $data['channel']) {
             return $this->transaction->createWithInstantRedirection($data);

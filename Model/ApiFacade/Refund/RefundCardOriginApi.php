@@ -1,15 +1,15 @@
 <?php
 
-namespace tpaycom\magento2basic\Model\ApiFacade\Refund;
+namespace Tpay\Magento2\Model\ApiFacade\Refund;
 
 use Magento\Framework\Validator\Exception;
+use Tpay\Magento2\Api\TpayConfigInterface;
 use Tpay\OriginApi\Refunds\CardRefunds;
 use Tpay\OriginApi\Utilities\Util;
-use tpaycom\magento2basic\Api\TpayInterface;
 
 class RefundCardOriginApi extends CardRefunds
 {
-    public function __construct(TpayInterface $tpay)
+    public function __construct(TpayConfigInterface $tpay)
     {
         Util::$loggingEnabled = false;
         $this->cardApiKey = $tpay->getCardApiKey();

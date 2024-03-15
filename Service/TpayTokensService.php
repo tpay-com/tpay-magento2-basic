@@ -1,48 +1,44 @@
 <?php
 
-namespace tpaycom\magento2basic\Service;
+namespace Tpay\Magento2\Service;
 
 use Magento\Framework\App\ResourceConnection;
-use Magento\Framework\Data\Collection\AbstractDb;
-use Magento\Framework\Model\Context;
-use Magento\Framework\Registry;
-use tpaycom\magento2basic\Model\Tokens;
+use Tpay\Magento2\Model\Api\TokenRepositoryInterface;
+use Tpay\Magento2\Model\ResourceModel\Token\Collection;
 use Zend_Db_Expr;
 
-class TpayTokensService extends Tokens
+class TpayTokensService
 {
     /** @var ResourceConnection */
     private $resourceConnection;
 
-    public function __construct(
-        Context $context,
-        Registry $registry,
-        ResourceConnection $resourceConnection,
-        $resource = null,
-        ?AbstractDb $resourceCollection = null,
-        array $data = []
-    ) {
+    /** @var Collection */
+    private $collection;
+
+    /** @var TokenRepositoryInterface */
+    private $tokenRepository;
+
+    public function __construct(ResourceConnection $resourceConnection, Collection $collection, TokenRepositoryInterface $tokenRepository)
+    {
         $this->resourceConnection = $resourceConnection;
-        parent::__construct($context, $registry, $resource, $resourceCollection, $data);
+        $this->tokenRepository = $tokenRepository;
+        $this->collection = $collection;
     }
 
-    public function setCustomerToken(
-        string $customerId,
-        ?string $token,
-        string $shortCode,
-        string $vendor,
-        ?string $crc = null
-    ) {
-        $tokenEntity = $this->load($token, 'cli_auth');
+    public function setCustomerToken(string $customerId, ?string $token, string $shortCode, string $vendor, ?string $crc = null)
+    {
+        $tokenEntity = $this->tokenRepository->getByToken($token);
 
         if (!$tokenEntity->getId()) {
-            $this->setCustomerId($customerId)
+            $tokenEntity
+                ->setCustomerId($customerId)
                 ->setToken($token)
                 ->setShortCode($shortCode)
                 ->setVendor($vendor)
                 ->setCreationTime()
-                ->setCrc($crc)
-                ->save();
+                ->setCrc($crc);
+
+            $this->tokenRepository->save($tokenEntity);
         }
     }
 
@@ -55,7 +51,7 @@ class TpayTokensService extends Tokens
             ->from($tableName)
             ->where('cli_id = ?', $customerId)
             ->where(new Zend_Db_Expr('cli_auth IS NOT NULL'))
-            ->where(new Zend_Db_Expr($crcRequired ? 'crc IS NOT NULL' : 'crc IS NULL'));
+            ->where(new Zend_Db_Expr($crcRequired ? 'LENGTH(crc) > 1' : 'LENGTH(crc) < 1'));
 
         $results = [];
         foreach ($connection->fetchAll($select) as $token) {
@@ -71,12 +67,14 @@ class TpayTokensService extends Tokens
         return $results;
     }
 
-    public function deleteCustomerToken(string $token): TpayTokensService
+    public function deleteCustomerToken(string $token): bool
     {
-        return $this->deleteToken($token)->save();
+        $token = $this->tokenRepository->getByToken($token);
+
+        return $this->tokenRepository->delete($token);
     }
 
-    public function getWithoutAuthCustomerTokens(int $customerId, string $crc): array
+    public function getWithoutAuthCustomerTokens(string $customerId, string $crc): array
     {
         foreach ($this->getToken($customerId) as $token) {
             if (empty($token['crc'])) {
@@ -92,12 +90,12 @@ class TpayTokensService extends Tokens
 
     public function updateTokenById(int $tokenId, string $tokenValue)
     {
-        $token = $this->load($tokenId);
+        $token = $this->tokenRepository->getById($tokenId);
         $token->setToken($tokenValue);
-        $token->save();
+        $this->tokenRepository->save($token);
     }
 
-    public function getTokenById(int $tokenId, int $customerId, bool $crcRequired = true): ?array
+    public function getTokenById(int $tokenId, string $customerId, bool $crcRequired = true): ?array
     {
         $connection = $this->resourceConnection->getConnection();
         $tableName = $connection->getTableName('tpay_credit_cards');
@@ -106,10 +104,29 @@ class TpayTokensService extends Tokens
             ->from($tableName)
             ->where('id = ?', $tokenId)
             ->where('cli_id = ?', $customerId)
-            ->where(new Zend_Db_Expr($crcRequired ? 'crc IS NOT NULL' : 'crc IS NULL'));
+            ->where(new Zend_Db_Expr($crcRequired ? 'LENGTH(crc) > 1' : 'LENGTH(crc) < 1'));
 
         $result = $connection->fetchAll($select);
 
         return !empty($result) ? $result[0] : null;
+    }
+
+    public function getToken(string $customerId): array
+    {
+        $tokenCollection = $this->collection;
+        $tokenCollection->addFieldToFilter('cli_id', $customerId);
+
+        $results = [];
+        foreach ($tokenCollection->getItems() as $token) {
+            $results[] = [
+                'tokenId' => $token->getId(),
+                'token' => $token->getCliAuth(),
+                'cardShortCode' => $token->getShortCode(),
+                'vendor' => $token->getVendor(),
+                'crc' => $token->getCrc(),
+            ];
+        }
+
+        return $results;
     }
 }
