@@ -91,7 +91,7 @@ class CardOpen
             return 'magento2basic/tpay';
         }
 
-        $customerToken = $customerToken ?? $this->tokensService->getTokenById($cardId, $this->tpay->getCustomerId($orderId));
+        $customerToken = $customerToken ? $customerToken : $this->tokensService->getTokenById($cardId, $this->tpay->getCustomerId($orderId));
 
         if ($customerToken) {
             try {
