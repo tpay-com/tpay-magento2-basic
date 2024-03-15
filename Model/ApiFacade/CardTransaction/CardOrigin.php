@@ -39,7 +39,7 @@ class CardOrigin extends CardNotificationHandler
         parent::__construct();
     }
 
-    public function makeFullCardTransactionProcess(string $orderId): string
+    public function makeFullCardTransactionProcess(string $orderId, ?array $customerToken = null): string
     {
         $payment = $this->tpayService->getPayment($orderId);
         $paymentData = $payment->getData();
@@ -61,25 +61,18 @@ class CardOrigin extends CardNotificationHandler
         if (isset($additionalPaymentInformation['card_id']) && false !== $additionalPaymentInformation['card_id'] && $this->tpayConfig->getCardSaveEnabled()) {
             $cardId = (int) $additionalPaymentInformation['card_id'];
 
-            return $this->processSavedCardPayment($orderId, $cardId);
+            return $this->processSavedCardPayment($orderId, $cardId, $customerToken);
         }
 
         return $this->processNewCardPayment($orderId, $additionalPaymentInformation);
     }
 
-    private function processSavedCardPayment(string $orderId, string $cardId): string
+    private function processSavedCardPayment(string $orderId, int $cardId, ?array $customerToken = null): string
     {
-        $customerTokens = $this->tokensService->getCustomerTokens($this->tpay->getCustomerId($orderId));
+        $customerToken ??= $this->tokensService->getTokenById($cardId, $this->tpay->getCustomerId($orderId));
 
-        $isValid = false;
-        $token = '';
-        foreach ($customerTokens as $key => $value) {
-            if ((int) $value['tokenId'] === $cardId) {
-                $isValid = true;
-                $token = $value['token'];
-            }
-        }
-        if ($isValid) {
+        if ($customerToken) {
+            $token = $customerToken['cli_auth'];
             try {
                 $paymentResult = $this->presale($this->tpayPaymentConfig['description'], $token);
 
@@ -108,8 +101,7 @@ class CardOrigin extends CardNotificationHandler
             } catch (Exception $e) {
                 return $this->trySaleAgain($orderId);
             }
-        }
-        if (!$isValid) {
+        } else {
             $this->tpayService->addCommentToHistory($orderId, 'Attempt of payment by not owned card has been blocked!');
         }
 
