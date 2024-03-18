@@ -76,6 +76,10 @@ class CardOpen
 
     public function payTransaction(string $orderId, array $additionalPaymentInformation, ?string $transactionId = null, ?array $customerToken = null): string
     {
+        if (null === $this->tpayPaymentConfig) {
+            $this->tpayPaymentConfig = $this->tpay->getTpayFormData($orderId);
+        }
+
         if (isset($additionalPaymentInformation['card_id']) && false !== $additionalPaymentInformation['card_id'] && $this->tpayConfig->getCardSaveEnabled()) {
             $cardId = (int) $additionalPaymentInformation['card_id'];
 
