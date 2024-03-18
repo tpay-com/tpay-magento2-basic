@@ -42,8 +42,3 @@ Moduł Magento2 bramki płatności [Tpay](https://tpay.com).
     ```
 
 3. Włącz i skonfiguruj moduł w panelu administratora Magento w `Stores/Configuration/Payment Methods/tpay.com`.
-
-
-## Notatki
-
-Ten moduł działa tylko z PLN! Jeśli PLN nie jest Twoją podstawową walutą, nie zobaczysz tego modułu na stronach checkoutu.
