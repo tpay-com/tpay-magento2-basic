@@ -30,9 +30,14 @@ class CardApiFacade
         $this->createOpenApiInstance($tpay, $tpayConfig, $tokensService, $tpayService);
     }
 
-    public function makeCardTransaction(string $orderId): string
+    public function makeCardTransaction(string $orderId, ?array $customerToken = null): string
     {
-        return $this->getCurrent()->makeFullCardTransactionProcess($orderId);
+        return $this->getCurrent()->makeFullCardTransactionProcess($orderId, $customerToken);
+    }
+
+    public function payTransaction(string $orderId, array $additionalPaymentInformation, ?string $transactionId = null, ?array $customerToken = null): string
+    {
+        return $this->useOpenCard ? $this->cardOpen->payTransaction($orderId, $additionalPaymentInformation, $transactionId, $customerToken) : 'error';
     }
 
     private function getCurrent()

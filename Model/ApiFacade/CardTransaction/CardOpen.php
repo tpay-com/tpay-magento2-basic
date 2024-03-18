@@ -38,12 +38,12 @@ class CardOpen
         $this->tpayApi->authorization()->setClientName($tpayConfig->buildMagentoInfo());
     }
 
-    public function makeFullCardTransactionProcess(string $orderId): string
+    public function makeFullCardTransactionProcess(string $orderId, ?array $customerToken = null): string
     {
         $additionalPaymentInformation = $this->getAdditionalData($orderId);
         $transaction = $this->makeCardTransaction($orderId);
 
-        return $this->payTransaction($orderId, $additionalPaymentInformation, $transaction['transactionId'] ?? null);
+        return $this->payTransaction($orderId, $additionalPaymentInformation, $transaction['transactionId'] ?? null, $customerToken);
     }
 
     public function getAdditionalData(string $orderId): array
@@ -74,24 +74,28 @@ class CardOpen
         return $transaction;
     }
 
-    public function payTransaction(string $orderId, array $additionalPaymentInformation, ?string $transactionId = null): string
+    public function payTransaction(string $orderId, array $additionalPaymentInformation, ?string $transactionId = null, ?array $customerToken = null): string
     {
+        if (null === $this->tpayPaymentConfig) {
+            $this->tpayPaymentConfig = $this->tpay->getTpayFormData($orderId);
+        }
+
         if (isset($additionalPaymentInformation['card_id']) && false !== $additionalPaymentInformation['card_id'] && $this->tpayConfig->getCardSaveEnabled()) {
             $cardId = (int) $additionalPaymentInformation['card_id'];
 
-            return $this->processSavedCardPayment($orderId, $cardId, $transactionId);
+            return $this->processSavedCardPayment($orderId, $cardId, $transactionId, $customerToken);
         }
 
         return $this->processNewCardPayment($orderId, $additionalPaymentInformation, $transactionId);
     }
 
-    private function processSavedCardPayment(string $orderId, int $cardId, ?string $transactionId = null): string
+    private function processSavedCardPayment(string $orderId, int $cardId, ?string $transactionId = null, ?array $customerToken = null): string
     {
         if (!$transactionId) {
             return 'magento2basic/tpay';
         }
 
-        $customerToken = $this->tokensService->getTokenById($cardId, $this->tpay->getCustomerId($orderId));
+        $customerToken = $customerToken ? $customerToken : $this->tokensService->getTokenById($cardId, $this->tpay->getCustomerId($orderId));
 
         if ($customerToken) {
             try {

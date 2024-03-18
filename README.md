@@ -42,8 +42,3 @@
     ```
 
 3. Enable and configure module in Magento Admin under `Stores/Configuration/Payment Methods/tpay.com`.
-
-
-## Notes
-
-This module works with PLN only! If PLN is not your base currency, you will not see this module on checkout pages.
