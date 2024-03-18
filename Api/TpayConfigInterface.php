@@ -7,6 +7,8 @@ namespace Tpay\Magento2\Api;
 /** @api */
 interface TpayConfigInterface
 {
+    public function isTpayActive(): bool;
+
     public function getTitle(): ?string;
 
     public function getCardTitle(): ?string;

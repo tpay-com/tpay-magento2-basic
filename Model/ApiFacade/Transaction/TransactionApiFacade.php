@@ -20,21 +20,25 @@ class TransactionApiFacade
     /** @var OpenApi */
     private $openApi;
 
-    /** @var bool */
-    private $useOpenApi;
+    /** @var TpayConfigInterface */
+    private $tpay;
 
     /** @var CacheInterface */
     private $cache;
 
+    /** @var bool */
+    private $useOpenApi = false;
+
     public function __construct(TpayConfigInterface $tpay, CacheInterface $cache)
     {
-        $this->createOriginApiInstance($tpay);
-        $this->createOpenApiInstance($tpay);
+        $this->tpay = $tpay;
         $this->cache = $cache;
     }
 
     public function isOpenApiUse(): bool
     {
+        $this->connectApi();
+
         return $this->useOpenApi;
     }
 
@@ -65,14 +69,16 @@ class TransactionApiFacade
     /** @return list<Channel> */
     public function channels(): array
     {
+        $this->connectApi();
+
+        if (!$this->useOpenApi) {
+            return [];
+        }
+
         $channels = $this->cache->load(self::CHANNELS_CACHE_KEY);
 
         if ($channels) {
             return unserialize($channels);
-        }
-
-        if (false === $this->useOpenApi) {
-            return [];
         }
 
         $channels = array_filter($this->openApi->channels(), function (Channel $channel) {
@@ -114,7 +120,17 @@ class TransactionApiFacade
 
     private function getCurrentApi()
     {
+        $this->connectApi();
+
         return $this->useOpenApi ? $this->openApi : $this->originApi;
+    }
+
+    private function connectApi()
+    {
+        if (null == $this->openApi && null === $this->originApi) {
+            $this->createOriginApiInstance($this->tpay);
+            $this->createOpenApiInstance($this->tpay);
+        }
     }
 
     private function createOriginApiInstance(TpayConfigInterface $tpay)

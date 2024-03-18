@@ -45,6 +45,10 @@ class TpayConfigProvider implements ConfigProviderInterface
 
     public function getConfig(): array
     {
+        if (!$this->paymentMethod->isAvailable()) {
+            return [];
+        }
+
         $config = $this->configFacade->getConfig();
         $channels = $this->transactionApi->channels();
 

@@ -18,6 +18,9 @@ class MethodListPlugin
 {
     private const CONFIG_PATH = 'payment/tpaycom_magento2basic/openapi_settings/onsite_channels';
 
+    /** @var TpayInterface */
+    protected $paymentMethod;
+
     /** @var Data */
     private $data;
 
@@ -54,7 +57,8 @@ class MethodListPlugin
         TpayConfigInterface $tpayConfig,
         Session $checkoutSession,
         TransactionApiFacade $transactions,
-        ConstraintValidator $constraintValidator
+        ConstraintValidator $constraintValidator,
+        TpayInterface $paymentMethod
     ) {
         $this->data = $data;
         $this->scopeConfig = $scopeConfig;
@@ -65,10 +69,15 @@ class MethodListPlugin
         $this->checkoutSession = $checkoutSession;
         $this->transactions = $transactions;
         $this->constraintValidator = $constraintValidator;
+        $this->paymentMethod = $paymentMethod;
     }
 
     public function afterGetAvailableMethods(MethodList $compiled, $result)
     {
+        if (!$this->paymentMethod->isAvailable()) {
+            return $result;
+        }
+
         $onsiteChannels = $this->scopeConfig->getValue(self::CONFIG_PATH, ScopeInterface::SCOPE_STORE);
         $channelList = $onsiteChannels ? explode(',', $onsiteChannels) : [];
         $channels = $this->transactions->channels();

@@ -27,6 +27,11 @@ class ConfigurationProvider implements TpayConfigInterface
         $this->productMetadataInterface = $productMetadataInterface;
     }
 
+    public function isTpayActive(): bool
+    {
+        return (bool) $this->getConfigData('active');
+    }
+
     public function getBlikLevelZeroStatus(): bool
     {
         return (bool) $this->getConfigData('general_settings/blik_level_zero');
@@ -147,12 +152,12 @@ class ConfigurationProvider implements TpayConfigInterface
         return $this->getConfigData('cardpayment_settings/rsa_key');
     }
 
-    public function getHashType(): string
+    public function getHashType(): ?string
     {
         return $this->getConfigData('cardpayment_settings/cardpayment_originapi_settings/hash_type');
     }
 
-    public function getVerificationCode(): string
+    public function getVerificationCode(): ?string
     {
         return $this->getConfigData('cardpayment_settings/cardpayment_originapi_settings/verification_code');
     }
