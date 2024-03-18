@@ -211,6 +211,10 @@ class TpayPayment extends Adapter implements TpayInterface
 
     public function isAvailable(?CartInterface $quote = null)
     {
+        if (!$this->configurationProvider->isTpayActive()) {
+            return false;
+        }
+
         $minAmount = $this->configurationProvider->getMinOrderTotal();
         $maxAmount = $this->configurationProvider->getMaxOrderTotal();
 

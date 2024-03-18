@@ -17,6 +17,18 @@ class CardApiFacade
     /** @var CardOpen */
     private $cardOpen;
 
+    /** @var TpayInterface */
+    private $tpay;
+
+    /** @var TpayConfigInterface */
+    private $tpayConfig;
+
+    /** @var TpayTokensService */
+    private $tokensService;
+
+    /** @var TpayService */
+    private $tpayService;
+
     /** @var StoreManagerInterface */
     private $storeManager;
 
@@ -25,9 +37,11 @@ class CardApiFacade
 
     public function __construct(TpayInterface $tpay, TpayConfigInterface $tpayConfig, TpayTokensService $tokensService, TpayService $tpayService, StoreManagerInterface $storeManager)
     {
+        $this->tpay = $tpay;
+        $this->tpayConfig = $tpayConfig;
+        $this->tokensService = $tokensService;
+        $this->tpayService = $tpayService;
         $this->storeManager = $storeManager;
-        $this->createCardOriginApiInstance($tpay, $tpayConfig, $tokensService, $tpayService);
-        $this->createOpenApiInstance($tpay, $tpayConfig, $tokensService, $tpayService);
     }
 
     public function makeCardTransaction(string $orderId, ?array $customerToken = null): string
@@ -37,12 +51,31 @@ class CardApiFacade
 
     public function payTransaction(string $orderId, array $additionalPaymentInformation, ?string $transactionId = null, ?array $customerToken = null): string
     {
+        $this->connectApi();
+
         return $this->useOpenCard ? $this->cardOpen->payTransaction($orderId, $additionalPaymentInformation, $transactionId, $customerToken) : 'error';
+    }
+
+    public function isOpenApiUse(): bool
+    {
+        $this->connectApi();
+
+        return (bool) $this->useOpenCard;
     }
 
     private function getCurrent()
     {
+        $this->connectApi();
+
         return $this->useOpenCard ? $this->cardOpen : $this->cardOrigin;
+    }
+
+    private function connectApi()
+    {
+        if (null == $this->cardOpen && null === $this->cardOrigin) {
+            $this->createCardOriginApiInstance($this->tpay, $this->tpayConfig, $this->tokensService, $this->tpayService);
+            $this->createOpenApiInstance($this->tpay, $this->tpayConfig, $this->tokensService, $this->tpayService);
+        }
     }
 
     private function createCardOriginApiInstance(TpayInterface $tpay, TpayConfigInterface $tpayConfig, TpayTokensService $tokensService, TpayService $tpayService)

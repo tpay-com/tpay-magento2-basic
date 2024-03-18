@@ -25,8 +25,6 @@ class RefundApiFacade
     public function __construct(TpayConfigInterface $tpay)
     {
         $this->tpay = $tpay;
-        $this->createRefundOriginApiInstance($tpay);
-        $this->createOpenApiInstance($tpay);
     }
 
     public function makeRefund(InfoInterface $payment, float $amount)
@@ -43,7 +41,17 @@ class RefundApiFacade
 
     private function getCurrentApi()
     {
+        $this->connectApi();
+
         return $this->useOpenApi ? $this->openApi : $this->originApi;
+    }
+
+    private function connectApi()
+    {
+        if (null == $this->openApi && null === $this->originApi) {
+            $this->createRefundOriginApiInstance($this->tpay);
+            $this->createOpenApiInstance($this->tpay);
+        }
     }
 
     private function createRefundOriginApiInstance(TpayConfigInterface $tpay)

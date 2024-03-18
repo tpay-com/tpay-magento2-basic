@@ -22,24 +22,56 @@ class ConfigFacade
     /** @var CardConfigFacade */
     private $cardConfig;
 
+    /** @var TpayInterface */
+    private $tpay;
+
+    /** @var TpayConfigInterface */
+    private $tpayConfig;
+
+    /** @var Repository */
+    private $assetRepository;
+
+    /** @var TpayTokensService */
+    private $tokensService;
+
+    /** @var StoreManagerInterface */
+    private $storeManager;
+
+    /** @var TpayService */
+    private $tpayService;
+
     /** @var bool */
     private $useOpenApi;
 
     public function __construct(TpayInterface $tpay, TpayConfigInterface $tpayConfig, Repository $assetRepository, TpayTokensService $tokensService, StoreManagerInterface $storeManager, TpayService $tpayService)
     {
-        $this->createOriginApiInstance($tpay, $tpayConfig, $assetRepository, $tokensService);
-        $this->createOpenApiInstance($tpay, $tpayConfig, $assetRepository, $tokensService, $storeManager);
-        $this->cardConfig = new CardConfigFacade($tpay, $tpayConfig, $assetRepository, $tokensService, $storeManager, $tpayService);
+        $this->tpay = $tpay;
+        $this->tpayConfig = $tpayConfig;
+        $this->assetRepository = $assetRepository;
+        $this->tokensService = $tokensService;
+        $this->storeManager = $storeManager;
+        $this->tpayService = $tpayService;
     }
 
     public function getConfig(): array
     {
+        $this->connectApi();
+
         return array_merge($this->getCurrentApi() ? $this->getCurrentApi()->getConfig() : [], $this->cardConfig->getConfig());
     }
 
     private function getCurrentApi()
     {
         return $this->useOpenApi ? $this->openApi : $this->originConfig;
+    }
+
+    private function connectApi()
+    {
+        if (null == $this->openApi && null === $this->originConfig) {
+            $this->createOriginApiInstance($this->tpay, $this->tpayConfig, $this->assetRepository, $this->tokensService);
+            $this->createOpenApiInstance($this->tpay, $this->tpayConfig, $this->assetRepository, $this->tokensService, $this->storeManager);
+            $this->cardConfig = new CardConfigFacade($this->tpay, $this->tpayConfig, $this->assetRepository, $this->tokensService, $this->storeManager, $this->tpayService);
+        }
     }
 
     private function createOriginApiInstance(TpayInterface $tpay, TpayConfigInterface $tpayConfig, Repository $assetRepository, TpayTokensService $tokensService)
