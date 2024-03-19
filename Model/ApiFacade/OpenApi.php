@@ -2,6 +2,7 @@
 
 namespace Tpay\Magento2\Model\ApiFacade;
 
+use Magento\Framework\App\CacheInterface;
 use Magento\Payment\Model\InfoInterface;
 use Tpay\Magento2\Api\TpayConfigInterface;
 use Tpay\Magento2\Model\ApiFacade\Transaction\Dto\Channel;
@@ -12,11 +13,22 @@ class OpenApi
     /** @var TpayApi */
     private $tpayApi;
 
-    public function __construct(TpayConfigInterface $tpay)
+    private $cache;
+
+    const AUTH_TOKEN_CACHE_KEY = 'tpay_auth_token_%s';
+
+    public function __construct(TpayConfigInterface $tpay, CacheInterface $cache)
     {
+        $this->cache = $cache;
         $this->tpayApi = new TpayApi($tpay->getOpenApiClientId(), $tpay->getOpenApiPassword(), !$tpay->useSandboxMode());
-        $this->tpayApi->authorization();
+        $token = $this->cache->load($this->getAuthTokenCacheKey($tpay));
+        if ($token) {
+            $this->tpayApi->setCustomToken(unserialize($token));
+        }
         $this->tpayApi->authorization()->setClientName($tpay->buildMagentoInfo());
+        if(!$token){
+            $this->cache->save(serialize($this->tpayApi->getToken()), $this->getAuthTokenCacheKey($tpay));
+        }
     }
 
     public function create(array $data): array
@@ -198,5 +210,15 @@ class OpenApi
         $result['payments']['errors'] = [1];
 
         return $result;
+    }
+
+    private function getAuthTokenCacheKey(TpayConfigInterface $tpay)
+    {
+        return sprintf(
+            self::AUTH_TOKEN_CACHE_KEY,
+            md5(
+                join('|', [$tpay->getOpenApiClientId(), $tpay->getOpenApiPassword(), !$tpay->useSandboxMode()])
+            )
+        );
     }
 }

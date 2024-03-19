@@ -3,6 +3,7 @@
 namespace Tpay\Magento2\Model\ApiFacade\Refund;
 
 use Exception;
+use Magento\Framework\App\CacheInterface;
 use Magento\Payment\Model\InfoInterface;
 use Tpay\Magento2\Api\TpayConfigInterface;
 use Tpay\Magento2\Api\TpayInterface;
@@ -22,9 +23,12 @@ class RefundApiFacade
     /** @var bool */
     private $useOpenApi;
 
-    public function __construct(TpayConfigInterface $tpay)
+    private $cache;
+
+    public function __construct(TpayConfigInterface $tpay, CacheInterface $cache)
     {
         $this->tpay = $tpay;
+        $this->cache = $cache;
     }
 
     public function makeRefund(InfoInterface $payment, float $amount)
@@ -66,7 +70,7 @@ class RefundApiFacade
     private function createOpenApiInstance(TpayConfigInterface $tpay)
     {
         try {
-            $this->openApi = new OpenApi($tpay);
+            $this->openApi = new OpenApi($tpay, $this->cache);
             $this->useOpenApi = true;
         } catch (Exception $exception) {
             $this->openApi = null;

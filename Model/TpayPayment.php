@@ -6,6 +6,7 @@ namespace Tpay\Magento2\Model;
 
 use Magento\Checkout\Model\Session;
 use Magento\Customer\Model\Session as CustomerSession;
+use Magento\Framework\App\CacheInterface;
 use Magento\Framework\DataObject;
 use Magento\Framework\Escaper;
 use Magento\Framework\Event\ManagerInterface;
@@ -102,6 +103,7 @@ class TpayPayment extends Adapter implements TpayInterface
         string $code,
         string $formBlockType,
         string $infoBlockType,
+        CacheInterface $cache,
         ?CommandPoolInterface $commandPool = null,
         ?ValidatorPoolInterface $validatorPool = null,
         ?CommandManagerInterface $commandExecutor = null,
@@ -257,7 +259,7 @@ class TpayPayment extends Adapter implements TpayInterface
      */
     public function refund(InfoInterface $payment, $amount)
     {
-        $refundService = new RefundApiFacade($this->configurationProvider);
+        $refundService = new RefundApiFacade($this->configurationProvider, $this->cache);
 
         $refundResult = $refundService->makeRefund($payment, (float) $amount);
         try {
