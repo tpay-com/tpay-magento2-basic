@@ -215,10 +215,10 @@ class ConfigurationProvider implements TpayConfigInterface
 
     private function getPackagesVersions(): array
     {
-        $dir = __DIR__.'/../../composer.json';
+        $dir = __DIR__.'/../composer.json';
         if (file_exists($dir)) {
             $composerJson = json_decode(
-                file_get_contents(__DIR__.'/../../composer.json'),
+                file_get_contents(__DIR__.'/../composer.json'),
                 true
             )['require'] ?? [];
 
