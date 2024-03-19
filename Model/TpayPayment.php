@@ -78,6 +78,7 @@ class TpayPayment extends Adapter implements TpayInterface
     /** @var LoggerInterface */
     protected $logger;
 
+    /** @var CacheInterface */
     protected $cache;
 
     private $supportedVendors = [
