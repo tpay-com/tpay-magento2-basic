@@ -3,7 +3,6 @@
     "description": "Tpay payments module",
     "license": "MIT",
     "type": "magento2-module",
-    "version": "2.0.2",
     "authors": [
         {
             "name": "tpay.com",
