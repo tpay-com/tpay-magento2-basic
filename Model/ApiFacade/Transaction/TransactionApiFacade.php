@@ -158,7 +158,7 @@ class TransactionApiFacade
         }
 
         try {
-            $this->openApi = new OpenApi($tpay);
+            $this->openApi = new OpenApi($tpay, $this->cache);
             $this->useOpenApi = true;
         } catch (Exception $exception) {
             $this->openApi = null;
