@@ -78,6 +78,9 @@ class TpayPayment extends Adapter implements TpayInterface
     /** @var LoggerInterface */
     protected $logger;
 
+    /** @var CacheInterface */
+    protected $cache;
+
     private $supportedVendors = [
         'visa',
         'jcb',
@@ -118,6 +121,7 @@ class TpayPayment extends Adapter implements TpayInterface
         $this->configurationProvider = $configurationProvider;
         $this->infoInstance = $infoInstance;
         $this->resolver = $resolver;
+        $this->cache = $cache;
         parent::__construct(
             $eventManager,
             $valueHandlerPool,

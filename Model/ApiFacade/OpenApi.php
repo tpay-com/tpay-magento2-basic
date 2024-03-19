@@ -10,12 +10,12 @@ use tpaySDK\Api\TpayApi;
 
 class OpenApi
 {
+    public const AUTH_TOKEN_CACHE_KEY = 'tpay_auth_token_%s';
+
     /** @var TpayApi */
     private $tpayApi;
 
     private $cache;
-
-    const AUTH_TOKEN_CACHE_KEY = 'tpay_auth_token_%s';
 
     public function __construct(TpayConfigInterface $tpay, CacheInterface $cache)
     {
@@ -26,7 +26,7 @@ class OpenApi
             $this->tpayApi->setCustomToken(unserialize($token));
         }
         $this->tpayApi->authorization()->setClientName($tpay->buildMagentoInfo());
-        if(!$token){
+        if (!$token) {
             $this->cache->save(serialize($this->tpayApi->getToken()), $this->getAuthTokenCacheKey($tpay));
         }
     }

@@ -1,0 +1,6 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="controller_action_predispatch">
+        <observer name="tpay_magento2_loggers" instance="Tpay\Magento2\Observer\LoggerInjectObserver" shared="false" />
+    </event>
+</config>

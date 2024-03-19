@@ -203,6 +203,7 @@ class ConfigurationProvider implements TpayConfigInterface
                 'magento2:'.$this->getMagentoVersion(),
                 'tpay-com/tpay-openapi-php:'.$versions[0],
                 'tpay-com/tpay-php:'.$versions[1],
+                'magento2basic:'.$this->getTpayPluginVersion(),
                 'PHP:'.phpversion(),
             ]
         );
@@ -215,10 +216,10 @@ class ConfigurationProvider implements TpayConfigInterface
 
     private function getPackagesVersions(): array
     {
-        $dir = __DIR__.'/../../composer.json';
+        $dir = __DIR__.'/../composer.json';
         if (file_exists($dir)) {
             $composerJson = json_decode(
-                file_get_contents(__DIR__.'/../../composer.json'),
+                file_get_contents(__DIR__.'/../composer.json'),
                 true
             )['require'] ?? [];
 
@@ -226,5 +227,15 @@ class ConfigurationProvider implements TpayConfigInterface
         }
 
         return ['n/a', 'n/a'];
+    }
+
+    private function getTpayPluginVersion(): string
+    {
+        $dir = __DIR__.'/../.version';
+        if (file_exists($dir)) {
+            return file_get_contents(__DIR__.'/../.version');
+        }
+
+        return 'n/a';
     }
 }
