@@ -1,27 +1,83 @@
-# Magento2-Tpay
+# Moduł Płatności Tpay dla Magento 2
 
-Moduł Magento2 bramki płatności [Tpay](https://tpay.com).
+### Podstawowe informacje
 
-[![Najnowsza stabilna wersja](https://img.shields.io/packagist/v/tpaycom/magento2basic.svg?label=Najnowsza%20stabilna%20wersja)](https://packagist.org/packages/tpaycom/magento2basic)
-[![Wersja PHP](https://img.shields.io/packagist/php-v/tpaycom/magento2basic.svg?label=PHP)](https://php.net)
-[![Licencja](https://img.shields.io/github/license/tpay-com/tpay-magento2-basic.svg?label=Licencja)](LICENSE)
-[![CI status](https://github.com/tpay-com/tpay-magento2-basic/actions/workflows/ci.yaml/badge.svg?branch=master)](https://github.com/tpay-com/tpay-magento2-basic/actions)
-[![Pokrycie typami](https://shepherd.dev/github/tpay-com/tpay-magento2-basic/coverage.svg)](https://shepherd.dev/github/tpay-com/tpay-magento2-basic)
+Oficjalny moduł szybkich płatności online za pośrednictwem Tpay na platformie Magento 2.
 
-[English version :gb: wersja angielska](./README.md)
+### Funkcje
 
-## Instalacja
+- Wiele metod płatności: e-przelew, BLIK, płatności kartowe, ratalne i odroczone
+- Najwyższe standardy bezpieczeństwa: PCI DSS Level 1, szyfrowanie TLS, status KIP
+- Zwroty wykonywane z poziomu panelu sklepu
+- Obsługa waluty innej niż PLN za pośrednictwem kart płatniczych
+- Możliwość użycia konta Sandbox (od wersji modułu: 2.0.0)
 
-1. Wykonaj następujące polecenie, aby pobrać moduł:
-    ```console
-    composer require tpaycom/magento2basic
-    ```
+### Wymagania
 
-2. Wykonaj następujące polecenia, aby włączyć moduł:
-    ```console
-    php bin/magento module:enable Tpay_Magento2
-    php bin/magento setup:upgrade
-    php bin/magento setup:di:compile
-    ```
+- Sklep z dostepna walutą Polski Złoty (PLN)
+- Program composer na serwerze
+- Aktywne konto w [Tpay.com](https://tpay.com)
+- Uruchomiony dostęp na koncie do Open API
 
-3. Włącz i skonfiguruj moduł w panelu administratora Magento w `Stores/Configuration/Payment Methods/tpay.com`.
+#### Wersja modułu od 2.0.0
+
+- Wersja Magento od 2.3.0
+- Wersja PHP zgodna z wymaganiami platformy sprzedażowej
+
+#### Wersja modułu do 2.0.0
+
+- Wersja Magento od 2.0.0
+- Wersja PHP zgodna z wymaganiami platformy sprzedażowej
+
+### Instalacja modułu przez Composer
+
+1. Pobierz bibliotekę [Tpay Origin API library](https://github.com/tpay-com/tpay-php). W głównym folderze Magento wpisz
+   komendę*:
+
+   ```
+   composer require tpay-com/tpay-php
+   ```
+
+   *Krok możesz pominąć jeśli już wcześniej korzystałeś z modułu Tpay
+
+2. Pobierz bibliotekę [Tpay Open API library](https://github.com/tpay-com/tpay-openapi-php). W głównym folderze Magento
+   wpisz komendę:
+
+   ```
+   composer require tpay-com/tpay-openapi-php
+   ```
+
+3. Pobierz moduł Tpay. W głównym folderze Magento wpisz komendę:
+
+   ```
+   composer require tpaycom/magento2basic
+   ```
+
+4. Uruchom moduł Tpay. W głównym folderze Magento wpisz komendę:
+
+   ```
+   php bin/magento module:enable Tpay_Magento2
+   php bin/magento setup:upgrade
+   php bin/magento setup:di:compile
+   php bin/magento setup:static-content:deploy
+   ```
+
+5. W panelu administacyjnym przejdź do konfiguracji modułu Tpay: Stores -> Configuration -> Payment Methods -> tpay.com.
+
+### [Konfiguracja bramki płatniczej](https://support.tpay.com/pl/developer/addons/magento/instrukcja-konfiguracji-wtyczki-tpay-dla-magento-2)
+
+### [Konfiguracja zwrotów z panelu administarcyjnego Magento2](https://support.tpay.com/pl/developer/addons/magento/instrukcja-realizacji-zwrotow-za-pomoca-wtyczki-tpay-dla-magento-2)
+
+### [Konfiguracja osbługi waluty innej niż PLN](https://support.tpay.com/pl/developer/addons/magento/instrukcja-obslugi-wielu-walut-we-wtyczce-tpay-dla-magento-2)
+
+### Obsługa GraphQL
+
+Możliwa jest integracja tego rozwiązania z naszą wtyczką. Repozytorium znajdziesz
+[tutaj](https://github.com/tpay-com/tpay-magento2-graphql).
+
+### Wsparcie techniczne
+
+W przypadku dodatkowych pytań zapraszamy do kontaktu z Działem Obsługi Klienta Tpay pod tym
+[linkiem](https://tpay.com/kontakt)
+
+### [Changelog](https://github.com/tpay-com/tpay-magento2-basic/releases)
