@@ -1,5 +1,7 @@
 # Tpay Payment Module for Magento 2
 
+### [Polish version of README](https://github.com/tpay-com/tpay-magento2-basic/blob/master/README_PL.md)
+
 ### Basic information
 
 The official module for quick online payments via Tpay on the Magento 2 platform.
