@@ -150,6 +150,10 @@ class OpenApi
             ],
         ];
 
+        if ($data['group'] && $data['channel']) {
+            throw \OpenApiException::channelAndGroupCollision();
+        }
+
         if ($data['group']) {
             $paymentData['pay']['groupId'] = $data['group'];
         }
