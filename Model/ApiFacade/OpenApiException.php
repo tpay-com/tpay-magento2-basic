@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-class OpenApiException extends \Exception
+class OpenApiException extends Exception
 {
     public function __construct($message = '', $code = 0, ?Throwable $previous = null)
     {
