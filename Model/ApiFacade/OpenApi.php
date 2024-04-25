@@ -4,6 +4,7 @@ namespace Tpay\Magento2\Model\ApiFacade;
 
 use Magento\Framework\App\CacheInterface;
 use Magento\Payment\Model\InfoInterface;
+use OpenApiException;
 use Tpay\Magento2\Api\TpayConfigInterface;
 use Tpay\Magento2\Model\ApiFacade\Transaction\Dto\Channel;
 use tpaySDK\Api\TpayApi;
@@ -151,7 +152,7 @@ class OpenApi
         ];
 
         if ($data['group'] && $data['channel']) {
-            throw \OpenApiException::channelAndGroupCollision();
+            throw OpenApiException::channelAndGroupCollision();
         }
 
         if ($data['group']) {
