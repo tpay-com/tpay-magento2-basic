@@ -87,7 +87,7 @@ class MethodListPlugin
             return [];
         }
 
-        if (!$this->tpay->isCartValid($this->checkoutSession->getQuote()->getGrandTotal())) {
+        if (!$this->tpay->isCartValid($this->checkoutSession->getQuote()->getBaseGrandTotal())) {
             return $result;
         }
 

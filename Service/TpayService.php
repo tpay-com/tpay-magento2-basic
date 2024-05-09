@@ -62,7 +62,7 @@ class TpayService extends RegisterCaptureNotificationOperation
     {
         $order = $this->orderRepository->getByIncrementId($orderId);
         $order
-            ->setTotalDue($order->getGrandTotal())
+            ->setTotalDue($order->getBaseGrandTotal())
             ->setTotalPaid(0.00)
             ->setBaseTotalPaid(0.00)
             ->setBaseTotalDue($order->getBaseGrandTotal())
@@ -105,7 +105,7 @@ class TpayService extends RegisterCaptureNotificationOperation
         }
 
         $sendNewInvoiceMail = (bool) $tpayConfig->getInvoiceSendMail();
-        $orderAmount = (float) number_format((float) $order->getGrandTotal(), 2, '.', '');
+        $orderAmount = (float) number_format((float) $order->getBaseGrandTotal(), 2, '.', '');
         $trStatus = $validParams['tr_status'];
         $emailNotify = false;
 
@@ -114,7 +114,7 @@ class TpayService extends RegisterCaptureNotificationOperation
                 $emailNotify = true;
             }
             $status = Order::STATE_PROCESSING;
-            $this->registerCaptureNotificationTpay($order->getPayment(), $order->getGrandTotal(), $validParams);
+            $this->registerCaptureNotificationTpay($order->getPayment(), $order->getBaseGrandTotal(), $validParams);
         } elseif ('CHARGEBACK' === $trStatus) {
             $order->addCommentToStatusHistory($this->getTransactionDesc($validParams));
             $this->orderRepository->save($order);
@@ -161,7 +161,7 @@ class TpayService extends RegisterCaptureNotificationOperation
 
         $sendNewInvoiceMail = (bool) $tpayConfig->getInvoiceSendMail();
         $transactionDesc = $this->getCardTransactionDesc($validParams);
-        $orderAmount = (float) number_format((float) $order->getGrandTotal(), 2, '.', '');
+        $orderAmount = (float) number_format((float) $order->getBaseGrandTotal(), 2, '.', '');
         $emailNotify = false;
 
         $order = $this->updateTransactionId($order, $validParams);
@@ -174,7 +174,7 @@ class TpayService extends RegisterCaptureNotificationOperation
             if (Order::STATE_PROCESSING != $order->getState()) {
                 $emailNotify = true;
             }
-            $this->registerCardCaptureNotificationTpay($order->getPayment(), $order->getGrandTotal(), $validParams);
+            $this->registerCardCaptureNotificationTpay($order->getPayment(), $order->getBaseGrandTotal(), $validParams);
         }
 
         if ($emailNotify) {

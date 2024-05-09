@@ -188,7 +188,7 @@ class TpayPayment extends Adapter implements TpayInterface
     {
         $order = $this->getOrder($orderId);
         $billingAddress = $order->getBillingAddress();
-        $amount = number_format((float) $order->getGrandTotal(), 2, '.', '');
+        $amount = number_format((float) $order->getBaseGrandTotal(), 2, '.', '');
         $crc = base64_encode($orderId);
         $name = $billingAddress->getData('firstname').' '.$billingAddress->getData('lastname');
         $phone = $billingAddress->getData('telephone');
@@ -210,7 +210,7 @@ class TpayPayment extends Adapter implements TpayInterface
             'phone' => $phone,
             'online' => $this->configurationProvider->onlyOnlineChannels() ? 1 : 0,
             'module' => 'Magento '.$this->configurationProvider->getMagentoVersion(),
-            'currency' => $this->getISOCurrencyCode($order->getOrderCurrencyCode()),
+            'currency' => $this->getISOCurrencyCode($order->getBaseCurrencyCode()),
             'language' => $language,
         ];
     }
@@ -288,7 +288,7 @@ class TpayPayment extends Adapter implements TpayInterface
         if (!$amount) {
             $orderId = $this->getCheckout()->getLastRealOrderId();
             $order = $this->orderRepository->getByIncrementId($orderId);
-            $amount = $order->getGrandTotal();
+            $amount = $order->getBaseGrandTotal();
         }
 
         return $amount;
