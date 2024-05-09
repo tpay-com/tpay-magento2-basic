@@ -92,7 +92,7 @@ class ConfigFacade
 
     private function createOpenApiInstance(TpayInterface $tpay, TpayConfigInterface $tpayConfig, Repository $assetRepository, TpayTokensService $tokensService, StoreManagerInterface $storeManager)
     {
-        if ('PLN' !== $storeManager->getStore()->getCurrentCurrencyCode() || !$tpayConfig->isOpenApiEnabled()) {
+        if ('PLN' !== $storeManager->getStore()->getBaseCurrencyCode() || !$tpayConfig->isOpenApiEnabled()) {
             $this->openApi = null;
             $this->useOpenApi = false;
 

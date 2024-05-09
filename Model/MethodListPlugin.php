@@ -148,7 +148,7 @@ class MethodListPlugin
 
     private function isPlnPayment(): bool
     {
-        return 'PLN' === $this->storeManager->getStore()->getCurrentCurrencyCode();
+        return 'PLN' === $this->storeManager->getStore()->getBaseCurrencyCode();
     }
 
     private function filterTransaction(array $result): array
