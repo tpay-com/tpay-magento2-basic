@@ -70,4 +70,6 @@ interface TpayConfigInterface
     public function getMagentoVersion(): string;
 
     public function buildMagentoInfo(): string;
+
+    public function getPaymentCurrency(): string;
 }

@@ -7,6 +7,7 @@ namespace Tpay\Magento2\Provider;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Store\Model\ScopeInterface;
+use Magento\Store\Model\StoreManagerInterface;
 use Tpay\Magento2\Api\TpayConfigInterface;
 
 class ConfigurationProvider implements TpayConfigInterface
@@ -21,10 +22,14 @@ class ConfigurationProvider implements TpayConfigInterface
     /** @var ProductMetadataInterface */
     protected $productMetadataInterface;
 
-    public function __construct(ScopeConfigInterface $scopeConfig, ProductMetadataInterface $productMetadataInterface)
+    /** @var StoreManagerInterface */
+    private $storeManager;
+
+    public function __construct(ScopeConfigInterface $scopeConfig, ProductMetadataInterface $productMetadataInterface, StoreManagerInterface $storeManager)
     {
         $this->scopeConfig = $scopeConfig;
         $this->productMetadataInterface = $productMetadataInterface;
+        $this->storeManager = $storeManager;
     }
 
     public function isTpayActive(): bool
@@ -212,6 +217,11 @@ class ConfigurationProvider implements TpayConfigInterface
     public function getConfigData($field, $storeId = null)
     {
         return $this->scopeConfig->getValue(self::BASE_CONFIG_PATH.$field, ScopeInterface::SCOPE_STORE, $storeId);
+    }
+
+    public function getPaymentCurrency(): string
+    {
+        return $this->getConfigData('sale_settings/bank_payments_view') ? $this->storeManager->getStore()->getBaseCurrencyCode() : $this->storeManager->getStore()->getCurrentCurrencyCode();
     }
 
     private function getPackagesVersions(): array
