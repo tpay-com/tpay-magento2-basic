@@ -88,7 +88,7 @@ class MethodListPlugin
         $result = $this->addCardMethod($result);
         $result = $this->filterResult($result);
 
-        if (!$this->transactions->isOpenApiUse() || !$this->isPlnPayment()) {
+        if (!$this->transactions->isOpenApiUse() || !$this->tpayConfig->isPlnPayment()) {
             return $result;
         }
 
@@ -133,16 +133,11 @@ class MethodListPlugin
             return $this->filterTransaction($result);
         }
 
-        if ($this->isPlnPayment()) {
+        if ($this->tpayConfig->isPlnPayment()) {
             return $result;
         }
 
         return $this->filterTransaction($result);
-    }
-
-    private function isPlnPayment(): bool
-    {
-        return 'PLN' === $this->tpayConfig->getPaymentCurrency();
     }
 
     private function filterTransaction(array $result): array

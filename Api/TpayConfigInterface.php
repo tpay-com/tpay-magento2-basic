@@ -71,5 +71,5 @@ interface TpayConfigInterface
 
     public function buildMagentoInfo(): string;
 
-    public function getPaymentCurrency(): string;
+    public function isPlnPayment(): bool;
 }

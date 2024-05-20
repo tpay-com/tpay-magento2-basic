@@ -219,9 +219,13 @@ class ConfigurationProvider implements TpayConfigInterface
         return $this->scopeConfig->getValue(self::BASE_CONFIG_PATH.$field, ScopeInterface::SCOPE_STORE, $storeId);
     }
 
-    public function getPaymentCurrency(): string
+    public function isPlnPayment(): bool
     {
-        return $this->getConfigData('sale_settings/bank_payments_view') ? $this->storeManager->getStore()->getBaseCurrencyCode() : $this->storeManager->getStore()->getCurrentCurrencyCode();
+        if ($this->getConfigData('sale_settings/bank_payments_view')) {
+            return $this->storeManager->getStore()->getBaseCurrencyCode() == 'PLN';
+        } else {
+            return $this->storeManager->getStore()->getBaseCurrencyCode() == 'PLN' && $this->storeManager->getStore()->getCurrentCurrencyCode() == 'PLN';
+        }
     }
 
     private function getPackagesVersions(): array
