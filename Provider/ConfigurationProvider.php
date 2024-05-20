@@ -222,9 +222,9 @@ class ConfigurationProvider implements TpayConfigInterface
     public function isPlnPayment(): bool
     {
         if ($this->getConfigData('sale_settings/bank_payments_view')) {
-            return $this->storeManager->getStore()->getBaseCurrencyCode() == 'PLN';
+            return 'PLN' == $this->storeManager->getStore()->getBaseCurrencyCode();
         } else {
-            return $this->storeManager->getStore()->getBaseCurrencyCode() == 'PLN' && $this->storeManager->getStore()->getCurrentCurrencyCode() == 'PLN';
+            return 'PLN' == $this->storeManager->getStore()->getBaseCurrencyCode() && 'PLN' == $this->storeManager->getStore()->getCurrentCurrencyCode();
         }
     }
 
