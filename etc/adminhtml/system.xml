@@ -173,6 +173,11 @@
                         <comment>Leave empty for no limit</comment>
                         <validate>validate-number</validate>
                     </field>
+                    <field id="bank_payments_view" translate="label" type="select" sortOrder="18" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>View bank payments</label>
+                        <comment>If you use other currencies visible on the website and pay in PLN, turn it on/off</comment>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
                 </group>
             </group>
         </section>

@@ -8,7 +8,6 @@ use Magento\Payment\Helper\Data;
 use Magento\Payment\Model\MethodInterface;
 use Magento\Payment\Model\MethodList;
 use Magento\Store\Model\ScopeInterface;
-use Magento\Store\Model\StoreManagerInterface;
 use Tpay\Magento2\Api\TpayConfigInterface;
 use Tpay\Magento2\Api\TpayInterface;
 use Tpay\Magento2\Model\ApiFacade\Transaction\TransactionApiFacade;
@@ -30,9 +29,6 @@ class MethodListPlugin
     /** @var OnsiteChannels */
     private $onsiteChannels;
 
-    /** @var StoreManagerInterface */
-    private $storeManager;
-
     /** @var TpayPayment */
     private $tpay;
 
@@ -52,7 +48,6 @@ class MethodListPlugin
         Data $data,
         ScopeConfigInterface $scopeConfig,
         OnsiteChannels $onsiteChannels,
-        StoreManagerInterface $storeManager,
         TpayPayment $tpay,
         TpayConfigInterface $tpayConfig,
         Session $checkoutSession,
@@ -63,7 +58,6 @@ class MethodListPlugin
         $this->data = $data;
         $this->scopeConfig = $scopeConfig;
         $this->onsiteChannels = $onsiteChannels;
-        $this->storeManager = $storeManager;
         $this->tpay = $tpay;
         $this->tpayConfig = $tpayConfig;
         $this->checkoutSession = $checkoutSession;
@@ -87,14 +81,14 @@ class MethodListPlugin
             return [];
         }
 
-        if (!$this->tpay->isCartValid($this->checkoutSession->getQuote()->getGrandTotal())) {
+        if (!$this->tpay->isCartValid($this->checkoutSession->getQuote()->getBaseGrandTotal())) {
             return $result;
         }
 
         $result = $this->addCardMethod($result);
         $result = $this->filterResult($result);
 
-        if (!$this->transactions->isOpenApiUse() || !$this->isPlnPayment()) {
+        if (!$this->transactions->isOpenApiUse() || !$this->tpayConfig->isPlnPayment()) {
             return $result;
         }
 
@@ -139,16 +133,11 @@ class MethodListPlugin
             return $this->filterTransaction($result);
         }
 
-        if ($this->isPlnPayment()) {
+        if ($this->tpayConfig->isPlnPayment()) {
             return $result;
         }
 
         return $this->filterTransaction($result);
-    }
-
-    private function isPlnPayment(): bool
-    {
-        return 'PLN' === $this->storeManager->getStore()->getCurrentCurrencyCode();
     }
 
     private function filterTransaction(array $result): array

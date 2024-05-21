@@ -7,7 +7,6 @@ namespace Tpay\Magento2\Model;
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Framework\View\Asset\Repository;
 use Magento\Payment\Helper\Data as PaymentHelper;
-use Magento\Store\Model\StoreManagerInterface;
 use Tpay\Magento2\Api\TpayConfigInterface;
 use Tpay\Magento2\Api\TpayInterface;
 use Tpay\Magento2\Model\ApiFacade\TpayConfig\ConfigFacade;
@@ -32,7 +31,6 @@ class TpayConfigProvider implements ConfigProviderInterface
     public function __construct(
         PaymentHelper $paymentHelper,
         Repository $assetRepository,
-        StoreManagerInterface $storeManager,
         TpayTokensService $tokensService,
         TransactionApiFacade $transactionApiFacade,
         TpayService $tpayService,
@@ -40,7 +38,7 @@ class TpayConfigProvider implements ConfigProviderInterface
     ) {
         $this->paymentHelper = $paymentHelper;
         $this->transactionApi = $transactionApiFacade;
-        $this->configFacade = new ConfigFacade($this->getPaymentMethodInstance(), $tpayConfig, $assetRepository, $tokensService, $storeManager, $tpayService);
+        $this->configFacade = new ConfigFacade($this->getPaymentMethodInstance(), $tpayConfig, $assetRepository, $tokensService, $tpayService);
     }
 
     public function getConfig(): array
