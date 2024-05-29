@@ -78,7 +78,7 @@ class ConfigOpen extends TpayApi
 
     public function getTerms(): ?string
     {
-        return $this->tpay->getTermsURL();
+        return $this->tpayConfig->getTermsURL();
     }
 
     public function createCSS(string $css): string

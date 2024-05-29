@@ -43,7 +43,6 @@ class TpayPayment extends Adapter implements TpayInterface
     protected $_canRefund = true;
     protected $_canRefundInvoicePartial = true;
     protected $redirectURL = 'https://secure.tpay.com';
-    protected $termsURL = 'https://secure.tpay.com/regulamin.pdf';
 
     /** @var float */
     protected $minAmountBlik = 0.01;
@@ -177,11 +176,6 @@ class TpayPayment extends Adapter implements TpayInterface
     public function checkBlikLevel0Settings(): bool
     {
         return $this->configurationProvider->getBlikLevelZeroStatus() && $this->checkBlikAmount();
-    }
-
-    public function getTermsURL(): string
-    {
-        return $this->termsURL;
     }
 
     public function getTpayFormData(?string $orderId = null): array
