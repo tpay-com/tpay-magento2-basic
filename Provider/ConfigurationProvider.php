@@ -80,7 +80,7 @@ class ConfigurationProvider implements TpayConfigInterface
 
     public function getTermsURL(): string
     {
-        if (substr($this->localeResolver->getLocale(), 0, 2) == 'pl') {
+        if ('pl' == substr($this->localeResolver->getLocale(), 0, 2)) {
             return $this->termsURL;
         }
 
