@@ -90,7 +90,7 @@ class CardApiFacade
 
     private function createOpenApiInstance(TpayInterface $tpay, TpayConfigInterface $tpayConfig, TpayTokensService $tokensService, TpayService $tpayService)
     {
-        if (!$tpayConfig->isPlnPayment() || !$tpayConfig->isCardEnabled()) {
+        if (!$tpayConfig->isOpenApiEnabled() || !$tpayConfig->isPlnPayment() || !$tpayConfig->isCardEnabled()) {
             $this->cardOpen = null;
             $this->useOpenCard = false;
 
