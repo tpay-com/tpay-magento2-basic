@@ -68,7 +68,7 @@ class CardApiFacade
         if (null == $this->cardOpen && null === $this->cardOrigin) {
             $originAuthorization = $this->createCardOriginApiInstance($this->tpay, $this->tpayConfig, $this->tokensService, $this->tpayService);
 
-            if (isset($originAuthorization['content']) && $originAuthorization['content'] == 'correct') {
+            if (isset($originAuthorization['content']) && 'correct' == $originAuthorization['content']) {
                 $this->useOpenCard = false;
 
                 return;
@@ -89,7 +89,7 @@ class CardApiFacade
         try {
             $this->cardOrigin = new CardOrigin($tpay, $tpayConfig, $tokensService, $tpayService);
 
-            return $this->cardOrigin->requests($this->cardOrigin->cardsApiURL . $this->tpayConfig->getCardApiKey(), ['api_password' => $this->tpayConfig->getCardApiPassword(), 'method' => 'check']);
+            return $this->cardOrigin->requests($this->cardOrigin->cardsApiURL.$this->tpayConfig->getCardApiKey(), ['api_password' => $this->tpayConfig->getCardApiPassword(), 'method' => 'check']);
         } catch (Exception $exception) {
             $this->cardOrigin = null;
 
