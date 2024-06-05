@@ -60,24 +60,35 @@ class CardConfigFacade
     private function connectApi()
     {
         if (null == $this->openApi && null === $this->originApi) {
-            $this->createOriginApiInstance($this->tpay, $this->tpayConfig, $this->assetRepository, $this->tokensService, $this->tpayService);
+            $originAuthorization = $this->createOriginApiInstance($this->tpay, $this->tpayConfig, $this->assetRepository, $this->tokensService, $this->tpayService);
+
+            if (isset($originAuthorization['content']) && $originAuthorization['content'] == 'correct') {
+                $this->useOpenApi = false;
+
+                return;
+            }
+
             $this->createOpenApiInstance($this->tpay, $this->tpayConfig, $this->assetRepository, $this->tokensService);
         }
     }
 
-    private function createOriginApiInstance(TpayInterface $tpay, TpayConfigInterface $tpayConfig, Repository $assetRepository, TpayTokensService $tokensService, TpayService $tpayService)
+    private function createOriginApiInstance(TpayInterface $tpay, TpayConfigInterface $tpayConfig, Repository $assetRepository, TpayTokensService $tokensService, TpayService $tpayService): array
     {
         if (!$tpayConfig->isCardEnabled()) {
             $this->originApi = null;
 
-            return;
+            return [];
         }
 
         try {
-            new CardOrigin($tpay, $tpayConfig, $tokensService, $tpayService);
+            $cardOrigin = new CardOrigin($tpay, $tpayConfig, $tokensService, $tpayService);
             $this->originApi = new ConfigOrigin($tpay, $tpayConfig, $assetRepository, $tokensService);
+
+            return $cardOrigin->requests($cardOrigin->cardsApiURL . $this->tpayConfig->getCardApiKey(), ['api_password' => $this->tpayConfig->getCardApiPassword(), 'method' => 'check']);
         } catch (Exception $exception) {
             $this->originApi = null;
+
+            return [];
         }
     }
 
