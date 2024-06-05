@@ -46,9 +46,7 @@ class CardApiFacade
 
     public function payTransaction(string $orderId, array $additionalPaymentInformation, ?string $transactionId = null, ?array $customerToken = null): string
     {
-        $this->connectApi();
-
-        return $this->useOpenCard ? $this->cardOpen->payTransaction($orderId, $additionalPaymentInformation, $transactionId, $customerToken) : 'error';
+        return $this->isOpenApiUse() ? $this->cardOpen->payTransaction($orderId, $additionalPaymentInformation, $transactionId, $customerToken) : 'error';
     }
 
     public function isOpenApiUse(): bool
@@ -68,29 +66,40 @@ class CardApiFacade
     private function connectApi()
     {
         if (null == $this->cardOpen && null === $this->cardOrigin) {
-            $this->createCardOriginApiInstance($this->tpay, $this->tpayConfig, $this->tokensService, $this->tpayService);
+            $originAuthorization = $this->createCardOriginApiInstance($this->tpay, $this->tpayConfig, $this->tokensService, $this->tpayService);
+
+            if (isset($originAuthorization['content']) && 'correct' == $originAuthorization['content']) {
+                $this->useOpenCard = false;
+
+                return;
+            }
+
             $this->createOpenApiInstance($this->tpay, $this->tpayConfig, $this->tokensService, $this->tpayService);
         }
     }
 
-    private function createCardOriginApiInstance(TpayInterface $tpay, TpayConfigInterface $tpayConfig, TpayTokensService $tokensService, TpayService $tpayService)
+    private function createCardOriginApiInstance(TpayInterface $tpay, TpayConfigInterface $tpayConfig, TpayTokensService $tokensService, TpayService $tpayService): array
     {
         if (!$tpayConfig->isCardEnabled()) {
             $this->cardOrigin = null;
 
-            return;
+            return [];
         }
 
         try {
             $this->cardOrigin = new CardOrigin($tpay, $tpayConfig, $tokensService, $tpayService);
+
+            return $this->cardOrigin->requests($this->cardOrigin->cardsApiURL.$this->tpayConfig->getCardApiKey(), ['api_password' => $this->tpayConfig->getCardApiPassword(), 'method' => 'check']);
         } catch (Exception $exception) {
             $this->cardOrigin = null;
+
+            return [];
         }
     }
 
     private function createOpenApiInstance(TpayInterface $tpay, TpayConfigInterface $tpayConfig, TpayTokensService $tokensService, TpayService $tpayService)
     {
-        if (!$tpayConfig->isPlnPayment() || !$tpayConfig->isCardEnabled()) {
+        if (!$tpayConfig->isOpenApiEnabled() || !$tpayConfig->isPlnPayment() || !$tpayConfig->isCardEnabled()) {
             $this->cardOpen = null;
             $this->useOpenCard = false;
 

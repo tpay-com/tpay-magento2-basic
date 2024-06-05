@@ -6,6 +6,7 @@ namespace Tpay\Magento2\Provider;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ProductMetadataInterface;
+use Magento\Framework\Locale\Resolver;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Tpay\Magento2\Api\TpayConfigInterface;
@@ -15,6 +16,7 @@ class ConfigurationProvider implements TpayConfigInterface
     private const BASE_CONFIG_PATH = 'payment/tpaycom_magento2basic/';
 
     protected $termsURL = 'https://secure.tpay.com/regulamin.pdf';
+    protected $termsEnURL = 'https://tpay.com/user/assets/files_for_download/payment-terms-and-conditions.pdf';
 
     /** @var ScopeConfigInterface */
     protected $scopeConfig;
@@ -25,11 +27,15 @@ class ConfigurationProvider implements TpayConfigInterface
     /** @var StoreManagerInterface */
     private $storeManager;
 
-    public function __construct(ScopeConfigInterface $scopeConfig, ProductMetadataInterface $productMetadataInterface, StoreManagerInterface $storeManager)
+    /** @var Resolver */
+    private $localeResolver;
+
+    public function __construct(ScopeConfigInterface $scopeConfig, ProductMetadataInterface $productMetadataInterface, StoreManagerInterface $storeManager, Resolver $localeResolver)
     {
         $this->scopeConfig = $scopeConfig;
         $this->productMetadataInterface = $productMetadataInterface;
         $this->storeManager = $storeManager;
+        $this->localeResolver = $localeResolver;
     }
 
     public function isTpayActive(): bool
@@ -74,7 +80,11 @@ class ConfigurationProvider implements TpayConfigInterface
 
     public function getTermsURL(): string
     {
-        return $this->termsURL;
+        if ('pl' == substr($this->localeResolver->getLocale(), 0, 2)) {
+            return $this->termsURL;
+        }
+
+        return $this->termsEnURL;
     }
 
     public function getOpenApiPassword(): ?string
