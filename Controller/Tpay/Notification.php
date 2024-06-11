@@ -18,8 +18,8 @@ use Tpay\Magento2\Api\TpayInterface;
 use Tpay\Magento2\Service\TpayService;
 use Tpay\Magento2\Service\TpayTokensService;
 use Tpay\OriginApi\Utilities\Util;
-use tpaySDK\Webhook\JWSVerifiedPaymentNotification;
 use Tpay\OriginApi\Webhook\JWSVerifiedPaymentNotification as CardJWSVerifiedPaymentNotification;
+use tpaySDK\Webhook\JWSVerifiedPaymentNotification;
 
 class Notification implements CsrfAwareActionInterface
 {
@@ -153,7 +153,7 @@ class Notification implements CsrfAwareActionInterface
             );
 
             if (!empty($token)) {
-                $this->tokensService->updateTokenById((int)$token['tokenId'], $notification['card_token']);
+                $this->tokensService->updateTokenById((int) $token['tokenId'], $notification['card_token']);
             }
         }
     }
