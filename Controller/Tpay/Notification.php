@@ -19,6 +19,7 @@ use Tpay\Magento2\Service\TpayService;
 use Tpay\Magento2\Service\TpayTokensService;
 use Tpay\OriginApi\Utilities\Util;
 use tpaySDK\Webhook\JWSVerifiedPaymentNotification;
+use Tpay\OriginApi\Webhook\JWSVerifiedPaymentNotification as CardJWSVerifiedPaymentNotification;
 
 class Notification implements CsrfAwareActionInterface
 {
@@ -59,6 +60,15 @@ class Notification implements CsrfAwareActionInterface
 
     public function execute(): ?Response
     {
+        if (isset($_POST['card'])) {
+            return $this->executeCardNotification();
+        }
+
+        return $this->executeNotification();
+    }
+
+    public function executeNotification(): ?Response
+    {
         $response = null;
 
         foreach ($this->storeManager->getStores() as $store) {
@@ -70,6 +80,36 @@ class Notification implements CsrfAwareActionInterface
         }
 
         return $response;
+    }
+
+    public function executeCardNotification(): ?Response
+    {
+        try {
+            $notification = (new CardJWSVerifiedPaymentNotification(
+                $this->tpayConfig->getSecurityCode(),
+                !$this->tpayConfig->useSandboxMode()
+            ))->getNotification();
+
+            $orderId = base64_decode($notification['order_id']);
+
+            $this->tpayService->setCardOrderStatus($orderId, $notification, $this->tpayConfig);
+            $this->saveOriginCard($notification, $orderId);
+
+            return $this->response->setStatusCode(Response::STATUS_CODE_200)->setContent('TRUE');
+        } catch (Exception $e) {
+            Util::log(
+                'Notification exception',
+                sprintf(
+                    '%s in file %s line: %d \n\n %s',
+                    $e->getMessage(),
+                    $e->getFile(),
+                    $e->getLine(),
+                    $e->getTraceAsString()
+                )
+            );
+
+            return $this->response->setStatusCode(Response::STATUS_CODE_400)->setContent('FALSE');
+        }
     }
 
     public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
@@ -108,13 +148,30 @@ class Notification implements CsrfAwareActionInterface
 
         if (isset($notification['card_token']) && !$this->tpay->isCustomerGuest($orderId)) {
             $token = $this->tokensService->getWithoutAuthCustomerTokens(
-                $order->getCustomerId(),
+                (string) $order->getCustomerId(),
                 $notification['tr_crc']
             );
 
             if (!empty($token)) {
-                $this->tokensService->updateTokenById((int) $token['tokenId'], $notification['card_token']);
+                $this->tokensService->updateTokenById((int)$token['tokenId'], $notification['card_token']);
             }
+        }
+    }
+
+    private function saveOriginCard(array $notification, string $orderId)
+    {
+        $order = $this->tpayService->getOrderById($orderId);
+
+        $payment = $this->tpayService->getPayment($orderId);
+        $additionalPaymentInformation = $payment->getData()['additional_information'];
+
+        if (isset($notification['cli_auth']) && $this->tpayConfig->getCardSaveEnabled() && !$this->tpay->isCustomerGuest($orderId)) {
+            $this->tokensService->setCustomerToken(
+                (string) $order->getCustomerId(),
+                $notification['cli_auth'],
+                $notification['card'],
+                $additionalPaymentInformation['card_vendor']
+            );
         }
     }
 
@@ -127,6 +184,7 @@ class Notification implements CsrfAwareActionInterface
                 $this->tpayConfig->getSecurityCode($storeId),
                 !$this->tpayConfig->useSandboxMode($storeId)
             ))->getNotification();
+
             $notification = $notification->getNotificationAssociative();
             $orderId = base64_decode($notification['tr_crc']);
 
