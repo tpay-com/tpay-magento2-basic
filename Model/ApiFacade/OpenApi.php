@@ -25,7 +25,7 @@ class OpenApi
         if ($token) {
             $this->tpayApi->setCustomToken(unserialize($token));
         }
-        $this->tpayApi->authorization()->setClientName($tpay->buildMagentoInfo());
+        $this->tpayApi->transactions()->setClientName($tpay->buildMagentoInfo());
         if (!$token) {
             $this->cache->save(serialize($this->tpayApi->getToken()), $this->getAuthTokenCacheKey($tpay));
         }

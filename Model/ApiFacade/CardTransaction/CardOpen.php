@@ -35,7 +35,7 @@ class CardOpen
         $this->tokensService = $tokensService;
         $this->tpayService = $tpayService;
         $this->tpayApi = new TpayApi($tpayConfig->getOpenApiClientId(), $tpayConfig->getOpenApiPassword(), !$tpayConfig->useSandboxMode());
-        $this->tpayApi->authorization()->setClientName($tpayConfig->buildMagentoInfo());
+        $this->tpayApi->transactions()->setClientName($tpayConfig->buildMagentoInfo());
     }
 
     public function makeFullCardTransactionProcess(string $orderId, ?array $customerToken = null): string
