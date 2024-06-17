@@ -18,7 +18,7 @@ use Tpay\Magento2\Api\TpayInterface;
 use Tpay\Magento2\Service\TpayService;
 use Tpay\Magento2\Service\TpayTokensService;
 use Tpay\OriginApi\Utilities\Util;
-use Tpay\OriginApi\Webhook\JWSVerifiedPaymentNotification as CardJWSVerifiedPaymentNotification;
+use Tpay\OriginApi\Webhook\JWSVerifiedPaymentNotification as OriginJWSVerifiedPaymentNotification;
 use tpaySDK\Webhook\JWSVerifiedPaymentNotification;
 
 class Notification implements CsrfAwareActionInterface
@@ -85,7 +85,7 @@ class Notification implements CsrfAwareActionInterface
     public function executeCardNotification(): ?Response
     {
         try {
-            $notification = (new CardJWSVerifiedPaymentNotification(
+            $notification = (new OriginJWSVerifiedPaymentNotification(
                 $this->tpayConfig->getSecurityCode(),
                 !$this->tpayConfig->useSandboxMode()
             ))->getNotification();
