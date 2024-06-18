@@ -257,7 +257,9 @@ class ConfigurationProvider implements TpayConfigInterface
     {
         $dir = __DIR__.'/../.version';
         if (file_exists($dir)) {
-            return file_get_contents(__DIR__.'/../.version');
+            $version = file_get_contents(__DIR__.'/../.version');
+
+            return rtrim($version, "\n");
         }
 
         return 'n/a';

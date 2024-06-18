@@ -69,7 +69,7 @@ class CardOrigin extends CardNotificationHandler
 
     private function processSavedCardPayment(string $orderId, int $cardId, ?array $customerToken = null): string
     {
-        $customerToken = $customerToken ? $customerToken : $this->tokensService->getTokenById($cardId, $this->tpay->getCustomerId($orderId));
+        $customerToken = $customerToken ? $customerToken : $this->tokensService->getTokenById($cardId, $this->tpay->getCustomerId($orderId), false);
 
         if ($customerToken) {
             $token = $customerToken['cli_auth'];
@@ -81,7 +81,7 @@ class CardOrigin extends CardNotificationHandler
                 }
 
                 if (1 === (int) $paymentResult['result'] && isset($paymentResult['status']) && 'correct' === $paymentResult['status']) {
-                    $this->tpayService->setOrderStatus($orderId, $paymentResult, $this->tpayConfig);
+                    $this->tpayService->setCardOrderStatus($orderId, $paymentResult, $this->tpayConfig);
                     $this->tpayService->addCommentToHistory($orderId, 'Successful payment by saved card');
 
                     return 'magento2basic/tpay/success';

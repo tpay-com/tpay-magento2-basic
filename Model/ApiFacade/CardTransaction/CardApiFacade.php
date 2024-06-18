@@ -74,6 +74,7 @@ class CardApiFacade
                 return;
             }
 
+            $this->cardOrigin = null;
             $this->createOpenApiInstance($this->tpay, $this->tpayConfig, $this->tokensService, $this->tpayService);
         }
     }
