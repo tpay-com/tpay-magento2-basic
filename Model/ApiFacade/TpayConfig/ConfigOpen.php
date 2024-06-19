@@ -2,6 +2,8 @@
 
 namespace Tpay\Magento2\Model\ApiFacade\TpayConfig;
 
+use Magento\Csp\Helper\CspNonceProvider;
+use Magento\Framework\Escaper;
 use Magento\Framework\View\Asset\Repository;
 use Tpay\Magento2\Api\TpayConfigInterface;
 use Tpay\Magento2\Api\TpayInterface;
@@ -23,12 +25,26 @@ class ConfigOpen extends TpayApi
     /** @var Repository */
     private $assetRepository;
 
-    public function __construct(TpayInterface $tpay, TpayConfigInterface $tpayConfig, Repository $assetRepository, TpayTokensService $tokensService)
-    {
+    /** @var CspNonceProvider */
+    private $cspNonceProvider;
+
+    /** @var Escaper */
+    private $escaper;
+
+    public function __construct(
+        TpayInterface $tpay,
+        TpayConfigInterface $tpayConfig,
+        Repository $assetRepository,
+        TpayTokensService $tokensService,
+        CspNonceProvider $cspNonceProvider,
+        Escaper $escaper
+    ) {
         $this->tpay = $tpay;
         $this->tpayConfig = $tpayConfig;
         $this->assetRepository = $assetRepository;
         $this->tokensService = $tokensService;
+        $this->cspNonceProvider = $cspNonceProvider;
+        $this->escaper = $escaper;
         parent::__construct($tpayConfig->getOpenApiClientId(), $tpayConfig->getOpenApiPassword(), !$tpayConfig->useSandboxMode());
     }
 
@@ -68,9 +84,12 @@ class ConfigOpen extends TpayApi
     public function createScript(string $script): string
     {
         return "
-            <script type=\"text/javascript\">
+            <script nonce='{$this->cspNonceProvider->generateNonce()}'>
                 require(['jquery'], function ($) {
-                    $.getScript('{$this->generateURL($script)}');
+                    let script = document.createElement('script');
+                    script.nonce = '{$this->cspNonceProvider->generateNonce()}';
+                    script.textContent = '{$this->escaper->escapeJs($this->assetRepository->createAsset($script)->getContent())}';
+                    document.head.appendChild(script);
 
                 });
             </script>";
