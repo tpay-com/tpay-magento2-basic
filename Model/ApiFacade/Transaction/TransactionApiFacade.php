@@ -86,7 +86,7 @@ class TransactionApiFacade
             return true === $channel->available;
         });
 
-        $this->cache->save(serialize($channels), $cacheKey, [], self::CACHE_LIFETIME);
+        $this->cache->save(serialize($channels), $cacheKey, [\Magento\Framework\App\Config::CACHE_TAG], self::CACHE_LIFETIME);
 
         return $channels;
     }
