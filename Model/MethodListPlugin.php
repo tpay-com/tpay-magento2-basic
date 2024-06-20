@@ -72,12 +72,10 @@ class MethodListPlugin
             return $result;
         }
 
-        $onsiteChannels = $this->scopeConfig->getValue(self::CONFIG_PATH, ScopeInterface::SCOPE_STORE);
-        $channelList = $onsiteChannels ? explode(',', $onsiteChannels) : [];
-        $channels = $this->transactions->channels();
-        $conutryId = $this->checkoutSession->getQuote()->getBillingAddress()->getCountryId();
+        $countryId = $this->checkoutSession->getQuote()->getBillingAddress()->getCountryId();
+        [$channelList, $channels] = $this->getChannels();
 
-        if ($conutryId && $this->constraintValidator->isClientCountryValid($this->tpayConfig->isAllowSpecific(), $conutryId, $this->tpayConfig->getSpecificCountry())) {
+        if ($countryId && $this->constraintValidator->isClientCountryValid($this->tpayConfig->isAllowSpecific(), $countryId, $this->tpayConfig->getSpecificCountry())) {
             return [];
         }
 
@@ -145,5 +143,19 @@ class MethodListPlugin
         return array_filter($result, function ($method) {
             return 'Tpay_Magento2' !== $method->getCode();
         });
+    }
+
+    private function getChannels(): array
+    {
+        $onsiteChannels = $this->scopeConfig->getValue(self::CONFIG_PATH, ScopeInterface::SCOPE_STORE);
+        $channelList = $onsiteChannels ? explode(',', $onsiteChannels) : [];
+        $channels = $this->transactions->channels();
+
+        $flippedChannels = array_flip(array_keys($channels));
+        $channelList = array_filter($channelList, function ($value) use ($flippedChannels) {
+            return isset($flippedChannels[$value]);
+        });
+
+        return [$channelList, $channels];
     }
 }
