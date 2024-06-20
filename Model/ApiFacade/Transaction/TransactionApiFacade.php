@@ -74,7 +74,7 @@ class TransactionApiFacade
             return [];
         }
 
-        $cacheKey = 'tpay_channels'.md5(join('|', [$this->tpay->getOpenApiClientId(), $this->tpay->getOpenApiPassword(), !$this->tpay->useSandboxMode()]));
+        $cacheKey = 'tpay_channels_'.md5(join('|', [$this->tpay->getOpenApiClientId(), $this->tpay->getOpenApiPassword(), !$this->tpay->useSandboxMode()]));
 
         $channels = $this->cache->load($cacheKey);
 
