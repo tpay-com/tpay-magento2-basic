@@ -11,7 +11,6 @@ use Tpay\OpenApi\Utilities\TpayException;
 
 class TransactionApiFacade
 {
-    private const CHANNELS_CACHE_KEY = 'tpay_channels';
     private const CACHE_LIFETIME = 86400;
 
     /** @var TransactionOriginApi */
@@ -75,7 +74,9 @@ class TransactionApiFacade
             return [];
         }
 
-        $channels = $this->cache->load(self::CHANNELS_CACHE_KEY);
+        $cacheKey = 'tpay_channels'.md5(join('|', [$this->tpay->getOpenApiClientId(), $this->tpay->getOpenApiPassword(), !$this->tpay->useSandboxMode()]));
+
+        $channels = $this->cache->load($cacheKey);
 
         if ($channels) {
             return unserialize($channels);
@@ -85,7 +86,7 @@ class TransactionApiFacade
             return true === $channel->available;
         });
 
-        $this->cache->save(serialize($channels), self::CHANNELS_CACHE_KEY, [], self::CACHE_LIFETIME);
+        $this->cache->save(serialize($channels), $cacheKey, [], self::CACHE_LIFETIME);
 
         return $channels;
     }
