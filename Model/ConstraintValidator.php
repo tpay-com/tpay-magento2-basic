@@ -63,10 +63,6 @@ class ConstraintValidator
 
     private function validateBrowser(string $browserSupport, string $browser): bool
     {
-        if ($browserSupport == 'ApplePaySession' && $browser != 'Safari') {
-            return false;
-        }
-
-        return true;
+        return !('ApplePaySession' == $browserSupport && 'Safari' != $browser);
     }
 }
