@@ -1,15 +1,14 @@
-name: Release
+name: Create release
 
 on:
-  push:
-    tags:
-      - '*'
-
-permissions:
-  contents: write
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to create'
+        required: true
 
 jobs:
-  check:
+  create_release:
     runs-on: ubuntu-latest
 
     steps:
