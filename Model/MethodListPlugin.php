@@ -21,6 +21,9 @@ class MethodListPlugin
     /** @var TpayInterface */
     protected $paymentMethod;
 
+    /** @var Request */
+    protected $request;
+
     /** @var Data */
     private $data;
 
@@ -44,9 +47,6 @@ class MethodListPlugin
 
     /** @var ConstraintValidator */
     private $constraintValidator;
-
-    /** @var Request */
-    protected $request;
 
     public function __construct(
         Data $data,
@@ -173,7 +173,8 @@ class MethodListPlugin
 
         if (strpos($userAgent, 'Chrome')) {
             return 'Chrome';
-        } elseif (strpos($userAgent, 'Safari')) {
+        }
+        if (strpos($userAgent, 'Safari')) {
             return 'Safari';
         }
 
