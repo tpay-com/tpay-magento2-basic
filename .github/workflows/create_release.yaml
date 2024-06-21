@@ -15,7 +15,7 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v3
 
-      - name: Check version in tpay.php
+      - name: Check .version
         run: if [ $(grep ${{ github.event.inputs.version }} .version -c) != 1 ]; then exit 1; fi
 
       - name: Check Changelog
