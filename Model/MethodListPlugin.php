@@ -2,6 +2,7 @@
 
 namespace Tpay\Magento2\Model;
 
+use Laminas\Http\PhpEnvironment\Request;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Payment\Helper\Data;
@@ -44,6 +45,9 @@ class MethodListPlugin
     /** @var ConstraintValidator */
     private $constraintValidator;
 
+    /** @var Request */
+    protected $request;
+
     public function __construct(
         Data $data,
         ScopeConfigInterface $scopeConfig,
@@ -53,7 +57,8 @@ class MethodListPlugin
         Session $checkoutSession,
         TransactionApiFacade $transactions,
         ConstraintValidator $constraintValidator,
-        TpayInterface $paymentMethod
+        TpayInterface $paymentMethod,
+        Request $request
     ) {
         $this->data = $data;
         $this->scopeConfig = $scopeConfig;
@@ -64,6 +69,7 @@ class MethodListPlugin
         $this->transactions = $transactions;
         $this->constraintValidator = $constraintValidator;
         $this->paymentMethod = $paymentMethod;
+        $this->request = $request;
     }
 
     public function afterGetAvailableMethods(MethodList $compiled, $result)
@@ -90,10 +96,12 @@ class MethodListPlugin
             return $result;
         }
 
+        $browser = $this->getBrowser();
+
         foreach ($channelList as $onsiteChannel) {
             $channel = $channels[$onsiteChannel];
 
-            if (!empty($channel->constraints) && !$this->constraintValidator->validate($channel->constraints)) {
+            if (!empty($channel->constraints) && !$this->constraintValidator->validate($channel->constraints, $browser)) {
                 continue;
             }
 
@@ -157,5 +165,18 @@ class MethodListPlugin
         });
 
         return [$channelList, $channels];
+    }
+
+    private function getBrowser(): string
+    {
+        $userAgent = $this->request->getHeader('User-Agent')->getFieldValue();
+
+        if (strpos($userAgent, 'Chrome')) {
+            return 'Chrome';
+        } elseif (strpos($userAgent, 'Safari')) {
+            return 'Safari';
+        }
+
+        return 'Other';
     }
 }
