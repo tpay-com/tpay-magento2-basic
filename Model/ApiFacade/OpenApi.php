@@ -6,7 +6,7 @@ use Magento\Framework\App\CacheInterface;
 use Magento\Payment\Model\InfoInterface;
 use Tpay\Magento2\Api\TpayConfigInterface;
 use Tpay\Magento2\Model\ApiFacade\Transaction\Dto\Channel;
-use tpaySDK\Api\TpayApi;
+use Tpay\OpenApi\Api\TpayApi;
 
 class OpenApi
 {
