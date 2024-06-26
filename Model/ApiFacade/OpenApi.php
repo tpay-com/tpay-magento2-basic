@@ -20,12 +20,13 @@ class OpenApi
     public function __construct(TpayConfigInterface $tpay, CacheInterface $cache)
     {
         $this->cache = $cache;
-        $this->tpayApi = new TpayApi($tpay->getOpenApiClientId(), $tpay->getOpenApiPassword(), !$tpay->useSandboxMode());
+        $this->tpayApi = new TpayApi($tpay->getOpenApiClientId(), $tpay->getOpenApiPassword(), !$tpay->useSandboxMode(), 'read', null, $tpay->buildMagentoInfo());
         $token = $this->cache->load($this->getAuthTokenCacheKey($tpay));
+
         if ($token) {
             $this->tpayApi->setCustomToken(unserialize($token));
         }
-        $this->tpayApi->transactions()->setClientName($tpay->buildMagentoInfo());
+
         if (!$token) {
             $this->cache->save(serialize($this->tpayApi->getToken()), $this->getAuthTokenCacheKey($tpay));
         }
