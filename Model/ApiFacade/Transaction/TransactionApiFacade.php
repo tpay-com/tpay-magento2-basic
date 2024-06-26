@@ -12,7 +12,7 @@ use Tpay\OpenApi\Utilities\TpayException;
 class TransactionApiFacade
 {
     private const CHANNELS_CACHE_KEY = 'tpay_channels';
-    private const CACHE_LIFETIME = 86_400;
+    private const CACHE_LIFETIME = 86400;
 
     /** @var TransactionOriginApi */
     private $originApi;
