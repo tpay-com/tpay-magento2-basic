@@ -3,49 +3,36 @@
 namespace Tpay\Magento2\Model\ApiFacade\TpayConfig;
 
 use Exception;
-use Magento\Framework\View\Asset\Repository;
 use Tpay\Magento2\Api\TpayConfigInterface;
-use Tpay\Magento2\Api\TpayInterface;
 use Tpay\Magento2\Model\ApiFacade\Transaction\TransactionOriginApi;
-use Tpay\Magento2\Service\TpayService;
-use Tpay\Magento2\Service\TpayTokensService;
 
 class ConfigFacade
 {
-    /** @var ConfigOrigin */
+    /** @var ConfigOrigin\Proxy */
     private $originConfig;
 
-    /** @var ConfigOpen */
+    /** @var ConfigOpen\Proxy */
     private $openApi;
 
-    /** @var CardConfigFacade */
+    /** @var CardConfigFacade\Proxy */
     private $cardConfig;
-
-    /** @var TpayInterface */
-    private $tpay;
 
     /** @var TpayConfigInterface */
     private $tpayConfig;
 
-    /** @var Repository */
-    private $assetRepository;
-
-    /** @var TpayTokensService */
-    private $tokensService;
-
-    /** @var TpayService */
-    private $tpayService;
-
     /** @var bool */
     private $useOpenApi;
 
-    public function __construct(TpayInterface $tpay, TpayConfigInterface $tpayConfig, Repository $assetRepository, TpayTokensService $tokensService, TpayService $tpayService)
-    {
-        $this->tpay = $tpay;
+    public function __construct(
+        TpayConfigInterface $tpayConfig,
+        ConfigOrigin\Proxy $originConfig,
+        ConfigOpen\Proxy $openApi,
+        CardConfigFacade\Proxy $cardConfig
+    ) {
         $this->tpayConfig = $tpayConfig;
-        $this->assetRepository = $assetRepository;
-        $this->tokensService = $tokensService;
-        $this->tpayService = $tpayService;
+        $this->originConfig = $originConfig;
+        $this->openApi = $openApi;
+        $this->cardConfig = $cardConfig;
     }
 
     public function getConfig(): array
@@ -63,29 +50,26 @@ class ConfigFacade
     private function connectApi()
     {
         if (null == $this->openApi && null === $this->originConfig) {
-            $this->createOriginApiInstance($this->tpay, $this->tpayConfig, $this->assetRepository, $this->tokensService);
-            $this->createOpenApiInstance($this->tpay, $this->tpayConfig, $this->assetRepository, $this->tokensService);
-            $this->cardConfig = new CardConfigFacade($this->tpay, $this->tpayConfig, $this->assetRepository, $this->tokensService, $this->tpayService);
+            $this->createOriginApiInstance($this->tpayConfig);
+            $this->createOpenApiInstance($this->tpayConfig);
         }
     }
 
-    private function createOriginApiInstance(TpayInterface $tpay, TpayConfigInterface $tpayConfig, Repository $assetRepository, TpayTokensService $tokensService)
+    private function createOriginApiInstance(TpayConfigInterface $tpayConfig)
     {
         if (!$tpayConfig->isOriginApiEnabled()) {
-            $this->originConfig = null;
 
             return;
         }
 
         try {
             new TransactionOriginApi($tpayConfig->getApiPassword(), $tpayConfig->getApiKey(), $tpayConfig->getMerchantId(), $tpayConfig->getSecurityCode(), !$tpayConfig->useSandboxMode());
-            $this->originConfig = new ConfigOrigin($tpay, $tpayConfig, $assetRepository, $tokensService);
         } catch (Exception $exception) {
-            $this->originConfig = null;
+            return;
         }
     }
 
-    private function createOpenApiInstance(TpayInterface $tpay, TpayConfigInterface $tpayConfig, Repository $assetRepository, TpayTokensService $tokensService)
+    private function createOpenApiInstance(TpayConfigInterface $tpayConfig)
     {
         if (!$tpayConfig->isPlnPayment() || !$tpayConfig->isOpenApiEnabled()) {
             $this->openApi = null;
@@ -95,11 +79,9 @@ class ConfigFacade
         }
 
         try {
-            $this->openApi = new ConfigOpen($tpay, $tpayConfig, $assetRepository, $tokensService);
             $this->openApi->authorization();
             $this->useOpenApi = true;
         } catch (Exception $exception) {
-            $this->openApi = null;
             $this->useOpenApi = false;
         }
     }
