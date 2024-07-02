@@ -61,6 +61,7 @@ define(
                 paymentData['group'] = $('#tpay-channel-input').val();
                 paymentData['blik_code'] = $('#blik_code').val();
                 paymentData['accept_tos'] = $('input[name="accept_tos"]').is(':checked');
+                paymentData['channel'] = "";
 
                 return $.extend(true, parent, {'additional_data': paymentData});
             },

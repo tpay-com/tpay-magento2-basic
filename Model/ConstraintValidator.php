@@ -16,7 +16,7 @@ class ConstraintValidator
         $this->checkoutSession = $session;
     }
 
-    public function validate(array $constraints): bool
+    public function validate(array $constraints, string $browser): bool
     {
         foreach ($constraints as $constraint) {
             switch ($constraint['type']) {
@@ -28,6 +28,12 @@ class ConstraintValidator
                     break;
                 case 'max':
                     if (!$this->validateMaximalTotal((float) $constraint['value'])) {
+                        return false;
+                    }
+
+                    break;
+                case 'supported':
+                    if (!$this->validateBrowser($constraint['field'], $browser)) {
                         return false;
                     }
 
@@ -53,5 +59,10 @@ class ConstraintValidator
     private function validateMaximalTotal(float $maximal): bool
     {
         return $this->checkoutSession->getQuote()->getBaseGrandTotal() <= $maximal;
+    }
+
+    private function validateBrowser(string $browserSupport, string $browser): bool
+    {
+        return !('ApplePaySession' == $browserSupport && 'Safari' != $browser);
     }
 }

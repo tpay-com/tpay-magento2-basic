@@ -45,6 +45,14 @@ require(['jquery', 'mage/translate'], function ($, $t) {
             return true;
         }
 
+        function isBrowserSupport(channelId) {
+            if (channelId === 170) { //ApplePay
+                return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+            }
+
+            return true;
+        }
+
         function ShowChannelsCombo() {
             var str = '',
                 i,
@@ -68,6 +76,10 @@ require(['jquery', 'mage/translate'], function ($, $t) {
                 }
 
                 if (inArray(id, installmentsGroupId) && !doesAmountFitToInstallments(parseFloat(window.checkoutConfig.tpay.payment.grandTotal), parseInt(id))) {
+                    continue;
+                }
+
+                if (!isBrowserSupport(parseInt(id))) {
                     continue;
                 }
 

@@ -2,6 +2,7 @@
 
 namespace Tpay\Magento2\Model;
 
+use Laminas\Http\PhpEnvironment\Request;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Payment\Helper\Data;
@@ -19,6 +20,9 @@ class MethodListPlugin
 
     /** @var TpayInterface */
     protected $paymentMethod;
+
+    /** @var Request */
+    protected $request;
 
     /** @var Data */
     private $data;
@@ -53,7 +57,8 @@ class MethodListPlugin
         Session $checkoutSession,
         TransactionApiFacade $transactions,
         ConstraintValidator $constraintValidator,
-        TpayInterface $paymentMethod
+        TpayInterface $paymentMethod,
+        Request $request
     ) {
         $this->data = $data;
         $this->scopeConfig = $scopeConfig;
@@ -64,6 +69,7 @@ class MethodListPlugin
         $this->transactions = $transactions;
         $this->constraintValidator = $constraintValidator;
         $this->paymentMethod = $paymentMethod;
+        $this->request = $request;
     }
 
     public function afterGetAvailableMethods(MethodList $compiled, $result)
@@ -72,12 +78,10 @@ class MethodListPlugin
             return $result;
         }
 
-        $onsiteChannels = $this->scopeConfig->getValue(self::CONFIG_PATH, ScopeInterface::SCOPE_STORE);
-        $channelList = $onsiteChannels ? explode(',', $onsiteChannels) : [];
-        $channels = $this->transactions->channels();
-        $conutryId = $this->checkoutSession->getQuote()->getBillingAddress()->getCountryId();
+        $countryId = $this->checkoutSession->getQuote()->getBillingAddress()->getCountryId();
+        [$channelList, $channels] = $this->getChannels();
 
-        if ($conutryId && $this->constraintValidator->isClientCountryValid($this->tpayConfig->isAllowSpecific(), $conutryId, $this->tpayConfig->getSpecificCountry())) {
+        if ($countryId && $this->constraintValidator->isClientCountryValid($this->tpayConfig->isAllowSpecific(), $countryId, $this->tpayConfig->getSpecificCountry())) {
             return [];
         }
 
@@ -92,10 +96,12 @@ class MethodListPlugin
             return $result;
         }
 
+        $browser = $this->getBrowser();
+
         foreach ($channelList as $onsiteChannel) {
             $channel = $channels[$onsiteChannel];
 
-            if (!empty($channel->constraints) && !$this->constraintValidator->validate($channel->constraints)) {
+            if (!empty($channel->constraints) && !$this->constraintValidator->validate($channel->constraints, $browser)) {
                 continue;
             }
 
@@ -145,5 +151,33 @@ class MethodListPlugin
         return array_filter($result, function ($method) {
             return 'Tpay_Magento2' !== $method->getCode();
         });
+    }
+
+    private function getChannels(): array
+    {
+        $onsiteChannels = $this->scopeConfig->getValue(self::CONFIG_PATH, ScopeInterface::SCOPE_STORE);
+        $channelList = $onsiteChannels ? explode(',', $onsiteChannels) : [];
+        $channels = $this->transactions->channels();
+
+        $flippedChannels = array_flip(array_keys($channels));
+        $channelList = array_filter($channelList, function ($value) use ($flippedChannels) {
+            return isset($flippedChannels[$value]);
+        });
+
+        return [$channelList, $channels];
+    }
+
+    private function getBrowser(): string
+    {
+        $userAgent = $this->request->getHeader('User-Agent')->getFieldValue();
+
+        if (strpos($userAgent, 'Chrome')) {
+            return 'Chrome';
+        }
+        if (strpos($userAgent, 'Safari')) {
+            return 'Safari';
+        }
+
+        return 'Other';
     }
 }
