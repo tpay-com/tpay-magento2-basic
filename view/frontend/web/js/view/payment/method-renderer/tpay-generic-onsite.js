@@ -26,6 +26,10 @@ define(
                 return window.checkoutConfig.tpay.payment.getTerms;
             },
 
+            getRegulations: function () {
+                return window.checkoutConfig.tpaycards.payment.getRegulations;
+            },
+
             getLogoUrl: function (code) {
                 const id = code.slice(code.indexOf('-') + 1);
 

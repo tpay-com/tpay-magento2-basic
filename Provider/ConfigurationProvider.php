@@ -17,6 +17,8 @@ class ConfigurationProvider implements TpayConfigInterface
 
     protected $termsURL = 'https://secure.tpay.com/regulamin.pdf';
     protected $termsEnURL = 'https://tpay.com/user/assets/files_for_download/payment-terms-and-conditions.pdf';
+    protected $regulationsURL = 'https://tpay.com/user/assets/files_for_download/klauzula-informacyjna-platnik.pdf';
+    protected $regulationsEnURL = 'https://tpay.com/user/assets/files_for_download/information-clause-payer.pdf';
 
     /** @var ScopeConfigInterface */
     protected $scopeConfig;
@@ -85,6 +87,15 @@ class ConfigurationProvider implements TpayConfigInterface
         }
 
         return $this->termsEnURL;
+    }
+
+    public function getRegulationsURL(): string
+    {
+        if ('pl' == substr($this->localeResolver->getLocale(), 0, 2)) {
+            return $this->regulationsURL;
+        }
+
+        return $this->regulationsEnURL;
     }
 
     public function getOpenApiPassword(): ?string

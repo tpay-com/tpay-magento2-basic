@@ -64,10 +64,12 @@
             <!-- ko template: getTemplate() --><!-- /ko -->
             <!--/ko-->
             <div class="TpayRegulations tpay-regulations-offset">
-                <input type="checkbox" name="accept_tos" id="accept_tos"/>
+                <input type="checkbox" name="accept_tos" id="accept_tos" checked/>
                 <label for="accept_tos">
-                    <a target="_blank"
-                       data-bind="attr: {href: getTerms()}, text: $t('I do accept tpay.com service regulations')"></a>.
+                    <span data-bind="text: $t('By paying, you accept ')"></span>
+                    <a target="_blank" data-bind="attr: {href: getTerms()}, text: $t('regulations')"></a>.<br>
+                    <span data-bind="text: $t('The personal data administrator is Krajowy Integrator Płatności S.A with its registered office in Poznań. ')"></span>
+                    <a target="_blank" data-bind="attr: {href: getRegulations()}, text: $t('Show full content')"></a>.
                 </label>
             </div>
         </div>
