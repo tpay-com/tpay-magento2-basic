@@ -144,18 +144,5 @@ require(['jquery', 'mage/translate'], function ($, $t) {
         checkBlikInput();
         setBlikInputAction();
         payButton.addClass('disabled');
-        tos.on('change', function () {
-            var input = $('#tpay-channel-input');
-            if (input.val() > 0 && $('#blik_code').val().length === 0 && tos.is(':checked')) {
-                payButton.removeClass('disabled');
-                return;
-            }
-
-            if ($('#blik_code').val().length === 6 && tos.is(':checked')) {
-                payButton.removeClass('disabled');
-                return;
-            }
-            payButton.addClass('disabled');
-        });
     }
 );

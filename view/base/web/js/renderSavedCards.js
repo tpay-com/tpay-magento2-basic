@@ -74,14 +74,6 @@ require(['jquery', 'mage/translate'], function ($, $t) {
     }
 
     $('document').ready(function () {
-        var tos = $('#card_accept_tos');
-
         renderForm();
-        tos.on('change', function () {
-            if (tos.is(':checked')) {
-                $("#tpaycom_magento2cards_submit").removeClass('disabled');
-            }
-        });
     });
-
 });
