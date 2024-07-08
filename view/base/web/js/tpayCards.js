@@ -112,10 +112,6 @@ require(['jquery', 'mage/translate'], function ($, $t) {
         cvcInput.on(TRIGGER_EVENTS, function () {
             validateCvc($(this));
         });
-
-        tos.on('change', function () {
-            enablePayment();
-        });
     }
 
     $(document).ready(function () {

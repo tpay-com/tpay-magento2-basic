@@ -41,6 +41,7 @@ class ConfigOrigin
                     'merchantId' => $this->tpayConfig->getMerchantId(),
                     'showPaymentChannels' => $this->showChannels(),
                     'getTerms' => $this->getTerms(),
+                    'getRegulations' => $this->getRegulations(),
                     'addCSS' => $this->createCSS('Tpay_Magento2::css/tpay.css'),
                     'blikStatus' => $this->tpay->checkBlikLevel0Settings(),
                     'onlyOnlineChannels' => $this->tpayConfig->onlyOnlineChannels(),
@@ -82,6 +83,11 @@ class ConfigOrigin
         return $this->tpayConfig->getTermsURL();
     }
 
+    public function getRegulations(): ?string
+    {
+        return $this->tpayConfig->getRegulationsURL();
+    }
+
     public function createCSS(string $css): string
     {
         return "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$this->generateURL($css)}\">";
@@ -115,6 +121,7 @@ class ConfigOrigin
                     'customerTokens' => $customerTokensData,
                     'isSavingEnabled' => $this->tpayConfig->getCardSaveEnabled(),
                     'getTerms' => $this->getTerms(),
+                    'getRegulations' => $this->getRegulations(),
                 ],
             ],
         ];

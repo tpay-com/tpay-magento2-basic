@@ -42,6 +42,8 @@ interface TpayConfigInterface
     /** Return url for a tpay.com terms */
     public function getTermsURL(): string;
 
+    public function getRegulationsURL(): string;
+
     /** Check if send an email about the new invoice to customer */
     public function getInvoiceSendMail(): string;
 
