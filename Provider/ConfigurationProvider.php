@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tpay\Magento2\Provider;
 
+use Composer\InstalledVersions;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Framework\Locale\Resolver;
@@ -221,17 +222,13 @@ class ConfigurationProvider implements TpayConfigInterface
 
     public function buildMagentoInfo(): string
     {
-        $versions = $this->getPackagesVersions();
-
-        return implode(
-            '|',
-            [
-                'magento2:'.$this->getMagentoVersion(),
-                'tpay-com/tpay-openapi-php:'.$versions[0],
-                'tpay-com/tpay-php:'.$versions[1],
-                'magento2basic:'.$this->getTpayPluginVersion(),
-                'PHP:'.phpversion(),
-            ]
+        return sprintf(
+            'magento2:%s|tpay-openapi-php:%s|tpay-php:%s|magento2basic:%s|PHP:%s',
+            $this->getMagentoVersion(),
+            InstalledVersions::getPrettyVersion('tpay-com/tpay-openapi-php'),
+            InstalledVersions::getPrettyVersion('tpay-com/tpay-php'),
+            $this->getTpayPluginVersion(),
+            phpversion()
         );
     }
 
@@ -247,21 +244,6 @@ class ConfigurationProvider implements TpayConfigInterface
         }
 
         return 'PLN' == $this->storeManager->getStore()->getBaseCurrencyCode() && 'PLN' == $this->storeManager->getStore()->getCurrentCurrencyCode();
-    }
-
-    private function getPackagesVersions(): array
-    {
-        $dir = __DIR__.'/../composer.json';
-        if (file_exists($dir)) {
-            $composerJson = json_decode(
-                file_get_contents(__DIR__.'/../composer.json'),
-                true
-            )['require'] ?? [];
-
-            return [$composerJson['tpay-com/tpay-openapi-php'], $composerJson['tpay-com/tpay-php']];
-        }
-
-        return ['n/a', 'n/a'];
     }
 
     private function getTpayPluginVersion(): string

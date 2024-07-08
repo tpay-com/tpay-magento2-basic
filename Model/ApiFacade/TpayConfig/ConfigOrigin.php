@@ -69,13 +69,15 @@ class ConfigOrigin
 
     public function createScript(string $script): string
     {
-        return "
-            <script type=\"text/javascript\">
+        return <<<EOD
+
+            <script type="text/javascript">
                 require(['jquery'], function ($) {
                     $.getScript('{$this->generateURL($script)}');
 
                 });
-            </script>";
+            </script>
+EOD;
     }
 
     public function getTerms(): ?string
