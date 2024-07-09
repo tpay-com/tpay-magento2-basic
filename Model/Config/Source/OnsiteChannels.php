@@ -44,9 +44,10 @@ class OnsiteChannels implements OptionSourceInterface
         $scope = $context->getRequest()->getParam('store', null);
         $websiteScope = $context->getRequest()->getParam('website', null);
         $storeId = 0;
-        if ($scope !== null) {
+
+        if (null !== $scope) {
             $storeId = $storeManager->getStore($scope)->getId();
-        } elseif ($websiteScope !== null) {
+        } elseif (null !== $websiteScope) {
             $website = $storeManager->getWebsite($websiteScope);
             $storeId = $website->getDefaultStore()->getId();
         }
