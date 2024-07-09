@@ -2,8 +2,8 @@
 
 namespace Tpay\Magento2\Model\Config\Source;
 
-use Magento\Framework\App\CacheInterface;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\CacheInterface;
 use Magento\Framework\Data\OptionSourceInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Tpay\Magento2\Api\TpayConfigInterface;

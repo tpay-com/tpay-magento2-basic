@@ -28,8 +28,8 @@ class TransactionApiFacade
     /** @var bool */
     private $useOpenApi = false;
 
-    /** @var int|null */
-    private $storeId = null;
+    /** @var null|int */
+    private $storeId;
 
     public function __construct(TpayConfigInterface $tpay, CacheInterface $cache, ?int $storeId = null)
     {
