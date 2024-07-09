@@ -39,19 +39,19 @@ class OnsiteChannels implements OptionSourceInterface
         }, $this->transactions->channels());
     }
 
-    private function getStoreId(Context $context, StoreManagerInterface $storeManager): int
+    private function getStoreId(Context $context, StoreManagerInterface $storeManager): ?int
     {
         $scope = $context->getRequest()->getParam('store', null);
         $websiteScope = $context->getRequest()->getParam('website', null);
-        $storeId = 0;
+        $storeId = null;
 
         if (null !== $scope) {
-            $storeId = $storeManager->getStore($scope)->getId();
+            $storeId = (int) $storeManager->getStore($scope)->getId();
         } elseif (null !== $websiteScope) {
             $website = $storeManager->getWebsite($websiteScope);
-            $storeId = $website->getDefaultStore()->getId();
+            $storeId = (int) $website->getDefaultStore()->getId();
         }
 
-        return (int) $storeId;
+        return $storeId;
     }
 }
