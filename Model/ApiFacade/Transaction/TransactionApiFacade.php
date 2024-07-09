@@ -28,10 +28,14 @@ class TransactionApiFacade
     /** @var bool */
     private $useOpenApi = false;
 
-    public function __construct(TpayConfigInterface $tpay, CacheInterface $cache)
+    /** @var int|null */
+    private $storeId = null;
+
+    public function __construct(TpayConfigInterface $tpay, CacheInterface $cache, ?int $storeId = null)
     {
         $this->tpay = $tpay;
         $this->cache = $cache;
+        $this->storeId = $storeId;
     }
 
     public function isOpenApiUse(): bool
@@ -136,14 +140,14 @@ class TransactionApiFacade
 
     private function createOriginApiInstance(TpayConfigInterface $tpay)
     {
-        if (!$tpay->isOriginApiEnabled()) {
+        if (!$tpay->isOriginApiEnabled($this->storeId)) {
             $this->originApi = null;
 
             return;
         }
 
         try {
-            $this->originApi = new TransactionOriginApi($tpay->getApiPassword(), $tpay->getApiKey(), $tpay->getMerchantId(), $tpay->getSecurityCode(), !$tpay->useSandboxMode());
+            $this->originApi = new TransactionOriginApi($tpay->getApiPassword($this->storeId), $tpay->getApiKey($this->storeId), $tpay->getMerchantId($this->storeId), $tpay->getSecurityCode($this->storeId), !$tpay->useSandboxMode($this->storeId));
         } catch (Exception $exception) {
             $this->originApi = null;
         }
@@ -151,7 +155,7 @@ class TransactionApiFacade
 
     private function createOpenApiInstance(TpayConfigInterface $tpay)
     {
-        if (!$tpay->isOpenApiEnabled()) {
+        if (!$tpay->isOpenApiEnabled($this->storeId)) {
             $this->openApi = null;
             $this->useOpenApi = false;
 
@@ -159,7 +163,7 @@ class TransactionApiFacade
         }
 
         try {
-            $this->openApi = new OpenApi($tpay, $this->cache);
+            $this->openApi = new OpenApi($tpay, $this->cache, $this->storeId);
             $this->useOpenApi = true;
         } catch (Exception $exception) {
             $this->openApi = null;

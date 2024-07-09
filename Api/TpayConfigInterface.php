@@ -13,25 +13,25 @@ interface TpayConfigInterface
 
     public function getCardTitle(): ?string;
 
-    public function isOriginApiEnabled(): bool;
+    public function isOriginApiEnabled(?int $storeId = null): bool;
 
-    public function isOpenApiEnabled(): bool;
+    public function isOpenApiEnabled(?int $storeId = null): bool;
 
     public function isCardEnabled(): bool;
 
     public function isOriginApiCardUse(): bool;
 
-    public function getApiPassword(): ?string;
+    public function getApiPassword(?int $storeId = null): ?string;
 
-    public function getOpenApiPassword(): ?string;
+    public function getOpenApiPassword(?int $storeId = null): ?string;
 
-    public function getApiKey(): ?string;
+    public function getApiKey(?int $storeId = null): ?string;
 
     public function getSecurityCode(?int $storeId = null): ?string;
 
-    public function getOpenApiClientId(): ?string;
+    public function getOpenApiClientId(?int $storeId = null): ?string;
 
-    public function getMerchantId(): ?int;
+    public function getMerchantId(?int $storeId = null): ?int;
 
     public function getBlikLevelZeroStatus(): bool;
 
