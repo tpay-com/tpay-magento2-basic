@@ -184,7 +184,16 @@ class Notification implements CsrfAwareActionInterface
 
             return $this->response->setStatusCode(Response::STATUS_CODE_200)->setContent('TRUE');
         } catch (Exception $e) {
-            $this->handleNotificationError($e);
+            Util::log(
+                'Notification exception',
+                sprintf(
+                    '%s in file %s line: %d \n\n %s',
+                    $e->getMessage(),
+                    $e->getFile(),
+                    $e->getLine(),
+                    $e->getTraceAsString()
+                )
+            );
 
             return $this->response->setStatusCode(Response::STATUS_CODE_400)->setContent('FALSE');
         }
@@ -207,23 +216,18 @@ class Notification implements CsrfAwareActionInterface
 
             return $this->response->setStatusCode(Response::STATUS_CODE_200)->setContent('TRUE');
         } catch (Exception $e) {
-            $this->handleNotificationError($e);
+            Util::log(
+                'Notification exception',
+                sprintf(
+                    '%s in file %s line: %d \n\n %s',
+                    $e->getMessage(),
+                    $e->getFile(),
+                    $e->getLine(),
+                    $e->getTraceAsString()
+                )
+            );
 
             return $this->response->setStatusCode(Response::STATUS_CODE_400)->setContent('FALSE');
         }
-    }
-
-    private function handleNotificationError(Exception $error)
-    {
-        Util::log(
-            'Notification exception',
-            sprintf(
-                '%s in file %s line: %d \n\n %s',
-                $error->getMessage(),
-                $error->getFile(),
-                $error->getLine(),
-                $error->getTraceAsString()
-            )
-        );
     }
 }
