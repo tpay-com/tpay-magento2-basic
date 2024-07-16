@@ -56,9 +56,9 @@ class ConfigurationProvider implements TpayConfigInterface
         return $this->getConfigData('general_settings/title');
     }
 
-    public function getApiKey(): ?string
+    public function getApiKey(?int $storeId = null): ?string
     {
-        return $this->getConfigData('originapi_settings/api_key_tpay');
+        return $this->getConfigData('originapi_settings/api_key_tpay', $storeId);
     }
 
     public function getCardApiKey(): ?string
@@ -66,9 +66,9 @@ class ConfigurationProvider implements TpayConfigInterface
         return $this->getConfigData('cardpayment_settings/cardpayment_originapi_settings/card_api_key_tpay');
     }
 
-    public function getApiPassword(): ?string
+    public function getApiPassword(?int $storeId = null): ?string
     {
-        return $this->getConfigData('originapi_settings/api_password');
+        return $this->getConfigData('originapi_settings/api_password', $storeId);
     }
 
     public function getCardApiPassword(): ?string
@@ -99,19 +99,19 @@ class ConfigurationProvider implements TpayConfigInterface
         return $this->regulationsEnURL;
     }
 
-    public function getOpenApiPassword(): ?string
+    public function getOpenApiPassword(?int $storeId = null): ?string
     {
-        return $this->getConfigData('openapi_settings/open_api_password');
+        return $this->getConfigData('openapi_settings/open_api_password', $storeId);
     }
 
-    public function getMerchantId(): ?int
+    public function getMerchantId(?int $storeId = null): ?int
     {
-        return (int) $this->getConfigData('general_settings/merchant_id');
+        return (int) $this->getConfigData('general_settings/merchant_id', $storeId);
     }
 
-    public function getOpenApiClientId(): ?string
+    public function getOpenApiClientId(?int $storeId = null): ?string
     {
-        return $this->getConfigData('openapi_settings/open_api_client_id');
+        return $this->getConfigData('openapi_settings/open_api_client_id', $storeId);
     }
 
     public function getSecurityCode(?int $storeId = null): ?string
@@ -134,14 +134,14 @@ class ConfigurationProvider implements TpayConfigInterface
         return $this->getConfigData('cardpayment_settings/card_title') ?? '';
     }
 
-    public function isOriginApiEnabled(): bool
+    public function isOriginApiEnabled(?int $storeId = null): bool
     {
-        return (bool) $this->getConfigData('originapi_settings/origin_api_active');
+        return (bool) $this->getConfigData('originapi_settings/origin_api_active', $storeId);
     }
 
-    public function isOpenApiEnabled(): bool
+    public function isOpenApiEnabled(?int $storeId = null): bool
     {
-        return (bool) $this->getConfigData('openapi_settings/open_api_active');
+        return (bool) $this->getConfigData('openapi_settings/open_api_active', $storeId);
     }
 
     public function isCardEnabled(): bool
