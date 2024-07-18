@@ -55,7 +55,7 @@ class Notification implements CsrfAwareActionInterface
     {
         $orderId = base64_decode($_POST['tr_crc']);
         $order = $this->tpayService->getOrderById($orderId);
-        $storeId = $order->getStoreId() ? (int)$order->getStoreId() : null;
+        $storeId = $order->getStoreId() ? (int) $order->getStoreId() : null;
 
         if (isset($_POST['card'])) {
             return $this->extractCardNotification($storeId);
