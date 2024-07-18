@@ -53,15 +53,15 @@ class Notification implements CsrfAwareActionInterface
 
     public function execute(): ?Response
     {
-        $orderId = base64_decode($_POST['tr_crc']);
-        $order = $this->tpayService->getOrderById($orderId);
-        $storeId = $order->getStoreId() ? (int) $order->getStoreId() : null;
-
         if (isset($_POST['card'])) {
-            return $this->extractCardNotification($storeId);
+            $orderId = base64_decode($_POST['order_id']);
+
+            return $this->extractCardNotification($this->getOrderStore($orderId));
         }
 
-        return $this->extractNotification($storeId);
+        $orderId = base64_decode($_POST['tr_crc']);
+
+        return $this->extractNotification($this->getOrderStore($orderId));
     }
 
     public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
@@ -188,5 +188,12 @@ class Notification implements CsrfAwareActionInterface
                 $e->getTraceAsString()
             )
         );
+    }
+
+    private function getOrderStore(string $orderId): ?int
+    {
+        $order = $this->tpayService->getOrderById($orderId);
+
+        return $order->getStoreId() ? (int) $order->getStoreId() : null;
     }
 }
