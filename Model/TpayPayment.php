@@ -255,7 +255,8 @@ class TpayPayment extends Adapter implements TpayInterface
      */
     public function refund(InfoInterface $payment, $amount)
     {
-        $refundService = new RefundApiFacade($this->configurationProvider, $this->cache);
+        $storeId = $payment->getOrder()->getStoreId() ? (int) $payment->getOrder()->getStoreId() : null;
+        $refundService = new RefundApiFacade($this->configurationProvider, $this->cache, $storeId);
 
         $refundResult = $refundService->makeRefund($payment, (float) $amount);
         try {

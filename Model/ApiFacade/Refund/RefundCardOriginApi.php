@@ -9,14 +9,14 @@ use Tpay\OriginApi\Utilities\Util;
 
 class RefundCardOriginApi extends CardRefunds
 {
-    public function __construct(TpayConfigInterface $tpay)
+    public function __construct(TpayConfigInterface $tpay, ?int $storeId = null)
     {
         Util::$loggingEnabled = false;
-        $this->cardApiKey = $tpay->getCardApiKey();
-        $this->cardApiPass = $tpay->getCardApiPassword();
-        $this->cardVerificationCode = $tpay->getVerificationCode();
-        $this->cardKeyRSA = $tpay->getRSAKey();
-        $this->cardHashAlg = $tpay->getHashType();
+        $this->cardApiKey = $tpay->getCardApiKey($storeId);
+        $this->cardApiPass = $tpay->getCardApiPassword($storeId);
+        $this->cardVerificationCode = $tpay->getVerificationCode($storeId);
+        $this->cardKeyRSA = $tpay->getRSAKey($storeId);
+        $this->cardHashAlg = $tpay->getHashType($storeId);
         parent::__construct();
     }
 

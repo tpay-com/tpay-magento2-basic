@@ -18,7 +18,7 @@ require(['jquery', 'mage/translate'], function ($, $t) {
         $('input[name=savedId]').each(function () {
             if ($(this).val() !== 'new') {
                 $(this).click(function () {
-                    if ($(this).is(":checked") && $('#card_accept_tos').is(':checked')) {
+                    if ($(this).is(":checked")) {
                         $('#card_form').css({opacity: 1.0}).animate({opacity: 0.0}, 500);
                         setTimeout(
                             function () {

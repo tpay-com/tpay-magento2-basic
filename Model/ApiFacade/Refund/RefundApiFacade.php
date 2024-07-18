@@ -23,12 +23,16 @@ class RefundApiFacade
     /** @var bool */
     private $useOpenApi;
 
+    /** @var null|bool */
+    private $storeId;
+
     private $cache;
 
-    public function __construct(TpayConfigInterface $tpay, CacheInterface $cache)
+    public function __construct(TpayConfigInterface $tpay, CacheInterface $cache, ?int $storeId = null)
     {
         $this->tpay = $tpay;
         $this->cache = $cache;
+        $this->storeId = $storeId;
     }
 
     public function makeRefund(InfoInterface $payment, float $amount)
@@ -37,7 +41,7 @@ class RefundApiFacade
             return $this->getCurrentApi()->makeRefund($payment, $amount);
         }
         if (!empty($payment->getAdditionalInformation('card_data'))) {
-            return (new RefundCardOriginApi($this->tpay))->makeCardRefund($payment, $amount);
+            return (new RefundCardOriginApi($this->tpay, $this->storeId))->makeCardRefund($payment, $amount);
         }
 
         return $this->originApi->makeRefund($payment, $amount);
@@ -61,7 +65,7 @@ class RefundApiFacade
     private function createRefundOriginApiInstance(TpayConfigInterface $tpay)
     {
         try {
-            $this->originApi = new RefundOriginApi($tpay);
+            $this->originApi = new RefundOriginApi($tpay, $this->storeId);
         } catch (Exception $exception) {
             $this->originApi = null;
         }
@@ -70,7 +74,7 @@ class RefundApiFacade
     private function createOpenApiInstance(TpayConfigInterface $tpay)
     {
         try {
-            $this->openApi = new OpenApi($tpay, $this->cache);
+            $this->openApi = new OpenApi($tpay, $this->cache, $this->storeId);
             $this->useOpenApi = true;
         } catch (Exception $exception) {
             $this->openApi = null;

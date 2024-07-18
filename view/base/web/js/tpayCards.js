@@ -4,8 +4,7 @@ require(['jquery', 'mage/translate'], function ($, $t) {
             numberInput = $('#card_number'),
             expiryInput = $('#expiry_date'),
             cvcInput = $('#cvc'),
-            RSA = $('#tpayRSA').text(),
-            tos = $('#card_accept_tos');
+            RSA = $('#tpayRSA').text();
 
         const TRIGGER_EVENTS = 'input change blur';
 
@@ -92,7 +91,7 @@ require(['jquery', 'mage/translate'], function ($, $t) {
             if (cn.length === 0 || ed.length === 0 || cvc.length === 0) {
                 isValid = false;
             }
-            if (isValid && tos.is(':checked')) {
+            if (isValid) {
                 encrypt.setPublicKey(decoded);
                 encrypted = encrypt.encrypt(cd);
                 $("#card_data").val(encrypted);

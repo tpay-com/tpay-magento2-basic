@@ -79,7 +79,7 @@ define(
                     paymentData = {};
                 paymentData['group'] = $('#tpay-channel-input').val();
                 paymentData['blik_code'] = $('#blik_code').val();
-                paymentData['accept_tos'] = $('input[name="accept_tos"]').is(':checked');
+                paymentData['accept_tos'] = true;
 
                 paymentData['card_data'] = $('input[name="card_data"]').val();
                 paymentData['card_save'] = $('input[name="card_save"]').is(":checked");

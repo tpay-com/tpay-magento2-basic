@@ -42,7 +42,7 @@ define(
                 var parent = this._super(),
                     paymentData = {};
 
-                paymentData['accept_tos'] = $('input[name="accept_tos"]').is(':checked');
+                paymentData['accept_tos'] = true;
 
                 return $.extend(true, parent, {'additional_data': paymentData});
             },
