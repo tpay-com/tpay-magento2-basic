@@ -118,6 +118,7 @@ class TransactionApiFacade
             unset($data['channel']);
             unset($data['currency']);
             unset($data['language']);
+            unset($data['tax_id']);
         }
 
         return $data;
