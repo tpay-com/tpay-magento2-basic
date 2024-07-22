@@ -58,7 +58,6 @@ class ConfigFacade
     private function createOriginApiInstance(TpayConfigInterface $tpayConfig)
     {
         if (!$tpayConfig->isOriginApiEnabled()) {
-
             return;
         }
 
