@@ -58,6 +58,7 @@ class ConfigOpen extends TpayApi
                     'tpayCardsLogoUrl' => $this->generateURL('Tpay_Magento2::images/card.svg'),
                     'showPaymentChannels' => $this->showChannels(),
                     'getTerms' => $this->getTerms(),
+                    'getRegulations' => $this->getRegulations(),
                     'addCSS' => $this->createCSS('Tpay_Magento2::css/tpay.css'),
                     'blikStatus' => $this->tpay->checkBlikLevel0Settings(),
                     'getBlikChannelID' => TransactionOriginApi::BLIK_CHANNEL,
@@ -83,7 +84,8 @@ class ConfigOpen extends TpayApi
 
     public function createScript(string $script): string
     {
-        return "
+        return <<<EOD
+
             <script nonce='{$this->cspNonceProvider->generateNonce()}'>
                 require(['jquery'], function ($) {
                     let script = document.createElement('script');
@@ -92,12 +94,18 @@ class ConfigOpen extends TpayApi
                     document.head.appendChild(script);
 
                 });
-            </script>";
+            </script>
+EOD;
     }
 
     public function getTerms(): ?string
     {
         return $this->tpayConfig->getTermsURL();
+    }
+
+    public function getRegulations(): ?string
+    {
+        return $this->tpayConfig->getRegulationsURL();
     }
 
     public function createCSS(string $css): string
@@ -134,6 +142,7 @@ class ConfigOpen extends TpayApi
                     'customerTokens' => $customerTokensData,
                     'isSavingEnabled' => $this->tpayConfig->getCardSaveEnabled(),
                     'getTerms' => $this->getTerms(),
+                    'getRegulations' => $this->getRegulations(),
                 ],
             ],
         ];
@@ -147,7 +156,6 @@ class ConfigOpen extends TpayApi
         $script[] = 'Tpay_Magento2::js/string_routines.js';
         $script[] = 'Tpay_Magento2::js/tpayCards.js';
         $script[] = 'Tpay_Magento2::js/renderSavedCards.js';
-        $script[] = 'Tpay_Magento2::js/tpayGeneric.js';
         $scripts = '';
 
         foreach ($script as $key => $value) {

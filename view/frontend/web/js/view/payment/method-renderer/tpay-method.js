@@ -37,6 +37,10 @@ define(
                 return window.checkoutConfig.tpay.payment.getTerms;
             },
 
+            getRegulations: function () {
+                return window.checkoutConfig.tpaycards.payment.getRegulations;
+            },
+
             getLogoUrl: function () {
                 return window.checkoutConfig.tpay.payment.tpayLogoUrl;
             },
@@ -61,6 +65,7 @@ define(
                 paymentData['group'] = $('#tpay-channel-input').val();
                 paymentData['blik_code'] = $('#blik_code').val();
                 paymentData['accept_tos'] = $('input[name="accept_tos"]').is(':checked');
+                paymentData['channel'] = "";
 
                 return $.extend(true, parent, {'additional_data': paymentData});
             },

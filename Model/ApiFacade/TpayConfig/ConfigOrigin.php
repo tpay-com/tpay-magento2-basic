@@ -57,6 +57,7 @@ class ConfigOrigin
                     'merchantId' => $this->tpayConfig->getMerchantId(),
                     'showPaymentChannels' => $this->showChannels(),
                     'getTerms' => $this->getTerms(),
+                    'getRegulations' => $this->getRegulations(),
                     'addCSS' => $this->createCSS('Tpay_Magento2::css/tpay.css'),
                     'blikStatus' => $this->tpay->checkBlikLevel0Settings(),
                     'onlyOnlineChannels' => $this->tpayConfig->onlyOnlineChannels(),
@@ -84,7 +85,8 @@ class ConfigOrigin
 
     public function createScript(string $script): string
     {
-        return "
+        return <<<EOD
+
             <script nonce='{$this->cspNonceProvider->generateNonce()}'>
                 require(['jquery'], function ($) {
                     let script = document.createElement('script');
@@ -93,12 +95,18 @@ class ConfigOrigin
                     document.head.appendChild(script);
 
                 });
-            </script>";
+            </script>
+EOD;
     }
 
     public function getTerms(): ?string
     {
         return $this->tpayConfig->getTermsURL();
+    }
+
+    public function getRegulations(): ?string
+    {
+        return $this->tpayConfig->getRegulationsURL();
     }
 
     public function createCSS(string $css): string
@@ -134,6 +142,7 @@ class ConfigOrigin
                     'customerTokens' => $customerTokensData,
                     'isSavingEnabled' => $this->tpayConfig->getCardSaveEnabled(),
                     'getTerms' => $this->getTerms(),
+                    'getRegulations' => $this->getRegulations(),
                 ],
             ],
         ];

@@ -37,6 +37,10 @@ define(
                 return window.checkoutConfig.tpaycards.payment.getTerms;
             },
 
+            getRegulations: function () {
+                return window.checkoutConfig.tpaycards.payment.getRegulations;
+            },
+
             cardFetchJavaScripts: function () {
                 return window.checkoutConfig.tpaycards.payment.fetchJavaScripts;
             },

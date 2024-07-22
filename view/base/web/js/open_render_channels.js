@@ -45,6 +45,14 @@ require(['jquery', 'mage/translate'], function ($, $t) {
             return true;
         }
 
+        function isBrowserSupport(channelId) {
+            if (channelId === 170) { //ApplePay
+                return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+            }
+
+            return true;
+        }
+
         function ShowChannelsCombo() {
             var str = '',
                 i,
@@ -68,6 +76,10 @@ require(['jquery', 'mage/translate'], function ($, $t) {
                 }
 
                 if (inArray(id, installmentsGroupId) && !doesAmountFitToInstallments(parseFloat(window.checkoutConfig.tpay.payment.grandTotal), parseInt(id))) {
+                    continue;
+                }
+
+                if (!isBrowserSupport(parseInt(id))) {
                     continue;
                 }
 
@@ -132,18 +144,5 @@ require(['jquery', 'mage/translate'], function ($, $t) {
         checkBlikInput();
         setBlikInputAction();
         payButton.addClass('disabled');
-        tos.on('change', function () {
-            var input = $('#tpay-channel-input');
-            if (input.val() > 0 && $('#blik_code').val().length === 0 && tos.is(':checked')) {
-                payButton.removeClass('disabled');
-                return;
-            }
-
-            if ($('#blik_code').val().length === 6 && tos.is(':checked')) {
-                payButton.removeClass('disabled');
-                return;
-            }
-            payButton.addClass('disabled');
-        });
     }
 );

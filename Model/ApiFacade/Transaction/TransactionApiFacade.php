@@ -11,7 +11,6 @@ use Tpay\OpenApi\Utilities\TpayException;
 
 class TransactionApiFacade
 {
-    private const CHANNELS_CACHE_KEY = 'tpay_channels';
     private const CACHE_LIFETIME = 86400;
 
     /** @var TransactionOriginApi */
@@ -29,10 +28,14 @@ class TransactionApiFacade
     /** @var bool */
     private $useOpenApi = false;
 
-    public function __construct(TpayConfigInterface $tpay, CacheInterface $cache)
+    /** @var null|int */
+    private $storeId;
+
+    public function __construct(TpayConfigInterface $tpay, CacheInterface $cache, ?int $storeId = null)
     {
         $this->tpay = $tpay;
         $this->cache = $cache;
+        $this->storeId = $storeId;
     }
 
     public function isOpenApiUse(): bool
@@ -75,7 +78,9 @@ class TransactionApiFacade
             return [];
         }
 
-        $channels = $this->cache->load(self::CHANNELS_CACHE_KEY);
+        $cacheKey = 'tpay_channels_'.md5(join('|', [$this->tpay->getOpenApiClientId($this->storeId), $this->tpay->getOpenApiPassword($this->storeId), !$this->tpay->useSandboxMode($this->storeId)]));
+
+        $channels = $this->cache->load($cacheKey);
 
         if ($channels) {
             return unserialize($channels);
@@ -85,7 +90,7 @@ class TransactionApiFacade
             return true === $channel->available;
         });
 
-        $this->cache->save(serialize($channels), self::CHANNELS_CACHE_KEY, [], self::CACHE_LIFETIME);
+        $this->cache->save(serialize($channels), $cacheKey, [\Magento\Framework\App\Config::CACHE_TAG], self::CACHE_LIFETIME);
 
         return $channels;
     }
@@ -135,14 +140,14 @@ class TransactionApiFacade
 
     private function createOriginApiInstance(TpayConfigInterface $tpay)
     {
-        if (!$tpay->isOriginApiEnabled()) {
+        if (!$tpay->isOriginApiEnabled($this->storeId)) {
             $this->originApi = null;
 
             return;
         }
 
         try {
-            $this->originApi = new TransactionOriginApi($tpay->getApiPassword(), $tpay->getApiKey(), $tpay->getMerchantId(), $tpay->getSecurityCode(), !$tpay->useSandboxMode());
+            $this->originApi = new TransactionOriginApi($tpay->getApiPassword($this->storeId), $tpay->getApiKey($this->storeId), $tpay->getMerchantId($this->storeId), $tpay->getSecurityCode($this->storeId), !$tpay->useSandboxMode($this->storeId));
         } catch (Exception $exception) {
             $this->originApi = null;
         }
@@ -150,7 +155,7 @@ class TransactionApiFacade
 
     private function createOpenApiInstance(TpayConfigInterface $tpay)
     {
-        if (!$tpay->isOpenApiEnabled()) {
+        if (!$tpay->isOpenApiEnabled($this->storeId)) {
             $this->openApi = null;
             $this->useOpenApi = false;
 
@@ -158,7 +163,7 @@ class TransactionApiFacade
         }
 
         try {
-            $this->openApi = new OpenApi($tpay, $this->cache);
+            $this->openApi = new OpenApi($tpay, $this->cache, $this->storeId);
             $this->useOpenApi = true;
         } catch (Exception $exception) {
             $this->openApi = null;

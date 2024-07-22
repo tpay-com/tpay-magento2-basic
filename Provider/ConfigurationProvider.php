@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tpay\Magento2\Provider;
 
+use Composer\InstalledVersions;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Framework\Locale\Resolver;
@@ -17,6 +18,8 @@ class ConfigurationProvider implements TpayConfigInterface
 
     protected $termsURL = 'https://secure.tpay.com/regulamin.pdf';
     protected $termsEnURL = 'https://tpay.com/user/assets/files_for_download/payment-terms-and-conditions.pdf';
+    protected $regulationsURL = 'https://tpay.com/user/assets/files_for_download/klauzula-informacyjna-platnik.pdf';
+    protected $regulationsEnURL = 'https://tpay.com/user/assets/files_for_download/information-clause-payer.pdf';
 
     /** @var ScopeConfigInterface */
     protected $scopeConfig;
@@ -53,9 +56,9 @@ class ConfigurationProvider implements TpayConfigInterface
         return $this->getConfigData('general_settings/title');
     }
 
-    public function getApiKey(): ?string
+    public function getApiKey(?int $storeId = null): ?string
     {
-        return $this->getConfigData('originapi_settings/api_key_tpay');
+        return $this->getConfigData('originapi_settings/api_key_tpay', $storeId);
     }
 
     public function getCardApiKey(): ?string
@@ -63,9 +66,9 @@ class ConfigurationProvider implements TpayConfigInterface
         return $this->getConfigData('cardpayment_settings/cardpayment_originapi_settings/card_api_key_tpay');
     }
 
-    public function getApiPassword(): ?string
+    public function getApiPassword(?int $storeId = null): ?string
     {
-        return $this->getConfigData('originapi_settings/api_password');
+        return $this->getConfigData('originapi_settings/api_password', $storeId);
     }
 
     public function getCardApiPassword(): ?string
@@ -87,19 +90,28 @@ class ConfigurationProvider implements TpayConfigInterface
         return $this->termsEnURL;
     }
 
-    public function getOpenApiPassword(): ?string
+    public function getRegulationsURL(): string
     {
-        return $this->getConfigData('openapi_settings/open_api_password');
+        if ('pl' == substr($this->localeResolver->getLocale(), 0, 2)) {
+            return $this->regulationsURL;
+        }
+
+        return $this->regulationsEnURL;
     }
 
-    public function getMerchantId(): ?int
+    public function getOpenApiPassword(?int $storeId = null): ?string
     {
-        return (int) $this->getConfigData('general_settings/merchant_id');
+        return $this->getConfigData('openapi_settings/open_api_password', $storeId);
     }
 
-    public function getOpenApiClientId(): ?string
+    public function getMerchantId(?int $storeId = null): ?int
     {
-        return $this->getConfigData('openapi_settings/open_api_client_id');
+        return (int) $this->getConfigData('general_settings/merchant_id', $storeId);
+    }
+
+    public function getOpenApiClientId(?int $storeId = null): ?string
+    {
+        return $this->getConfigData('openapi_settings/open_api_client_id', $storeId);
     }
 
     public function getSecurityCode(?int $storeId = null): ?string
@@ -122,14 +134,14 @@ class ConfigurationProvider implements TpayConfigInterface
         return $this->getConfigData('cardpayment_settings/card_title') ?? '';
     }
 
-    public function isOriginApiEnabled(): bool
+    public function isOriginApiEnabled(?int $storeId = null): bool
     {
-        return (bool) $this->getConfigData('originapi_settings/origin_api_active');
+        return (bool) $this->getConfigData('originapi_settings/origin_api_active', $storeId);
     }
 
-    public function isOpenApiEnabled(): bool
+    public function isOpenApiEnabled(?int $storeId = null): bool
     {
-        return (bool) $this->getConfigData('openapi_settings/open_api_active');
+        return (bool) $this->getConfigData('openapi_settings/open_api_active', $storeId);
     }
 
     public function isCardEnabled(): bool
@@ -210,17 +222,13 @@ class ConfigurationProvider implements TpayConfigInterface
 
     public function buildMagentoInfo(): string
     {
-        $versions = $this->getPackagesVersions();
-
-        return implode(
-            '|',
-            [
-                'magento2:'.$this->getMagentoVersion(),
-                'tpay-com/tpay-openapi-php:'.$versions[0],
-                'tpay-com/tpay-php:'.$versions[1],
-                'magento2basic:'.$this->getTpayPluginVersion(),
-                'PHP:'.phpversion(),
-            ]
+        return sprintf(
+            'magento2:%s|tpay-openapi-php:%s|tpay-php:%s|magento2basic:%s|PHP:%s',
+            $this->getMagentoVersion(),
+            InstalledVersions::getPrettyVersion('tpay-com/tpay-openapi-php'),
+            InstalledVersions::getPrettyVersion('tpay-com/tpay-php'),
+            $this->getTpayPluginVersion(),
+            phpversion()
         );
     }
 
@@ -236,21 +244,6 @@ class ConfigurationProvider implements TpayConfigInterface
         }
 
         return 'PLN' == $this->storeManager->getStore()->getBaseCurrencyCode() && 'PLN' == $this->storeManager->getStore()->getCurrentCurrencyCode();
-    }
-
-    private function getPackagesVersions(): array
-    {
-        $dir = __DIR__.'/../composer.json';
-        if (file_exists($dir)) {
-            $composerJson = json_decode(
-                file_get_contents(__DIR__.'/../composer.json'),
-                true
-            )['require'] ?? [];
-
-            return [$composerJson['tpay-com/tpay-openapi-php'], $composerJson['tpay-com/tpay-php']];
-        }
-
-        return ['n/a', 'n/a'];
     }
 
     private function getTpayPluginVersion(): string

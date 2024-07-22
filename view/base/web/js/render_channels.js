@@ -142,19 +142,6 @@ require(['jquery', 'mage/translate'], function ($, $t) {
             checkBlikInput();
             setBlikInputAction();
             payButton.addClass('disabled');
-            tos.on('change', function () {
-                var input = $('#tpay-channel-input');
-                if (input.val() > 0 && $('#blik_code').val().length === 0 && tos.is(':checked')) {
-                    payButton.removeClass('disabled');
-                    return;
-                }
-
-                if ($('#blik_code').val().length === 6 && tos.is(':checked')) {
-                    payButton.removeClass('disabled');
-                    return;
-                }
-                payButton.addClass('disabled');
-            });
         });
 
         $("#tpaycom_magento2generic_submit", '.payment-method').addClass('disabled');
@@ -165,17 +152,6 @@ require(['jquery', 'mage/translate'], function ($, $t) {
 
             var submitBtn = $("#tpaycom_magento2generic_submit", parent);
             submitBtn.addClass('disabled');
-        });
-
-        $("input[name='accept_tos']").on("click", function () {
-            var parent = $(this).closest('.payment-method-content');
-            var submitBtn = $("#tpaycom_magento2generic_submit", parent);
-
-            if ($('#generic_accept_tos', parent).is(':checked')) {
-                submitBtn.removeClass('disabled');
-            } else {
-                submitBtn.addClass('disabled');
-            }
         });
     }
 );

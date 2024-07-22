@@ -84,32 +84,17 @@ class Notification implements CsrfAwareActionInterface
 
     public function executeCardNotification(): ?Response
     {
-        try {
-            $notification = (new OriginJWSVerifiedPaymentNotification(
-                $this->tpayConfig->getSecurityCode(),
-                !$this->tpayConfig->useSandboxMode()
-            ))->getNotification();
+        $response = null;
 
-            $orderId = base64_decode($notification['order_id']);
+        foreach ($this->storeManager->getStores() as $store) {
+            $response = $this->extractCardNotification($store);
 
-            $this->tpayService->setCardOrderStatus($orderId, $notification, $this->tpayConfig);
-            $this->saveOriginCard($notification, $orderId);
-
-            return $this->response->setStatusCode(Response::STATUS_CODE_200)->setContent('TRUE');
-        } catch (Exception $e) {
-            Util::log(
-                'Notification exception',
-                sprintf(
-                    '%s in file %s line: %d \n\n %s',
-                    $e->getMessage(),
-                    $e->getFile(),
-                    $e->getLine(),
-                    $e->getTraceAsString()
-                )
-            );
-
-            return $this->response->setStatusCode(Response::STATUS_CODE_400)->setContent('FALSE');
+            if (Response::STATUS_CODE_200 === $response->getStatusCode()) {
+                break;
+            }
         }
+
+        return $response;
     }
 
     public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
@@ -196,6 +181,38 @@ class Notification implements CsrfAwareActionInterface
 
             $this->saveCard($notification, $orderId);
             $this->tpayService->setOrderStatus($orderId, $notification, $this->tpayConfig);
+
+            return $this->response->setStatusCode(Response::STATUS_CODE_200)->setContent('TRUE');
+        } catch (Exception $e) {
+            Util::log(
+                'Notification exception',
+                sprintf(
+                    '%s in file %s line: %d \n\n %s',
+                    $e->getMessage(),
+                    $e->getFile(),
+                    $e->getLine(),
+                    $e->getTraceAsString()
+                )
+            );
+
+            return $this->response->setStatusCode(Response::STATUS_CODE_400)->setContent('FALSE');
+        }
+    }
+
+    private function extractCardNotification(StoreInterface $store): ?Response
+    {
+        $storeId = (int) $store->getStoreId();
+
+        try {
+            $notification = (new OriginJWSVerifiedPaymentNotification(
+                $this->tpayConfig->getSecurityCode($storeId),
+                !$this->tpayConfig->useSandboxMode($storeId)
+            ))->getNotification();
+
+            $orderId = base64_decode($notification['order_id']);
+
+            $this->tpayService->setCardOrderStatus($orderId, $notification, $this->tpayConfig);
+            $this->saveOriginCard($notification, $orderId);
 
             return $this->response->setStatusCode(Response::STATUS_CODE_200)->setContent('TRUE');
         } catch (Exception $e) {
