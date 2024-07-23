@@ -61,9 +61,9 @@ class ConfigurationProvider implements TpayConfigInterface
         return $this->getConfigData('originapi_settings/api_key_tpay', $storeId);
     }
 
-    public function getCardApiKey(): ?string
+    public function getCardApiKey(?int $storeId = null): ?string
     {
-        return $this->getConfigData('cardpayment_settings/cardpayment_originapi_settings/card_api_key_tpay');
+        return $this->getConfigData('cardpayment_settings/cardpayment_originapi_settings/card_api_key_tpay', $storeId);
     }
 
     public function getApiPassword(?int $storeId = null): ?string
@@ -71,9 +71,9 @@ class ConfigurationProvider implements TpayConfigInterface
         return $this->getConfigData('originapi_settings/api_password', $storeId);
     }
 
-    public function getCardApiPassword(): ?string
+    public function getCardApiPassword(?int $storeId = null): ?string
     {
-        return $this->getConfigData('cardpayment_settings/cardpayment_originapi_settings/card_api_password');
+        return $this->getConfigData('cardpayment_settings/cardpayment_originapi_settings/card_api_password', $storeId);
     }
 
     public function getInvoiceSendMail(): string
@@ -174,19 +174,19 @@ class ConfigurationProvider implements TpayConfigInterface
         return (bool) $this->getConfigData('cardpayment_settings/card_save_enabled');
     }
 
-    public function getRSAKey(): ?string
+    public function getRSAKey(?int $storeId = null): ?string
     {
-        return $this->getConfigData('cardpayment_settings/rsa_key');
+        return $this->getConfigData('cardpayment_settings/rsa_key', $storeId);
     }
 
-    public function getHashType(): ?string
+    public function getHashType(?int $storeId = null): ?string
     {
-        return $this->getConfigData('cardpayment_settings/cardpayment_originapi_settings/hash_type');
+        return $this->getConfigData('cardpayment_settings/cardpayment_originapi_settings/hash_type', $storeId);
     }
 
-    public function getVerificationCode(): ?string
+    public function getVerificationCode(?int $storeId = null): ?string
     {
-        return $this->getConfigData('cardpayment_settings/cardpayment_originapi_settings/verification_code');
+        return $this->getConfigData('cardpayment_settings/cardpayment_originapi_settings/verification_code', $storeId);
     }
 
     public function isAllowSpecific(): bool

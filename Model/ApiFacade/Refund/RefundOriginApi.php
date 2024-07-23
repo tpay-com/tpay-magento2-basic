@@ -10,14 +10,14 @@ use Tpay\OriginApi\Utilities\Util;
 
 class RefundOriginApi extends BasicRefunds
 {
-    public function __construct(TpayConfigInterface $tpay)
+    public function __construct(TpayConfigInterface $tpay, ?int $storeId = null)
     {
-        $this->trApiKey = $tpay->getApiPassword();
-        $this->trApiPass = $tpay->getApiKey();
-        $this->merchantId = $tpay->getMerchantId();
-        $this->merchantSecret = $tpay->getSecurityCode();
+        $this->trApiKey = $tpay->getApiPassword($storeId);
+        $this->trApiPass = $tpay->getApiKey($storeId);
+        $this->merchantId = $tpay->getMerchantId($storeId);
+        $this->merchantSecret = $tpay->getSecurityCode($storeId);
         parent::__construct();
-        if ($tpay->useSandboxMode()) {
+        if ($tpay->useSandboxMode($storeId)) {
             $this->apiURL = 'https://secure.sandbox.tpay.com/api/gw/';
         }
     }

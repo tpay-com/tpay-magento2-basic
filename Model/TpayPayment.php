@@ -198,6 +198,7 @@ class TpayPayment extends Adapter implements TpayInterface
             'city' => $this->escaper->escapeHtml($order->getBillingAddress()->getData('city')),
             'zip' => $this->escaper->escapeHtml($order->getBillingAddress()->getData('postcode')),
             'country' => $this->escaper->escapeHtml($order->getBillingAddress()->getData('country_id')),
+            'tax_id' => $this->escaper->escapeHtml($order->getBillingAddress()->getData('vat_id')),
             'return_error_url' => $this->urlBuilder->getUrl('magento2basic/tpay/error'),
             'result_url' => $this->urlBuilder->getUrl('magento2basic/tpay/notification'),
             'return_url' => $this->urlBuilder->getUrl('magento2basic/tpay/success'),
@@ -255,7 +256,8 @@ class TpayPayment extends Adapter implements TpayInterface
      */
     public function refund(InfoInterface $payment, $amount)
     {
-        $refundService = new RefundApiFacade($this->configurationProvider, $this->cache);
+        $storeId = $payment->getOrder()->getStoreId() ? (int) $payment->getOrder()->getStoreId() : null;
+        $refundService = new RefundApiFacade($this->configurationProvider, $this->cache, $storeId);
 
         $refundResult = $refundService->makeRefund($payment, (float) $amount);
         try {

@@ -594,8 +594,6 @@ form select.wrong
 
 .TpayRegulations input {
     display: none;
-    margin: 0;
-    position: static;
 }
 
 .tpay-regulations-offset {

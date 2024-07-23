@@ -7,8 +7,7 @@
  */
 require(['jquery', 'mage/translate'], function ($, $t) {
 
-        var payButton = $('#tpaycom_magento2basic_submit'),
-            tos = $('#accept_tos');
+        var payButton = $('#tpaycom_magento2basic_submit');
 
         function getBankTile(groupId, groupName, logoSrc) {
             return '<div class="tpay-group-holder tpay-with-logo" id="bank-' + groupId + '">' +
@@ -90,7 +89,7 @@ require(['jquery', 'mage/translate'], function ($, $t) {
                         active_bank_blocks[0].className = active_bank_blocks[0].className.replace('tpay-active', '');
                     }
                     this.className = this.className + ' tpay-active';
-                    if (input.val() > 0 && $('#blik_code').val().length === 0 && tos.is(':checked')) {
+                    if (input.val() > 0 && $('#blik_code').val().length === 0) {
                         payButton.removeClass('disabled');
                     }
                 });
@@ -122,8 +121,6 @@ require(['jquery', 'mage/translate'], function ($, $t) {
                 }
                 if (
                     (that.val().length === 6 || (that.val().length === 0 && $('#tpay-channel-input').val() > 0))
-                    &&
-                    tos.is(':checked')
                 ) {
                     payButton.removeClass('disabled');
                 }
@@ -148,7 +145,6 @@ require(['jquery', 'mage/translate'], function ($, $t) {
 
         $('input[name="payment[method]"]').on('click', function () {
             var parent = $(this).closest('.payment-method');
-            $('input[name="accept_tos"]', parent).prop('checked', false);
 
             var submitBtn = $("#tpaycom_magento2generic_submit", parent);
             submitBtn.addClass('disabled');

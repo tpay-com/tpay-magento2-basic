@@ -591,6 +591,10 @@ form select.wrong
     flex: 1;
 }
 
+.TpayRegulations input {
+    display: none;
+}
+
 @media (min-width: 956px) {
     #card_payment {
         flex-direction: row;

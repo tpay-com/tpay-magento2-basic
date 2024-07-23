@@ -164,6 +164,10 @@ class OpenApi
             $paymentData['pay']['channelId'] = $data['channel'];
         }
 
+        if ($data['tax_id']) {
+            $paymentData['payer']['taxId'] = $data['tax_id'];
+        }
+
         return $paymentData;
     }
 

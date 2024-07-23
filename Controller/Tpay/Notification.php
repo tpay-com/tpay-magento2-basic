@@ -11,8 +11,6 @@ use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Sales\Model\Order;
-use Magento\Store\Api\Data\StoreInterface;
-use Magento\Store\Model\StoreManagerInterface;
 use Tpay\Magento2\Api\TpayConfigInterface;
 use Tpay\Magento2\Api\TpayInterface;
 use Tpay\Magento2\Service\TpayService;
@@ -35,9 +33,6 @@ class Notification implements CsrfAwareActionInterface
     /** @var TpayTokensService */
     private $tokensService;
 
-    /** @var StoreManagerInterface */
-    private $storeManager;
-
     /** @var ResponseInterface */
     private $response;
 
@@ -46,14 +41,12 @@ class Notification implements CsrfAwareActionInterface
         TpayConfigInterface $tpayConfig,
         TpayService $tpayService,
         TpayTokensService $tokensService,
-        StoreManagerInterface $storeManager,
         ResponseInterface $response
     ) {
         $this->tpay = $tpayModel;
         $this->tpayConfig = $tpayConfig;
         $this->tpayService = $tpayService;
         $this->tokensService = $tokensService;
-        $this->storeManager = $storeManager;
         $this->response = $response;
         Util::$loggingEnabled = false;
     }
@@ -61,40 +54,14 @@ class Notification implements CsrfAwareActionInterface
     public function execute(): ?Response
     {
         if (isset($_POST['card'])) {
-            return $this->executeCardNotification();
+            $orderId = base64_decode($_POST['order_id']);
+
+            return $this->extractCardNotification($this->getOrderStore($orderId));
         }
 
-        return $this->executeNotification();
-    }
+        $orderId = base64_decode($_POST['tr_crc']);
 
-    public function executeNotification(): ?Response
-    {
-        $response = null;
-
-        foreach ($this->storeManager->getStores() as $store) {
-            $response = $this->extractNotification($store);
-
-            if (Response::STATUS_CODE_200 === $response->getStatusCode()) {
-                break;
-            }
-        }
-
-        return $response;
-    }
-
-    public function executeCardNotification(): ?Response
-    {
-        $response = null;
-
-        foreach ($this->storeManager->getStores() as $store) {
-            $response = $this->extractCardNotification($store);
-
-            if (Response::STATUS_CODE_200 === $response->getStatusCode()) {
-                break;
-            }
-        }
-
-        return $response;
+        return $this->extractNotification($this->getOrderStore($orderId));
     }
 
     public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
@@ -160,10 +127,8 @@ class Notification implements CsrfAwareActionInterface
         }
     }
 
-    private function extractNotification(StoreInterface $store): Response
+    private function extractNotification(?int $storeId = null): Response
     {
-        $storeId = (int) $store->getStoreId();
-
         try {
             $notification = (new JWSVerifiedPaymentNotification(
                 $this->tpayConfig->getSecurityCode($storeId),
@@ -184,25 +149,14 @@ class Notification implements CsrfAwareActionInterface
 
             return $this->response->setStatusCode(Response::STATUS_CODE_200)->setContent('TRUE');
         } catch (Exception $e) {
-            Util::log(
-                'Notification exception',
-                sprintf(
-                    '%s in file %s line: %d \n\n %s',
-                    $e->getMessage(),
-                    $e->getFile(),
-                    $e->getLine(),
-                    $e->getTraceAsString()
-                )
-            );
+            $this->handleException($e);
 
             return $this->response->setStatusCode(Response::STATUS_CODE_400)->setContent('FALSE');
         }
     }
 
-    private function extractCardNotification(StoreInterface $store): ?Response
+    private function extractCardNotification(?int $storeId = null): ?Response
     {
-        $storeId = (int) $store->getStoreId();
-
         try {
             $notification = (new OriginJWSVerifiedPaymentNotification(
                 $this->tpayConfig->getSecurityCode($storeId),
@@ -216,18 +170,30 @@ class Notification implements CsrfAwareActionInterface
 
             return $this->response->setStatusCode(Response::STATUS_CODE_200)->setContent('TRUE');
         } catch (Exception $e) {
-            Util::log(
-                'Notification exception',
-                sprintf(
-                    '%s in file %s line: %d \n\n %s',
-                    $e->getMessage(),
-                    $e->getFile(),
-                    $e->getLine(),
-                    $e->getTraceAsString()
-                )
-            );
+            $this->handleException($e);
 
             return $this->response->setStatusCode(Response::STATUS_CODE_400)->setContent('FALSE');
         }
+    }
+
+    private function handleException(Exception $e)
+    {
+        Util::log(
+            'Notification exception',
+            sprintf(
+                '%s in file %s line: %d \n\n %s',
+                $e->getMessage(),
+                $e->getFile(),
+                $e->getLine(),
+                $e->getTraceAsString()
+            )
+        );
+    }
+
+    private function getOrderStore(string $orderId): ?int
+    {
+        $order = $this->tpayService->getOrderById($orderId);
+
+        return $order->getStoreId() ? (int) $order->getStoreId() : null;
     }
 }

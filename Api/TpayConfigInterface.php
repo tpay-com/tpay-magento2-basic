@@ -49,17 +49,17 @@ interface TpayConfigInterface
 
     public function useSandboxMode(?int $storeId = null): bool;
 
-    public function getCardApiKey(): ?string;
+    public function getCardApiKey(?int $storeId = null): ?string;
 
-    public function getCardApiPassword(): ?string;
+    public function getCardApiPassword(?int $storeId = null): ?string;
 
     public function getCardSaveEnabled(): bool;
 
-    public function getRSAKey(): ?string;
+    public function getRSAKey(?int $storeId = null): ?string;
 
-    public function getHashType(): ?string;
+    public function getHashType(?int $storeId = null): ?string;
 
-    public function getVerificationCode(): ?string;
+    public function getVerificationCode(?int $storeId = null): ?string;
 
     public function isAllowSpecific(): bool;
 
