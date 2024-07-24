@@ -179,6 +179,10 @@
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     </field>
                 </group>
+                <field id="version_comment" translate="label" type="label" sortOrder="19" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Version information</label>
+                    <frontend_model>Tpay\Magento2\Model\Config\Source\VersionInfo</frontend_model>
+                </field>
             </group>
         </section>
     </system>
