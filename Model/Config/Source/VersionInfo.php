@@ -18,7 +18,7 @@ class VersionInfo extends Field
         parent::__construct($context, $data);
     }
 
-    protected function _getElementHtml(AbstractElement $element): string
+    protected function _getElementHtml(AbstractElement $element): string // phpcs:ignore
     {
         return $this->tpayConfig->buildMagentoInfo();
     }
