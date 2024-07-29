@@ -3,6 +3,8 @@
 namespace Tpay\Magento2\Model\ApiFacade\TpayConfig;
 
 use Exception;
+use Magento\Csp\Helper\CspNonceProvider;
+use Magento\Framework\Escaper;
 use Magento\Framework\View\Asset\Repository;
 use Tpay\Magento2\Api\TpayConfigInterface;
 use Tpay\Magento2\Api\TpayInterface;
@@ -36,13 +38,28 @@ class CardConfigFacade
     /** @var bool */
     private $useOpenApi;
 
-    public function __construct(TpayInterface $tpay, TpayConfigInterface $tpayConfig, Repository $assetRepository, TpayTokensService $tokensService, TpayService $tpayService)
-    {
+    /** @var CspNonceProvider */
+    private $cspNonceProvider;
+
+    /** @var Escaper */
+    private $escaper;
+
+    public function __construct(
+        TpayInterface $tpay,
+        TpayConfigInterface $tpayConfig,
+        Repository $assetRepository,
+        TpayTokensService $tokensService,
+        TpayService $tpayService,
+        CspNonceProvider $cspNonceProvider,
+        Escaper $escaper
+    ) {
         $this->tpay = $tpay;
         $this->tpayConfig = $tpayConfig;
         $this->assetRepository = $assetRepository;
         $this->tokensService = $tokensService;
         $this->tpayService = $tpayService;
+        $this->cspNonceProvider = $cspNonceProvider;
+        $this->escaper = $escaper;
     }
 
     public function getConfig(): array
@@ -60,7 +77,7 @@ class CardConfigFacade
     private function connectApi()
     {
         if (null == $this->openApi && null === $this->originApi) {
-            $originAuthorization = $this->createOriginApiInstance($this->tpay, $this->tpayConfig, $this->assetRepository, $this->tokensService, $this->tpayService);
+            $originAuthorization = $this->createOriginApiInstance();
 
             if (isset($originAuthorization['content']) && 'correct' == $originAuthorization['content']) {
                 $this->useOpenApi = false;
@@ -68,21 +85,21 @@ class CardConfigFacade
                 return;
             }
 
-            $this->createOpenApiInstance($this->tpay, $this->tpayConfig, $this->assetRepository, $this->tokensService);
+            $this->createOpenApiInstance();
         }
     }
 
-    private function createOriginApiInstance(TpayInterface $tpay, TpayConfigInterface $tpayConfig, Repository $assetRepository, TpayTokensService $tokensService, TpayService $tpayService): array
+    private function createOriginApiInstance(): array
     {
-        if (!$tpayConfig->isCardEnabled()) {
+        if (!$this->tpayConfig->isCardEnabled()) {
             $this->originApi = null;
 
             return [];
         }
 
         try {
-            $cardOrigin = new CardOrigin($tpay, $tpayConfig, $tokensService, $tpayService);
-            $this->originApi = new ConfigOrigin($tpay, $tpayConfig, $assetRepository, $tokensService);
+            $cardOrigin = new CardOrigin($this->tpay, $this->tpayConfig, $this->tokensService, $this->tpayService);
+            $this->originApi = new ConfigOrigin($this->tpay, $this->tpayConfig, $this->assetRepository, $this->tokensService, $this->cspNonceProvider, $this->escaper);
 
             return $cardOrigin->requests($cardOrigin->cardsApiURL.$this->tpayConfig->getCardApiKey(), ['api_password' => $this->tpayConfig->getCardApiPassword(), 'method' => 'check']);
         } catch (Exception $exception) {
@@ -92,9 +109,9 @@ class CardConfigFacade
         }
     }
 
-    private function createOpenApiInstance(TpayInterface $tpay, TpayConfigInterface $tpayConfig, Repository $assetRepository, TpayTokensService $tokensService)
+    private function createOpenApiInstance()
     {
-        if (!$tpayConfig->isOpenApiEnabled() || !$tpayConfig->isPlnPayment()) {
+        if (!$this->tpayConfig->isOpenApiEnabled() || !$this->tpayConfig->isPlnPayment()) {
             $this->openApi = null;
             $this->useOpenApi = false;
 
@@ -102,7 +119,7 @@ class CardConfigFacade
         }
 
         try {
-            $this->openApi = new ConfigOpen($tpay, $tpayConfig, $assetRepository, $tokensService);
+            $this->openApi = new ConfigOpen($this->tpay, $this->tpayConfig, $this->assetRepository, $this->tokensService, $this->cspNonceProvider, $this->escaper);
             $this->openApi->authorization();
             $this->useOpenApi = true;
         } catch (Exception $exception) {
