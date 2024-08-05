@@ -266,7 +266,7 @@ class ConfigurationProvider implements TpayConfigInterface
 
         if (true === method_exists('Composer\Autoload\ClassLoader', 'getRegisteredLoaders')) {
             $vendorDir = array_keys(ClassLoader::getRegisteredLoaders())[0];
-            $installed = $vendorDir . '/composer/installed.php';
+            $installed = $vendorDir.'/composer/installed.php';
 
             if (false === file_exists($installed)) {
                 return $apiVersions;
