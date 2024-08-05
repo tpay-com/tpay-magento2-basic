@@ -27,7 +27,7 @@ define(
             },
 
             getRegulations: function () {
-                return window.checkoutConfig.tpaycards.payment.getRegulations;
+                return window.checkoutConfig.tpay.payment.getRegulations;
             },
 
             getLogoUrl: function (code) {
