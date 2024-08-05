@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tpay\Magento2\Provider;
 
-use Composer\InstalledVersions;
+use Composer\Autoload\ClassLoader;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Framework\Locale\Resolver;
@@ -222,11 +222,13 @@ class ConfigurationProvider implements TpayConfigInterface
 
     public function buildMagentoInfo(): string
     {
+        $apiVersions = $this->getApisVersions();
+
         return sprintf(
             'magento2:%s|tpay-openapi-php:%s|tpay-php:%s|magento2basic:%s|PHP:%s',
             $this->getMagentoVersion(),
-            InstalledVersions::getPrettyVersion('tpay-com/tpay-openapi-php'),
-            InstalledVersions::getPrettyVersion('tpay-com/tpay-php'),
+            $apiVersions[0],
+            $apiVersions[1],
             $this->getTpayPluginVersion(),
             phpversion()
         );
@@ -256,5 +258,31 @@ class ConfigurationProvider implements TpayConfigInterface
         }
 
         return 'n/a';
+    }
+
+    private function getApisVersions(): array
+    {
+        $apiVersions = ['n/a', 'n/a'];
+
+        if (true === method_exists('Composer\Autoload\ClassLoader', 'getRegisteredLoaders')) {
+            $vendorDir = array_keys(ClassLoader::getRegisteredLoaders())[0];
+            $installed = $vendorDir . '/composer/installed.php';
+
+            if (false === file_exists($installed)) {
+                return $apiVersions;
+            }
+
+            $dir = require $installed;
+
+            if (isset($dir['versions']['tpay-com/tpay-openapi-php'])) {
+                $apiVersions[0] = $dir['versions']['tpay-com/tpay-openapi-php']['pretty_version'];
+            }
+
+            if (isset($dir['versions']['tpay-com/tpay-php'])) {
+                $apiVersions[1] = $dir['versions']['tpay-com/tpay-php']['pretty_version'];
+            }
+        }
+
+        return $apiVersions;
     }
 }
