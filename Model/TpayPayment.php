@@ -184,7 +184,11 @@ class TpayPayment extends Adapter implements TpayInterface
         $billingAddress = $order->getBillingAddress();
         $amount = number_format((float) $order->getBaseGrandTotal(), 2, '.', '');
         $crc = base64_encode($orderId);
-        $name = $billingAddress->getData('firstname').' '.$billingAddress->getData('lastname');
+        $name = join(' ', [
+            $billingAddress->getData('company'),
+            $billingAddress->getData('firstname'),
+            $billingAddress->getData('lastname')]
+        );
         $phone = $billingAddress->getData('telephone');
         $language = $this->validateCardLanguage($this->resolver->getLocale());
 
