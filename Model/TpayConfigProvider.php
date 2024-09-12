@@ -43,7 +43,7 @@ class TpayConfigProvider implements ConfigProviderInterface
 
     public function getConfig(): array
     {
-        if (!$this->paymentMethod->isAvailable()) {
+        if (!$this->paymentMethod->isTpayAvailable()) {
             return [];
         }
 

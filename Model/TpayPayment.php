@@ -351,6 +351,23 @@ class TpayPayment extends Adapter implements TpayInterface
         return !is_null($grandTotal);
     }
 
+    public function isTpayAvailable(?CartInterface $quote = null)
+    {
+        if (!$this->configurationProvider->isTpayActive()) {
+            return false;
+        }
+
+        $minAmount = $this->configurationProvider->getMinOrderTotal();
+        $maxAmount = $this->configurationProvider->getMaxOrderTotal();
+        $amount = (float) $this->getCheckout()->getQuote()->getBaseGrandTotal();
+
+        if ($amount < $minAmount || ($maxAmount && $amount > $maxAmount)) {
+            return false;
+        }
+
+        return $this->isAvailable($quote);
+    }
+
     protected function checkBlikAmount(): bool
     {
         return (bool) ($this->getCheckoutTotal() >= $this->minAmountBlik);

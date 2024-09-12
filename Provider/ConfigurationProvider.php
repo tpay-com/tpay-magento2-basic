@@ -159,14 +159,14 @@ class ConfigurationProvider implements TpayConfigInterface
         return (bool) $this->getConfigData('general_settings/use_sandbox', $storeId);
     }
 
-    public function getMinOrderTotal(): int
+    public function getMinOrderTotal(): float
     {
-        return (int) $this->getConfigData('sale_settings/min_order_total');
+        return (float) ($this->getConfigData('sale_settings/min_order_total') ?? 0.01);
     }
 
-    public function getMaxOrderTotal(): int
+    public function getMaxOrderTotal(): float
     {
-        return (int) $this->getConfigData('sale_settings/max_order_total');
+        return (float) $this->getConfigData('sale_settings/max_order_total');
     }
 
     public function getCardSaveEnabled(): bool
