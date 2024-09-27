@@ -20,8 +20,6 @@ interface TpayInterface
 
     public function isCustomerLoggedIn(): bool;
 
-    public function isTpayAvailable();
-
     /** @param string $orderId */
     public function getCustomerId($orderId);
 
