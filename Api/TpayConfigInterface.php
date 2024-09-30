@@ -65,9 +65,9 @@ interface TpayConfigInterface
 
     public function getSpecificCountry(): array;
 
-    public function getMinOrderTotal(): int;
+    public function getMinOrderTotal(): float;
 
-    public function getMaxOrderTotal(): int;
+    public function getMaxOrderTotal(): float;
 
     public function getMagentoVersion(): string;
 

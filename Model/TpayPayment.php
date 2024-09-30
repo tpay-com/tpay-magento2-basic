@@ -287,7 +287,7 @@ class TpayPayment extends Adapter implements TpayInterface
     {
         $amount = (float) $this->getCheckout()->getQuote()->getBaseGrandTotal();
 
-        if (!$amount) {
+        if (!$amount && $this->getCheckout()->getLastRealOrderId()) {
             $orderId = $this->getCheckout()->getLastRealOrderId();
             $order = $this->orderRepository->getByIncrementId($orderId);
             $amount = $order->getBaseGrandTotal();
