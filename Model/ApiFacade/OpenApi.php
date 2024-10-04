@@ -134,6 +134,7 @@ class OpenApi
             'amount' => $data['amount'],
             'description' => $data['description'],
             'hiddenDescription' => $data['crc'],
+            'lang' => strstr($data['language'], '_', true) ? strstr($data['language'], '_', true) : $data['language'],
             'payer' => [
                 'email' => $data['email'],
                 'name' => $data['name'],
