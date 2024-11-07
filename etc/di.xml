@@ -15,6 +15,7 @@
     <preference for="Tpay\Magento2\Model\Api\Data\TokensInterface" type="Tpay\Magento2\Model\Token"/>
     <preference for="Tpay\Magento2\Model\Api\TokenRepositoryInterface" type="Tpay\Magento2\Model\TokenRepository"/>
     <preference for="Magento\Sales\Api\OrderPaymentRepositoryInterface" type="Magento\Sales\Model\Order\Payment\Repository"/>
+    <preference for="Tpay\Magento2\Notification\Strategy\Factory\NotificationProcessorFactoryInterface" type="Tpay\Magento2\Notification\Strategy\Factory\NotificationProcessorFactory" />
     <type name="Magento\Payment\Model\MethodList">
         <plugin name="tpay_generic_onsite" type="Tpay\Magento2\Model\MethodListPlugin" />
     </type>
@@ -27,6 +28,15 @@
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
             <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\ConfigurableInfo</argument>
             <argument name="valueHandlerPool" xsi:type="object">TpayPaymentMethodValueHandlerPool</argument>
+        </arguments>
+    </type>
+    <type name="Tpay\Magento2\Notification\Strategy\Factory\NotificationProcessorFactory">
+        <arguments>
+            <argument name="strategies" xsi:type="array">
+                <item name="default" xsi:type="object">Tpay\Magento2\Notification\Strategy\DefaultNotificationProcessor</item>
+                <item name="card" xsi:type="object">Tpay\Magento2\Notification\Strategy\CardNotificationProcessor</item>
+                <item name="blikAlias" xsi:type="object">Tpay\Magento2\Notification\Strategy\BlikAliasNotificationProcessor</item>
+            </argument>
         </arguments>
     </type>
     <virtualType name="TpayPaymentMethodConfig" type="Magento\Payment\Gateway\Config\Config">

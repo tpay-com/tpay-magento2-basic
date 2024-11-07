@@ -13,11 +13,12 @@ use Magento\Framework\App\ResponseInterface;
 use Magento\Sales\Model\Order;
 use Tpay\Magento2\Api\TpayConfigInterface;
 use Tpay\Magento2\Api\TpayInterface;
+use Tpay\Magento2\Notification\Strategy\Factory\NotificationProcessorFactoryInterface;
 use Tpay\Magento2\Service\TpayService;
 use Tpay\Magento2\Service\TpayTokensService;
+use Tpay\OpenApi\Webhook\JWSVerifiedPaymentNotification;
 use Tpay\OriginApi\Utilities\Util;
 use Tpay\OriginApi\Webhook\JWSVerifiedPaymentNotification as OriginJWSVerifiedPaymentNotification;
-use tpaySDK\Webhook\JWSVerifiedPaymentNotification;
 
 class Notification implements CsrfAwareActionInterface
 {
@@ -30,6 +31,9 @@ class Notification implements CsrfAwareActionInterface
     /** @var TpayService */
     protected $tpayService;
 
+    /** @var NotificationProcessorFactoryInterface */
+    protected $notificationProcessorFactory;
+
     /** @var TpayTokensService */
     private $tokensService;
 
@@ -41,27 +45,41 @@ class Notification implements CsrfAwareActionInterface
         TpayConfigInterface $tpayConfig,
         TpayService $tpayService,
         TpayTokensService $tokensService,
-        ResponseInterface $response
+        ResponseInterface $response,
+        NotificationProcessorFactoryInterface $notificationProcessorFactory
     ) {
         $this->tpay = $tpayModel;
         $this->tpayConfig = $tpayConfig;
         $this->tpayService = $tpayService;
         $this->tokensService = $tokensService;
         $this->response = $response;
+        $this->notificationProcessorFactory = $notificationProcessorFactory;
         Util::$loggingEnabled = false;
     }
 
     public function execute(): ?Response
     {
-        if (isset($_POST['card'])) {
-            $orderId = base64_decode($_POST['order_id']);
+        try {
+            if (isset($_POST['card'])) {
+                $orderId = base64_decode($_POST['order_id']);
 
-            return $this->extractCardNotification($this->getOrderStore($orderId));
+                return $this->extractCardNotification($this->getOrderStore($orderId));
+            }
+
+            if (isset($_POST['event'])) {
+                return $this->response->setStatusCode(Response::STATUS_CODE_400)->setContent('kurwa mac');
+            }
+
+            $orderId = base64_decode($_POST['tr_crc']);
+
+            $strategy = $this->notificationProcessorFactory->create($_POST);
+
+            $strategy->process($this->getOrderStore($orderId));
+        } catch (\Throwable $e) {
+            return $this->response->setStatusCode(Response::STATUS_CODE_400)->setContent($e->getMessage());
         }
 
-        $orderId = base64_decode($_POST['tr_crc']);
-
-        return $this->extractNotification($this->getOrderStore($orderId));
+        return $this->response->setStatusCode(Response::STATUS_CODE_200)->setContent('TRUE');
     }
 
     public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
