@@ -16,6 +16,7 @@ class AliasRepository implements AliasRepositoryInterface
     /** @var AliasResourceModel */
     protected $aliasResourceModel;
 
+    /** @phpstan-ignore-next-line */
     public function __construct(AliasFactory $aliasFactory, AliasResourceModel $aliasResourceModel)
     {
         $this->aliasFactory = $aliasFactory;
@@ -30,17 +31,11 @@ class AliasRepository implements AliasRepositoryInterface
         return $alias;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function save(AliasInterface $alias): void
     {
         $this->aliasResourceModel->save($alias);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function remove(AliasInterface $alias): void
     {
         $this->aliasResourceModel->delete($alias);

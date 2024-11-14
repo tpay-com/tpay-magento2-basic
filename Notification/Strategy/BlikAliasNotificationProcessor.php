@@ -21,11 +21,11 @@ class BlikAliasNotificationProcessor implements NotificationProcessorInterface
         $response = $_POST;
         $userId = (int) explode('_', $response['value'])[1];
 
-        if ($response['event'] === 'ALIAS_REGISTER') {
+        if ('ALIAS_REGISTER' === $response['event']) {
             $this->aliasService->saveCustomerAlias($userId, $response['value']);
         }
 
-        if ($response['event'] === 'ALIAS_UNREGISTER') {
+        if ('ALIAS_UNREGISTER' === $response['event']) {
             $this->aliasService->removeCustomerAlias($userId, $response['value']);
         }
     }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tpay\Magento2\Service;
 
+use Exception;
 use Magento\Framework\App\ResourceConnection;
 use Tpay\Magento2\Model\Api\AliasRepositoryInterface;
 use Tpay\Magento2\Model\ResourceModel\Alias\Collection;
@@ -54,15 +55,12 @@ class TpayAliasService implements TpayAliasServiceInterface
         }
     }
 
-    /**
-     * @inheritDoc
-     */
     public function removeCustomerAlias(int $customerId, string $alias): void
     {
         $aliasEntity = $this->aliasRepository->findByCustomerId($customerId);
 
         if (!$aliasEntity->getId()) {
-            throw new \Exception("Alias for customerId {$customerId} not found");
+            throw new Exception("Alias for customerId {$customerId} not found");
         }
 
         $this->aliasRepository->remove($aliasEntity);

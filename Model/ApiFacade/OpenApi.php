@@ -100,7 +100,7 @@ class OpenApi
                 'type' => 0,
                 'aliases' => [
                     'value' => $blikAlias,
-                    'type' => 'UID'
+                    'type' => 'UID',
                 ],
             ],
         ];
