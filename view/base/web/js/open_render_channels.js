@@ -113,6 +113,10 @@ require(['jquery', 'mage/translate'], function ($, $t) {
             if (window.checkoutConfig.tpay.payment.blikStatus !== true) {
                 $(".blik").hide();
             }
+
+            if (!window.checkoutConfig.blik_alias) {
+                $(".blik-alias").hide();
+            }
         }
 
         function setBlikInputAction() {
@@ -120,19 +124,33 @@ require(['jquery', 'mage/translate'], function ($, $t) {
 
             $('#blik_code').on(TRIGGER_EVENTS, function () {
                 var that = $(this);
+
                 if (that.val().length > 0) {
                     $('#tpay-basic-main-payment').css('display', 'none');
                 } else {
                     $('#tpay-basic-main-payment').css('display', 'block');
                 }
+
                 if (
                     (that.val().length === 6 || (that.val().length === 0 && $('#tpay-channel-input').val() > 0))
                 ) {
                     payButton.removeClass('disabled');
                 }
+
                 if (that.val().length > 0 && that.val().length !== 6) {
                     payButton.addClass('disabled');
                 }
+
+                $('#blik_alias').prop('checked', false);
+            });
+
+            $('#blik_alias').on('change', function () {
+                if ($('#blik_code').val().length > 0) {
+                    $('#blik_alias').prop('checked', false);
+                }
+
+                $("#blik_alias_value").val(window.checkoutConfig.blik_alias);
+                payButton.removeClass('disabled');
             });
         }
 

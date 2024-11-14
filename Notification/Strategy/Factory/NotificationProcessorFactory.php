@@ -6,7 +6,7 @@ use Tpay\Magento2\Notification\Strategy\NotificationProcessorInterface;
 
 class NotificationProcessorFactory implements NotificationProcessorFactoryInterface
 {
-    /** @var NotificationProcessorInterface[] */
+    /** @var list<NotificationProcessorInterface> */
     protected $strategies;
 
     public function __construct(array $strategies = [])

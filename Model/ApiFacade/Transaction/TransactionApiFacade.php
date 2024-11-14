@@ -69,6 +69,11 @@ class TransactionApiFacade
         return $this->getCurrentApi()->blik($blikTransactionId, $blikCode);
     }
 
+    public function blikAlias($blikAliasTransactionId, $blikAlias): array
+    {
+        return $this->getCurrentApi()->blikAlias($blikAliasTransactionId, $blikAlias);
+    }
+
     /** @return list<Channel> */
     public function channels(): array
     {

@@ -35,7 +35,7 @@ class OpenApi
 
     public function create(array $data): array
     {
-        if (!empty($data['blikPaymentData'])) {
+        if (!empty($data['blikPaymentData']) && empty($data['blikPaymentData']['aliases'])) {
             return $this->createBlikZero($data);
         }
 
@@ -47,7 +47,7 @@ class OpenApi
 
     public function createTransaction(array $data): array
     {
-        if (!empty($data['blikPaymentData'])) {
+        if (!empty($data['blikPaymentData']) && empty($data['blikPaymentData']['aliases'])) {
             return $this->createBlikZeroTransaction($data);
         }
 
@@ -83,6 +83,25 @@ class OpenApi
             'blikPaymentData' => [
                 'type' => 0,
                 'blikToken' => $blikCode,
+            ],
+        ];
+
+        $result = $this->tpayApi->transactions()->createInstantPaymentByTransactionId($additional_payment_data, $transactionId);
+
+        return $this->updateRedirectUrl($this->waitForBlikAccept($result));
+    }
+
+    public function blikAlias(string $transactionId, string $blikAlias): array
+    {
+        $additional_payment_data = [
+            'channelId' => 64,
+            'method' => 'pay_by_link',
+            'blikPaymentData' => [
+                'type' => 0,
+                'aliases' => [
+                    'value' => $blikAlias,
+                    'type' => 'UID'
+                ],
             ],
         ];
 

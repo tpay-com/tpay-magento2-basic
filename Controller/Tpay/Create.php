@@ -98,7 +98,7 @@ class Create implements ActionInterface
                     return $this->redirectFactory->redirectSuccess();
                 }
 
-                $result = $this->blikPay($transaction['title'], $additionalPaymentInformation['blik_code']);
+                $result = $this->blikPay($transaction['title'], $additionalPaymentInformation['blik_code'] ?? '', $additionalPaymentInformation['blik_alias'] ?? '');
                 $this->checkoutSession->unsQuoteId();
 
                 if (!$result) {
@@ -125,9 +125,13 @@ class Create implements ActionInterface
      * @param string $blikTransactionId
      * @param string $blikCode
      */
-    protected function blikPay($blikTransactionId, $blikCode): bool
+    protected function blikPay($blikTransactionId, $blikCode, $blikAlias): bool
     {
-        $apiResult = $this->transaction->blik($blikTransactionId, $blikCode);
+        if ($blikAlias) {
+            $apiResult = $this->transaction->blikAlias($blikTransactionId, $blikAlias);
+        } else {
+            $apiResult = $this->transaction->blik($blikTransactionId, $blikCode);
+        }
 
         return isset($apiResult['result']) && 1 === $apiResult['result'];
     }
@@ -139,7 +143,7 @@ class Create implements ActionInterface
         if ($this->additionalPaymentInfoValidator->validateBlikIfPresent($additionalPaymentInformation)) {
             $data['group'] = TransactionOriginApi::BLIK_CHANNEL;
             $data['channel'] = null;
-            $this->handleBlikData($data, $additionalPaymentInformation['blik_code']);
+            $this->handleBlikData($data, $additionalPaymentInformation['blik_code'] ?? '', $additionalPaymentInformation['blik_alias'] ?? '');
         } else {
             $data['group'] = (int) ($additionalPaymentInformation['group'] ?? null);
             $data['channel'] = (int) ($additionalPaymentInformation['channel'] ?? null);
@@ -159,12 +163,21 @@ class Create implements ActionInterface
         return $this->transaction->create($data);
     }
 
-    private function handleBlikData(array &$data, string $blikCode)
+    private function handleBlikData(array &$data, string $blikCode, string $blikAlias)
     {
         if ($this->transaction->isOpenApiUse() && $this->tpay->checkBlikLevel0Settings()) {
-            $data['blikPaymentData'] = [
-                'blikToken' => $blikCode,
-            ];
+            if ($blikCode) {
+                $data['blikPaymentData'] = [
+                    'blikToken' => $blikCode,
+                ];
+            }
+
+            if ($blikAlias) {
+                $data['blikPaymentData']['aliases'] = [
+                    'type' => 'UID',
+                    'value' => $blikAlias,
+                ];
+            }
         }
         if (!$this->transaction->isOpenApiUse()) {
             unset($data['channel']);

@@ -11,6 +11,7 @@ interface TpayInterface
     public const GROUP = 'group';
     public const CHANNEL = 'channel';
     public const BLIK_CODE = 'blik_code';
+    public const BLIK_ALIAS = 'blik_alias';
     public const TERMS_ACCEPT = 'accept_tos';
     public const CARDDATA = 'card_data';
     public const CARD_SAVE = 'card_save';
