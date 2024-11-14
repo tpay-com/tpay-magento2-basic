@@ -16,6 +16,8 @@
     <preference for="Tpay\Magento2\Model\Api\TokenRepositoryInterface" type="Tpay\Magento2\Model\TokenRepository"/>
     <preference for="Magento\Sales\Api\OrderPaymentRepositoryInterface" type="Magento\Sales\Model\Order\Payment\Repository"/>
     <preference for="Tpay\Magento2\Notification\Strategy\Factory\NotificationProcessorFactoryInterface" type="Tpay\Magento2\Notification\Strategy\Factory\NotificationProcessorFactory" />
+    <preference for="Tpay\Magento2\Service\TpayAliasServiceInterface" type="Tpay\Magento2\Service\TpayAliasService" />
+    <preference for="Tpay\Magento2\Model\Api\AliasRepositoryInterface" type="Tpay\Magento2\Model\AliasRepository" />
     <type name="Magento\Payment\Model\MethodList">
         <plugin name="tpay_generic_onsite" type="Tpay\Magento2\Model\MethodListPlugin" />
     </type>
