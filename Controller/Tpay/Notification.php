@@ -31,9 +31,7 @@ class Notification implements CsrfAwareActionInterface
     public function execute(): ?Response
     {
         try {
-            $orderId = isset($_POST['order_id']) ? base64_decode($_POST['order_id']) : base64_decode($_POST['tr_crc']);
-
-            $this->notificationProcessor->process($orderId);
+            $this->notificationProcessor->process();
         } catch (Throwable $e) {
             return $this->response->setStatusCode(Response::STATUS_CODE_400)->setContent($e->getMessage());
         }

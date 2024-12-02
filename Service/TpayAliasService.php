@@ -39,7 +39,7 @@ class TpayAliasService implements TpayAliasServiceInterface
             ->from($tableName)
             ->where('cli_id = ?', $customerId);
 
-        return $connection->fetchRow($select);
+        return $connection->fetchRow($select)['alias'];
     }
 
     public function saveCustomerAlias(int $customerId, string $alias): void

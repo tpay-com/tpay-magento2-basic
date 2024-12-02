@@ -66,7 +66,10 @@ define(
                 paymentData['blik_code'] = $('#blik_code').val();
                 paymentData['accept_tos'] = true;
                 paymentData['channel'] = "";
-                paymentData['blik_alias'] = $('#blik_alias_value').val();
+
+                if ($('#blik_alias').prop('checked')) {
+                    paymentData['blik_alias'] = $('#blik_alias').val();
+                }
 
                 return $.extend(true, parent, {'additional_data': paymentData});
             },

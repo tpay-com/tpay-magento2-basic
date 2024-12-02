@@ -149,7 +149,6 @@ require(['jquery', 'mage/translate'], function ($, $t) {
                     $('#blik_alias').prop('checked', false);
                 }
 
-                $("#blik_alias_value").val(window.checkoutConfig.blik_alias);
                 payButton.removeClass('disabled');
             });
         }

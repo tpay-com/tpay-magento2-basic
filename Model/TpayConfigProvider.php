@@ -62,7 +62,7 @@ class TpayConfigProvider implements ConfigProviderInterface
             $alias = $this->aliasService->getCustomerAlias((int) $this->customerSession->getCustomerId());
 
             if ($alias) {
-                $config['blik_alias'] = $alias['alias'];
+                $config['blik_alias'] = true;
             }
         }
 

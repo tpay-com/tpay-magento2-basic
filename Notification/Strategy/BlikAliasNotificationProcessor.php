@@ -16,17 +16,17 @@ class BlikAliasNotificationProcessor implements NotificationProcessorInterface
         $this->aliasService = $aliasService;
     }
 
-    public function process(?int $storeId)
+    public function process(?int $storeId = null)
     {
         $response = $_POST;
-        $userId = (int) explode('_', $response['value'])[1];
+        $userId = (int) explode('-', $response['msg_value']['value'])[1];
 
         if ('ALIAS_REGISTER' === $response['event']) {
-            $this->aliasService->saveCustomerAlias($userId, $response['value']);
+            $this->aliasService->saveCustomerAlias($userId, $response['msg_value']['value']);
         }
 
         if ('ALIAS_UNREGISTER' === $response['event']) {
-            $this->aliasService->removeCustomerAlias($userId, $response['value']);
+            $this->aliasService->removeCustomerAlias($userId, $response['msg_value']['value']);
         }
     }
 }

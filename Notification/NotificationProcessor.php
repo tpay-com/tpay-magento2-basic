@@ -2,6 +2,7 @@
 
 namespace Tpay\Magento2\Notification;
 
+use Tpay\Magento2\Notification\Strategy\BlikAliasNotificationProcessor;
 use Tpay\Magento2\Notification\Strategy\Factory\NotificationProcessorFactoryInterface;
 use Tpay\Magento2\Service\TpayService;
 
@@ -19,11 +20,18 @@ class NotificationProcessor
         $this->tpayService = $tpayService;
     }
 
-    public function process(string $orderId)
+    public function process()
     {
         $strategy = $this->factory->create($_POST);
 
-        $strategy->process($this->getOrderStore($orderId));
+        if ($strategy instanceof BlikAliasNotificationProcessor) {
+            $storeId = null;
+        } else {
+            $orderId = isset($_POST['order_id']) ? base64_decode($_POST['order_id']) : base64_decode($_POST['tr_crc']);
+            $storeId = $this->getOrderStore($orderId);
+        }
+
+        $strategy->process($storeId);
     }
 
     private function getOrderStore(string $orderId): ?int

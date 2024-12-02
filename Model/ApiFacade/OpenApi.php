@@ -35,7 +35,7 @@ class OpenApi
 
     public function create(array $data): array
     {
-        if (!empty($data['blikPaymentData']) && empty($data['blikPaymentData']['aliases'])) {
+        if (!empty($data['blikPaymentData'])) {
             return $this->createBlikZero($data);
         }
 
@@ -60,6 +60,7 @@ class OpenApi
     public function createWithInstantRedirect(array $data): array
     {
         $transactionData = $this->handleDataStructure($data);
+
         $transaction = $this->tpayApi->transactions()->createTransactionWithInstantRedirection($transactionData);
 
         return $this->updateRedirectUrl($transaction);
@@ -75,14 +76,14 @@ class OpenApi
         return $this->updateRedirectUrl($transaction);
     }
 
-    public function blik(string $transactionId, string $blikCode): array
+    public function blik(string $transactionId, array $blikPaymentData): array
     {
         $additional_payment_data = [
             'channelId' => 64,
-            'method' => 'pay_by_link',
             'blikPaymentData' => [
                 'type' => 0,
-                'blikToken' => $blikCode,
+                'blikToken' => $blikPaymentData['blikToken'],
+                'aliases' => $blikPaymentData['aliases'],
             ],
         ];
 
@@ -91,17 +92,14 @@ class OpenApi
         return $this->updateRedirectUrl($this->waitForBlikAccept($result));
     }
 
-    public function blikAlias(string $transactionId, string $blikAlias): array
+    public function blikAlias(string $transactionId, array $aliases): array
     {
         $additional_payment_data = [
             'channelId' => 64,
             'method' => 'pay_by_link',
             'blikPaymentData' => [
                 'type' => 0,
-                'aliases' => [
-                    'value' => $blikAlias,
-                    'type' => 'UID',
-                ],
+                'aliases' => $aliases,
             ],
         ];
 
@@ -114,7 +112,11 @@ class OpenApi
     {
         $transaction = $this->createBlikZeroTransaction($data);
 
-        return $this->blik($transaction['transactionId'], $data['blikPaymentData']['blikToken']);
+        if (!empty($data['blikPaymentData']['aliases']) && empty($data['blikPaymentData']['blikToken'])) {
+            return $this->blikAlias($transaction['transactionId'], $data['blikPaymentData']['aliases']);
+        }
+
+        return $this->blik($transaction['transactionId'], $data['blikPaymentData']);
     }
 
     public function makeRefund(InfoInterface $payment, float $amount): array
