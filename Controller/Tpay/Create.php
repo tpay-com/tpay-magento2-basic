@@ -135,6 +135,7 @@ class Create implements ActionInterface
      *
      * @param string $blikTransactionId
      * @param string $blikCode
+     * @param string $blikAlias
      */
     protected function blikPay($blikTransactionId, $blikCode, $blikAlias): bool
     {
