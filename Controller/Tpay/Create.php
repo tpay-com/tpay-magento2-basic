@@ -136,9 +136,9 @@ class Create implements ActionInterface
      * @param string $blikTransactionId
      * @param string $blikCode
      */
-    protected function blikPay($blikTransactionId, $blikCode): bool
+    protected function blikPay($blikTransactionId, $blikCode, $blikAlias): bool
     {
-        $apiResult = $this->transaction->blik($blikTransactionId, $blikCode);
+        $apiResult = $this->transaction->blik($blikTransactionId, $blikCode, $blikAlias);
 
         return isset($apiResult['result']) && 1 === $apiResult['result'];
     }
@@ -187,7 +187,7 @@ class Create implements ActionInterface
                 $data['blikPaymentData']['aliases'] = [
                     'type' => 'UID',
                     'value' => $alias,
-                    'label' => 'tpay-magento2'
+                    'label' => 'tpay-magento2',
                 ];
             }
         }
@@ -208,6 +208,6 @@ class Create implements ActionInterface
 
     private function buildBlikAlias(string $customerId): string
     {
-        return sprintf("32322223242222323241231232233333%s-%s", base64_encode('tpay-magento'), $customerId);
+        return sprintf('%s-%s', base64_encode('tpay-magento'), $customerId);
     }
 }

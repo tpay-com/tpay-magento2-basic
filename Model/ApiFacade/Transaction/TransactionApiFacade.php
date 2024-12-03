@@ -66,7 +66,12 @@ class TransactionApiFacade
 
     public function blik($blikTransactionId, $blikCode, $blikAlias): array
     {
-        return $this->getCurrentApi()->blik($blikTransactionId, ['blikToken' => $blikCode, 'aliases' => ['type' => 'UID', 'value' => $blikAlias, 'label' => 'tpay-magento2']]);
+        $blikData = [
+            'blikToken' => $blikCode,
+            'aliases' => $blikAlias ? ['type' => 'UID', 'value' => $blikAlias, 'label' => 'tpay-magento2'] : [],
+        ];
+
+        return $this->getCurrentApi()->blik($blikTransactionId, $blikData);
     }
 
     public function blikAlias($blikAliasTransactionId, $blikAlias): array
