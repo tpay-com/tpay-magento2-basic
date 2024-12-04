@@ -83,7 +83,7 @@ class OpenApi
             'blikPaymentData' => [
                 'type' => 0,
                 'blikToken' => $blikPaymentData['blikToken'],
-                'aliases' => $blikPaymentData['aliases'],
+                'aliases' => $blikPaymentData['aliases'] ?? [],
             ],
         ];
 
