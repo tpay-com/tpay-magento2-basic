@@ -83,9 +83,12 @@ class OpenApi
             'blikPaymentData' => [
                 'type' => 0,
                 'blikToken' => $blikPaymentData['blikToken'],
-                'aliases' => $blikPaymentData['aliases'] ?? [],
             ],
         ];
+
+        if (isset($blikPaymentData['aliases'])) {
+            $additional_payment_data['blikPaymentData']['aliases'] = $blikPaymentData['aliases'];
+        }
 
         $result = $this->tpayApi->transactions()->createInstantPaymentByTransactionId($additional_payment_data, $transactionId);
 
