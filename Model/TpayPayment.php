@@ -267,7 +267,7 @@ class TpayPayment extends Adapter implements TpayInterface
 
         $refundResult = $refundService->makeRefund($payment, (float) $amount);
         try {
-            if ($refundResult) {
+            if ($refundResult['result'] === 'success' && $refundResult['status'] === 'correct') {
                 $payment
                     ->setTransactionId(Transaction::TYPE_REFUND)
                     ->setParentTransactionId($payment->getParentTransactionId())
