@@ -9,6 +9,7 @@ use Tpay\Magento2\Api\TpayConfigInterface;
 use Tpay\Magento2\Api\TpayInterface;
 use Tpay\Magento2\Model\ApiFacade\Transaction\TransactionApiFacade;
 use Tpay\Magento2\Model\ApiFacade\Transaction\TransactionOriginApi;
+use Tpay\Magento2\Provider\ConfigurationProvider;
 use Tpay\Magento2\Service\RedirectHandler;
 use Tpay\Magento2\Service\TpayAliasServiceInterface;
 use Tpay\Magento2\Service\TpayService;
@@ -209,6 +210,6 @@ class Create implements ActionInterface
 
     private function buildBlikAlias(string $customerId): string
     {
-        return sprintf('%s-%s', base64_encode('tpay-magento'), $customerId);
+        return sprintf('%s-%s', ConfigurationProvider::generateRandomString(10), $customerId);
     }
 }
