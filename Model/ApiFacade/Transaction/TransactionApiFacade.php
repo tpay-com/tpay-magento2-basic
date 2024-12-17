@@ -64,9 +64,19 @@ class TransactionApiFacade
         return $this->openApi->createWithInstantRedirect($config);
     }
 
-    public function blik($blikTransactionId, $blikCode): array
+    public function blik($blikTransactionId, $blikCode, $blikAlias): array
     {
-        return $this->getCurrentApi()->blik($blikTransactionId, $blikCode);
+        $blikData = [
+            'blikToken' => $blikCode,
+            'aliases' => $blikAlias ? ['type' => 'UID', 'value' => $blikAlias, 'label' => 'tpay-magento2'] : [],
+        ];
+
+        return $this->getCurrentApi()->blik($blikTransactionId, $blikData);
+    }
+
+    public function blikAlias($blikAliasTransactionId, $blikAlias): array
+    {
+        return $this->getCurrentApi()->blikAlias($blikAliasTransactionId, $blikAlias);
     }
 
     /** @return list<Channel> */

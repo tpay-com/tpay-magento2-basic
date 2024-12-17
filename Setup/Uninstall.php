@@ -14,6 +14,7 @@ class Uninstall implements UninstallInterface
         $installer->startSetup();
 
         $installer->getConnection()->dropTable($installer->getTable('tpay_credit_cards'));
+        $installer->getConnection()->dropTable($installer->getTable('tpay_blik_aliases'));
 
         $installer->endSetup();
     }

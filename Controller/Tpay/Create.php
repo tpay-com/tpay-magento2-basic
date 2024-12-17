@@ -9,7 +9,9 @@ use Tpay\Magento2\Api\TpayConfigInterface;
 use Tpay\Magento2\Api\TpayInterface;
 use Tpay\Magento2\Model\ApiFacade\Transaction\TransactionApiFacade;
 use Tpay\Magento2\Model\ApiFacade\Transaction\TransactionOriginApi;
+use Tpay\Magento2\Provider\ConfigurationProvider;
 use Tpay\Magento2\Service\RedirectHandler;
+use Tpay\Magento2\Service\TpayAliasServiceInterface;
 use Tpay\Magento2\Service\TpayService;
 use Tpay\Magento2\Validator\AdditionalPaymentInfoValidator;
 use Tpay\OriginApi\Utilities\Util;
@@ -37,6 +39,12 @@ class Create implements ActionInterface
     /** @var AdditionalPaymentInfoValidator */
     private $additionalPaymentInfoValidator;
 
+    /** @var \Magento\Customer\Model\Session */
+    private $customerSession;
+
+    /** @var TpayAliasServiceInterface */
+    private $aliasService;
+
     public function __construct(
         TpayInterface $tpayModel,
         TpayConfigInterface $tpayConfig,
@@ -44,7 +52,9 @@ class Create implements ActionInterface
         Session $checkoutSession,
         TransactionApiFacade $transactionApiFacade,
         RedirectHandler $redirectFactory,
-        AdditionalPaymentInfoValidator $additionalPaymentInfoValidator
+        AdditionalPaymentInfoValidator $additionalPaymentInfoValidator,
+        \Magento\Customer\Model\Session $customerSession,
+        TpayAliasServiceInterface $aliasService
     ) {
         $this->tpay = $tpayModel;
         $this->tpayConfig = $tpayConfig;
@@ -53,6 +63,8 @@ class Create implements ActionInterface
         $this->transaction = $transactionApiFacade;
         $this->redirectFactory = $redirectFactory;
         $this->additionalPaymentInfoValidator = $additionalPaymentInfoValidator;
+        $this->customerSession = $customerSession;
+        $this->aliasService = $aliasService;
         Util::$loggingEnabled = false;
     }
 
@@ -98,7 +110,7 @@ class Create implements ActionInterface
                     return $this->redirectFactory->redirectSuccess();
                 }
 
-                $result = $this->blikPay($transaction['title'], $additionalPaymentInformation['blik_code']);
+                $result = $this->blikPay($transaction['title'], $additionalPaymentInformation['blik_code'] ?? '', $additionalPaymentInformation['blik_alias'] ?? '');
                 $this->checkoutSession->unsQuoteId();
 
                 if (!$result) {
@@ -124,10 +136,11 @@ class Create implements ActionInterface
      *
      * @param string $blikTransactionId
      * @param string $blikCode
+     * @param string $blikAlias
      */
-    protected function blikPay($blikTransactionId, $blikCode): bool
+    protected function blikPay($blikTransactionId, $blikCode, $blikAlias): bool
     {
-        $apiResult = $this->transaction->blik($blikTransactionId, $blikCode);
+        $apiResult = $this->transaction->blik($blikTransactionId, $blikCode, $blikAlias);
 
         return isset($apiResult['result']) && 1 === $apiResult['result'];
     }
@@ -139,7 +152,7 @@ class Create implements ActionInterface
         if ($this->additionalPaymentInfoValidator->validateBlikIfPresent($additionalPaymentInformation)) {
             $data['group'] = TransactionOriginApi::BLIK_CHANNEL;
             $data['channel'] = null;
-            $this->handleBlikData($data, $additionalPaymentInformation['blik_code']);
+            $this->handleBlikData($data, $additionalPaymentInformation['blik_code'] ?? '', $additionalPaymentInformation['blik_alias'] ?? false);
         } else {
             $data['group'] = (int) ($additionalPaymentInformation['group'] ?? null);
             $data['channel'] = (int) ($additionalPaymentInformation['channel'] ?? null);
@@ -159,13 +172,28 @@ class Create implements ActionInterface
         return $this->transaction->create($data);
     }
 
-    private function handleBlikData(array &$data, string $blikCode)
+    private function handleBlikData(array &$data, string $blikCode, bool $blikAlias)
     {
         if ($this->transaction->isOpenApiUse() && $this->tpay->checkBlikLevel0Settings()) {
-            $data['blikPaymentData'] = [
-                'blikToken' => $blikCode,
-            ];
+            if ($blikCode) {
+                $data['blikPaymentData']['blikToken'] = $blikCode;
+            }
+
+            $customerId = $this->customerSession->getCustomerId();
+
+            if ($customerId) {
+                $alias = $blikAlias
+                    ? $this->aliasService->getCustomerAlias($customerId)
+                    : $this->buildBlikAlias($customerId);
+
+                $data['blikPaymentData']['aliases'] = [
+                    'type' => 'UID',
+                    'value' => $alias,
+                    'label' => 'tpay-magento2',
+                ];
+            }
         }
+
         if (!$this->transaction->isOpenApiUse()) {
             unset($data['channel']);
             unset($data['currency']);
@@ -178,5 +206,10 @@ class Create implements ActionInterface
         if (isset($transaction['transactionId'])) {
             $paymentData['additional_information']['transaction_id'] = $transaction['transactionId'];
         }
+    }
+
+    private function buildBlikAlias(string $customerId): string
+    {
+        return sprintf('%s-%s', ConfigurationProvider::generateRandomString(10), $customerId);
     }
 }

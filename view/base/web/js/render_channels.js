@@ -149,5 +149,7 @@ require(['jquery', 'mage/translate'], function ($, $t) {
             var submitBtn = $("#tpaycom_magento2generic_submit", parent);
             submitBtn.addClass('disabled');
         });
+
+        $(".blik-alias").hide();
     }
 );

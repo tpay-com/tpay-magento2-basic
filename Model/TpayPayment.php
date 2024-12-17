@@ -242,6 +242,7 @@ class TpayPayment extends Adapter implements TpayInterface
         $additionalData = array_merge($info->getAdditionalInformation(), $data->getData('additional_data'));
         $info->setAdditionalInformation(static::GROUP, array_key_exists(static::GROUP, $additionalData) ? $additionalData[static::GROUP] : '');
         $info->setAdditionalInformation(static::BLIK_CODE, array_key_exists(static::BLIK_CODE, $additionalData) ? $additionalData[static::BLIK_CODE] : '');
+        $info->setAdditionalInformation(static::BLIK_ALIAS, array_key_exists(static::BLIK_ALIAS, $additionalData) ? $additionalData[static::BLIK_ALIAS] : '');
         $info->setAdditionalInformation(static::CHANNEL, $additionalData[static::CHANNEL] ?? null);
         $info->setAdditionalInformation(static::TERMS_ACCEPT, isset($additionalData[static::TERMS_ACCEPT]) ? (bool) ($additionalData[static::TERMS_ACCEPT]) : false);
         $info->setAdditionalInformation(static::CARDDATA, $additionalData[static::CARDDATA] ?? '');

@@ -248,6 +248,19 @@ class ConfigurationProvider implements TpayConfigInterface
         return 'PLN' == $this->storeManager->getStore()->getBaseCurrencyCode() && 'PLN' == $this->storeManager->getStore()->getCurrentCurrencyCode();
     }
 
+    public static function generateRandomString(int $length = 46): string
+    {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $randomString = '';
+
+        for ($i = 0; $i < $length; $i++) {
+            $index = rand(0, strlen($characters) - 1);
+            $randomString .= $characters[$index];
+        }
+
+        return $randomString;
+    }
+
     private function getTpayPluginVersion(): string
     {
         $dir = __DIR__.'/../.version';

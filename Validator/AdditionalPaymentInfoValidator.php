@@ -15,7 +15,7 @@ class AdditionalPaymentInfoValidator
 
     public function validateBlikIfPresent(array $data): bool
     {
-        return 6 === strlen($data[TpayInterface::BLIK_CODE]);
+        return 6 === strlen($data[TpayInterface::BLIK_CODE]) || !empty($data[TpayInterface::BLIK_ALIAS]);
     }
 
     public function validatePresenceOfGroupOrChannel(array $data): bool

@@ -31,4 +31,9 @@ class TransactionOriginApi extends PaymentBlik
     {
         return $this->create($data);
     }
+
+    public function blikAlias(string $transactionId, string $blikAlias): array
+    {
+        return $this->blik($transactionId, '', $blikAlias);
+    }
 }

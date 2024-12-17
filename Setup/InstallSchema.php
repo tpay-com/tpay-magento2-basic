@@ -81,6 +81,52 @@ class InstallSchema implements InstallSchemaInterface
             $installer->getConnection()->createTable($table);
         }
 
+        // Get tpay blik aliases table
+        $tableName = $installer->getTable('tpay_blik_aliases');
+        // Check if the table already exists
+        if (true != $installer->getConnection()->isTableExists($tableName)) {
+            // Create table
+            $table = $installer->getConnection()
+                ->newTable($tableName)
+                ->addColumn(
+                    'id',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'identity' => true,
+                        'unsigned' => true,
+                        'nullable' => false,
+                        'primary' => true,
+                    ],
+                    'ID'
+                )
+                ->addColumn(
+                    'cli_id',
+                    Table::TYPE_TEXT,
+                    null,
+                    ['nullable' => false, 'default' => ''],
+                    'Customer Identifier'
+                )
+                ->addColumn(
+                    'alias',
+                    Table::TYPE_TEXT,
+                    null,
+                    ['nullable' => false, 'default' => ''],
+                    'Blik alias'
+                )
+                ->addColumn(
+                    'created_at',
+                    Table::TYPE_DATETIME,
+                    null,
+                    ['nullable' => false],
+                    'Created At'
+                )
+                ->setComment('Tpay blik aliases')
+                ->setOption('type', 'InnoDB')
+                ->setOption('charset', 'utf8');
+            $installer->getConnection()->createTable($table);
+        }
+
         $installer->endSetup();
     }
 }
