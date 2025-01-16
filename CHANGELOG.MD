@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Module version bump
+- Module version bump to be adequate to github tag
 
 ## 2.1.6
 
