@@ -47,7 +47,7 @@ class TransactionApiFacade
 
     public function isAnyApiUse(): bool
     {
-        return $this->useOpenApi || $this->originApi !== null;
+        return $this->useOpenApi || null !== $this->originApi;
     }
 
     public function create(array $config): array
