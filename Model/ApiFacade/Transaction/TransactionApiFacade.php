@@ -45,6 +45,11 @@ class TransactionApiFacade
         return $this->useOpenApi;
     }
 
+    public function isAnyApiUse(): bool
+    {
+        return $this->useOpenApi || $this->originApi !== null;
+    }
+
     public function create(array $config): array
     {
         return $this->getCurrentApi()->create($config);

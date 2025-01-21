@@ -135,7 +135,7 @@ class MethodListPlugin
 
     private function filterResult(array $result): array
     {
-        if (!$this->tpayConfig->isOpenApiEnabled() && !$this->tpayConfig->isOriginApiEnabled()) {
+        if ((!$this->tpayConfig->isOpenApiEnabled() && !$this->tpayConfig->isOriginApiEnabled()) || !$this->transactions->isAnyApiUse()) {
             return $this->filterTransaction($result);
         }
 
