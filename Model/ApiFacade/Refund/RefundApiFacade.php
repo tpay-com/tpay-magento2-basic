@@ -2,18 +2,13 @@
 
 namespace Tpay\Magento2\Model\ApiFacade\Refund;
 
-use Exception;
-use Magento\Framework\App\CacheInterface;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Payment\Model\InfoInterface;
-use Tpay\Magento2\Api\TpayConfigInterface;
-use Tpay\Magento2\Api\TpayInterface;
+use Magento\Store\Model\ScopeInterface;
 use Tpay\Magento2\Model\ApiFacade\OpenApi;
 
 class RefundApiFacade
 {
-    /** @var TpayInterface */
-    private $tpay;
-
     /** @var RefundOriginApi */
     private $originApi;
 
@@ -22,17 +17,18 @@ class RefundApiFacade
 
     /** @var bool */
     private $useOpenApi;
+    /**
+     * @var RefundCardOriginApi
+     */
+    private $refundOriginApi;
 
-    /** @var null|bool */
-    private $storeId;
-
-    private $cache;
-
-    public function __construct(TpayConfigInterface $tpay, CacheInterface $cache, ?int $storeId = null)
+    public function __construct(RefundCardOriginApi $originApi, RefundOriginApi $refundOriginApi, OpenApi $openApi, ScopeConfigInterface $storeConfig)
     {
-        $this->tpay = $tpay;
-        $this->cache = $cache;
-        $this->storeId = $storeId;
+
+        $this->originApi = $originApi;
+        $this->refundOriginApi = $refundOriginApi;
+        $this->openApi = $openApi;
+        $this->useOpenApi = $storeConfig->isSetFlag('payment/tpaycom_magento2basic/openapi_settings/open_api_active', ScopeInterface::SCOPE_STORE);
     }
 
     public function makeRefund(InfoInterface $payment, float $amount)
@@ -41,44 +37,17 @@ class RefundApiFacade
             return $this->getCurrentApi()->makeRefund($payment, $amount);
         }
         if (!empty($payment->getAdditionalInformation('card_data'))) {
-            return (new RefundCardOriginApi($this->tpay, $this->storeId))->makeCardRefund($payment, $amount);
+            return $this->refundOriginApi->makeCardRefund($payment, $amount);
         }
 
         return $this->originApi->makeRefund($payment, $amount);
     }
 
+    /**
+     * @return OpenApi|RefundOriginApi
+     */
     private function getCurrentApi()
     {
-        $this->connectApi();
-
         return $this->useOpenApi ? $this->openApi : $this->originApi;
-    }
-
-    private function connectApi()
-    {
-        if (null == $this->openApi && null === $this->originApi) {
-            $this->createRefundOriginApiInstance($this->tpay);
-            $this->createOpenApiInstance($this->tpay);
-        }
-    }
-
-    private function createRefundOriginApiInstance(TpayConfigInterface $tpay)
-    {
-        try {
-            $this->originApi = new RefundOriginApi($tpay, $this->storeId);
-        } catch (Exception $exception) {
-            $this->originApi = null;
-        }
-    }
-
-    private function createOpenApiInstance(TpayConfigInterface $tpay)
-    {
-        try {
-            $this->openApi = new OpenApi($tpay, $this->cache, $this->storeId);
-            $this->useOpenApi = true;
-        } catch (Exception $exception) {
-            $this->openApi = null;
-            $this->useOpenApi = false;
-        }
     }
 }

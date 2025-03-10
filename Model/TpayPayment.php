@@ -88,6 +88,10 @@ class TpayPayment extends Adapter implements TpayInterface
         'amex',
         'mastercard',
     ];
+    /**
+     * @var RefundApiFacade
+     */
+    private $refundApiFacade;
 
     public function __construct(
         UrlInterface $urlBuilder,
@@ -106,6 +110,7 @@ class TpayPayment extends Adapter implements TpayInterface
         string $formBlockType,
         string $infoBlockType,
         CacheInterface $cache,
+        RefundApiFacade $refundApiFacade,
         ?CommandPoolInterface $commandPool = null,
         ?ValidatorPoolInterface $validatorPool = null,
         ?CommandManagerInterface $commandExecutor = null,
@@ -121,6 +126,7 @@ class TpayPayment extends Adapter implements TpayInterface
         $this->infoInstance = $infoInstance;
         $this->resolver = $resolver;
         $this->cache = $cache;
+        $this->refundApiFacade = $refundApiFacade;
         parent::__construct(
             $eventManager,
             $valueHandlerPool,
@@ -133,6 +139,7 @@ class TpayPayment extends Adapter implements TpayInterface
             $commandExecutor,
             $logger
         );
+
     }
 
     public function isActive($storeId = null): bool
@@ -263,10 +270,8 @@ class TpayPayment extends Adapter implements TpayInterface
      */
     public function refund(InfoInterface $payment, $amount)
     {
-        $storeId = $payment->getOrder()->getStoreId() ? (int) $payment->getOrder()->getStoreId() : null;
-        $refundService = new RefundApiFacade($this->configurationProvider, $this->cache, $storeId);
 
-        $refundResult = $refundService->makeRefund($payment, (float) $amount);
+        $refundResult = $this->refundApiFacade->makeRefund($payment, (float) $amount);
         try {
             if ('success' === $refundResult['result'] && 'correct' === $refundResult['status']) {
                 $payment

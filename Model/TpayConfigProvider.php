@@ -38,19 +38,16 @@ class TpayConfigProvider implements ConfigProviderInterface
 
     public function __construct(
         PaymentHelper $paymentHelper,
-        Repository $assetRepository,
-        TpayTokensService $tokensService,
         TransactionApiFacade $transactionApiFacade,
-        TpayService $tpayService,
-        TpayConfigInterface $tpayConfig,
         Session $customerSession,
-        TpayAliasServiceInterface $aliasService
+        TpayAliasServiceInterface $aliasService,
+        ConfigFacade $configFacade
     ) {
         $this->paymentHelper = $paymentHelper;
         $this->transactionApi = $transactionApiFacade;
-        $this->configFacade = new ConfigFacade($this->getPaymentMethodInstance(), $tpayConfig, $assetRepository, $tokensService, $tpayService);
         $this->customerSession = $customerSession;
         $this->aliasService = $aliasService;
+        $this->configFacade = $configFacade;
     }
 
     public function getConfig(): array
@@ -75,14 +72,5 @@ class TpayConfigProvider implements ConfigProviderInterface
         }
 
         return $config;
-    }
-
-    private function getPaymentMethodInstance(): TpayInterface
-    {
-        if (null === $this->paymentMethod) {
-            $this->paymentMethod = $this->paymentHelper->getMethodInstance(TpayInterface::CODE);
-        }
-
-        return $this->paymentMethod;
     }
 }

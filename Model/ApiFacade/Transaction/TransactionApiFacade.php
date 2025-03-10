@@ -2,9 +2,11 @@
 
 namespace Tpay\Magento2\Model\ApiFacade\Transaction;
 
-use Exception;
 use Magento\Framework\App\CacheInterface;
-use Tpay\Magento2\Api\TpayConfigInterface;
+use Magento\Framework\App\Config;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Store\Model\ScopeInterface;
+use Magento\Store\Model\StoreManagerInterface;
 use Tpay\Magento2\Model\ApiFacade\OpenApi;
 use Tpay\Magento2\Model\ApiFacade\Transaction\Dto\Channel;
 use Tpay\OpenApi\Utilities\TpayException;
@@ -19,29 +21,27 @@ class TransactionApiFacade
     /** @var OpenApi */
     private $openApi;
 
-    /** @var TpayConfigInterface */
-    private $tpay;
-
     /** @var CacheInterface */
     private $cache;
 
     /** @var bool */
-    private $useOpenApi = false;
+    private $useOpenApi;
+    /**
+     * @var StoreManagerInterface
+     */
+    private $storeManager;
 
-    /** @var null|int */
-    private $storeId;
-
-    public function __construct(TpayConfigInterface $tpay, CacheInterface $cache, ?int $storeId = null)
+    public function __construct(TransactionOriginApi $originApi, OpenApi $openApi, ScopeConfigInterface $storeConfig, CacheInterface $cache, StoreManagerInterface $storeManager)
     {
-        $this->tpay = $tpay;
+        $this->originApi = $originApi;
+        $this->openApi = $openApi;
         $this->cache = $cache;
-        $this->storeId = $storeId;
+        $this->storeManager = $storeManager;
+        $this->useOpenApi = $storeConfig->isSetFlag('payment/tpaycom_magento2basic/openapi_settings/open_api_active', ScopeInterface::SCOPE_STORE);
     }
 
     public function isOpenApiUse(): bool
     {
-        $this->connectApi();
-
         return $this->useOpenApi;
     }
 
@@ -82,13 +82,11 @@ class TransactionApiFacade
     /** @return list<Channel> */
     public function channels(): array
     {
-        $this->connectApi();
-
         if (!$this->useOpenApi) {
             return [];
         }
 
-        $cacheKey = 'tpay_channels_'.md5(join('|', [$this->tpay->getOpenApiClientId($this->storeId), $this->tpay->getOpenApiPassword($this->storeId), !$this->tpay->useSandboxMode($this->storeId)]));
+        $cacheKey = 'tpay_channels_' .$this->storeManager->getStore()->getCode();
 
         $channels = $this->cache->load($cacheKey);
 
@@ -100,14 +98,14 @@ class TransactionApiFacade
             return true === $channel->available;
         });
 
-        $this->cache->save(serialize($channels), $cacheKey, [\Magento\Framework\App\Config::CACHE_TAG], self::CACHE_LIFETIME);
+        $this->cache->save(serialize($channels), $cacheKey, [Config::CACHE_TAG], self::CACHE_LIFETIME);
 
         return $channels;
     }
 
     public function translateGroupToChannel(array $data, bool $redirectToChannel): array
     {
-        if ($redirectToChannel && $this->useOpenApi && $data['group'] && !$data['channel'] && TransactionOriginApi::BLIK_CHANNEL != (int) $data['group']) {
+        if ($redirectToChannel && $this->useOpenApi && $data['group'] && !$data['channel'] && TransactionOriginApi::BLIK_CHANNEL != (int)$data['group']) {
             foreach ($this->openApi->channels() as $channel) {
                 $group = $channel->groups[0] ?? null;
                 if (isset($group['id']) && $group['id'] == $data['group']) {
@@ -136,49 +134,6 @@ class TransactionApiFacade
 
     private function getCurrentApi()
     {
-        $this->connectApi();
-
         return $this->useOpenApi ? $this->openApi : $this->originApi;
-    }
-
-    private function connectApi()
-    {
-        if (null == $this->openApi && null === $this->originApi) {
-            $this->createOriginApiInstance($this->tpay);
-            $this->createOpenApiInstance($this->tpay);
-        }
-    }
-
-    private function createOriginApiInstance(TpayConfigInterface $tpay)
-    {
-        if (!$tpay->isOriginApiEnabled($this->storeId)) {
-            $this->originApi = null;
-
-            return;
-        }
-
-        try {
-            $this->originApi = new TransactionOriginApi($tpay->getApiPassword($this->storeId), $tpay->getApiKey($this->storeId), $tpay->getMerchantId($this->storeId), $tpay->getSecurityCode($this->storeId), !$tpay->useSandboxMode($this->storeId));
-        } catch (Exception $exception) {
-            $this->originApi = null;
-        }
-    }
-
-    private function createOpenApiInstance(TpayConfigInterface $tpay)
-    {
-        if (!$tpay->isOpenApiEnabled($this->storeId)) {
-            $this->openApi = null;
-            $this->useOpenApi = false;
-
-            return;
-        }
-
-        try {
-            $this->openApi = new OpenApi($tpay, $this->cache, $this->storeId);
-            $this->useOpenApi = true;
-        } catch (Exception $exception) {
-            $this->openApi = null;
-            $this->useOpenApi = false;
-        }
     }
 }

@@ -24,6 +24,38 @@
     <type name="Magento\Quote\Model\Quote\Payment">
         <plugin name="tpay_generic_payment" type="Tpay\Magento2\Model\GenericPaymentPlugin" />
     </type>
+    <type name="Tpay\Magento2\Model\ApiFacade\CardTransaction\CardApiFacade">
+        <arguments>
+            <argument name="cardOrigin" xsi:type="object">Tpay\Magento2\Model\ApiFacade\CardTransaction\CardOrigin\Proxy</argument>
+            <argument name="cardOpen" xsi:type="object">Tpay\Magento2\Model\ApiFacade\CardTransaction\CardOpen\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Tpay\Magento2\Model\ApiFacade\Refund\RefundApiFacade">
+        <arguments>
+            <argument name="openApi" xsi:type="object">Tpay\Magento2\Model\ApiFacade\OpenApi\Proxy</argument>
+            <argument name="originApi" xsi:type="object">Tpay\Magento2\Model\ApiFacade\Refund\RefundCardOriginApi\Proxy</argument>
+            <argument name="refundOriginApi" xsi:type="object">Tpay\Magento2\Model\ApiFacade\Refund\RefundOriginApi\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Tpay\Magento2\Model\ApiFacade\TpayConfig\CardConfigFacade">
+        <arguments>
+            <argument name="originApi" xsi:type="object">Tpay\Magento2\Model\ApiFacade\TpayConfig\ConfigOrigin\Proxy</argument>
+            <argument name="openApi" xsi:type="object">Tpay\Magento2\Model\ApiFacade\TpayConfig\ConfigOpen\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Tpay\Magento2\Model\ApiFacade\TpayConfig\ConfigFacade">
+        <arguments>
+            <argument name="cardConfig" xsi:type="object">Tpay\Magento2\Model\ApiFacade\TpayConfig\CardConfigFacade\Proxy</argument>
+            <argument name="configOpen" xsi:type="object">Tpay\Magento2\Model\ApiFacade\TpayConfig\ConfigOpen\Proxy</argument>
+            <argument name="configOrigin" xsi:type="object">Tpay\Magento2\Model\ApiFacade\TpayConfig\ConfigOrigin\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Tpay\Magento2\Model\ApiFacade\Transaction\TransactionApiFacade">
+        <arguments>
+            <argument name="originApi" xsi:type="object">Tpay\Magento2\Model\ApiFacade\Transaction\TransactionOriginApi\Proxy</argument>
+            <argument name="openApi" xsi:type="object">Tpay\Magento2\Model\ApiFacade\OpenApi\Proxy</argument>
+        </arguments>
+    </type>
     <type name="Tpay\Magento2\Model\TpayPayment">
         <arguments>
             <argument name="code" xsi:type="string">Tpay_Magento2</argument>
