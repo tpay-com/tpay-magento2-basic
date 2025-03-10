@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tpay\Magento2\Notification\Strategy;
 
 use Tpay\Magento2\Api\Notification\Strategy\NotificationProcessorInterface;
-use Tpay\Magento2\Api\TpayAliasServiceInterface;
+use Tpay\Magento2\Service\TpayAliasServiceInterface;
 
 class BlikAliasNotificationProcessor implements NotificationProcessorInterface
 {
