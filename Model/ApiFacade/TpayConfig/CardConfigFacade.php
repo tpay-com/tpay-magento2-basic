@@ -2,18 +2,8 @@
 
 namespace Tpay\Magento2\Model\ApiFacade\TpayConfig;
 
-use Exception;
-use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Framework\App\ObjectManager;
-use Magento\Framework\View\Asset\Repository;
 use Magento\Store\Model\ScopeInterface;
-use Psr\Log\LoggerInterface;
-use Tpay\Magento2\Api\TpayConfigInterface;
-use Tpay\Magento2\Api\TpayInterface;
-use Tpay\Magento2\Model\ApiFacade\CardTransaction\CardOrigin;
-use Tpay\Magento2\Service\TpayService;
-use Tpay\Magento2\Service\TpayTokensService;
 
 class CardConfigFacade
 {

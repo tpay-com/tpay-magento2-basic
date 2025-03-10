@@ -26,9 +26,8 @@ class TransactionApiFacade
 
     /** @var bool */
     private $useOpenApi;
-    /**
-     * @var StoreManagerInterface
-     */
+
+    /** @var StoreManagerInterface */
     private $storeManager;
 
     public function __construct(TransactionOriginApi $originApi, OpenApi $openApi, ScopeConfigInterface $storeConfig, CacheInterface $cache, StoreManagerInterface $storeManager)
@@ -86,7 +85,7 @@ class TransactionApiFacade
             return [];
         }
 
-        $cacheKey = 'tpay_channels_' .$this->storeManager->getStore()->getCode();
+        $cacheKey = 'tpay_channels_'.$this->storeManager->getStore()->getCode();
 
         $channels = $this->cache->load($cacheKey);
 
@@ -105,7 +104,7 @@ class TransactionApiFacade
 
     public function translateGroupToChannel(array $data, bool $redirectToChannel): array
     {
-        if ($redirectToChannel && $this->useOpenApi && $data['group'] && !$data['channel'] && TransactionOriginApi::BLIK_CHANNEL != (int)$data['group']) {
+        if ($redirectToChannel && $this->useOpenApi && $data['group'] && !$data['channel'] && TransactionOriginApi::BLIK_CHANNEL != (int) $data['group']) {
             foreach ($this->openApi->channels() as $channel) {
                 $group = $channel->groups[0] ?? null;
                 if (isset($group['id']) && $group['id'] == $data['group']) {

@@ -6,15 +6,11 @@ namespace Tpay\Magento2\Model;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Customer\Model\Session;
-use Magento\Framework\View\Asset\Repository;
 use Magento\Payment\Helper\Data as PaymentHelper;
-use Tpay\Magento2\Api\TpayConfigInterface;
 use Tpay\Magento2\Api\TpayInterface;
 use Tpay\Magento2\Model\ApiFacade\TpayConfig\ConfigFacade;
 use Tpay\Magento2\Model\ApiFacade\Transaction\TransactionApiFacade;
 use Tpay\Magento2\Service\TpayAliasServiceInterface;
-use Tpay\Magento2\Service\TpayService;
-use Tpay\Magento2\Service\TpayTokensService;
 
 class TpayConfigProvider implements ConfigProviderInterface
 {

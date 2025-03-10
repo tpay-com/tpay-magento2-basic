@@ -88,9 +88,8 @@ class TpayPayment extends Adapter implements TpayInterface
         'amex',
         'mastercard',
     ];
-    /**
-     * @var RefundApiFacade
-     */
+
+    /** @var RefundApiFacade */
     private $refundApiFacade;
 
     public function __construct(
@@ -139,7 +138,6 @@ class TpayPayment extends Adapter implements TpayInterface
             $commandExecutor,
             $logger
         );
-
     }
 
     public function isActive($storeId = null): bool
@@ -270,7 +268,6 @@ class TpayPayment extends Adapter implements TpayInterface
      */
     public function refund(InfoInterface $payment, $amount)
     {
-
         $refundResult = $this->refundApiFacade->makeRefund($payment, (float) $amount);
         try {
             if ('success' === $refundResult['result'] && 'correct' === $refundResult['status']) {

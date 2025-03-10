@@ -2,14 +2,8 @@
 
 namespace Tpay\Magento2\Model\ApiFacade\CardTransaction;
 
-use Exception;
-use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
-use Tpay\Magento2\Api\TpayConfigInterface;
-use Tpay\Magento2\Api\TpayInterface;
-use Tpay\Magento2\Service\TpayService;
-use Tpay\Magento2\Service\TpayTokensService;
 
 class CardApiFacade
 {

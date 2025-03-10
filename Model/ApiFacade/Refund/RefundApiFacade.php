@@ -17,14 +17,12 @@ class RefundApiFacade
 
     /** @var bool */
     private $useOpenApi;
-    /**
-     * @var RefundCardOriginApi
-     */
+
+    /** @var RefundCardOriginApi */
     private $refundOriginApi;
 
     public function __construct(RefundCardOriginApi $originApi, RefundOriginApi $refundOriginApi, OpenApi $openApi, ScopeConfigInterface $storeConfig)
     {
-
         $this->originApi = $originApi;
         $this->refundOriginApi = $refundOriginApi;
         $this->openApi = $openApi;
@@ -43,9 +41,7 @@ class RefundApiFacade
         return $this->originApi->makeRefund($payment, $amount);
     }
 
-    /**
-     * @return OpenApi|RefundOriginApi
-     */
+    /** @return OpenApi|RefundOriginApi */
     private function getCurrentApi()
     {
         return $this->useOpenApi ? $this->openApi : $this->originApi;
