@@ -3,7 +3,7 @@
 namespace Tpay\Magento2\Notification;
 
 use Tpay\Magento2\Notification\Strategy\BlikAliasNotificationProcessor;
-use Tpay\Magento2\Notification\Strategy\Factory\NotificationProcessorFactoryInterface;
+use Tpay\Magento2\Api\Notification\Strategy\NotificationProcessorFactoryInterface;
 use Tpay\Magento2\Service\TpayService;
 
 class NotificationProcessor

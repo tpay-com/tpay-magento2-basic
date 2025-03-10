@@ -9,15 +9,15 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <preference for="Tpay\Magento2\Api\TpayInterface" type="Tpay\Magento2\Model\TpayPayment" />
-    <preference for="Tpay\Magento2\Api\TpayConfigInterface" type="Tpay\Magento2\Provider\ConfigurationProvider" />
-    <preference for="Tpay\Magento2\Api\Sales\OrderRepositoryInterface" type="Tpay\Magento2\Model\Sales\OrderRepository" />
-    <preference for="Tpay\Magento2\Model\Api\Data\TokensInterface" type="Tpay\Magento2\Model\Token"/>
-    <preference for="Tpay\Magento2\Model\Api\TokenRepositoryInterface" type="Tpay\Magento2\Model\TokenRepository"/>
     <preference for="Magento\Sales\Api\OrderPaymentRepositoryInterface" type="Magento\Sales\Model\Order\Payment\Repository"/>
-    <preference for="Tpay\Magento2\Notification\Strategy\Factory\NotificationProcessorFactoryInterface" type="Tpay\Magento2\Notification\Strategy\Factory\NotificationProcessorFactory" />
-    <preference for="Tpay\Magento2\Service\TpayAliasServiceInterface" type="Tpay\Magento2\Service\TpayAliasService" />
-    <preference for="Tpay\Magento2\Model\Api\AliasRepositoryInterface" type="Tpay\Magento2\Model\AliasRepository" />
+    <preference for="Tpay\Magento2\Api\AliasRepositoryInterface" type="Tpay\Magento2\Model\AliasRepository" />
+    <preference for="Tpay\Magento2\Api\Data\TokensInterface" type="Tpay\Magento2\Model\Token"/>
+    <preference for="Tpay\Magento2\Api\Notification\Strategy\NotificationProcessorFactoryInterface" type="Tpay\Magento2\Notification\Strategy\Factory\NotificationProcessorFactory" />
+    <preference for="Tpay\Magento2\Api\Sales\OrderRepositoryInterface" type="Tpay\Magento2\Model\Sales\OrderRepository" />
+    <preference for="Tpay\Magento2\Api\TokenRepositoryInterface" type="Tpay\Magento2\Model\TokenRepository"/>
+    <preference for="Tpay\Magento2\Api\TpayAliasServiceInterface" type="Tpay\Magento2\Service\TpayAliasService" />
+    <preference for="Tpay\Magento2\Api\TpayConfigInterface" type="Tpay\Magento2\Provider\ConfigurationProvider" />
+    <preference for="Tpay\Magento2\Api\TpayInterface" type="Tpay\Magento2\Model\TpayPayment" />
     <type name="Magento\Payment\Model\MethodList">
         <plugin name="tpay_generic_onsite" type="Tpay\Magento2\Model\MethodListPlugin" />
     </type>

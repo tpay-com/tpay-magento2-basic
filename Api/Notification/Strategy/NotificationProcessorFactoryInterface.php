@@ -1,8 +1,8 @@
 <?php
 
-namespace Tpay\Magento2\Notification\Strategy\Factory;
+namespace Tpay\Magento2\Api\Notification\Strategy;
 
-use Tpay\Magento2\Notification\Strategy\NotificationProcessorInterface;
+use Tpay\Magento2\Api\Notification\Strategy\NotificationProcessorInterface;
 
 interface NotificationProcessorFactoryInterface
 {
