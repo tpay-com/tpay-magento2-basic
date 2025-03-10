@@ -26,7 +26,7 @@ class CardApiFacade
     {
         $this->cardOrigin = $cardOrigin;
         $this->cardOpen = $cardOpen;
-        $this->useOpenCard = $storeConfig->isSetFlag('payment/tpaycom_magento2basic/openapi_settings/open_api_active', ScopeInterface::SCOPE_STORE);
+        $this->useOpenCard = 'PLN' === $storeConfig->getValue('currency/options/base', ScopeInterface::SCOPE_STORE);
     }
 
     public function makeCardTransaction(string $orderId, ?array $customerToken = null): string
