@@ -20,6 +20,7 @@ class Notification implements CsrfAwareActionInterface
 
     /** @var ResponseInterface */
     private $response;
+
     /** @var LoggerInterface */
     private $logger;
 
@@ -38,7 +39,8 @@ class Notification implements CsrfAwareActionInterface
         try {
             $this->notificationProcessor->process();
         } catch (Throwable $e) {
-            $this->logger->info('Failed to process Tpay notification: ' . $e->getMessage(), ['exception' => $e]);
+            $this->logger->info('Failed to process Tpay notification: '.$e->getMessage(), ['exception' => $e]);
+
             return $this->response->setStatusCode(Response::STATUS_CODE_400)->setContent($e->getMessage());
         }
 
