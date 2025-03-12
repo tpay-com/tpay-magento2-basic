@@ -121,7 +121,7 @@ class CardOrigin extends CardNotificationHandler
             return $url;
         }
 
-        return 'magento2basic/tpay/success';
+        return 1 === (int) $result['result'] && isset($result['status']) && 'correct' === $result['status'] ? 'magento2basic/tpay/success' : 'magento2basic/tpay/error';
     }
 
     private function addToPaymentData(string $orderId, string $key, $value)
