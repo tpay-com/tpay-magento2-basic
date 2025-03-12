@@ -20,7 +20,7 @@ class CardConfigFacade
     {
         $this->originApi = $originApi;
         $this->openApi = $openApi;
-        $this->useOpenApi = $storeConfig->isSetFlag('payment/tpaycom_magento2basic/openapi_settings/open_api_active', ScopeInterface::SCOPE_STORE);
+        $this->useOpenApi = 'PLN' === $storeConfig->getValue('currency/options/base', ScopeInterface::SCOPE_STORE);
     }
 
     public function getConfig(): array

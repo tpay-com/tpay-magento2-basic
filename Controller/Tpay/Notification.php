@@ -9,6 +9,7 @@ use Magento\Framework\App\CsrfAwareActionInterface;
 use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\ResponseInterface;
+use Psr\Log\LoggerInterface;
 use Throwable;
 use Tpay\Magento2\Notification\NotificationProcessor;
 
@@ -19,13 +20,17 @@ class Notification implements CsrfAwareActionInterface
 
     /** @var ResponseInterface */
     private $response;
+    /** @var LoggerInterface */
+    private $logger;
 
     public function __construct(
         ResponseInterface $response,
-        NotificationProcessor $notificationProcessor
+        NotificationProcessor $notificationProcessor,
+        LoggerInterface $logger
     ) {
         $this->response = $response;
         $this->notificationProcessor = $notificationProcessor;
+        $this->logger = $logger;
     }
 
     public function execute(): ?Response
@@ -33,6 +38,7 @@ class Notification implements CsrfAwareActionInterface
         try {
             $this->notificationProcessor->process();
         } catch (Throwable $e) {
+            $this->logger->info('Failed to process Tpay notification: ' . $e->getMessage(), ['exception' => $e]);
             return $this->response->setStatusCode(Response::STATUS_CODE_400)->setContent($e->getMessage());
         }
 

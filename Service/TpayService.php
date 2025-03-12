@@ -211,7 +211,7 @@ class TpayService extends RegisterCaptureNotificationOperation
 
         $order = $payment->getOrder();
         $amount = (float) $amount;
-        $invoice = $this->getInvoiceForTransactionId($order, $payment->getTransactionId());
+        $invoice = $this->getInvoiceForTransactionId($order, $payment->getLastTransId());
 
         if (!$invoice && $payment->isCaptureFinal($amount)) {
             $invoice = $this->createAndRegisterInvoice($order, $payment);
@@ -312,7 +312,7 @@ class TpayService extends RegisterCaptureNotificationOperation
 
         $order = $payment->getOrder();
         $amount = (float) $amount;
-        $invoice = $this->getInvoiceForTransactionId($order, $payment->getTransactionId());
+        $invoice = $this->getInvoiceForTransactionId($order, $payment->getLastTransId());
         $orderCurrencyCode = $order->getOrderCurrency()->getCode();
 
         if (!in_array($orderCurrencyCode, CurrencyCodesDictionary::CODES)) {
