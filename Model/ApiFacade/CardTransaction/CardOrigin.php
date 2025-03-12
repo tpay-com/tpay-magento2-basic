@@ -37,6 +37,9 @@ class CardOrigin extends CardNotificationHandler
         $this->cardKeyRSA = $tpayConfig->getRSAKey();
         $this->cardHashAlg = $tpayConfig->getHashType();
         parent::__construct();
+        if ($this->tpayConfig->useSandboxMode()) {
+            $this->cardsApiURL = 'https://secure.sandbox.tpay.com/api/cards/';
+        }
     }
 
     public function makeFullCardTransactionProcess(string $orderId, ?array $customerToken = null): string
