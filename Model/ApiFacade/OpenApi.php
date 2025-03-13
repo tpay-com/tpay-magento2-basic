@@ -3,6 +3,7 @@
 namespace Tpay\Magento2\Model\ApiFacade;
 
 use Magento\Framework\App\CacheInterface;
+use Magento\Framework\Validator\Exception;
 use Magento\Payment\Model\InfoInterface;
 use Tpay\Magento2\Api\TpayConfigInterface;
 use Tpay\Magento2\Model\ApiFacade\Transaction\Dto\Channel;
@@ -124,10 +125,23 @@ class OpenApi
 
     public function makeRefund(InfoInterface $payment, float $amount): array
     {
-        return $this->tpayApi->transactions()->createRefundByTransactionId(
+        $result = $this->tpayApi->transactions()->createRefundByTransactionId(
             ['amount' => $amount],
             $payment->getAdditionalInformation('transaction_id')
         );
+
+        if ('success' != $result['result'] ?? '') {
+            $messages = [];
+            foreach ($result['errors'] ?? [] as $error) {
+                if (isset($error['errorMessage'])) {
+                    $messages[] = $error['errorMessage'];
+                }
+            }
+
+            throw new Exception(__('Payment refunding error. - '.implode('; ', $messages)));
+        }
+
+        return $result;
     }
 
     public function channels(): array

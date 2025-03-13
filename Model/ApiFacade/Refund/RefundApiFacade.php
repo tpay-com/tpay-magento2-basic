@@ -21,7 +21,7 @@ class RefundApiFacade
     /** @var RefundCardOriginApi */
     private $refundOriginApi;
 
-    public function __construct(RefundCardOriginApi $originApi, RefundOriginApi $refundOriginApi, OpenApi $openApi, ScopeConfigInterface $storeConfig)
+    public function __construct(RefundCardOriginApi $refundOriginApi, RefundOriginApi $originApi, OpenApi $openApi, ScopeConfigInterface $storeConfig)
     {
         $this->originApi = $originApi;
         $this->refundOriginApi = $refundOriginApi;
@@ -31,14 +31,11 @@ class RefundApiFacade
 
     public function makeRefund(InfoInterface $payment, float $amount)
     {
-        if ($payment->getAdditionalInformation('transaction_id')) {
+        if (false !== strpos($payment->getLastTransId(), '-')) {
             return $this->getCurrentApi()->makeRefund($payment, $amount);
         }
-        if (!empty($payment->getAdditionalInformation('card_data'))) {
-            return $this->refundOriginApi->makeCardRefund($payment, $amount);
-        }
 
-        return $this->originApi->makeRefund($payment, $amount);
+        return $this->refundOriginApi->makeCardRefund($payment, $amount);
     }
 
     /** @return OpenApi|RefundOriginApi */

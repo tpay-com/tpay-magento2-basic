@@ -323,7 +323,7 @@ class TpayService extends RegisterCaptureNotificationOperation
 
         if (!$invoice && $payment->isCaptureFinal($amount) && ($orderCurrency === (int) $validParams['currency'] || $orderCurrencyCode === $validParams['currency'])) {
             $invoice = $this->createAndRegisterInvoice($order, $payment, Order::STATE_PROCESSING);
-        } else {
+        } elseif (!$invoice) {
             $this->handlePotentialFraud($payment, $amount, $skipFraudDetection);
         }
 

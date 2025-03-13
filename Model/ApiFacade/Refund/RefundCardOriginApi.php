@@ -18,6 +18,9 @@ class RefundCardOriginApi extends CardRefunds
         $this->cardKeyRSA = $tpay->getRSAKey($storeId);
         $this->cardHashAlg = $tpay->getHashType($storeId);
         parent::__construct();
+        if ($tpay->useSandboxMode()) {
+            $this->cardsApiURL = 'https://secure.sandbox.tpay.com/api/cards/';
+        }
     }
 
     public function makeCardRefund($payment, $amount, $currency = '985')
@@ -27,7 +30,7 @@ class RefundCardOriginApi extends CardRefunds
         $result = $this->refund($transactionId, __('Zwrot do zamówienia ').$payment->getOrder()->getRealOrderId());
 
         if (1 === (int) $result['result'] && isset($result['status']) && 'correct' === $result['status']) {
-            return $result['sale_auth'];
+            return $result;
         }
         $errDesc = isset($result['err_desc']) ? ' error description: '.$result['err_desc'] : '';
         $errCode = isset($result['err_code']) ? ' error code: '.$result['err_code'] : '';
