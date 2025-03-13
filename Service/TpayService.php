@@ -325,6 +325,8 @@ class TpayService extends RegisterCaptureNotificationOperation
             $invoice = $this->createAndRegisterInvoice($order, $payment, Order::STATE_PROCESSING);
         } elseif (!$invoice) {
             $this->handlePotentialFraud($payment, $amount, $skipFraudDetection);
+
+            return;
         }
 
         $this->finalizePayment($payment, $invoice, $amount, $order);
