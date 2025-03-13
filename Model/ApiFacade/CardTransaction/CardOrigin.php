@@ -114,7 +114,11 @@ class CardOrigin extends CardNotificationHandler
     private function trySaleAgain(string $orderId): string
     {
         $this->setCardData(null);
-        $result = $this->registerSale($this->tpayPaymentConfig['name'], $this->tpayPaymentConfig['email'], $this->tpayPaymentConfig['description']);
+        try {
+            $result = $this->registerSale($this->tpayPaymentConfig['name'], $this->tpayPaymentConfig['email'], $this->tpayPaymentConfig['description']);
+        } catch (Exception $e) {
+            return 'magento2basic/tpay/error';
+        }
 
         if (isset($result['sale_auth'])) {
             $url = 'https://secure.tpay.com/cards?sale_auth='.$result['sale_auth'];
