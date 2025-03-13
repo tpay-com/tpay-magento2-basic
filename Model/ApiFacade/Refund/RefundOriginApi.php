@@ -30,6 +30,6 @@ class RefundOriginApi extends BasicRefunds
             return ['result' => 'success', 'status' => 'correct'];
         }
         $errCode = isset($apiResult['err']) ? ' error code: '.$apiResult['err'] : '';
-        throw new Exception(__('Payment refunding error. -'.$errCode));
+        throw new Exception(__('Payment refunding error. - %1', $errCode));
     }
 }

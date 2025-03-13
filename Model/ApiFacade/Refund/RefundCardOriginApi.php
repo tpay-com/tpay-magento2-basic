@@ -35,6 +35,6 @@ class RefundCardOriginApi extends CardRefunds
         $errDesc = isset($result['err_desc']) ? ' error description: '.$result['err_desc'] : '';
         $errCode = isset($result['err_code']) ? ' error code: '.$result['err_code'] : '';
         $reason = isset($result['reason']) ? ' reason: '.$result['reason'] : '';
-        throw new Exception(__('Payment refunding error. -'.$errCode.$errDesc.$reason));
+        throw new Exception(__('Payment refunding error. - %1', $errCode.$errDesc.$reason));
     }
 }

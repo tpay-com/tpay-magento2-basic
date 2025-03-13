@@ -138,7 +138,7 @@ class OpenApi
                 }
             }
 
-            throw new Exception(__('Payment refunding error. - '.implode('; ', $messages)));
+            throw new Exception(__('Payment refunding error. - %1', implode('; ', $messages)));
         }
 
         return $result;
