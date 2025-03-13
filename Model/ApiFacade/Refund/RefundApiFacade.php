@@ -2,49 +2,44 @@
 
 namespace Tpay\Magento2\Model\ApiFacade\Refund;
 
-use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Payment\Model\InfoInterface;
-use Magento\Store\Model\ScopeInterface;
-use Tpay\Magento2\Model\ApiFacade\OpenApi;
+use Tpay\Magento2\Model\ApiFacade\OpenApiFactory;
 
 class RefundApiFacade
 {
-    /** @var RefundOriginApi */
+    /** @var RefundOriginApiFactory */
     private $originApi;
 
-    /** @var OpenApi */
+    /** @var OpenApiFactory */
     private $openApi;
 
-    /** @var bool */
-    private $useOpenApi;
-
-    /** @var RefundCardOriginApi */
+    /** @var RefundCardOriginApiFactory */
     private $refundOriginApi;
 
-    public function __construct(RefundCardOriginApi $refundOriginApi, RefundOriginApi $originApi, OpenApi $openApi, ScopeConfigInterface $storeConfig)
+    public function __construct(RefundCardOriginApiFactory $refundOriginApi, RefundOriginApiFactory $originApi, OpenApiFactory $openApi)
     {
         $this->originApi = $originApi;
         $this->refundOriginApi = $refundOriginApi;
         $this->openApi = $openApi;
-        $this->useOpenApi = $storeConfig->isSetFlag('payment/tpaycom_magento2basic/openapi_settings/open_api_active', ScopeInterface::SCOPE_STORE);
     }
 
     public function makeRefund(InfoInterface $payment, float $amount)
     {
+        $storeId = $payment->getOrder()->getStoreId();
         if (false !== strpos($payment->getLastTransId(), '-')) {
             if ($payment->getAdditionalInformation('transaction_id')) {
-                return $this->openApi->makeRefund($payment, $amount);
+                $openApi = $this->openApi->create(['storeId' => $storeId]);
+
+                return $openApi->makeRefund($payment, $amount);
             }
 
-            return $this->originApi->makeRefund($payment, $amount);
+            $originApi = $this->originApi->create(['storeId' => $storeId]);
+
+            return $originApi->makeRefund($payment, $amount);
         }
 
-        return $this->refundOriginApi->makeCardRefund($payment, $amount);
-    }
+        $refundOriginApi = $this->refundOriginApi->create(['storeId' => $storeId]);
 
-    /** @return OpenApi|RefundOriginApi */
-    private function getCurrentApi()
-    {
-        return $this->useOpenApi ? $this->openApi : $this->originApi;
+        return $refundOriginApi->makeCardRefund($payment, $amount);
     }
 }

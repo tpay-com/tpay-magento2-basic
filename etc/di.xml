@@ -30,13 +30,6 @@
             <argument name="cardOpen" xsi:type="object">Tpay\Magento2\Model\ApiFacade\CardTransaction\CardOpen\Proxy</argument>
         </arguments>
     </type>
-    <type name="Tpay\Magento2\Model\ApiFacade\Refund\RefundApiFacade">
-        <arguments>
-            <argument name="openApi" xsi:type="object">Tpay\Magento2\Model\ApiFacade\OpenApi\Proxy</argument>
-            <argument name="originApi" xsi:type="object">Tpay\Magento2\Model\ApiFacade\Refund\RefundOriginApi\Proxy</argument>
-            <argument name="refundOriginApi" xsi:type="object">Tpay\Magento2\Model\ApiFacade\Refund\RefundCardOriginApi\Proxy</argument>
-        </arguments>
-    </type>
     <type name="Tpay\Magento2\Model\ApiFacade\TpayConfig\CardConfigFacade">
         <arguments>
             <argument name="originApi" xsi:type="object">Tpay\Magento2\Model\ApiFacade\TpayConfig\ConfigOrigin\Proxy</argument>
