@@ -12,8 +12,8 @@ class RefundOriginApi extends BasicRefunds
 {
     public function __construct(TpayConfigInterface $tpay, ?int $storeId = null)
     {
-        $this->trApiKey = $tpay->getApiPassword($storeId);
-        $this->trApiPass = $tpay->getApiKey($storeId);
+        $this->trApiKey = $tpay->getApiKey($storeId);
+        $this->trApiPass = $tpay->getApiPassword($storeId);
         $this->merchantId = $tpay->getMerchantId($storeId);
         $this->merchantSecret = $tpay->getSecurityCode($storeId);
         parent::__construct();
@@ -22,12 +22,12 @@ class RefundOriginApi extends BasicRefunds
         }
     }
 
-    public function makeRefund(InfoInterface $payment, float $amount): bool
+    public function makeRefund(InfoInterface $payment, float $amount): array
     {
         Util::$loggingEnabled = false;
         $apiResult = $this->setTransactionID($payment->getParentTransactionId())->refundAny(number_format($amount, 2));
         if (isset($apiResult['result']) && 1 === (int) $apiResult['result']) {
-            return true;
+            return ['result' => 'success', 'status' => 'correct'];
         }
         $errCode = isset($apiResult['err']) ? ' error code: '.$apiResult['err'] : '';
         throw new Exception(__('Payment refunding error. -'.$errCode));

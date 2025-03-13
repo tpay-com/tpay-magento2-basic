@@ -278,7 +278,6 @@ class TpayPayment extends Adapter implements TpayInterface
                     ->setShouldCloseParentTransaction(1);
             }
         } catch (\Exception $e) {
-            $this->logger->debug($e->getMessage());
             throw new Exception(__('Payment refunding error.'));
         }
 

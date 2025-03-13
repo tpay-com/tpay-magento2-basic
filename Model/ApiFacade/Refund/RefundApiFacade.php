@@ -32,7 +32,11 @@ class RefundApiFacade
     public function makeRefund(InfoInterface $payment, float $amount)
     {
         if (false !== strpos($payment->getLastTransId(), '-')) {
-            return $this->getCurrentApi()->makeRefund($payment, $amount);
+            if ($payment->getAdditionalInformation('transaction_id')) {
+                return $this->openApi->makeRefund($payment, $amount);
+            }
+
+            return $this->originApi->makeRefund($payment, $amount);
         }
 
         return $this->refundOriginApi->makeCardRefund($payment, $amount);
