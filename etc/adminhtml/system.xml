@@ -80,6 +80,7 @@
                     </field>
                 </group>
                 <group id="originapi_settings" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <comment>Origin API is deprecated. Do not configure for new installations. This section is kept for backwards compatibility to allow processing refunds placed via Origin API.</comment>
                     <label>Configuration Origin API</label>
                     <field id="origin_api_active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Active</label>
@@ -106,6 +107,7 @@
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     </field>
                     <group id="cardpayment_originapi_settings"  translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <comment>Configure this section only if You want to process credit card payments in currencies other than PLN and Your credit card processor is set to Elavon.</comment>
                         <label>Cards payments Origin API settings</label>
                         <depends><field id="cardpayment_api_active">1</field></depends>
                         <field id="hash_type" translate="label" type="select" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">

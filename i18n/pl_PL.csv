@@ -66,3 +66,5 @@
 "Show full content","Zapoznaj się z pełną treścią"
 "I pay with BLIK from saved account", "Zapłać zapisanym aliasem BLIK"
 "Payment refunding error. - %1","Wystąpił problem podczas wykonywania zwrotu - %1"
+"Origin API is deprecated. Do not configure for new installations. This section is kept for backwards compatibility to allow processing refunds placed via Origin API.","Origin API jest wygaszane. Nie konfiguruj tej sekcji w przypadku nowych instalacji. Konfiguracja w tej sekcji jest dla zapewnienia kompatybilności wstecznej w przetwarzaniu zwrotów dla zamówień złożonych przez Origin API"
+"Configure this section only if You want to process credit card payments in currencies other than PLN and Your credit card processor is set to Elavon.","Wypełnij tę sekcję tylko jeżeli chcesz przyjmować płatności kartą w walucie innej niż złoty polski. Upewnij się, że Twoim operatorem płatności kartowych jest Elavon."
