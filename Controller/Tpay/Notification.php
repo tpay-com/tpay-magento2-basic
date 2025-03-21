@@ -15,8 +15,8 @@ use Tpay\Magento2\Notification\NotificationProcessor;
 
 class Notification implements CsrfAwareActionInterface, HttpPostActionInterface
 {
-    const BAD_REQUEST = 400;
-    const HTTP_OK = 200;
+    public const BAD_REQUEST = 400;
+    public const HTTP_OK = 200;
 
     /** @var NotificationProcessor */
     protected $notificationProcessor;
@@ -40,7 +40,7 @@ class Notification implements CsrfAwareActionInterface, HttpPostActionInterface
         } catch (Throwable $e) {
             return $result
                 ->setHttpResponseCode(self::BAD_REQUEST)
-                ->setContents('FALSE - ' . $e->getMessage());
+                ->setContents('FALSE - '.$e->getMessage());
         }
 
         return $result
