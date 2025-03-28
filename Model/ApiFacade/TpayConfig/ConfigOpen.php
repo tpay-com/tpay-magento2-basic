@@ -28,25 +28,22 @@ class ConfigOpen
 
     /** @var OpenApi */
     private $openApi;
-    /**
-     * @var CspNonceProvider
-     */
+
+    /** @var CspNonceProvider */
     private $nonceProvider;
-    /**
-     * @var Escaper
-     */
+
+    /** @var Escaper */
     private $escaper;
 
     public function __construct(
-        TpayInterface       $tpay,
+        TpayInterface $tpay,
         TpayConfigInterface $tpayConfig,
-        Repository          $assetRepository,
-        TpayTokensService   $tokensService,
-        OpenApi             $openApi,
-        CspNonceProvider    $nonceProvider,
-        Escaper             $escaper
-    )
-    {
+        Repository $assetRepository,
+        TpayTokensService $tokensService,
+        OpenApi $openApi,
+        CspNonceProvider $nonceProvider,
+        Escaper $escaper
+    ) {
         $this->tpay = $tpay;
         $this->tpayConfig = $tpayConfig;
         $this->assetRepository = $assetRepository;
@@ -78,7 +75,7 @@ class ConfigOpen
                         'getBlikChannelID' => TransactionOriginApi::BLIK_CHANNEL,
                         'useSandbox' => $this->tpayConfig->useSandboxMode(),
                         'grandTotal' => number_format($this->tpay->getCheckoutTotal(), 2, '.', ''),
-                        'groups' => $this->openApi->getBankGroups((bool)$this->tpayConfig->onlyOnlineChannels())['groups'],
+                        'groups' => $this->openApi->getBankGroups((bool) $this->tpayConfig->onlyOnlineChannels())['groups'],
                     ],
                 ],
             ];

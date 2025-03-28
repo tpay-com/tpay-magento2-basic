@@ -27,25 +27,22 @@ class ConfigOrigin
 
     /** @var CardOrigin */
     private $cardOrigin;
-    /**
-     * @var CspNonceProvider
-     */
+
+    /** @var CspNonceProvider */
     private $nonceProvider;
-    /**
-     * @var Escaper
-     */
+
+    /** @var Escaper */
     private $escaper;
 
     public function __construct(
-        TpayInterface       $tpay,
+        TpayInterface $tpay,
         TpayConfigInterface $tpayConfig,
-        Repository          $assetRepository,
-        TpayTokensService   $tokensService,
-        CardOrigin          $cardOrigin,
-        CspNonceProvider    $nonceProvider,
-        Escaper             $escaper
-    )
-    {
+        Repository $assetRepository,
+        TpayTokensService $tokensService,
+        CardOrigin $cardOrigin,
+        CspNonceProvider $nonceProvider,
+        Escaper $escaper
+    ) {
         $this->tpay = $tpay;
         $this->tpayConfig = $tpayConfig;
         $this->assetRepository = $assetRepository;
@@ -104,7 +101,7 @@ EOD;
     public function getCardConfig()
     {
         try {
-            $check = $this->cardOrigin->requests($this->cardOrigin->getApiUrl() . $this->tpayConfig->getCardApiKey(), ['api_password' => $this->tpayConfig->getCardApiPassword(), 'method' => 'check']);
+            $check = $this->cardOrigin->requests($this->cardOrigin->getApiUrl().$this->tpayConfig->getCardApiKey(), ['api_password' => $this->tpayConfig->getCardApiPassword(), 'method' => 'check']);
             if (!isset($check['result']) || 1 !== $check['result']) {
                 return [];
             }
