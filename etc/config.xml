@@ -31,20 +31,5 @@
                 <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
             </Tpay_Magento2>
         </payment>
-        <csp>
-            <mode>
-                <storefront_checkout_index_index>
-                    <report_only>1</report_only>
-                </storefront_checkout_index_index>
-            </mode>
-            <policies>
-                <storefront_checkout_index_index>
-                    <scripts>
-                        <inline>0</inline>
-                        <event_handlers>0</event_handlers>
-                    </scripts>
-                </storefront_checkout_index_index>
-            </policies>
-        </csp>
     </default>
 </config>
