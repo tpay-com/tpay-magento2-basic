@@ -18,9 +18,7 @@ class FlushConnectionCache implements ObserverInterface
         $this->cache = $cache;
     }
 
-    /**
-     * Flush Tpay connection cache upon settings' change
-     */
+    /** Flush Tpay connection cache upon settings' change */
     public function execute(EventObserver $observer)
     {
         $configData = $observer->getData('configData');
