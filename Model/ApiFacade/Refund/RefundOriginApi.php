@@ -6,7 +6,6 @@ use Magento\Framework\Validator\Exception;
 use Magento\Payment\Model\InfoInterface;
 use Tpay\Magento2\Api\TpayConfigInterface;
 use Tpay\OriginApi\Refunds\BasicRefunds;
-use Tpay\OriginApi\Utilities\Util;
 
 class RefundOriginApi extends BasicRefunds
 {
@@ -24,7 +23,6 @@ class RefundOriginApi extends BasicRefunds
 
     public function makeRefund(InfoInterface $payment, float $amount): array
     {
-        Util::$loggingEnabled = false;
         $apiResult = $this->setTransactionID($payment->getParentTransactionId())->refundAny(number_format($amount, 2));
         if (isset($apiResult['result']) && 1 === (int) $apiResult['result']) {
             return ['result' => 'success', 'status' => 'correct'];

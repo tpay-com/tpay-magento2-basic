@@ -7,7 +7,10 @@ use Magento\Framework\Validator\Exception;
 use Magento\Payment\Model\InfoInterface;
 use Tpay\Magento2\Api\TpayConfigInterface;
 use Tpay\Magento2\Model\ApiFacade\Transaction\Dto\Channel;
+use Tpay\Magento2\Model\ApiFacade\Transaction\TransactionApiFacade;
+use Tpay\Magento2\Model\TpayConfigProvider;
 use Tpay\OpenApi\Api\TpayApi;
+use Tpay\OpenApi\Utilities\TpayException;
 
 class OpenApi
 {
@@ -17,6 +20,10 @@ class OpenApi
     private $tpayApi;
 
     private $cache;
+    /**
+     * @var int|null
+     */
+    private $storeId;
 
     public function __construct(TpayConfigInterface $tpay, CacheInterface $cache, ?int $storeId = null)
     {
@@ -30,8 +37,9 @@ class OpenApi
         $this->tpayApi->authorization();
 
         if (!$token) {
-            $this->cache->save(serialize($this->tpayApi->getToken()), $this->getAuthTokenCacheKey($tpay, $storeId), [\Magento\Framework\App\Config::CACHE_TAG], 7100);
+            $this->cache->save(serialize($this->tpayApi->getToken()), $this->getAuthTokenCacheKey($tpay, $storeId), [TpayConfigProvider::CACHE_TAG], 7100);
         }
+        $this->storeId = $storeId;
     }
 
     public function create(array $data): array
@@ -263,11 +271,39 @@ class OpenApi
 
     private function getAuthTokenCacheKey(TpayConfigInterface $tpay, ?int $storeId = null)
     {
-        return sprintf(
-            self::AUTH_TOKEN_CACHE_KEY,
-            md5(
-                join('|', [$tpay->getOpenApiClientId($storeId), $tpay->getOpenApiPassword($storeId), !$tpay->useSandboxMode($storeId)])
-            )
-        );
+        return sprintf(self::AUTH_TOKEN_CACHE_KEY, $storeId);
+    }
+
+    public function getBankGroups(bool $onlineOnly = false)
+    {
+
+        $cacheKey = 'tpay_bank_groups_' . $this->storeId;
+
+        $channels = $this->cache->load($cacheKey);
+
+        if ($channels) {
+            $channels = json_decode($channels, true);
+            if ($channels) {
+                return $channels;
+            }
+        }
+
+        try {
+            $groups = $this->tpayApi->transactions()->getBankGroups($onlineOnly);
+        } catch (TpayException $e) {
+            return [];
+        }
+        $this->cache->save(
+            json_encode($groups),
+            $cacheKey,
+            [TpayConfigProvider::CACHE_TAG],
+            TransactionApiFacade::CACHE_LIFETIME);
+
+        return $groups;
+    }
+
+    public function checkAuthorized()
+    {
+        return !empty($this->tpayApi->getToken());
     }
 }

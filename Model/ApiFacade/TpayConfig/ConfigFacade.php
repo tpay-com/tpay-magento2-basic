@@ -29,7 +29,7 @@ class ConfigFacade
 
     public function getConfig(): array
     {
-        return array_merge($this->getCurrentApi() ? $this->getCurrentApi()->getConfig() : [], $this->cardConfig->getConfig());
+        return array_merge($this->getCurrentApi()->getConfig(), $this->cardConfig->getConfig());
     }
 
     private function getCurrentApi()

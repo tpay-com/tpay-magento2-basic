@@ -43,10 +43,19 @@
             <argument name="configOrigin" xsi:type="object">Tpay\Magento2\Model\ApiFacade\TpayConfig\ConfigOrigin\Proxy</argument>
         </arguments>
     </type>
+    <type name="Tpay\Magento2\Model\ApiFacade\TpayConfig\ConfigOpen">
+        <arguments>
+            <argument name="openApi" xsi:type="object">Tpay\Magento2\Model\ApiFacade\OpenApi\Proxy</argument>
+        </arguments>
+    </type>
     <type name="Tpay\Magento2\Model\ApiFacade\Transaction\TransactionApiFacade">
         <arguments>
-            <argument name="originApi" xsi:type="object">Tpay\Magento2\Model\ApiFacade\Transaction\TransactionOriginApi\Proxy</argument>
             <argument name="openApi" xsi:type="object">Tpay\Magento2\Model\ApiFacade\OpenApi\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Tpay\Magento2\Model\ApiFacade\TpayConfig\ConfigOrigin">
+        <arguments>
+            <argument name="cardOrigin" xsi:type="object">Tpay\Magento2\Model\ApiFacade\CardTransaction\CardOrigin\Proxy</argument>
         </arguments>
     </type>
     <type name="Tpay\Magento2\Model\TpayPayment">

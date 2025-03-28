@@ -5,11 +5,13 @@ namespace Tpay\Magento2\Model\ApiFacade\TpayConfig;
 use Magento\Framework\View\Asset\Repository;
 use Tpay\Magento2\Api\TpayConfigInterface;
 use Tpay\Magento2\Api\TpayInterface;
+use Tpay\Magento2\Model\ApiFacade\OpenApi;
 use Tpay\Magento2\Model\ApiFacade\Transaction\TransactionOriginApi;
 use Tpay\Magento2\Service\TpayTokensService;
+use Tpay\OpenApi\Utilities\TpayException;
 use tpaySDK\Api\TpayApi;
 
-class ConfigOpen extends TpayApi
+class ConfigOpen
 {
     /** @var TpayTokensService */
     protected $tokensService;
@@ -22,36 +24,54 @@ class ConfigOpen extends TpayApi
 
     /** @var Repository */
     private $assetRepository;
+    /**
+     * @var OpenApi
+     */
+    private $openApi;
 
-    public function __construct(TpayInterface $tpay, TpayConfigInterface $tpayConfig, Repository $assetRepository, TpayTokensService $tokensService)
+    public function __construct(
+        TpayInterface       $tpay,
+        TpayConfigInterface $tpayConfig,
+        Repository          $assetRepository,
+        TpayTokensService   $tokensService,
+        OpenApi             $openApi)
     {
         $this->tpay = $tpay;
         $this->tpayConfig = $tpayConfig;
         $this->assetRepository = $assetRepository;
         $this->tokensService = $tokensService;
-        parent::__construct($tpayConfig->getOpenApiClientId(), $tpayConfig->getOpenApiPassword(), !$tpayConfig->useSandboxMode());
+        $this->openApi = $openApi;
     }
 
     public function getConfig(): array
     {
-        return [
-            'tpay' => [
-                'payment' => [
-                    'redirectUrl' => $this->tpay->getPaymentRedirectUrl(),
-                    'tpayLogoUrl' => $this->generateURL('Tpay_Magento2::images/logo_tpay.png'),
-                    'tpayCardsLogoUrl' => $this->generateURL('Tpay_Magento2::images/card.svg'),
-                    'showPaymentChannels' => $this->showChannels(),
-                    'getTerms' => $this->getTerms(),
-                    'getRegulations' => $this->getRegulations(),
-                    'addCSS' => $this->createCSS('Tpay_Magento2::css/tpay.css'),
-                    'blikStatus' => $this->tpay->checkBlikLevel0Settings(),
-                    'getBlikChannelID' => TransactionOriginApi::BLIK_CHANNEL,
-                    'useSandbox' => $this->tpayConfig->useSandboxMode(),
-                    'grandTotal' => number_format($this->tpay->getCheckoutTotal(), 2, '.', ''),
-                    'groups' => $this->transactions()->getBankGroups((bool) $this->tpayConfig->onlyOnlineChannels())['groups'],
+        try {
+            $this->openApi->checkAuthorized();
+        } catch (TpayException $exception) {
+            return [];
+        }
+        try {
+            return [
+                'tpay' => [
+                    'payment' => [
+                        'redirectUrl' => $this->tpay->getPaymentRedirectUrl(),
+                        'tpayLogoUrl' => $this->generateURL('Tpay_Magento2::images/logo_tpay.png'),
+                        'tpayCardsLogoUrl' => $this->generateURL('Tpay_Magento2::images/card.svg'),
+                        'showPaymentChannels' => $this->showChannels(),
+                        'getTerms' => $this->getTerms(),
+                        'getRegulations' => $this->getRegulations(),
+                        'addCSS' => $this->createCSS('Tpay_Magento2::css/tpay.css'),
+                        'blikStatus' => $this->tpay->checkBlikLevel0Settings(),
+                        'getBlikChannelID' => TransactionOriginApi::BLIK_CHANNEL,
+                        'useSandbox' => $this->tpayConfig->useSandboxMode(),
+                        'grandTotal' => number_format($this->tpay->getCheckoutTotal(), 2, '.', ''),
+                        'groups' => $this->openApi->getBankGroups((bool)$this->tpayConfig->onlyOnlineChannels())['groups'],
+                    ],
                 ],
-            ],
-        ];
+            ];
+        } catch (TpayException $exception) {
+            return [];
+        }
     }
 
     public function generateURL(string $name): string
@@ -96,6 +116,11 @@ EOD;
 
     public function getCardConfig()
     {
+        try {
+            $this->openApi->checkAuthorized();
+        } catch (TpayException $exception) {
+            return [];
+        }
         $customerTokensData = [];
 
         if ($this->tpayConfig->getCardSaveEnabled() && $this->tpay->isCustomerLoggedIn()) {

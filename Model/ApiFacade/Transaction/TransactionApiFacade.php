@@ -9,14 +9,12 @@ use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Tpay\Magento2\Model\ApiFacade\OpenApi;
 use Tpay\Magento2\Model\ApiFacade\Transaction\Dto\Channel;
+use Tpay\Magento2\Model\TpayConfigProvider;
 use Tpay\OpenApi\Utilities\TpayException;
 
 class TransactionApiFacade
 {
-    private const CACHE_LIFETIME = 86400;
-
-    /** @var TransactionOriginApi */
-    private $originApi;
+    public const CACHE_LIFETIME = 86400;
 
     /** @var OpenApi */
     private $openApi;
@@ -30,9 +28,8 @@ class TransactionApiFacade
     /** @var StoreManagerInterface */
     private $storeManager;
 
-    public function __construct(TransactionOriginApi $originApi, OpenApi $openApi, ScopeConfigInterface $storeConfig, CacheInterface $cache, StoreManagerInterface $storeManager)
+    public function __construct(OpenApi $openApi, ScopeConfigInterface $storeConfig, CacheInterface $cache, StoreManagerInterface $storeManager)
     {
-        $this->originApi = $originApi;
         $this->openApi = $openApi;
         $this->cache = $cache;
         $this->storeManager = $storeManager;
@@ -93,11 +90,14 @@ class TransactionApiFacade
             return unserialize($channels);
         }
 
-        $channels = array_filter($this->openApi->channels(), function (Channel $channel) {
-            return true === $channel->available;
-        });
-
-        $this->cache->save(serialize($channels), $cacheKey, [Config::CACHE_TAG], self::CACHE_LIFETIME);
+        try {
+            $channels = array_filter($this->openApi->channels(), function (Channel $channel) {
+                return true === $channel->available;
+            });
+        } catch (TpayException $e) {
+            return [];
+        }
+        $this->cache->save(serialize($channels), $cacheKey, [TpayConfigProvider::CACHE_TAG], self::CACHE_LIFETIME);
 
         return $channels;
     }
@@ -133,6 +133,6 @@ class TransactionApiFacade
 
     private function getCurrentApi()
     {
-        return $this->useOpenApi ? $this->openApi : $this->originApi;
+        return $this->openApi;
     }
 }

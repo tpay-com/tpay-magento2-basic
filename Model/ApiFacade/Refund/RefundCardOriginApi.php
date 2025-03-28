@@ -5,13 +5,11 @@ namespace Tpay\Magento2\Model\ApiFacade\Refund;
 use Magento\Framework\Validator\Exception;
 use Tpay\Magento2\Api\TpayConfigInterface;
 use Tpay\OriginApi\Refunds\CardRefunds;
-use Tpay\OriginApi\Utilities\Util;
 
 class RefundCardOriginApi extends CardRefunds
 {
     public function __construct(TpayConfigInterface $tpay, ?int $storeId = null)
     {
-        Util::$loggingEnabled = false;
         $this->cardApiKey = $tpay->getCardApiKey($storeId);
         $this->cardApiPass = $tpay->getCardApiPassword($storeId);
         $this->cardVerificationCode = $tpay->getVerificationCode($storeId);

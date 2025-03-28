@@ -25,7 +25,7 @@ class CardConfigFacade
 
     public function getConfig(): array
     {
-        return $this->getCurrentApi() ? $this->getCurrentApi()->getCardConfig() : [];
+        return $this->getCurrentApi()->getCardConfig();
     }
 
     private function getCurrentApi()
