@@ -7,7 +7,6 @@ use Magento\Framework\View\Asset\Repository;
 use Tpay\Magento2\Api\TpayConfigInterface;
 use Tpay\Magento2\Api\TpayInterface;
 use Tpay\Magento2\Model\ApiFacade\CardTransaction\CardOrigin;
-use Tpay\Magento2\Model\ApiFacade\Transaction\TransactionOriginApi;
 use Tpay\Magento2\Service\TpayTokensService;
 
 class ConfigOrigin
@@ -23,9 +22,8 @@ class ConfigOrigin
 
     /** @var TpayConfigInterface */
     private $tpayConfig;
-    /**
-     * @var CardOrigin
-     */
+
+    /** @var CardOrigin */
     private $cardOrigin;
 
     public function __construct(TpayInterface $tpay, TpayConfigInterface $tpayConfig, Repository $assetRepository, TpayTokensService $tokensService, CardOrigin $cardOrigin)
@@ -84,7 +82,6 @@ EOD;
 
     public function getCardConfig()
     {
-
         try {
             $check = $this->cardOrigin->requests($this->cardOrigin->getApiUrl().$this->tpayConfig->getCardApiKey(), ['api_password' => $this->tpayConfig->getCardApiPassword(), 'method' => 'check']);
             if (!isset($check['result']) || 1 !== $check['result']) {

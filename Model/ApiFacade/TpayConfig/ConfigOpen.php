@@ -9,7 +9,6 @@ use Tpay\Magento2\Model\ApiFacade\OpenApi;
 use Tpay\Magento2\Model\ApiFacade\Transaction\TransactionOriginApi;
 use Tpay\Magento2\Service\TpayTokensService;
 use Tpay\OpenApi\Utilities\TpayException;
-use tpaySDK\Api\TpayApi;
 
 class ConfigOpen
 {
@@ -24,18 +23,17 @@ class ConfigOpen
 
     /** @var Repository */
     private $assetRepository;
-    /**
-     * @var OpenApi
-     */
+
+    /** @var OpenApi */
     private $openApi;
 
     public function __construct(
-        TpayInterface       $tpay,
+        TpayInterface $tpay,
         TpayConfigInterface $tpayConfig,
-        Repository          $assetRepository,
-        TpayTokensService   $tokensService,
-        OpenApi             $openApi)
-    {
+        Repository $assetRepository,
+        TpayTokensService $tokensService,
+        OpenApi $openApi
+    ) {
         $this->tpay = $tpay;
         $this->tpayConfig = $tpayConfig;
         $this->assetRepository = $assetRepository;
@@ -65,7 +63,7 @@ class ConfigOpen
                         'getBlikChannelID' => TransactionOriginApi::BLIK_CHANNEL,
                         'useSandbox' => $this->tpayConfig->useSandboxMode(),
                         'grandTotal' => number_format($this->tpay->getCheckoutTotal(), 2, '.', ''),
-                        'groups' => $this->openApi->getBankGroups((bool)$this->tpayConfig->onlyOnlineChannels())['groups'],
+                        'groups' => $this->openApi->getBankGroups((bool) $this->tpayConfig->onlyOnlineChannels())['groups'],
                     ],
                 ],
             ];

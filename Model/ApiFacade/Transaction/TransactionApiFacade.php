@@ -3,7 +3,6 @@
 namespace Tpay\Magento2\Model\ApiFacade\Transaction;
 
 use Magento\Framework\App\CacheInterface;
-use Magento\Framework\App\Config;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;

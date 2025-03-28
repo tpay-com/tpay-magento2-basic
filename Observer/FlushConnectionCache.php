@@ -9,24 +9,17 @@ use Tpay\Magento2\Model\TpayConfigProvider;
 
 class FlushConnectionCache implements ObserverInterface
 {
-    /**
-     * @var CacheInterface
-     */
+    /** @var CacheInterface */
     private $cache;
 
-    /**
-     * @param CacheInterface $cache
-     */
     public function __construct(
         CacheInterface $cache
     ) {
         $this->cache = $cache;
     }
+
     /**
      * Flush Tpay connection cache upon settings' change
-     *
-     * @param EventObserver $observer
-     * @return void
      */
     public function execute(EventObserver $observer)
     {

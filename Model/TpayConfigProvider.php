@@ -14,7 +14,7 @@ use Tpay\Magento2\Service\TpayAliasServiceInterface;
 
 class TpayConfigProvider implements ConfigProviderInterface
 {
-    const CACHE_TAG = 'TPAY_CONFIG';
+    public const CACHE_TAG = 'TPAY_CONFIG';
 
     /** @var PaymentHelper */
     protected $paymentHelper;

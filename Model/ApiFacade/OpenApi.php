@@ -20,9 +20,8 @@ class OpenApi
     private $tpayApi;
 
     private $cache;
-    /**
-     * @var int|null
-     */
+
+    /** @var null|int */
     private $storeId;
 
     public function __construct(TpayConfigInterface $tpay, CacheInterface $cache, ?int $storeId = null)
@@ -174,6 +173,39 @@ class OpenApi
         return $channels;
     }
 
+    public function getBankGroups(bool $onlineOnly = false)
+    {
+        $cacheKey = 'tpay_bank_groups_'.$this->storeId;
+
+        $channels = $this->cache->load($cacheKey);
+
+        if ($channels) {
+            $channels = json_decode($channels, true);
+            if ($channels) {
+                return $channels;
+            }
+        }
+
+        try {
+            $groups = $this->tpayApi->transactions()->getBankGroups($onlineOnly);
+        } catch (TpayException $e) {
+            return [];
+        }
+        $this->cache->save(
+            json_encode($groups),
+            $cacheKey,
+            [TpayConfigProvider::CACHE_TAG],
+            TransactionApiFacade::CACHE_LIFETIME
+        );
+
+        return $groups;
+    }
+
+    public function checkAuthorized()
+    {
+        return !empty($this->tpayApi->getToken());
+    }
+
     private function handleDataStructure(array $data): array
     {
         $paymentData = [
@@ -272,38 +304,5 @@ class OpenApi
     private function getAuthTokenCacheKey(TpayConfigInterface $tpay, ?int $storeId = null)
     {
         return sprintf(self::AUTH_TOKEN_CACHE_KEY, $storeId);
-    }
-
-    public function getBankGroups(bool $onlineOnly = false)
-    {
-
-        $cacheKey = 'tpay_bank_groups_' . $this->storeId;
-
-        $channels = $this->cache->load($cacheKey);
-
-        if ($channels) {
-            $channels = json_decode($channels, true);
-            if ($channels) {
-                return $channels;
-            }
-        }
-
-        try {
-            $groups = $this->tpayApi->transactions()->getBankGroups($onlineOnly);
-        } catch (TpayException $e) {
-            return [];
-        }
-        $this->cache->save(
-            json_encode($groups),
-            $cacheKey,
-            [TpayConfigProvider::CACHE_TAG],
-            TransactionApiFacade::CACHE_LIFETIME);
-
-        return $groups;
-    }
-
-    public function checkAuthorized()
-    {
-        return !empty($this->tpayApi->getToken());
     }
 }
