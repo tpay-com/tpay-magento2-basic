@@ -2,6 +2,8 @@
 
 namespace Tpay\Magento2\Model\ApiFacade\TpayConfig;
 
+use Magento\Csp\Helper\CspNonceProvider;
+use Magento\Framework\Escaper;
 use Magento\Framework\View\Asset\Repository;
 use Tpay\Magento2\Api\TpayConfigInterface;
 use Tpay\Magento2\Api\TpayInterface;
@@ -27,18 +29,28 @@ class ConfigOpen
     /** @var OpenApi */
     private $openApi;
 
+    /** @var CspNonceProvider */
+    private $nonceProvider;
+
+    /** @var Escaper */
+    private $escaper;
+
     public function __construct(
         TpayInterface $tpay,
         TpayConfigInterface $tpayConfig,
         Repository $assetRepository,
         TpayTokensService $tokensService,
-        OpenApi $openApi
+        OpenApi $openApi,
+        CspNonceProvider $nonceProvider,
+        Escaper $escaper
     ) {
         $this->tpay = $tpay;
         $this->tpayConfig = $tpayConfig;
         $this->assetRepository = $assetRepository;
         $this->tokensService = $tokensService;
         $this->openApi = $openApi;
+        $this->nonceProvider = $nonceProvider;
+        $this->escaper = $escaper;
     }
 
     public function getConfig(): array
@@ -87,11 +99,12 @@ class ConfigOpen
     public function createScript(string $script): string
     {
         return <<<EOD
-
-            <script type="text/javascript">
+            <script nonce='{$this->nonceProvider->generateNonce()}'>
                 require(['jquery'], function ($) {
-                    $.getScript('{$this->generateURL($script)}');
-
+                    let script = document.createElement('script');
+                    script.nonce = '{$this->nonceProvider->generateNonce()}';
+                    script.textContent = '{$this->escaper->escapeJs($this->assetRepository->createAsset($script)->getContent())}';
+                    document.head.appendChild(script);
                 });
             </script>
 EOD;
