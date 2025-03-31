@@ -46,6 +46,7 @@ class Notification implements CsrfAwareActionInterface, HttpPostActionInterface
             $this->notificationProcessor->process();
         } catch (Throwable $e) {
             $this->logger->info('Failed to process Tpay notification: '.$e->getMessage(), ['exception' => $e]);
+
             return $result
                 ->setHttpResponseCode(self::BAD_REQUEST)
                 ->setContents('FALSE - '.$e->getMessage());
