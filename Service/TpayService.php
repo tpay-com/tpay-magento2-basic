@@ -211,7 +211,7 @@ class TpayService extends RegisterCaptureNotificationOperation
 
         $order = $payment->getOrder();
         $amount = (float) $amount;
-        $invoice = $this->getInvoiceForTransactionId($order, $payment->getTransactionId());
+        $invoice = $this->getInvoiceForTransactionId($order, $payment->getLastTransId());
 
         if (!$invoice && $payment->isCaptureFinal($amount)) {
             $invoice = $this->createAndRegisterInvoice($order, $payment);
@@ -312,7 +312,7 @@ class TpayService extends RegisterCaptureNotificationOperation
 
         $order = $payment->getOrder();
         $amount = (float) $amount;
-        $invoice = $this->getInvoiceForTransactionId($order, $payment->getTransactionId());
+        $invoice = $this->getInvoiceForTransactionId($order, $payment->getLastTransId());
         $orderCurrencyCode = $order->getOrderCurrency()->getCode();
 
         if (!in_array($orderCurrencyCode, CurrencyCodesDictionary::CODES)) {
@@ -323,8 +323,10 @@ class TpayService extends RegisterCaptureNotificationOperation
 
         if (!$invoice && $payment->isCaptureFinal($amount) && ($orderCurrency === (int) $validParams['currency'] || $orderCurrencyCode === $validParams['currency'])) {
             $invoice = $this->createAndRegisterInvoice($order, $payment, Order::STATE_PROCESSING);
-        } else {
+        } elseif (!$invoice) {
             $this->handlePotentialFraud($payment, $amount, $skipFraudDetection);
+
+            return;
         }
 
         $this->finalizePayment($payment, $invoice, $amount, $order);

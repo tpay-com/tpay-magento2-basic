@@ -1,6 +1,6 @@
 <?php
 
-namespace Tpay\Magento2\Model\Api\Data;
+namespace Tpay\Magento2\Api\Data;
 
 interface TokensInterface
 {

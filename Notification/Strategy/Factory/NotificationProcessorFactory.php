@@ -2,7 +2,8 @@
 
 namespace Tpay\Magento2\Notification\Strategy\Factory;
 
-use Tpay\Magento2\Notification\Strategy\NotificationProcessorInterface;
+use Tpay\Magento2\Api\Notification\Strategy\NotificationProcessorFactoryInterface;
+use Tpay\Magento2\Api\Notification\Strategy\NotificationProcessorInterface;
 
 class NotificationProcessorFactory implements NotificationProcessorFactoryInterface
 {

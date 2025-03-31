@@ -6,7 +6,7 @@ namespace Tpay\Magento2\Service;
 
 use Exception;
 use Magento\Framework\App\ResourceConnection;
-use Tpay\Magento2\Model\Api\AliasRepositoryInterface;
+use Tpay\Magento2\Api\AliasRepositoryInterface;
 use Tpay\Magento2\Model\ResourceModel\Alias\Collection;
 
 class TpayAliasService implements TpayAliasServiceInterface

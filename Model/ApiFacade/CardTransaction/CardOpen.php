@@ -91,7 +91,7 @@ class CardOpen
     private function processSavedCardPayment(string $orderId, int $cardId, ?string $transactionId = null, ?array $customerToken = null): string
     {
         if (!$transactionId) {
-            return 'magento2basic/tpay';
+            return 'magento2basic/tpay/error';
         }
 
         $customerToken = $customerToken ? $customerToken : $this->tokensService->getTokenById($cardId, $this->tpay->getCustomerId($orderId));
@@ -123,13 +123,13 @@ class CardOpen
                     $this->tpayService->addCommentToHistory($orderId, 'Failed to pay by saved card, error: '.$paymentResult['err_desc']);
                 }
             } catch (Exception $e) {
-                return 'magento2basic/tpay';
+                return 'magento2basic/tpay/error';
             }
         } else {
             $this->tpayService->addCommentToHistory($orderId, 'Attempt of payment by not owned card has been blocked!');
         }
 
-        return 'magento2basic/tpay';
+        return 'magento2basic/tpay/error';
     }
 
     private function addToPaymentData(string $orderId, string $key, $value)
@@ -144,7 +144,7 @@ class CardOpen
     private function processNewCardPayment(string $orderId, array $additionalPaymentInformation, ?string $transactionId = null): string
     {
         if (!$transactionId) {
-            return 'magento2basic/tpay';
+            return 'magento2basic/tpay/error';
         }
 
         $saveCard = isset($additionalPaymentInformation['card_save']) && $this->tpayConfig->getCardSaveEnabled() ? (bool) $additionalPaymentInformation['card_save'] : false;
@@ -161,7 +161,7 @@ class CardOpen
             $result = $this->tpayApi->transactions()->createPaymentByTransactionId($request, $transactionId);
             $this->tpayService->setCardOrderStatus($orderId, $this->handleValidParams($result), $this->tpayConfig);
         } catch (Exception $e) {
-            return 'magento2basic/tpay';
+            return 'magento2basic/tpay/error';
         }
 
         if (isset($result['transactionPaymentUrl']) && 'pending' === $result['payments']['status']) {
@@ -173,7 +173,7 @@ class CardOpen
             return $url3ds;
         }
 
-        return 'magento2basic/tpay';
+        return 'magento2basic/tpay/error';
     }
 
     private function saveCard(string $orderId, bool $saveCard, array $additionalPaymentInformation)

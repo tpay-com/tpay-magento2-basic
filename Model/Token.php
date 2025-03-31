@@ -3,7 +3,7 @@
 namespace Tpay\Magento2\Model;
 
 use Magento\Framework\Model\AbstractModel;
-use Tpay\Magento2\Model\Api\Data\TokensInterface;
+use Tpay\Magento2\Api\Data\TokensInterface;
 
 class Token extends AbstractModel implements TokensInterface
 {
