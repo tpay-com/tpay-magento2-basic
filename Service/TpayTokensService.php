@@ -3,7 +3,7 @@
 namespace Tpay\Magento2\Service;
 
 use Magento\Framework\App\ResourceConnection;
-use Tpay\Magento2\Model\Api\TokenRepositoryInterface;
+use Tpay\Magento2\Api\TokenRepositoryInterface;
 use Tpay\Magento2\Model\ResourceModel\Token\Collection;
 use Zend_Db_Expr;
 

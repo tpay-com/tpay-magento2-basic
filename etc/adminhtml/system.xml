@@ -62,13 +62,13 @@
                     <field id="open_api_client_id" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Client ID</label>
                         <comment>Find in Merchant’s panel: Integration -> API -> Open API Keys</comment>
-                        <validate>validate-length maximum-length-64</validate>
+                        <validate>required-entry validate-length maximum-length-64</validate>
                         <depends><field id="open_api_active">1</field></depends>
                     </field>
                     <field id="open_api_password" translate="label comment" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Secret</label>
                         <comment>Find in Merchant’s panel: Integration -> API -> Open API Keys</comment>
-                        <validate>validate-length maximum-length-64</validate>
+                        <validate>required-entry validate-length maximum-length-64</validate>
                         <depends><field id="open_api_active">1</field></depends>
                     </field>
                     <field id="onsite_channels" translate="label" type="multiselect" sortOrder="18" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -80,6 +80,7 @@
                     </field>
                 </group>
                 <group id="originapi_settings" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <comment>Origin API is deprecated. Do not configure for new installations. This section is kept for backwards compatibility to allow processing refunds placed via Origin API.</comment>
                     <label>Configuration Origin API</label>
                     <field id="origin_api_active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Active</label>
@@ -88,13 +89,13 @@
                     <field id="api_key_tpay" translate="label comment" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Key</label>
                         <comment>Find in Merchant’s panel: Integration -> API -> Old API Keys</comment>
-                        <validate>no-whitespace validate-length maximum-length-126</validate>
+                        <validate>required-entry no-whitespace validate-length maximum-length-126</validate>
                         <depends><field id="origin_api_active">1</field></depends>
                     </field>
                     <field id="api_password" translate="label comment" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Password</label>
                         <comment>Find in Merchant’s panel: Integration -> API -> Old API Keys</comment>
-                        <validate>no-whitespace validate-length maximum-length-40</validate>
+                        <validate>required-entry no-whitespace validate-length maximum-length-40</validate>
                         <depends><field id="origin_api_active">1</field></depends>
                     </field>
                 </group>
@@ -106,6 +107,7 @@
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     </field>
                     <group id="cardpayment_originapi_settings"  translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <comment>Configure this section only if You want to process credit card payments in currencies other than PLN and Your credit card processor is set to Elavon.</comment>
                         <label>Cards payments Origin API settings</label>
                         <depends><field id="cardpayment_api_active">1</field></depends>
                         <field id="hash_type" translate="label" type="select" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">

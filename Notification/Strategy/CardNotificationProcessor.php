@@ -2,6 +2,7 @@
 
 namespace Tpay\Magento2\Notification\Strategy;
 
+use Tpay\Magento2\Api\Notification\Strategy\NotificationProcessorInterface;
 use Tpay\Magento2\Api\TpayConfigInterface;
 use Tpay\Magento2\Api\TpayInterface;
 use Tpay\Magento2\Service\TpayService;

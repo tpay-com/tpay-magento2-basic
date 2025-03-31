@@ -8,7 +8,6 @@ use Tpay\Magento2\Api\TpayInterface;
 use Tpay\Magento2\Model\ApiFacade\CardTransaction\CardApiFacade;
 use Tpay\Magento2\Service\RedirectHandler;
 use Tpay\Magento2\Service\TpayService;
-use Tpay\OriginApi\Utilities\Util;
 
 class CardPayment implements ActionInterface
 {
@@ -34,7 +33,6 @@ class CardPayment implements ActionInterface
         $this->checkoutSession = $checkoutSession;
         $this->cardApiFacade = $cardApiFacade;
         $this->redirectFactory = $redirectFactory;
-        Util::$loggingEnabled = false;
     }
 
     public function execute()

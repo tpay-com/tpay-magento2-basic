@@ -1,8 +1,8 @@
 <?php
 
-namespace Tpay\Magento2\Model\Api;
+namespace Tpay\Magento2\Api;
 
-use Tpay\Magento2\Model\Api\Data\TokensInterface;
+use Tpay\Magento2\Api\Data\TokensInterface;
 
 interface TokenRepositoryInterface
 {

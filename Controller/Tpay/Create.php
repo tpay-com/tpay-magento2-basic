@@ -14,7 +14,6 @@ use Tpay\Magento2\Service\RedirectHandler;
 use Tpay\Magento2\Service\TpayAliasServiceInterface;
 use Tpay\Magento2\Service\TpayService;
 use Tpay\Magento2\Validator\AdditionalPaymentInfoValidator;
-use Tpay\OriginApi\Utilities\Util;
 
 class Create implements ActionInterface
 {
@@ -65,7 +64,6 @@ class Create implements ActionInterface
         $this->additionalPaymentInfoValidator = $additionalPaymentInfoValidator;
         $this->customerSession = $customerSession;
         $this->aliasService = $aliasService;
-        Util::$loggingEnabled = false;
     }
 
     public function execute(): ResultInterface

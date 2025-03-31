@@ -3,4 +3,7 @@
     <event name="controller_action_predispatch">
         <observer name="tpay_magento2_loggers" instance="Tpay\Magento2\Observer\LoggerInjectObserver" shared="false" />
     </event>
+    <event name="admin_system_config_save">
+        <observer name="tpay_connection_cache_flush" instance="Tpay\Magento2\Observer\FlushConnectionCache"/>
+    </event>
 </config>

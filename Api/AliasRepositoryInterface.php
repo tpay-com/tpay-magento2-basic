@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tpay\Magento2\Model\Api;
+namespace Tpay\Magento2\Api;
 
 use Exception;
 use Magento\Framework\Exception\AlreadyExistsException;
-use Tpay\Magento2\Model\Api\Data\AliasInterface;
+use Tpay\Magento2\Api\Data\AliasInterface;
 
 interface AliasRepositoryInterface
 {
