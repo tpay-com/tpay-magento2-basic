@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2.2.0
+
+### Added
+
+- Proper use of CSP nonceProvider in checkout for PCI DSS 4.0 compliance
+
+### Fixed
+
+- Origin Card API not respecting Sandbox setting
+- Origin API not logging
+- Improved caching of Open API token and group/channels list
+- Changed API selection logic to prioritize Open API
 
 ## 2.1.7
 
