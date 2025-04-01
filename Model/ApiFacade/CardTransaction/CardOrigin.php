@@ -121,7 +121,11 @@ class CardOrigin extends CardNotificationHandler
         }
 
         if (isset($result['sale_auth'])) {
-            $url = 'https://secure.tpay.com/cards?sale_auth='.$result['sale_auth'];
+            $baseUrl = 'https://secure.tpay.com/';
+            if ($this->tpayConfig->useSandboxMode()) {
+                $baseUrl = 'https://secure.sandbox.tpay.com/';
+            }
+            $url = $baseUrl . 'cards/?sale_auth='.$result['sale_auth'];
             $this->tpayService->addCommentToHistory($orderId, 'Customer has been redirected to tpay.com transaction panel. Transaction link '.$url);
             $this->addToPaymentData($orderId, 'transaction_url', $url);
 
