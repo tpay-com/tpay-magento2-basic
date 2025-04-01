@@ -1,0 +1,61 @@
+<?php
+/** @var Template $block */
+
+use Magento\Backend\Block\Template;
+
+$block->getViewFileUrl('Tpay_Magento2::images/payment-methods/blik.png');
+
+?>
+
+<div class="config-heading">
+    <div class="heading">
+        <div class="button-container">
+            <div>
+                <a href="<?= $block->getData('registration_url') ?>" target="_blank">
+                    <button type="button" class="button"><span>Create account</span></button>
+                </a>
+            </div>
+            <div>
+                <a href="https://register.sandbox.tpay.com/" target="_blank">
+                    <button type="button" class="button"><span>Create Sandbox account</span></button>
+                </a>
+            </div>
+        </div>
+        <div class="heading-intro"><p>Tpay to marka Krajowego Integratora Płatności S. A. - jesteśmy operatorem płatności, który od ponad 10 lat klientom ułatwia zakupy, a właścicielom sklepów pomaga rozwijać głównie ich e-biznesy.</p>
+            <ul>
+                <li>
+                    <strong>Płatność BLIK</strong>: BLIK w zawrotnym tempie zdobywa serca Polaków. By potwierdzić płatność za zamówienie, wystarczy podać 6-cyfrowy kod i potwierdzić transakcję np. w swoim telefonie. Kilka sekund dzieli Cię od zakończenia zakupów!
+                </li>
+                <li>
+                    <strong>Przelew online</strong>: Pay by link to druga najpopularniejsza metoda płatności online, Twoi klienci mogą płacić przelewem online z poziomu sklepu lub możesz generować dla nich linki do płatności.
+                </li>
+                <li>
+                    <strong>Karty płatnicze</strong>: Płatność kartą w internecie to wiele możliwości zarówno dla płatników, jak i sprzedawców. Możesz wdrożyć tę metodę na stronie sklepu, a jeśli jesteś regularnym dostawcą usług czy produktów - dzięki obsłudze kart zapewnisz wygodne płatności cykliczne.
+                </li>
+                <li>
+                    <strong>Płatności odroczone</strong>: Oferujemy płatności odroczone PayPo i Twisto, a także płatności ratalne z Bankiem Pekao, dzięki którym zrobisz wymarzone zakupy, spłacając je w wygodnym terminie.
+                </li>
+            </ul>
+            <br></div>
+        <div class="logos">
+            <img
+                src="<?= $block->getViewFileUrl('Tpay_Magento2::images/payment-methods/blik.png') ?>"
+                alt="BLIK">
+            <img
+                src="<?= $block->getViewFileUrl('Tpay_Magento2::images/payment-methods/cards.png') ?>"
+                alt="Visa / Mastercard">
+            <img
+                src="<?= $block->getViewFileUrl('Tpay_Magento2::images/payment-methods/paypo.svg') ?>"
+                alt="PayPo">
+            <img
+                src="<?= $block->getViewFileUrl('Tpay_Magento2::images/payment-methods/raty_pekao.png') ?>"
+                alt="Raty Pekao">
+            <img
+                src="<?= $block->getViewFileUrl('Tpay_Magento2::images/payment-methods/apple_pay.png') ?>"
+                alt="Apple Pay">
+            <img
+                src="<?= $block->getViewFileUrl('Tpay_Magento2::images/payment-methods/google_pay.png') ?>"
+                alt="Google Pay">
+        </div>
+    </div>
+</div>
