@@ -1,7 +1,10 @@
 <?php
-/** @var Template $block */
 
 use Magento\Backend\Block\Template;
+use Magento\Framework\Escaper;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
 
 $block->getViewFileUrl('Tpay_Magento2::images/payment-methods/blik.png');
 
@@ -11,29 +14,39 @@ $block->getViewFileUrl('Tpay_Magento2::images/payment-methods/blik.png');
     <div class="heading">
         <div class="button-container">
             <div>
-                <a href="<?= $block->getData('registration_url') ?>" target="_blank">
-                    <button type="button" class="button"><span>Create account</span></button>
+                <a href="<?= $escaper->escapeUrl($block->getData('registration_url')) ?>" target="_blank">
+                    <button type="button" class="button"><span><?= $escaper->escapeHtml(__('Create Tpay Account')) ?></span></button>
                 </a>
             </div>
             <div>
                 <a href="https://register.sandbox.tpay.com/" target="_blank">
-                    <button type="button" class="button"><span>Create Sandbox account</span></button>
+                    <button type="button" class="button"><span><?= $escaper->escapeHtml(__('Create Sandbox Account')) ?></span></button>
                 </a>
             </div>
         </div>
-        <div class="heading-intro"><p>Tpay to marka Krajowego Integratora Płatności S. A. - jesteśmy operatorem płatności, który od ponad 10 lat klientom ułatwia zakupy, a właścicielom sklepów pomaga rozwijać głównie ich e-biznesy.</p>
+        <div class="heading-intro">
+            <p>
+                <?= $escaper->escapeHtml(__('Tpay is an experienced payment provider that enables businesses to accept online payments quickly and securely – both locally and internationally.'), ['strong']) ?>
+            </p><p>
+                <?= $escaper->escapeHtml(__('It simplifies the shopping experience for customers and helps online store owners increase sales through modern, fast, and secure payment methods.'), ['strong']) ?>
+            </p><p>
+                <?= $escaper->escapeHtml(__('With a single integration, you can offer your customers a wide range of payment options.'), ['strong']) ?>
+            </p>
             <ul>
                 <li>
-                    <strong>Płatność BLIK</strong>: BLIK w zawrotnym tempie zdobywa serca Polaków. By potwierdzić płatność za zamówienie, wystarczy podać 6-cyfrowy kod i potwierdzić transakcję np. w swoim telefonie. Kilka sekund dzieli Cię od zakończenia zakupów!
+                    <strong><?= $escaper->escapeHtml(__('BLIK')) ?></strong> - <?= $escaper->escapeHtml(__('the most popular payment method in Poland. Simply enter a 6-digit code and confirm the transaction in your app – the entire process takes just a few seconds.'), ['strong']) ?>
                 </li>
                 <li>
-                    <strong>Przelew online</strong>: Pay by link to druga najpopularniejsza metoda płatności online, Twoi klienci mogą płacić przelewem online z poziomu sklepu lub możesz generować dla nich linki do płatności.
+                    <strong><?= $escaper->escapeHtml(__('Online transfers (pay-by-link)')) ?></strong> - <?= $escaper->escapeHtml(__('instant bank transfers directly from the store interface or via a generated payment link.'), ['strong']) ?>
                 </li>
                 <li>
-                    <strong>Karty płatnicze</strong>: Płatność kartą w internecie to wiele możliwości zarówno dla płatników, jak i sprzedawców. Możesz wdrożyć tę metodę na stronie sklepu, a jeśli jesteś regularnym dostawcą usług czy produktów - dzięki obsłudze kart zapewnisz wygodne płatności cykliczne.
+                    <strong><?= $escaper->escapeHtml(__('Payment cards (Visa, Mastercard)')) ?></strong> - <?= $escaper->escapeHtml(__('perfect for one-time payments as well as recurring or subscription-based billing.'), ['strong']) ?>
                 </li>
                 <li>
-                    <strong>Płatności odroczone</strong>: Oferujemy płatności odroczone PayPo i Twisto, a także płatności ratalne z Bankiem Pekao, dzięki którym zrobisz wymarzone zakupy, spłacając je w wygodnym terminie.
+                    <strong><?= $escaper->escapeHtml(__('Google Pay and Apple Pay')) ?></strong> - <?= $escaper->escapeHtml(__('modern, mobile payment solutions.'), ['strong']) ?>
+                </li>
+                <li>
+                    <strong><?= $escaper->escapeHtml(__('Buy now, pay later and installment payments')) ?></strong> - <?= $escaper->escapeHtml(__('your store can offer customers the flexibility to pay later (PayPo, Twisto) or in installments (Bank Pekao).'), ['strong']) ?>
                 </li>
             </ul>
             <br></div>

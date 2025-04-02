@@ -15,6 +15,7 @@ class TpayPaymentFieldset extends Fieldset
             $registrationUrl = 'https://register.tpay.com/';
         }
         $block->setData('registration_url', $registrationUrl);
+
         return $block->toHtml();
     }
 }
