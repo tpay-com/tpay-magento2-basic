@@ -13,7 +13,7 @@
         <section id="payment">
             <group id="tpaycom_magento2basic" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Tpay</label>
-                <comment><![CDATA[If you do not have an account yet, register in the production system at <a href="https://tpay.com/" target="_blank">tpay.com</a> or sandbox system <a href="https://panel.sandbox.tpay.com/" target="_blank">sandbox.tpay.com</a>]]></comment>
+                <frontend_model>Tpay\Magento2\Block\System\Config\TpayPaymentFieldset</frontend_model>
                 <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Active</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>

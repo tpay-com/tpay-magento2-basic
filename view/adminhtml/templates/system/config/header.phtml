@@ -1,0 +1,74 @@
+<?php
+
+use Magento\Backend\Block\Template;
+use Magento\Framework\Escaper;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+
+$block->getViewFileUrl('Tpay_Magento2::images/payment-methods/blik.png');
+
+?>
+
+<div class="config-heading">
+    <div class="heading">
+        <div class="button-container">
+            <div>
+                <a href="<?= $escaper->escapeUrl($block->getData('registration_url')) ?>" target="_blank">
+                    <button type="button" class="button"><span><?= $escaper->escapeHtml(__('Create Tpay Account')) ?></span></button>
+                </a>
+            </div>
+            <div>
+                <a href="https://register.sandbox.tpay.com/" target="_blank">
+                    <button type="button" class="button"><span><?= $escaper->escapeHtml(__('Create Sandbox Account')) ?></span></button>
+                </a>
+            </div>
+        </div>
+        <div class="heading-intro">
+            <p>
+                <?= $escaper->escapeHtml(__('Tpay is an experienced payment provider that enables businesses to accept online payments quickly and securely – both locally and internationally.'), ['strong']) ?>
+            </p><p>
+                <?= $escaper->escapeHtml(__('It simplifies the shopping experience for customers and helps online store owners increase sales through modern, fast, and secure payment methods.'), ['strong']) ?>
+            </p><p>
+                <?= $escaper->escapeHtml(__('With a single integration, you can offer your customers a wide range of payment options.'), ['strong']) ?>
+            </p>
+            <ul>
+                <li>
+                    <strong><?= $escaper->escapeHtml(__('BLIK')) ?></strong> - <?= $escaper->escapeHtml(__('the most popular payment method in Poland. Simply enter a 6-digit code and confirm the transaction in your app – the entire process takes just a few seconds.'), ['strong']) ?>
+                </li>
+                <li>
+                    <strong><?= $escaper->escapeHtml(__('Online transfers (pay-by-link)')) ?></strong> - <?= $escaper->escapeHtml(__('instant bank transfers directly from the store interface or via a generated payment link.'), ['strong']) ?>
+                </li>
+                <li>
+                    <strong><?= $escaper->escapeHtml(__('Payment cards (Visa, Mastercard)')) ?></strong> - <?= $escaper->escapeHtml(__('perfect for one-time payments as well as recurring or subscription-based billing.'), ['strong']) ?>
+                </li>
+                <li>
+                    <strong><?= $escaper->escapeHtml(__('Google Pay and Apple Pay')) ?></strong> - <?= $escaper->escapeHtml(__('modern, mobile payment solutions.'), ['strong']) ?>
+                </li>
+                <li>
+                    <strong><?= $escaper->escapeHtml(__('Buy now, pay later and installment payments')) ?></strong> - <?= $escaper->escapeHtml(__('your store can offer customers the flexibility to pay later (PayPo, Twisto) or in installments (Bank Pekao).'), ['strong']) ?>
+                </li>
+            </ul>
+            <br></div>
+        <div class="logos">
+            <img
+                src="<?= $block->getViewFileUrl('Tpay_Magento2::images/payment-methods/blik.png') ?>"
+                alt="BLIK">
+            <img
+                src="<?= $block->getViewFileUrl('Tpay_Magento2::images/payment-methods/cards.png') ?>"
+                alt="Visa / Mastercard">
+            <img
+                src="<?= $block->getViewFileUrl('Tpay_Magento2::images/payment-methods/paypo.svg') ?>"
+                alt="PayPo">
+            <img
+                src="<?= $block->getViewFileUrl('Tpay_Magento2::images/payment-methods/raty_pekao.png') ?>"
+                alt="Raty Pekao">
+            <img
+                src="<?= $block->getViewFileUrl('Tpay_Magento2::images/payment-methods/apple_pay.png') ?>"
+                alt="Apple Pay">
+            <img
+                src="<?= $block->getViewFileUrl('Tpay_Magento2::images/payment-methods/google_pay.png') ?>"
+                alt="Google Pay">
+        </div>
+    </div>
+</div>
