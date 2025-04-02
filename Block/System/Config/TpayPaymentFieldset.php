@@ -7,6 +7,7 @@ use Magento\Config\Block\System\Config\Form\Fieldset;
 
 class TpayPaymentFieldset extends Fieldset
 {
+    // phpcs:ignore
     protected function _getHeaderCommentHtml($element)
     {
         $block = $this->getLayout()->createBlock(Template::class)->setTemplate('Tpay_Magento2::system/config/header.phtml');
