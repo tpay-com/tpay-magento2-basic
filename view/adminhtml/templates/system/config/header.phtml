@@ -6,8 +6,6 @@ use Magento\Framework\Escaper;
 /** @var Template $block */
 /** @var Escaper $escaper */
 
-$block->getViewFileUrl('Tpay_Magento2::images/payment-methods/blik.png');
-
 ?>
 
 <div class="config-heading">
@@ -49,25 +47,31 @@ $block->getViewFileUrl('Tpay_Magento2::images/payment-methods/blik.png');
                     <strong><?= $escaper->escapeHtml(__('Buy now, pay later and installment payments')) ?></strong> - <?= $escaper->escapeHtml(__('your store can offer customers the flexibility to pay later (PayPo, Twisto) or in installments (Bank Pekao).'), ['strong']) ?>
                 </li>
             </ul>
-            <br></div>
+        </div>
         <div class="logos">
             <img
                 src="<?= $block->getViewFileUrl('Tpay_Magento2::images/payment-methods/blik.png') ?>"
+                style="max-width: 125px; max-height: 70px;"
                 alt="BLIK">
             <img
                 src="<?= $block->getViewFileUrl('Tpay_Magento2::images/payment-methods/cards.png') ?>"
+                style="max-width: 125px; max-height: 70px;"
                 alt="Visa / Mastercard">
             <img
                 src="<?= $block->getViewFileUrl('Tpay_Magento2::images/payment-methods/paypo.svg') ?>"
+                style="max-width: 125px; max-height: 70px;"
                 alt="PayPo">
             <img
                 src="<?= $block->getViewFileUrl('Tpay_Magento2::images/payment-methods/raty_pekao.png') ?>"
+                style="max-width: 125px; max-height: 70px;"
                 alt="Raty Pekao">
             <img
                 src="<?= $block->getViewFileUrl('Tpay_Magento2::images/payment-methods/apple_pay.png') ?>"
+                style="max-width: 125px; max-height: 70px;"
                 alt="Apple Pay">
             <img
                 src="<?= $block->getViewFileUrl('Tpay_Magento2::images/payment-methods/google_pay.png') ?>"
+                style="max-width: 125px; max-height: 70px;"
                 alt="Google Pay">
         </div>
     </div>
