@@ -70,6 +70,11 @@ class CardOrigin extends CardNotificationHandler
         return $this->processNewCardPayment($orderId, $additionalPaymentInformation);
     }
 
+    public function getApiUrl(): string
+    {
+        return $this->cardsApiURL;
+    }
+
     private function processSavedCardPayment(string $orderId, int $cardId, ?array $customerToken = null): string
     {
         $customerToken = $customerToken ? $customerToken : $this->tokensService->getTokenById($cardId, $this->tpay->getCustomerId($orderId), false);
