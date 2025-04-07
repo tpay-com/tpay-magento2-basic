@@ -6,29 +6,27 @@
  * @copyright   (https://tpay.com)
  *//*browser:true*/
 /*global define*/
-define(
-    [
-        'uiComponent',
-        'Magento_Checkout/js/model/payment/renderer-list'
-    ],
-    function (Component,
-              rendererList) {
-        'use strict';
+define(['uiComponent', 'Magento_Checkout/js/model/payment/renderer-list'], function (Component, rendererList) {
+    'use strict';
 
-        rendererList.push(
-            {
-                type: 'Tpay_Magento2',
-                component: 'Tpay_Magento2/js/view/payment/method-renderer/tpay-method'
-            }
-        );
-
-        if (typeof(window.checkoutConfig.generic) != "undefined"){
-         Object.values(window.checkoutConfig.generic).forEach((element) => rendererList.push({type: `generic-${element.id}`, component: 'Tpay_Magento2/js/view/payment/method-renderer/tpay-generic-onsite'}))
-        }
-
-        rendererList.push({type: 'Tpay_Magento2_Cards', component: 'Tpay_Magento2/js/view/payment/method-renderer/tpay-card-method'});
-
-        /** Add view logic here if needed */
-        return Component.extend({});
+    if (typeof (window.checkoutConfig.tpay) != "undefined") {
+        rendererList.push({
+            type: 'Tpay_Magento2', component: 'Tpay_Magento2/js/view/payment/method-renderer/tpay-method'
+        });
     }
-);
+
+    if (typeof (window.checkoutConfig.generic) != "undefined") {
+        Object.values(window.checkoutConfig.generic).forEach((element) => rendererList.push({
+            type: `generic-${element.id}`,
+            component: 'Tpay_Magento2/js/view/payment/method-renderer/tpay-generic-onsite'
+        }))
+    }
+    if (typeof (window.checkoutConfig.tpaycards) != "undefined") {
+        rendererList.push({
+            type: 'Tpay_Magento2_Cards', component: 'Tpay_Magento2/js/view/payment/method-renderer/tpay-card-method'
+        });
+    }
+
+    /** Add view logic here if needed */
+    return Component.extend({});
+});

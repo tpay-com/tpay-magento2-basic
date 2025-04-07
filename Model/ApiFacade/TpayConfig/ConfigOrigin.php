@@ -2,10 +2,13 @@
 
 namespace Tpay\Magento2\Model\ApiFacade\TpayConfig;
 
+use Exception;
+use Magento\Csp\Helper\CspNonceProvider;
+use Magento\Framework\Escaper;
 use Magento\Framework\View\Asset\Repository;
 use Tpay\Magento2\Api\TpayConfigInterface;
 use Tpay\Magento2\Api\TpayInterface;
-use Tpay\Magento2\Model\ApiFacade\Transaction\TransactionOriginApi;
+use Tpay\Magento2\Model\ApiFacade\CardTransaction\CardOrigin;
 use Tpay\Magento2\Service\TpayTokensService;
 
 class ConfigOrigin
@@ -22,37 +25,36 @@ class ConfigOrigin
     /** @var TpayConfigInterface */
     private $tpayConfig;
 
-    public function __construct(TpayInterface $tpay, TpayConfigInterface $tpayConfig, Repository $assetRepository, TpayTokensService $tokensService)
-    {
+    /** @var CardOrigin */
+    private $cardOrigin;
+
+    /** @var CspNonceProvider */
+    private $nonceProvider;
+
+    /** @var Escaper */
+    private $escaper;
+
+    public function __construct(
+        TpayInterface $tpay,
+        TpayConfigInterface $tpayConfig,
+        Repository $assetRepository,
+        TpayTokensService $tokensService,
+        CardOrigin $cardOrigin,
+        CspNonceProvider $nonceProvider,
+        Escaper $escaper
+    ) {
         $this->tpay = $tpay;
         $this->tpayConfig = $tpayConfig;
         $this->assetRepository = $assetRepository;
         $this->tokensService = $tokensService;
+        $this->cardOrigin = $cardOrigin;
+        $this->nonceProvider = $nonceProvider;
+        $this->escaper = $escaper;
     }
 
     public function getConfig(): array
     {
-        $config = [
-            'tpay' => [
-                'payment' => [
-                    'redirectUrl' => $this->tpay->getPaymentRedirectUrl(),
-                    'tpayLogoUrl' => $this->generateURL('Tpay_Magento2::images/logo_tpay.png'),
-                    'tpayCardsLogoUrl' => $this->generateURL('Tpay_Magento2::images/card.svg'),
-                    'merchantId' => $this->tpayConfig->getMerchantId(),
-                    'showPaymentChannels' => $this->showChannels(),
-                    'getTerms' => $this->getTerms(),
-                    'getRegulations' => $this->getRegulations(),
-                    'addCSS' => $this->createCSS('Tpay_Magento2::css/tpay.css'),
-                    'blikStatus' => $this->tpay->checkBlikLevel0Settings(),
-                    'onlyOnlineChannels' => $this->tpayConfig->onlyOnlineChannels(),
-                    'getBlikChannelID' => TransactionOriginApi::BLIK_CHANNEL,
-                    'useSandbox' => $this->tpayConfig->useSandboxMode(),
-                    'grandTotal' => number_format($this->tpay->getCheckoutTotal(), 2, '.', ''),
-                ],
-            ],
-        ];
-
-        return $this->tpay->isAvailable() ? $config : [];
+        return [];
     }
 
     public function generateURL(string $name): string
@@ -70,11 +72,12 @@ class ConfigOrigin
     public function createScript(string $script): string
     {
         return <<<EOD
-
-            <script type="text/javascript">
+            <script nonce='{$this->nonceProvider->generateNonce()}'>
                 require(['jquery'], function ($) {
-                    $.getScript('{$this->generateURL($script)}');
-
+                    let script = document.createElement('script');
+                    script.nonce = '{$this->nonceProvider->generateNonce()}';
+                    script.textContent = '{$this->escaper->escapeJs($this->assetRepository->createAsset($script)->getContent())}';
+                    document.head.appendChild(script);
                 });
             </script>
 EOD;
@@ -97,6 +100,15 @@ EOD;
 
     public function getCardConfig()
     {
+        try {
+            $check = $this->cardOrigin->requests($this->cardOrigin->getApiUrl().$this->tpayConfig->getCardApiKey(), ['api_password' => $this->tpayConfig->getCardApiPassword(), 'method' => 'check']);
+            if (!isset($check['result']) || 1 !== $check['result']) {
+                return [];
+            }
+        } catch (Exception $exception) {
+            return [];
+        }
+
         $customerTokensData = [];
         if ($this->tpayConfig->getCardSaveEnabled() && $this->tpay->isCustomerLoggedIn()) {
             $customerTokens = $this->tokensService->getCustomerTokens($this->tpay->getCheckoutCustomerId());

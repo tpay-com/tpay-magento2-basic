@@ -2,27 +2,21 @@
 
 namespace Tpay\Magento2\Model\ApiFacade\Transaction;
 
+use Tpay\Magento2\Api\TpayConfigInterface;
 use Tpay\OriginApi\PaymentBlik;
 
 class TransactionOriginApi extends PaymentBlik
 {
     public const BLIK_CHANNEL = 150;
 
-    /**
-     * @param string $apiPassword
-     * @param string $apiKey
-     * @param int    $merchantId
-     * @param string $merchantSecret
-     * @param mixed  $isProd
-     */
-    public function __construct($apiPassword, $apiKey, $merchantId, $merchantSecret, $isProd = true)
+    public function __construct(TpayConfigInterface $tpay, ?int $storeId = null)
     {
-        $this->trApiKey = $apiKey;
-        $this->trApiPass = $apiPassword;
-        $this->merchantId = $merchantId;
-        $this->merchantSecret = $merchantSecret;
+        $this->trApiKey = $tpay->getApiKey($storeId);
+        $this->trApiPass = $tpay->getApiPassword($storeId);
+        $this->merchantId = $tpay->getMerchantId($storeId);
+        $this->merchantSecret = $tpay->getSecurityCode($storeId);
         parent::__construct();
-        if (!$isProd) {
+        if ($tpay->useSandboxMode($storeId)) {
             $this->apiURL = 'https://secure.sandbox.tpay.com/api/gw/';
         }
     }

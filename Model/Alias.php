@@ -7,7 +7,7 @@ use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
-use Tpay\Magento2\Model\Api\Data\AliasInterface;
+use Tpay\Magento2\Api\Data\AliasInterface;
 
 class Alias extends AbstractModel implements AliasInterface
 {

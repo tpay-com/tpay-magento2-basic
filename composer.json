@@ -12,7 +12,8 @@
     "require": {
         "php": ">=7.1",
         "ext-json": "*",
-        "magento/framework": "^102.0 || ^103.0",
+        "magento/framework": "^103.0",
+        "magento/module-csp": "^100.4.5-p6",
         "tpay-com/tpay-openapi-php": "^1.8.0",
         "tpay-com/tpay-php": "^2.4.7"
     },

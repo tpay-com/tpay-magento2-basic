@@ -2,8 +2,8 @@
 
 namespace Tpay\Magento2\Model;
 
-use Tpay\Magento2\Model\Api\Data\TokensInterface;
-use Tpay\Magento2\Model\Api\TokenRepositoryInterface;
+use Tpay\Magento2\Api\Data\TokensInterface;
+use Tpay\Magento2\Api\TokenRepositoryInterface;
 use Tpay\Magento2\Model\ResourceModel\Token as TokenResourceModel;
 
 class TokenRepository implements TokenRepositoryInterface

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tpay\Magento2\Model;
 
-use Tpay\Magento2\Model\Api\AliasRepositoryInterface;
-use Tpay\Magento2\Model\Api\Data\AliasInterface;
+use Tpay\Magento2\Api\AliasRepositoryInterface;
+use Tpay\Magento2\Api\Data\AliasInterface;
 use Tpay\Magento2\Model\ResourceModel\Alias as AliasResourceModel;
 
 class AliasRepository implements AliasRepositoryInterface
