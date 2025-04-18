@@ -33,29 +33,13 @@ The official module for quick online payments via Tpay on the Magento 2 platform
 
 ### Module installation via Composer
 
-1. Download the [Tpay Origin API library](https://github.com/tpay-com/tpay-php). In the main Magento folder, enter the
-   command*:
-
-   ```
-   composer require tpay-com/tpay-php
-   ```
-
-   *You can skip this step if you have already used the Tpay module
-
-2. Download the [Tpay Open API library](https://github.com/tpay-com/tpay-openapi-php). In the main Magento folder,
-   enter the command:
-
-   ```
-   composer require tpay-com/tpay-openapi-php
-   ```
-
-3. Download the Tpay module. In the main Magento folder, enter the command:
+1. Download the Tpay module. In the main Magento folder, enter the command:
 
    ```
    composer require tpaycom/magento2basic
    ```
 
-4. Turn on the Tpay module. In the main Magento folder, enter the command:
+2. Turn on the Tpay module. In the main Magento folder, enter the command:
 
    ```
    php bin/magento module:enable Tpay_Magento2
@@ -64,7 +48,7 @@ The official module for quick online payments via Tpay on the Magento 2 platform
    php bin/magento setup:static-content:deploy
    ```
 
-5. Configure module in admin panel: Stores -> Configuration -> Payment Methods -> tpay.com.
+3. Configure module in admin panel: Stores -> Configuration -> Payment Methods -> tpay.com.
 
 ### [Payment gateway configuration](https://support.tpay.com/pl/developer/addons/magento/instrukcja-konfiguracji-wtyczki-tpay-dla-magento-2)
 
