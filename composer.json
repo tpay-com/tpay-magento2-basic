@@ -17,6 +17,10 @@
         "tpay-com/tpay-openapi-php": "^1.8.0",
         "tpay-com/tpay-php": "^2.4.7"
     },
+    "suggest": {
+	"tpay-com/magento2-graphql": "Additional GraphQL endpoints to use in PWA checkout applications",
+	"tpay-com/module-hyva-checkout": "Compatybility module for Hyvä Checkout"
+    },
     "autoload": {
         "psr-4": {
             "Tpay\\Magento2\\": ""

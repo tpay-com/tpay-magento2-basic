@@ -75,6 +75,11 @@ Oficjalny moduł szybkich płatności online za pośrednictwem Tpay na platformi
 Możliwa jest integracja tego rozwiązania z naszą wtyczką. Repozytorium znajdziesz
 [tutaj](https://github.com/tpay-com/tpay-magento2-graphql).
 
+### Obsługa Hyvä Checkout
+
+Do poprawnego działania z Hyvä Checkout potrzebny jest dodatkowy moduł kompatybilności.
+Repozytorium znajdziesz [tutaj](https://github.com/tpay-com/tpay-hyva-checkout)
+
 ### Wsparcie techniczne
 
 W przypadku dodatkowych pytań zapraszamy do kontaktu z Działem Obsługi Klienta Tpay pod tym

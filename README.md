@@ -77,6 +77,12 @@ The official module for quick online payments via Tpay on the Magento 2 platform
 It is possible to integrate this solution with our plugin. You can find the repository
 [here](https://github.com/tpay-com/tpay-magento2-graphql).
 
+
+### Hyvä Checkout support
+
+If you are using Hyvä Checkout additional compatybility module is required.
+You can find the repository [here](https://github.com/tpay-com/tpay-hyva-checkout)
+
 ### Technical assistance
 
 If you have additional questions, please contact the Tpay Customer Service Department at this
