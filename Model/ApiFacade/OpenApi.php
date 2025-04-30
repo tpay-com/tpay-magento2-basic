@@ -5,6 +5,7 @@ namespace Tpay\Magento2\Model\ApiFacade;
 use Magento\Framework\App\CacheInterface;
 use Magento\Framework\Validator\Exception;
 use Magento\Payment\Model\InfoInterface;
+use Magento\Store\Model\StoreManagerInterface;
 use Tpay\Magento2\Api\TpayConfigInterface;
 use Tpay\Magento2\Model\ApiFacade\Transaction\Dto\Channel;
 use Tpay\Magento2\Model\ApiFacade\Transaction\TransactionApiFacade;
@@ -21,14 +22,16 @@ class OpenApi
 
     private $cache;
 
-    /** @var null|int */
+    /** @var int */
     private $storeId;
 
-    public function __construct(TpayConfigInterface $tpay, CacheInterface $cache, ?int $storeId = null)
+    public function __construct(TpayConfigInterface $tpay, CacheInterface $cache, StoreManagerInterface $storeManager, ?int $storeId = null)
     {
+        $this->storeId = null === $storeId ? $storeManager->getStore()->getId() : $storeId;
         $this->cache = $cache;
-        $this->tpayApi = new TpayApi($tpay->getOpenApiClientId($storeId), $tpay->getOpenApiPassword($storeId), !$tpay->useSandboxMode($storeId));
-        $token = $this->cache->load($this->getAuthTokenCacheKey($tpay, $storeId));
+        $this->tpayApi = new TpayApi($tpay->getOpenApiClientId($this->storeId), $tpay->getOpenApiPassword($this->storeId), !$tpay->useSandboxMode($this->storeId));
+        $token = $this->cache->load($this->getAuthTokenCacheKey($tpay, $this->storeId));
+
         if ($token) {
             $this->tpayApi->setCustomToken(unserialize($token));
         }
@@ -36,9 +39,8 @@ class OpenApi
         $this->tpayApi->authorization();
 
         if (!$token) {
-            $this->cache->save(serialize($this->tpayApi->getToken()), $this->getAuthTokenCacheKey($tpay, $storeId), [TpayConfigProvider::CACHE_TAG], 7100);
+            $this->cache->save(serialize($this->tpayApi->getToken()), $this->getAuthTokenCacheKey($tpay, $this->storeId), [TpayConfigProvider::CACHE_TAG], 7100);
         }
-        $this->storeId = $storeId;
     }
 
     public function create(array $data): array
