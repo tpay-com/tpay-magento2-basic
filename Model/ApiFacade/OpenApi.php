@@ -25,7 +25,7 @@ class OpenApi
     /** @var int */
     private $storeId;
 
-    public function __construct(TpayConfigInterface $tpay, CacheInterface $cache, StoreManagerInterface $storeManager, $storeId = null)
+    public function __construct(TpayConfigInterface $tpay, CacheInterface $cache, StoreManagerInterface $storeManager, ?int $storeId = null)
     {
         $this->storeId = null === $storeId ? $storeManager->getStore()->getId() : $storeId;
         $this->cache = $cache;
