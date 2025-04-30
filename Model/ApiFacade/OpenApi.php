@@ -21,12 +21,13 @@ class OpenApi
     private $tpayApi;
 
     private $cache;
+
     /** @var int */
     private $storeId;
 
-    public function __construct(TpayConfigInterface $tpay, CacheInterface $cache, StoreManagerInterface $storeManager)
+    public function __construct(TpayConfigInterface $tpay, CacheInterface $cache, StoreManagerInterface $storeManager, $storeId = null)
     {
-        $this->storeId = (int)$storeManager->getStore()->getId();
+        $this->storeId = null === $storeId ? $storeManager->getStore()->getId() : $storeId;
         $this->cache = $cache;
         $this->tpayApi = new TpayApi($tpay->getOpenApiClientId($this->storeId), $tpay->getOpenApiPassword($this->storeId), !$tpay->useSandboxMode($this->storeId));
         $token = $this->cache->load($this->getAuthTokenCacheKey($tpay, $this->storeId));
