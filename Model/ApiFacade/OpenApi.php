@@ -16,6 +16,8 @@ use Tpay\OpenApi\Utilities\TpayException;
 class OpenApi
 {
     public const AUTH_TOKEN_CACHE_KEY = 'tpay_auth_token_%s';
+    public const VM_GROUP = 171;
+    public const VM_CHANNEL = 79;
 
     /** @var TpayApi */
     private $tpayApi;
@@ -50,9 +52,8 @@ class OpenApi
         }
 
         $transactionData = $this->handleDataStructure($data);
-        $transaction = $this->tpayApi->transactions()->createTransaction($transactionData);
 
-        return $this->updateRedirectUrl($transaction);
+        return $this->tpayApi->transactions()->createTransaction($transactionData);
     }
 
     public function createTransaction(array $data): array
@@ -62,18 +63,15 @@ class OpenApi
         }
 
         $transactionData = $this->handleDataStructure($data);
-        $transaction = $this->tpayApi->transactions()->createTransaction($transactionData);
 
-        return $this->updateRedirectUrl($transaction);
+        return $this->tpayApi->transactions()->createTransaction($transactionData);
     }
 
     public function createWithInstantRedirect(array $data): array
     {
         $transactionData = $this->handleDataStructure($data);
 
-        $transaction = $this->tpayApi->transactions()->createTransactionWithInstantRedirection($transactionData);
-
-        return $this->updateRedirectUrl($transaction);
+        return $this->tpayApi->transactions()->createTransactionWithInstantRedirection($transactionData);
     }
 
     public function createBlikZeroTransaction(array $data): array
@@ -81,9 +79,7 @@ class OpenApi
         $transactionData = $this->handleDataStructure($data);
         unset($transactionData['pay']);
 
-        $transaction = $this->tpayApi->transactions()->createTransactionWithInstantRedirection($transactionData);
-
-        return $this->updateRedirectUrl($transaction);
+        return $this->tpayApi->transactions()->createTransactionWithInstantRedirection($transactionData);
     }
 
     public function blik(string $transactionId, array $blikPaymentData): array
@@ -102,7 +98,7 @@ class OpenApi
 
         $result = $this->tpayApi->transactions()->createInstantPaymentByTransactionId($additional_payment_data, $transactionId);
 
-        return $this->updateRedirectUrl($this->waitForBlikAccept($result));
+        return $this->waitForBlikAccept($result);
     }
 
     public function blikAlias(string $transactionId, array $aliases): array
@@ -118,7 +114,7 @@ class OpenApi
 
         $result = $this->tpayApi->transactions()->createInstantPaymentByTransactionId($additional_payment_data, $transactionId);
 
-        return $this->updateRedirectUrl($this->waitForBlikAccept($result));
+        return $this->waitForBlikAccept($result);
     }
 
     public function createBlikZero(array $data): array
@@ -239,10 +235,18 @@ class OpenApi
 
         if ($data['group']) {
             $paymentData['pay']['groupId'] = $data['group'];
+
+            if (self::VM_GROUP === $data['group']) {
+                unset($paymentData['payer']['phone']);
+            }
         }
 
         if ($data['channel']) {
             $paymentData['pay']['channelId'] = $data['channel'];
+
+            if (self::VM_CHANNEL === $data['channel']) {
+                unset($paymentData['payer']['phone']);
+            }
         }
 
         if ($data['tax_id']) {
@@ -250,17 +254,6 @@ class OpenApi
         }
 
         return $paymentData;
-    }
-
-    private function updateRedirectUrl(array $transactionData): array
-    {
-        $blik0Url = null;
-        if (!isset($transactionData['transactionPaymentUrl']) && 'success' === $transactionData['result']) {
-            $blik0Url = 'blik0url';
-        }
-        $transactionData['url'] = $transactionData['transactionPaymentUrl'] ?? $blik0Url;
-
-        return $transactionData;
     }
 
     private function waitForBlikAccept(array $result): array
