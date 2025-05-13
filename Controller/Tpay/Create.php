@@ -81,14 +81,14 @@ class Create implements ActionInterface
 
             $transaction = $this->prepareTransaction($orderId, $additionalPaymentInformation);
 
-            if (!isset($transaction['title'], $transaction['url'])) {
+            if (!isset($transaction['title'])) {
                 return $this->redirectFactory->redirectError();
             }
 
             $this->handleOpenApiTrId($paymentData, $transaction);
 
             $this->tpayService->addCommentToHistory($orderId, 'Transaction title '.$transaction['title']);
-            $transactionUrl = $transaction['url'];
+            $transactionUrl = $transaction['transactionPaymentUrl'] ?? '';
 
             if (true === $this->tpayConfig->redirectToChannel()) {
                 $transactionUrl = str_replace('gtitle', 'title', $transactionUrl);
@@ -100,30 +100,16 @@ class Create implements ActionInterface
             $this->tpayService->saveOrderPayment($payment);
 
             if ($this->additionalPaymentInfoValidator->validateBlikIfPresent($additionalPaymentInformation) && $this->tpay->checkBlikLevel0Settings()) {
-                if (true === $this->transaction->isOpenApiUse()) {
-                    if (isset($transaction['payments']['errors']) && count($transaction['payments']['errors']) > 0) {
-                        return $this->redirectFactory->redirectError();
-                    }
-
-                    return $this->redirectFactory->redirectSuccess();
-                }
-
-                $result = $this->blikPay($transaction['title'], $additionalPaymentInformation['blik_code'] ?? '', $additionalPaymentInformation['blik_alias'] ?? '');
-                $this->checkoutSession->unsQuoteId();
-
-                if (!$result) {
-                    $this->tpayService->addCommentToHistory(
-                        $orderId,
-                        'User has typed wrong blik code and has been redirected to transaction panel in order to finish payment'
-                    );
-
+                if (isset($transaction['payments']['errors']) && count($transaction['payments']['errors']) > 0) {
                     return $this->redirectFactory->redirectError();
                 }
 
                 return $this->redirectFactory->redirectSuccess();
             }
 
-            return $this->redirectFactory->redirectTransaction($transactionUrl);
+            if (!empty($transactionUrl)) {
+                return $this->redirectFactory->redirectTransaction($transactionUrl);
+            }
         }
 
         return $this->redirectFactory->redirectError();
