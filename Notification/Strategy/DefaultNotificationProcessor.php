@@ -2,8 +2,6 @@
 
 namespace Tpay\Magento2\Notification\Strategy;
 
-use Exception;
-use Magento\Sales\Model\Order;
 use Tpay\Magento2\Api\Notification\Strategy\NotificationProcessorInterface;
 use Tpay\Magento2\Api\TpayConfigInterface;
 use Tpay\Magento2\Api\TpayInterface;
@@ -47,27 +45,12 @@ class DefaultNotificationProcessor implements NotificationProcessorInterface
         $notification = $notification->getNotificationAssociative();
         $orderId = base64_decode($notification['tr_crc']);
 
-        if ('PAID' === $notification['tr_status']) {
-            return $this->getPaidTransactionResponse($orderId);
-        }
-
-        $this->saveCard($notification, $orderId);
-        $this->tpayService->setOrderStatus($orderId, $notification, $this->tpayConfig);
-    }
-
-    protected function getPaidTransactionResponse(string $orderId): string
-    {
         $order = $this->tpayService->getOrderById($orderId);
 
-        if (!$order->getId()) {
-            throw new Exception(sprintf('Unable to get order by orderId %s', $orderId));
+        if ('TRUE' === $notification['tr_status']) {
+            $this->tpayService->confirmPayment($order, $notification['tr_amount'], $notification['tr_id'], []);
+            $this->saveCard($notification, $orderId);
         }
-
-        if (Order::STATE_CANCELED === $order->getState()) {
-            return 'FALSE';
-        }
-
-        return 'TRUE';
     }
 
     private function saveCard(array $notification, string $orderId)

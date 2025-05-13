@@ -89,7 +89,8 @@ class CardOrigin extends CardNotificationHandler
                 }
 
                 if (1 === (int) $paymentResult['result'] && isset($paymentResult['status']) && 'correct' === $paymentResult['status']) {
-                    $this->tpayService->setCardOrderStatus($orderId, $paymentResult, $this->tpayConfig);
+                    $order = $this->tpayService->getOrderById($orderId);
+                    $this->tpayService->confirmPayment($order, $paymentResult['amount'], $paymentResult['sale_auth'], $paymentResult);
                     $this->tpayService->addCommentToHistory($orderId, 'Successful payment by saved card');
 
                     return 'magento2basic/tpay/success';
@@ -169,7 +170,8 @@ class CardOrigin extends CardNotificationHandler
         }
         if (isset($result['status']) && 'correct' === $result['status']) {
             $this->validateNon3dsSign($result);
-            $this->tpayService->setCardOrderStatus($orderId, $result, $this->tpayConfig);
+            $order = $this->tpayService->getOrderById($orderId);
+            $this->tpayService->confirmPayment($order, $result['amount'], $result['sale_auth'], $result);
         }
 
         if (isset($result['cli_auth'], $result['card']) && !$this->tpay->isCustomerGuest($orderId)) {

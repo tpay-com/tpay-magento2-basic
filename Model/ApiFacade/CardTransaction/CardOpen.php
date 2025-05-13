@@ -109,7 +109,8 @@ class CardOpen
                 $result = $this->tpayApi->transactions()->createPaymentByTransactionId($request, $transactionId);
 
                 if ('success' === $result['result'] && isset($result['payments']['status']) && 'correct' === $result['payments']['status']) {
-                    $this->tpayService->setCardOrderStatus($orderId, $this->handleValidParams($result), $this->tpayConfig);
+                    $order = $this->tpayService->getOrderById($orderId);
+                    $this->tpayService->confirmPayment($order, $result['amount'], $result['transactionId'], $this->handleValidParams($result));
                     $this->tpayService->addCommentToHistory($orderId, 'Successful payment by saved card');
 
                     return 'magento2basic/tpay/success';
@@ -159,7 +160,6 @@ class CardOpen
                 'method' => 'pay_by_link',
             ];
             $result = $this->tpayApi->transactions()->createPaymentByTransactionId($request, $transactionId);
-            $this->tpayService->setCardOrderStatus($orderId, $this->handleValidParams($result), $this->tpayConfig);
         } catch (Exception $e) {
             return 'magento2basic/tpay/error';
         }
