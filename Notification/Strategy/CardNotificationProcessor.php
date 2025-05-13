@@ -45,8 +45,8 @@ class CardNotificationProcessor implements NotificationProcessorInterface
         $orderId = base64_decode($notification['order_id']);
         $order = $this->tpayService->getOrderById($orderId);
 
-        if ('TRUE' === $notification['tr_status']) {
-            $this->tpayService->confirmPayment($order, $notification['tr_amount'], $notification['tr_id'], []);
+        if ('correct' === $notification['status']) {
+            $this->tpayService->confirmPayment($order, $notification['amount'], $notification['sale_auth'], []);
             $this->saveOriginCard($notification, $orderId);
         }
     }
