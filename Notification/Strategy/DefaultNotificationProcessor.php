@@ -51,6 +51,9 @@ class DefaultNotificationProcessor implements NotificationProcessorInterface
             $this->tpayService->confirmPayment($order, $notification['tr_amount'], $notification['tr_id'], []);
             $this->saveCard($notification, $orderId);
         }
+        if ('CHARGEBACK' === $notification['tr_status']) {
+            $this->tpayService->addCommentToHistory($orderId, __('Transaction has been refunded via Tpay Transaction Panel'));
+        }
     }
 
     private function saveCard(array $notification, string $orderId)
