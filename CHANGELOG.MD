@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Streamlined IPN processing
+- Moved to Tpay OpenAPI SDK 2.0
 
 ## 2.2.2
 
