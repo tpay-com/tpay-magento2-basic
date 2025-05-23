@@ -1,0 +1,118 @@
+<?php
+
+namespace Magento\Framework\Controller\Result;
+
+class RawFactory
+{
+    /**
+     * Create class instance with specified parameters
+     *
+     * @param array $data
+     * @return \Magento\Framework\Controller\Result\Raw
+     */
+    public function create(array $data = []);
+}
+
+
+namespace Tpay\Magento2\Model;
+
+class AliasFactory
+{
+    /**
+     * Create class instance with specified parameters
+     *
+     * @param array $data
+     * @return \Tpay\Magento2\Model\Alias
+     */
+    public function create(array $data = []);
+}
+
+class TokenFactory
+{
+    /**
+     * Create class instance with specified parameters
+     *
+     * @param array $data
+     * @return \Tpay\Magento2\Model\Token
+     */
+    public function create(array $data = []);
+}
+
+
+namespace Tpay\OpenApi\Api;
+
+class TpayApiFactory
+{
+    /**
+     * Create class instance with specified parameters
+     *
+     * @param array $data
+     * @return \Tpay\OpenApi\Api\TpayApi
+     */
+    public function create(array $data = []);
+}
+
+namespace Tpay\OpenApi\Webhook;
+
+class JWSVerifiedPaymentNotificationFactory
+{
+    /**
+     * Create class instance with specified parameters
+     *
+     * @param array $data
+     * @return \Tpay\OpenApi\Webhook\JWSVerifiedPaymentNotification
+     */
+    public function create(array $data = []);
+}
+
+namespace Tpay\OpenApi\Webhook;
+
+class JWSVerifiedPaymentNotificationFactory
+{
+    /**
+     * Create class instance with specified parameters
+     *
+     * @param array $data
+     * @return \Tpay\OpenApi\Webhook\JWSVerifiedPaymentNotification
+     */
+    public function create(array $data = []);
+}
+
+namespace Tpay\Magento2\Model\ApiFacade;
+
+class OpenApiFactory
+{
+    /**
+     * Create class instance with specified parameters
+     *
+     * @param array $data
+     * @return \Tpay\Magento2\Model\ApiFacade\OpenApi
+     */
+    public function create(array $data = []);
+}
+
+namespace Tpay\Magento2\Model\ApiFacade\Refund;
+
+class RefundOriginApiFactory
+{
+    /**
+     * Create class instance with specified parameters
+     *
+     * @param array $data
+     * @return \Tpay\Magento2\Model\ApiFacade\Refund\RefundOriginApi
+     */
+    public function create(array $data = []);
+}
+
+namespace Tpay\Magento2\Model\ApiFacade\Refund;
+
+class RefundCardOriginApiFactory
+{
+    /**
+     * Create class instance with specified parameters
+     *
+     * @param array $data
+     * @return \Tpay\Magento2\Model\ApiFacade\Refund\RefundCardOriginApi
+     */
+    public function create(array $data = []);
+}

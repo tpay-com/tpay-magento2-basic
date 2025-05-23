@@ -41,7 +41,7 @@
 "Use sandbox mode (avoid using it in real production store)","Użyj trybu sandox (nie używaj tego na produkcyjnym sklepie)"
 "BLIK code","Kod BLIK"
 "Choose a payment method","Wybierz metodę płatności"
-"Transaction has been refunded","Transakcja została zwrócona"
+"Transaction has been refunded via Tpay Transaction Panel","Transakcja została zwrócona z poziomu Panelu Akceptanta Tpay"
 "The order has been holded","Zamówienie zostało wstrzymane"
 "Send new invoice email to customer", "Wyślij wiadomość z fakturą na adres e-mail klienta"
 "If you do not have an account yet, register in the production system at tpay.com or sandbox system panel.sandbox.tpay.com","Jeśli nie masz jeszcze konta, zarejestruj się w systemie produkcyjnym na tpay.com lub w systemie sandbox tpay.com"

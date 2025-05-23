@@ -16,7 +16,6 @@ class AliasRepository implements AliasRepositoryInterface
     /** @var AliasResourceModel */
     protected $aliasResourceModel;
 
-    /** @phpstan-ignore-next-line */
     public function __construct(AliasFactory $aliasFactory, AliasResourceModel $aliasResourceModel)
     {
         $this->aliasFactory = $aliasFactory;

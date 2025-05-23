@@ -18,6 +18,8 @@
     <preference for="Tpay\Magento2\Api\TpayConfigInterface" type="Tpay\Magento2\Provider\ConfigurationProvider" />
     <preference for="Tpay\Magento2\Api\TpayInterface" type="Tpay\Magento2\Model\TpayPayment" />
     <preference for="Tpay\Magento2\Service\TpayAliasServiceInterface" type="Tpay\Magento2\Service\TpayAliasService" />
+    <preference for="Tpay\OpenApi\Utilities\CertificateProvider" type="Tpay\OpenApi\Utilities\CacheCertificateProvider"/>
+    <preference for="Tpay\OpenApi\Utilities\Cache" type="Tpay\Magento2\Model\CacheProvider" />
     <type name="Magento\Payment\Model\MethodList">
         <plugin name="tpay_generic_onsite" type="Tpay\Magento2\Model\MethodListPlugin" />
     </type>
