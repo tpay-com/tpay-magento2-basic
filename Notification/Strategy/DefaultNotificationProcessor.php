@@ -23,7 +23,8 @@ class DefaultNotificationProcessor implements NotificationProcessorInterface
     /** @var TpayInterface */
     protected $tpay;
 
-    private JWSVerifiedPaymentNotificationFactory $notificationFactory;
+    /** @var JWSVerifiedPaymentNotificationFactory */
+    private $notificationFactory;
 
     public function __construct(
         TpayConfigInterface $tpayConfig,

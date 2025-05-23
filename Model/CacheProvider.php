@@ -7,7 +7,8 @@ use Tpay\OpenApi\Utilities\Cache;
 
 class CacheProvider extends Cache
 {
-    private CacheInterface $cache;
+    /** @var CacheInterface */
+    private $cache;
 
     public function __construct(CacheInterface $cache)
     {
