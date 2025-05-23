@@ -2,15 +2,15 @@
 
 namespace Tpay\Magento2\Model\ApiFacade;
 
-use Magento\Framework\App\CacheInterface;
 use Magento\Framework\Validator\Exception;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Tpay\Magento2\Api\TpayConfigInterface;
 use Tpay\Magento2\Model\ApiFacade\Transaction\Dto\Channel;
 use Tpay\Magento2\Model\ApiFacade\Transaction\TransactionApiFacade;
-use Tpay\Magento2\Model\TpayConfigProvider;
+use Tpay\Magento2\Model\CacheProvider;
 use Tpay\OpenApi\Api\TpayApi;
+use Tpay\OpenApi\Api\TpayApiFactory;
 use Tpay\OpenApi\Utilities\TpayException;
 
 class OpenApi
@@ -22,26 +22,32 @@ class OpenApi
     /** @var TpayApi */
     private $tpayApi;
 
+    /** @var CacheProvider */
     private $cache;
 
     /** @var int */
     private $storeId;
 
-    public function __construct(TpayConfigInterface $tpay, CacheInterface $cache, StoreManagerInterface $storeManager, ?int $storeId = null)
+    public function __construct(TpayConfigInterface $tpay, CacheProvider $cache, StoreManagerInterface $storeManager, TpayApiFactory $apiFactory, ?int $storeId = null)
     {
         $this->storeId = null === $storeId ? $storeManager->getStore()->getId() : $storeId;
         $this->cache = $cache;
-        $this->tpayApi = new TpayApi($tpay->getOpenApiClientId($this->storeId), $tpay->getOpenApiPassword($this->storeId), !$tpay->useSandboxMode($this->storeId));
-        $token = $this->cache->load($this->getAuthTokenCacheKey($tpay, $this->storeId));
+        $this->tpayApi = $apiFactory->create([
+            'clientId' => $tpay->getOpenApiClientId($this->storeId),
+            'clientSecret' => $tpay->getOpenApiPassword($this->storeId),
+            'productionMode' => !$tpay->useSandboxMode($this->storeId),
+            'clientName' => $tpay->buildMagentoInfo(),
+        ]);
+        $token = $this->cache->get($this->getAuthTokenCacheKey($tpay, $this->storeId));
 
         if ($token) {
-            $this->tpayApi->setCustomToken(unserialize($token));
+            $this->tpayApi->setCustomToken($token);
         }
 
         $this->tpayApi->authorization();
 
         if (!$token) {
-            $this->cache->save(serialize($this->tpayApi->getToken()), $this->getAuthTokenCacheKey($tpay, $this->storeId), [TpayConfigProvider::CACHE_TAG], 7100);
+            $this->cache->set($this->getAuthTokenCacheKey($tpay, $this->storeId), $this->tpayApi->getToken(), 7100);
         }
     }
 
@@ -175,13 +181,10 @@ class OpenApi
     {
         $cacheKey = 'tpay_bank_groups_'.$this->storeId;
 
-        $channels = $this->cache->load($cacheKey);
+        $channels = $this->cache->get($cacheKey);
 
         if ($channels) {
-            $channels = json_decode($channels, true);
-            if ($channels) {
-                return $channels;
-            }
+            return $channels;
         }
 
         try {
@@ -189,10 +192,9 @@ class OpenApi
         } catch (TpayException $e) {
             return [];
         }
-        $this->cache->save(
-            json_encode($groups),
+        $this->cache->set(
             $cacheKey,
-            [TpayConfigProvider::CACHE_TAG],
+            $groups,
             TransactionApiFacade::CACHE_LIFETIME
         );
 

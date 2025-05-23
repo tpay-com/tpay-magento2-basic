@@ -11,7 +11,6 @@ class TokenRepository implements TokenRepositoryInterface
     private $tokenFactory;
     private $tokenResourceModel;
 
-    /** @phpstan-ignore-next-line */
     public function __construct(TokenFactory $tokenFactory, TokenResourceModel $tokenResourceModel)
     {
         $this->tokenResourceModel = $tokenResourceModel;

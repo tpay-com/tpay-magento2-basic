@@ -7,7 +7,7 @@ use Tpay\Magento2\Api\TpayConfigInterface;
 use Tpay\Magento2\Api\TpayInterface;
 use Tpay\Magento2\Service\TpayService;
 use Tpay\Magento2\Service\TpayTokensService;
-use Tpay\OpenApi\Webhook\JWSVerifiedPaymentNotification;
+use Tpay\OpenApi\Webhook\JWSVerifiedPaymentNotificationFactory;
 
 class DefaultNotificationProcessor implements NotificationProcessorInterface
 {
@@ -23,24 +23,25 @@ class DefaultNotificationProcessor implements NotificationProcessorInterface
     /** @var TpayInterface */
     protected $tpay;
 
+    private JWSVerifiedPaymentNotificationFactory $notificationFactory;
+
     public function __construct(
         TpayConfigInterface $tpayConfig,
         TpayService $tpayService,
         TpayTokensService $tokensService,
-        TpayInterface $tpayModel
+        TpayInterface $tpayModel,
+        JWSVerifiedPaymentNotificationFactory $notificationFactory
     ) {
         $this->tpayConfig = $tpayConfig;
         $this->tpayService = $tpayService;
         $this->tokensService = $tokensService;
         $this->tpay = $tpayModel;
+        $this->notificationFactory = $notificationFactory;
     }
 
     public function process(?int $storeId)
     {
-        $notification = (new JWSVerifiedPaymentNotification(
-            $this->tpayConfig->getSecurityCode($storeId),
-            !$this->tpayConfig->useSandboxMode($storeId)
-        ))->getNotification();
+        $notification = $this->notificationFactory->create(['merchantSecret' => $this->tpayConfig->getSecurityCode($storeId), 'productionMode' => !$this->tpayConfig->useSandboxMode($storeId)])->getNotification();
 
         $notification = $notification->getNotificationAssociative();
         $orderId = base64_decode($notification['tr_crc']);
