@@ -2,14 +2,12 @@
 
 namespace Tpay\Magento2\Notification\Strategy;
 
-use Exception;
-use Magento\Sales\Model\Order;
 use Tpay\Magento2\Api\Notification\Strategy\NotificationProcessorInterface;
 use Tpay\Magento2\Api\TpayConfigInterface;
 use Tpay\Magento2\Api\TpayInterface;
 use Tpay\Magento2\Service\TpayService;
 use Tpay\Magento2\Service\TpayTokensService;
-use Tpay\OpenApi\Webhook\JWSVerifiedPaymentNotification;
+use Tpay\OpenApi\Webhook\JWSVerifiedPaymentNotificationFactory;
 
 class DefaultNotificationProcessor implements NotificationProcessorInterface
 {
@@ -25,49 +23,39 @@ class DefaultNotificationProcessor implements NotificationProcessorInterface
     /** @var TpayInterface */
     protected $tpay;
 
+    /** @var JWSVerifiedPaymentNotificationFactory */
+    private $notificationFactory;
+
     public function __construct(
         TpayConfigInterface $tpayConfig,
         TpayService $tpayService,
         TpayTokensService $tokensService,
-        TpayInterface $tpayModel
+        TpayInterface $tpayModel,
+        JWSVerifiedPaymentNotificationFactory $notificationFactory
     ) {
         $this->tpayConfig = $tpayConfig;
         $this->tpayService = $tpayService;
         $this->tokensService = $tokensService;
         $this->tpay = $tpayModel;
+        $this->notificationFactory = $notificationFactory;
     }
 
     public function process(?int $storeId)
     {
-        $notification = (new JWSVerifiedPaymentNotification(
-            $this->tpayConfig->getSecurityCode($storeId),
-            !$this->tpayConfig->useSandboxMode($storeId)
-        ))->getNotification();
+        $notification = $this->notificationFactory->create(['merchantSecret' => $this->tpayConfig->getSecurityCode($storeId), 'productionMode' => !$this->tpayConfig->useSandboxMode($storeId)])->getNotification();
 
         $notification = $notification->getNotificationAssociative();
         $orderId = base64_decode($notification['tr_crc']);
 
-        if ('PAID' === $notification['tr_status']) {
-            return $this->getPaidTransactionResponse($orderId);
-        }
-
-        $this->saveCard($notification, $orderId);
-        $this->tpayService->setOrderStatus($orderId, $notification, $this->tpayConfig);
-    }
-
-    protected function getPaidTransactionResponse(string $orderId): string
-    {
         $order = $this->tpayService->getOrderById($orderId);
 
-        if (!$order->getId()) {
-            throw new Exception(sprintf('Unable to get order by orderId %s', $orderId));
+        if ('TRUE' === $notification['tr_status']) {
+            $this->tpayService->confirmPayment($order, $notification['tr_amount'], $notification['tr_id'], []);
+            $this->saveCard($notification, $orderId);
         }
-
-        if (Order::STATE_CANCELED === $order->getState()) {
-            return 'FALSE';
+        if ('CHARGEBACK' === $notification['tr_status']) {
+            $this->tpayService->addCommentToHistory($orderId, __('Transaction has been refunded via Tpay Transaction Panel'));
         }
-
-        return 'TRUE';
     }
 
     private function saveCard(array $notification, string $orderId)
