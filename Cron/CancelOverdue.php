@@ -17,13 +17,34 @@ class CancelOverdue
     public const XML_CONFIG_PATH_ENABLE = 'payment/tpaycom_magento2basic/cancel/active';
     public const XML_CONFIG_PATH_DAYS = 'payment/tpaycom_magento2basic/cancel/days';
 
+    /** @var CollectionFactory */
+    private $collectionFactory;
+
+    /** @var StoreManagerInterface */
+    private $storeManager;
+
+    /** @var ScopeConfigInterface */
+    private $config;
+
+    /** @var OrderRepository */
+    private $orderRepository;
+
+    /** @var LoggerInterface */
+    private $logger;
+
     public function __construct(
-        private readonly CollectionFactory $collectionFactory,
-        private readonly StoreManagerInterface $storeManager,
-        private readonly ScopeConfigInterface $config,
-        private readonly OrderRepository $orderRepository,
-        private readonly LoggerInterface $logger
-    ) {}
+        CollectionFactory $collectionFactory,
+        StoreManagerInterface $storeManager,
+        ScopeConfigInterface $config,
+        OrderRepository $orderRepository,
+        LoggerInterface $logger
+    ) {
+        $this->logger = $logger;
+        $this->orderRepository = $orderRepository;
+        $this->config = $config;
+        $this->storeManager = $storeManager;
+        $this->collectionFactory = $collectionFactory;
+    }
 
     public function execute()
     {

@@ -11,10 +11,19 @@ use Tpay\Magento2\Model\ApiFacade\OpenApiFactory;
 
 class OrderCancel implements ObserverInterface
 {
+    /** @var OpenApiFactory */
+    private $openApiFactory;
+
+    /** @var LoggerInterface */
+    private $logger;
+
     public function __construct(
-        private readonly OpenApiFactory $openApiFactory,
-        private readonly LoggerInterface $logger
-    ) {}
+        OpenApiFactory $openApiFactory,
+        LoggerInterface $logger
+    ) {
+        $this->logger = $logger;
+        $this->openApiFactory = $openApiFactory;
+    }
 
     public function execute(Observer $observer): void
     {
