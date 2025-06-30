@@ -181,6 +181,19 @@
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     </field>
                 </group>
+                <group id="cancel" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Automatic order cancellation</label>
+                    <field id="active" translate="label comment" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Active</label>
+                        <comment>When enabled once a day scheduled task will attempt to cancel all orders in pending payment status older than number of days stated in next configuration field.</comment>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+                    <field id="days" translate="label" type="text" sortOrder="17" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Number of days</label>
+                        <validate>not-negative-amount validate-under-thirty</validate>
+                        <depends><field id="active">1</field></depends>
+                    </field>
+                </group>
                 <field id="version_comment" translate="label" type="label" sortOrder="19" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Version information</label>
                     <frontend_model>Tpay\Magento2\Model\Config\Source\VersionInfo</frontend_model>
