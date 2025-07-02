@@ -57,10 +57,12 @@ class CancelOverdue
 
             $date = new DateTime();
             $date->sub(new DateInterval('P'.$days.'D'));
-            $initialDate = $date->format('Y-m-d');
+            $toDate = $date->format('Y-m-d H:i:s');
+            $date->sub(new DateInterval('P1D'));
+            $fromDate = $date->format('Y-m-d 00:00:00');
 
             $collection = $this->collectionFactory->create();
-            $collection->addFieldToFilter('created_at', ['lt' => $initialDate]);
+            $collection->addFieldToFilter('created_at', ['from' => $fromDate, 'to' => $toDate]);
             $collection->addFieldToFilter('store_id', ['eq' => $store->getId()]);
             $collection->addFieldToFilter('state', ['eq' => Order::STATE_PENDING_PAYMENT]);
 
