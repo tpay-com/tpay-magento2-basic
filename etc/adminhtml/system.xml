@@ -185,7 +185,7 @@
                     <label>Automatic order cancellation</label>
                     <field id="active" translate="label comment" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Active</label>
-                        <comment>When enabled once a day scheduled task will attempt to cancel all orders in pending payment status older than number of days stated in next configuration field.</comment>
+                        <comment>When enabled scheduled task will attempt to cancel all orders in pending payment status older than number of days stated in next configuration field.</comment>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     </field>
                     <field id="days" translate="label" type="text" sortOrder="17" showInDefault="1" showInWebsite="1" showInStore="1">

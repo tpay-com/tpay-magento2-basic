@@ -84,7 +84,7 @@
 "Create Tpay Account","Załóż konto Tpay"
 "Create Sandbox Account","Załóż konto Sandbox"
 "Automatic order cancellation","Automatyczne anulowanie zamówień"
-"When enabled once a day scheduled task will attempt to cancel all orders in pending payment status older than number of days stated in next configuration field.","Gdy aktywny: raz dziennie zadanie harmonogramu podejmie próbę anulowania wszystkich zamówień w statusie oczekującym na płatność starszych niż liczba dni podana w kolejnym polu konfiguracyjnym."
+"When enabled scheduled task will attempt to cancel all orders in pending payment status older than number of days stated in next configuration field.","Gdy aktywny: zadanie harmonogramu podejmie próbę anulowania wszystkich zamówień w statusie oczekującym na płatność starszych niż liczba dni podana w kolejnym polu konfiguracyjnym."
 "Number of days","Liczba dni"
 "Please enter value between 1 and 30","Wprowadź liczbę pomiędzy 1 i 30"
 "Cancelled automatically due to lack of payment","Anulowane automatycznie z uwagi na brak płatności"
