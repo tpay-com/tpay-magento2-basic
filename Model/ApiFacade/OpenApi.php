@@ -206,6 +206,11 @@ class OpenApi
         return !empty($this->tpayApi->getToken());
     }
 
+    public function cancel(string $transactionId)
+    {
+        $this->tpayApi->transactions()->cancelTransaction($transactionId);
+    }
+
     private function handleDataStructure(array $data): array
     {
         $paymentData = [

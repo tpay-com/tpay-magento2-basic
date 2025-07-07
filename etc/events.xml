@@ -6,4 +6,7 @@
     <event name="admin_system_config_save">
         <observer name="tpay_connection_cache_flush" instance="Tpay\Magento2\Observer\FlushConnectionCache"/>
     </event>
+    <event name="order_cancel_after">
+        <observer name="tpay_sales_order_cancel_after" instance="Tpay\Magento2\Observer\OrderCancel" />
+    </event>
 </config>

@@ -30,6 +30,11 @@
                 <use_sandbox>0</use_sandbox>
                 <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
             </Tpay_Magento2>
+            <tpaycom_magento2basic>
+                <cancel>
+                    <days>30</days>
+                </cancel>
+            </tpaycom_magento2basic>
         </payment>
     </default>
 </config>
