@@ -5,8 +5,6 @@ namespace Tpay\Magento2\ViewModel\Checkout;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\Data\Form\FormKey;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
-use Psr\Log\LoggerInterface;
-use Tpay\Magento\Hyva\Payment\Method\Tpay;
 use Tpay\Magento2\Model\ApiFacade\Transaction\TransactionApiFacade;
 use Tpay\Magento2\Model\TpayPayment;
 use Tpay\Magento2\Provider\ConfigurationProvider;
@@ -16,12 +14,11 @@ class Success implements ArgumentInterface
     private Session $checkoutSession;
     private TransactionApiFacade $transactionApi;
     private FormKey $formKey;
-
     private int $orderId;
     private string $paymentId;
     private ConfigurationProvider $configurationProvider;
 
-    public function __construct(Session $checkoutSession, TransactionApiFacade $transactionApi, FormKey $formKey, ConfigurationProvider  $configurationProvider)
+    public function __construct(Session $checkoutSession, TransactionApiFacade $transactionApi, FormKey $formKey, ConfigurationProvider $configurationProvider)
     {
         $this->checkoutSession = $checkoutSession;
         $this->transactionApi = $transactionApi;
