@@ -63,8 +63,10 @@ class TransactionApiFacade
     {
         $blikData = [
             'blikToken' => $blikCode,
-            'aliases' => $blikAlias ? ['type' => 'UID', 'value' => $blikAlias, 'label' => 'tpay-magento2'] : [],
         ];
+        if (!empty($blikAlias)) {
+            $blikData['aliases'] = ['type' => 'UID', 'value' => $blikAlias, 'label' => 'tpay-magento2'];
+        }
 
         return $this->getCurrentApi()->blik($blikTransactionId, $blikData);
     }
@@ -128,6 +130,16 @@ class TransactionApiFacade
         }
 
         return $data;
+    }
+
+    public function getStatus(string $paymentId): ?array
+    {
+        return $this->openApi->getStatus($paymentId);
+    }
+
+    public function cancel($transactionId)
+    {
+        $this->openApi->cancel($transactionId);
     }
 
     private function getCurrentApi()

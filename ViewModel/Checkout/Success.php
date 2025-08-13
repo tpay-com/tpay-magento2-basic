@@ -1,0 +1,79 @@
+<?php
+
+namespace Tpay\Magento2\ViewModel\Checkout;
+
+use Magento\Checkout\Model\Session;
+use Magento\Framework\Data\Form\FormKey;
+use Magento\Framework\View\Element\Block\ArgumentInterface;
+use Psr\Log\LoggerInterface;
+use Tpay\Magento\Hyva\Payment\Method\Tpay;
+use Tpay\Magento2\Model\ApiFacade\Transaction\TransactionApiFacade;
+use Tpay\Magento2\Model\TpayPayment;
+use Tpay\Magento2\Provider\ConfigurationProvider;
+
+class Success implements ArgumentInterface
+{
+    private Session $checkoutSession;
+    private TransactionApiFacade $transactionApi;
+    private FormKey $formKey;
+
+    private int $orderId;
+    private string $paymentId;
+    private ConfigurationProvider $configurationProvider;
+
+    public function __construct(Session $checkoutSession, TransactionApiFacade $transactionApi, FormKey $formKey, ConfigurationProvider  $configurationProvider)
+    {
+        $this->checkoutSession = $checkoutSession;
+        $this->transactionApi = $transactionApi;
+        $this->formKey = $formKey;
+        $this->configurationProvider = $configurationProvider;
+    }
+
+    public function getPaymentStatus(): string
+    {
+        $order = $this->checkoutSession->getLastRealOrder();
+        $this->orderId = $order->getId();
+        $payment = $order->getPayment();
+        if (TpayPayment::CODE !== $payment->getMethod()) {
+            return 'non-tpay';
+        }
+        $paymentId = $payment->getAdditionalInformation('transaction_id');
+        $this->paymentId = $paymentId;
+        $status = $this->transactionApi->getStatus($paymentId);
+
+        if (in_array($status['status'], ['paid', 'correct', 'success'])) {
+            return 'success';
+        }
+
+        if (!empty($status['payments']['attempts'])) {
+            return 'failed';
+        }
+
+        return 'wait';
+    }
+
+    public function getOrderId(): string
+    {
+        return $this->orderId;
+    }
+
+    public function getTransactionId(): string
+    {
+        return $this->paymentId;
+    }
+
+    public function getFormKey(): string
+    {
+        return $this->formKey->getFormKey();
+    }
+
+    public function getTermsUrl(): string
+    {
+        $this->configurationProvider->getTermsURL();
+    }
+
+    public function getRegulationsUrl(): string
+    {
+        $this->configurationProvider->getRegulationsURL();
+    }
+}

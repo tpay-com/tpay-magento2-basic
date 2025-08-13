@@ -3,6 +3,7 @@
 namespace Tpay\Magento2\Model\ApiFacade\Refund;
 
 use Magento\Payment\Model\InfoInterface;
+use Tpay\Magento2\Model\ApiFacade\OpenApi;
 use Tpay\Magento2\Model\ApiFacade\OpenApiFactory;
 
 class RefundApiFacade
@@ -28,16 +29,19 @@ class RefundApiFacade
         $storeId = $payment->getOrder()->getStoreId();
         if (false !== strpos($payment->getLastTransId(), '-')) {
             if ($payment->getAdditionalInformation('transaction_id')) {
+                /** @var OpenApi $openApi */
                 $openApi = $this->openApi->create(['storeId' => $storeId]);
 
                 return $openApi->makeRefund($payment, $amount);
             }
 
+            /** @var RefundOriginApi $originApi */
             $originApi = $this->originApi->create(['storeId' => $storeId]);
 
             return $originApi->makeRefund($payment, $amount);
         }
 
+        /** @var RefundCardOriginApi $refundOriginApi */
         $refundOriginApi = $this->refundOriginApi->create(['storeId' => $storeId]);
 
         return $refundOriginApi->makeCardRefund($payment, $amount);

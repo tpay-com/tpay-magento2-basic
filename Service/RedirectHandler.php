@@ -27,7 +27,7 @@ class RedirectHandler
         return $this->redirect('magento2basic/tpay/Create');
     }
 
-    public function redirectCartPayment(): ResultInterface
+    public function redirectCardPayment(): ResultInterface
     {
         return $this->redirect('magento2basic/tpay/CardPayment');
     }

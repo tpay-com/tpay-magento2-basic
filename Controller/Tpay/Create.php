@@ -94,39 +94,21 @@ class Create implements ActionInterface
                 $transactionUrl = str_replace('gtitle', 'title', $transactionUrl);
             }
 
-            $this->tpayService->addCommentToHistory($orderId, 'Transaction link '.$transactionUrl);
+            if (!empty($transactionUrl)) {
+                $this->tpayService->addCommentToHistory($orderId, 'Transaction link '.$transactionUrl);
+            }
             $paymentData['additional_information']['transaction_url'] = $transactionUrl;
             $payment->setData($paymentData);
             $this->tpayService->saveOrderPayment($payment);
 
-            if ($this->additionalPaymentInfoValidator->validateBlikIfPresent($additionalPaymentInformation) && $this->tpay->checkBlikLevel0Settings()) {
-                if (isset($transaction['payments']['errors']) && count($transaction['payments']['errors']) > 0) {
-                    return $this->redirectFactory->redirectError();
-                }
-
-                return $this->redirectFactory->redirectSuccess();
-            }
-
             if (!empty($transactionUrl)) {
                 return $this->redirectFactory->redirectTransaction($transactionUrl);
             }
+
+            return $this->redirectFactory->redirectSuccess();
         }
 
         return $this->redirectFactory->redirectError();
-    }
-
-    /**
-     * Send BLIK code for transaction id
-     *
-     * @param string $blikTransactionId
-     * @param string $blikCode
-     * @param string $blikAlias
-     */
-    protected function blikPay($blikTransactionId, $blikCode, $blikAlias): bool
-    {
-        $apiResult = $this->transaction->blik($blikTransactionId, $blikCode, $blikAlias);
-
-        return isset($apiResult['result']) && 1 === $apiResult['result'];
     }
 
     private function prepareTransaction($orderId, array $additionalPaymentInformation)

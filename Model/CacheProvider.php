@@ -17,14 +17,14 @@ class CacheProvider extends Cache
 
     public function set($key, $value, $ttl)
     {
-        $this->cache->save(json_encode($value), $key, [TpayConfigProvider::CACHE_TAG], $ttl);
+        $this->cache->save(serialize($value), $key, [TpayConfigProvider::CACHE_TAG], $ttl);
     }
 
     public function get($key)
     {
         $json = $this->cache->load($key);
 
-        return json_decode($json, true);
+        return unserialize($json);
     }
 
     public function delete($key)

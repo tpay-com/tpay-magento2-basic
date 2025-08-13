@@ -16,8 +16,6 @@ use Tpay\OpenApi\Utilities\TpayException;
 class OpenApi
 {
     public const AUTH_TOKEN_CACHE_KEY = 'tpay_auth_token_%s';
-    public const VM_GROUP = 171;
-    public const VM_CHANNEL = 79;
 
     /** @var TpayApi */
     private $tpayApi;
@@ -102,9 +100,7 @@ class OpenApi
             $additional_payment_data['blikPaymentData']['aliases'] = $blikPaymentData['aliases'];
         }
 
-        $result = $this->tpayApi->transactions()->createInstantPaymentByTransactionId($additional_payment_data, $transactionId);
-
-        return $this->waitForBlikAccept($result);
+        return $this->tpayApi->transactions()->createInstantPaymentByTransactionId($additional_payment_data, $transactionId);
     }
 
     public function blikAlias(string $transactionId, array $aliases): array
@@ -118,9 +114,7 @@ class OpenApi
             ],
         ];
 
-        $result = $this->tpayApi->transactions()->createInstantPaymentByTransactionId($additional_payment_data, $transactionId);
-
-        return $this->waitForBlikAccept($result);
+        return $this->tpayApi->transactions()->createInstantPaymentByTransactionId($additional_payment_data, $transactionId);
     }
 
     public function createBlikZero(array $data): array
@@ -211,17 +205,22 @@ class OpenApi
         $this->tpayApi->transactions()->cancelTransaction($transactionId);
     }
 
+    public function getStatus(string $paymentId): ?array
+    {
+        return $this->tpayApi->transactions()->getTransactionById($paymentId);
+    }
+
     private function handleDataStructure(array $data): array
     {
         $paymentData = [
             'amount' => $data['amount'],
             'description' => $data['description'],
             'hiddenDescription' => $data['crc'],
-            'lang' => strstr($data['language'], '_', true) ? strstr($data['language'], '_', true) : $data['language'],
+            'lang' => strstr($data['language'], '_', true) ?: $data['language'],
             'payer' => [
                 'email' => $data['email'],
                 'name' => $data['name'],
-                'phone' => $data['phone'],
+                'phone' => preg_replace('/[^0-9]/', '', $data['phone']),
                 'address' => $data['address'],
                 'code' => $data['zip'],
                 'city' => $data['city'],
@@ -236,27 +235,19 @@ class OpenApi
             ],
         ];
 
-        if ($data['group'] && $data['channel']) {
+        if (!empty($data['group']) && !empty($data['channel'])) {
             throw OpenApiException::channelAndGroupCollision();
         }
 
-        if ($data['group']) {
+        if (!empty($data['group'])) {
             $paymentData['pay']['groupId'] = $data['group'];
-
-            if (self::VM_GROUP === $data['group']) {
-                unset($paymentData['payer']['phone']);
-            }
         }
 
-        if ($data['channel']) {
+        if (!empty($data['channel'])) {
             $paymentData['pay']['channelId'] = $data['channel'];
-
-            if (self::VM_CHANNEL === $data['channel']) {
-                unset($paymentData['payer']['phone']);
-            }
         }
 
-        if ($data['tax_id']) {
+        if (!empty($data['tax_id'])) {
             $paymentData['payer']['taxId'] = $data['tax_id'];
         }
 
