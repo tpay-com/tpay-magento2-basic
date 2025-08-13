@@ -18,13 +18,26 @@ use Tpay\Magento2\Service\TpayService;
 
 class Retry implements ActionInterface, HttpPostActionInterface
 {
-    private JsonFactory $resultJsonFactory;
-    private OrderRepositoryInterface $orderRepository;
-    private TransactionApiFacade $transactionApi;
-    private Http $request;
-    private TpayPayment $tpay;
-    private TpayService $service;
-    private Session $checkoutSession;
+    /** @var JsonFactory */
+    private $resultJsonFactory;
+
+    /** @var OrderRepositoryInterface */
+    private $orderRepository;
+
+    /** @var TransactionApiFacade */
+    private $transactionApi;
+
+    /** @var Http */
+    private $request;
+
+    /** @var TpayPayment */
+    private $tpay;
+
+    /** @var TpayService */
+    private $service;
+
+    /** @var Session */
+    private $checkoutSession;
 
     public function __construct(JsonFactory $resultJsonFactory, OrderRepositoryInterface $orderRepository, TransactionApiFacade $transactionApi, Http $request, TpayPayment $tpay, TpayService $service, Session $checkoutSession)
     {

@@ -16,11 +16,20 @@ use Tpay\Magento2\Model\ApiFacade\Transaction\TransactionApiFacade;
 
 class Status implements ActionInterface, HttpGetActionInterface
 {
-    private JsonFactory $resultJsonFactory;
-    private OrderRepositoryInterface $orderRepository;
-    private TransactionApiFacade $transactionApi;
-    private RequestInterface $request;
-    private Session $checkoutSession;
+    /** @var JsonFactory */
+    private $resultJsonFactory;
+
+    /** @var OrderRepositoryInterface */
+    private $orderRepository;
+
+    /** @var TransactionApiFacade */
+    private $transactionApi;
+
+    /** @var RequestInterface */
+    private $request;
+
+    /** @var Session */
+    private $checkoutSession;
 
     public function __construct(JsonFactory $resultJsonFactory, OrderRepositoryInterface $orderRepository, TransactionApiFacade $transactionApi, RequestInterface $request, Session $checkoutSession)
     {

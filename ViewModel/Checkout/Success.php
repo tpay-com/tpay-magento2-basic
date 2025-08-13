@@ -11,12 +11,23 @@ use Tpay\Magento2\Provider\ConfigurationProvider;
 
 class Success implements ArgumentInterface
 {
-    private Session $checkoutSession;
-    private TransactionApiFacade $transactionApi;
-    private FormKey $formKey;
-    private int $orderId;
-    private string $paymentId;
-    private ConfigurationProvider $configurationProvider;
+    /** @var Session */
+    private $checkoutSession;
+
+    /** @var TransactionApiFacade */
+    private $transactionApi;
+
+    /** @var FormKey */
+    private $formKey;
+
+    /** @var int */
+    private $orderId;
+
+    /** @var string */
+    private $paymentId;
+
+    /** @var ConfigurationProvider */
+    private $configurationProvider;
 
     public function __construct(Session $checkoutSession, TransactionApiFacade $transactionApi, FormKey $formKey, ConfigurationProvider $configurationProvider)
     {
