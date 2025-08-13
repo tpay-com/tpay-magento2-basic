@@ -77,11 +77,11 @@ class Success implements ArgumentInterface
 
     public function getTermsUrl(): string
     {
-        $this->configurationProvider->getTermsURL();
+        return $this->configurationProvider->getTermsURL();
     }
 
     public function getRegulationsUrl(): string
     {
-        $this->configurationProvider->getRegulationsURL();
+        return $this->configurationProvider->getRegulationsURL();
     }
 }
