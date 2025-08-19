@@ -15,6 +15,9 @@ use Tpay\Magento2\Api\TpayConfigInterface;
 class ConfigurationProvider implements TpayConfigInterface
 {
     private const BASE_CONFIG_PATH = 'payment/tpaycom_magento2basic/';
+    private const PRODUCTION_PREFIX = 'https://secure.tpay.com';
+    private const SANDBOX_PREFIX = 'https://secure.sandbox.tpay.com';
+    private const IMAGE_URL_PATTERN = '%s/tpay/web/groups/%u/normal-white-bg.png';
 
     protected $termsURL = 'https://secure.tpay.com/regulamin.pdf';
     protected $termsEnURL = 'https://tpay.com/user/assets/files_for_download/payment-terms-and-conditions.pdf';
@@ -244,6 +247,11 @@ class ConfigurationProvider implements TpayConfigInterface
         return 'PLN' == $this->storeManager->getStore()->getBaseCurrencyCode();
     }
 
+    public function getCardImageUrl(): string
+    {
+        return sprintf(self::IMAGE_URL_PATTERN, $this->getBaseUrl(), 103);
+    }
+
     public static function generateRandomString(int $length = 46): string
     {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -255,6 +263,15 @@ class ConfigurationProvider implements TpayConfigInterface
         }
 
         return $randomString;
+    }
+
+    private function getBaseUrl(): string
+    {
+        if (false === $this->useSandboxMode()) {
+            return self::PRODUCTION_PREFIX;
+        }
+
+        return self::SANDBOX_PREFIX;
     }
 
     private function getTpayPluginVersion(): string

@@ -66,7 +66,7 @@ class ConfigOpen
                     'payment' => [
                         'redirectUrl' => $this->tpay->getPaymentRedirectUrl(),
                         'tpayLogoUrl' => $this->generateURL('Tpay_Magento2::images/logo_tpay.png'),
-                        'tpayCardsLogoUrl' => $this->generateURL('Tpay_Magento2::images/card.svg'),
+                        'tpayCardsLogoUrl' => $this->tpayConfig->getCardImageUrl(),
                         'showPaymentChannels' => $this->showChannels(),
                         'getTerms' => $this->getTerms(),
                         'getRegulations' => $this->getRegulations(),
@@ -149,7 +149,7 @@ EOD;
             'tpaycards' => [
                 'payment' => [
                     'tpayLogoUrl' => $this->generateURL('Tpay_Magento2::images/logo_tpay.png'),
-                    'tpayCardsLogoUrl' => $this->generateURL('Tpay_Magento2::images/card.svg'),
+                    'tpayCardsLogoUrl' => $this->tpayConfig->getCardImageUrl(),
                     'getTpayLoadingGif' => $this->generateURL('Tpay_Magento2::images/loading.gif'),
                     'getRSAkey' => $this->tpayConfig->getRSAKey(),
                     'fetchJavaScripts' => $this->fetchJavaScripts(),
