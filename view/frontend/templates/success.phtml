@@ -29,13 +29,23 @@ $retryUrl = $block->getUrl('magento2basic/tpay/retry', ['order_id' => $viewModel
         </div>
         <div class="tpay_underline"></div>
     </div>
+    <div data-role="error" class="tpay_error"
+         <?php if ('error' !== $status): ?>style="display: none"<?php endif; ?>>
+        <div>
+            <img src="<?= $block->getViewFileUrl('Tpay_Magento2::/img/warning.svg') ?>" alt="Icon">
+        </div>
+        <div class="tpay_message">
+            <p class="tpay_title"><?= $escaper->escapeHtml(__('There was an error during your payment.')) ?></p>
+        </div>
+        <div class="tpay_underline"></div>
+    </div>
     <div data-role="wait" class="tpay_wait" <?php if ('wait' !== $status): ?>style="display: none"<?php endif; ?>>
         <div>
             <img src="<?= $block->getViewFileUrl('Tpay_Magento2::img/device-mobile-check.svg') ?>" alt="Ikona">
         </div>
         <div class="tpay_message">
             <p class="tpay_title">
-                Potwierdź płatność w aplikacji mobilnej swojego banku.
+                <?= $escaper->escapeHtml(__('Confirm payment in Your banking application.')) ?>
             </p>
         </div>
         <div class="tpay_underline"></div>

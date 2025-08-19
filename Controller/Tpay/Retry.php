@@ -63,23 +63,30 @@ class Retry implements ActionInterface, HttpPostActionInterface
             throw new InvalidRequestException($response->setData(['error' => true]));
         }
 
+        $paymentAttemptsCount = (int)($payment->getAdditionalInformation('payment_attempts_count') ?? 1);
+
         $status = $this->transactionApi->getStatus($transactionId);
 
         if (in_array($status['status'], ['paid', 'correct', 'success'])) {
             return $response->setData(['status' => 'success']);
         }
 
-        $disableBlik = count($status['payments']['attempts']) >= 3;
+        if (null !== $payment->getAdditionalInformation('old_transaction_id')) {
+            return $response->setData(['status' => 'error']);
+        }
+
+        $disableBlik = $paymentAttemptsCount >= 3;
 
         $blikCode = $this->request->getParam('blikCode');
 
-        if (!empty($blikCode) && preg_match('/^\d{6}$/', $blikCode)) {
+        if (!empty($blikCode) && preg_match('/^\d{6}$/', $blikCode) && $paymentAttemptsCount <= 3) {
             $result = $this->transactionApi->blik($transactionId, $blikCode, null);
 
-            $this->checkoutSession->setTpayPreviousAttempts(count($status['payments']['attempts']));
+            $payment->setAdditionalInformation('payment_attempts_count', $paymentAttemptsCount + 1);
+            $this->service->saveOrderPayment($payment);
 
-            if (!empty($result['errors'])) {
-                return $response->setData(['status' => 'failed', 'errorMessage' => $result['errors'][0]['errorMessage'], 'disableBlik' => $disableBlik]);
+            if (!empty($result['payments']['errors'])) {
+                return $response->setData(['status' => 'failed', 'errorMessage' => $result['payments']['errors'][0]['errorMessage'], 'disableBlik' => $disableBlik]);
             }
 
             return $response->setData(['status' => 'wait', 'disableBlik' => $disableBlik]);
@@ -92,6 +99,7 @@ class Retry implements ActionInterface, HttpPostActionInterface
         $transaction = $this->transactionApi->createTransaction($data);
 
         $payment->setAdditionalInformation('transaction_id', $transaction['transactionId']);
+        $payment->setAdditionalInformation('old_transaction_id', $transactionId);
         $this->service->saveOrderPayment($payment);
         $this->service->addCommentToHistory($order->getIncrementId(), __('Retrying payment with redirect to paywall and new transaction %1, link: %2', $transaction['title'], $transaction['transactionPaymentUrl']));
 

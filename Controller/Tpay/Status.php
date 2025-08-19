@@ -28,16 +28,12 @@ class Status implements ActionInterface, HttpGetActionInterface
     /** @var RequestInterface */
     private $request;
 
-    /** @var Session */
-    private $checkoutSession;
-
-    public function __construct(JsonFactory $resultJsonFactory, OrderRepositoryInterface $orderRepository, TransactionApiFacade $transactionApi, RequestInterface $request, Session $checkoutSession)
+    public function __construct(JsonFactory $resultJsonFactory, OrderRepositoryInterface $orderRepository, TransactionApiFacade $transactionApi, RequestInterface $request)
     {
         $this->resultJsonFactory = $resultJsonFactory;
         $this->orderRepository = $orderRepository;
         $this->transactionApi = $transactionApi;
         $this->request = $request;
-        $this->checkoutSession = $checkoutSession;
     }
 
     public function execute(): ResultInterface
@@ -59,8 +55,8 @@ class Status implements ActionInterface, HttpGetActionInterface
             return $response->setData(['status' => 'success']);
         }
 
-        $previousAttempts = (int) $this->checkoutSession->getTpayPreviousAttempts();
-        if (count($status['payments']['attempts']) > $previousAttempts) {
+        $previousAttempts = (int)($payment->getAdditionalInformation('payment_attempts_count') ?? 1);
+        if (count($status['payments']['attempts']) >= $previousAttempts) {
             return $response->setData(['status' => 'failed', 'errorMessage' => __('Payment failed. Try again.')]);
         }
 
