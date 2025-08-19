@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tpay\Magento2\Controller\Tpay;
 
-use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\App\ActionInterface;
 use Magento\Framework\App\Request\InvalidRequestException;
@@ -55,7 +54,7 @@ class Status implements ActionInterface, HttpGetActionInterface
             return $response->setData(['status' => 'success']);
         }
 
-        $previousAttempts = (int)($payment->getAdditionalInformation('payment_attempts_count') ?? 1);
+        $previousAttempts = (int) ($payment->getAdditionalInformation('payment_attempts_count') ?? 1);
         if (count($status['payments']['attempts']) >= $previousAttempts) {
             return $response->setData(['status' => 'failed', 'errorMessage' => __('Payment failed. Try again.')]);
         }

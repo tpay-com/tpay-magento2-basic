@@ -63,7 +63,7 @@ class Retry implements ActionInterface, HttpPostActionInterface
             throw new InvalidRequestException($response->setData(['error' => true]));
         }
 
-        $paymentAttemptsCount = (int)($payment->getAdditionalInformation('payment_attempts_count') ?? 1);
+        $paymentAttemptsCount = (int) ($payment->getAdditionalInformation('payment_attempts_count') ?? 1);
 
         $status = $this->transactionApi->getStatus($transactionId);
 
