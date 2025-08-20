@@ -16,6 +16,8 @@ use Tpay\OpenApi\Utilities\TpayException;
 class OpenApi
 {
     public const AUTH_TOKEN_CACHE_KEY = 'tpay_auth_token_%s';
+    public const VM_GROUP = 171;
+    public const VM_CHANNEL = 79;
 
     /** @var TpayApi */
     private $tpayApi;
@@ -220,7 +222,7 @@ class OpenApi
             'payer' => [
                 'email' => $data['email'],
                 'name' => $data['name'],
-                'phone' => preg_replace('/[^0-9]/', '', $data['phone']),
+                'phone' => $data['phone'],
                 'address' => $data['address'],
                 'code' => $data['zip'],
                 'city' => $data['city'],
@@ -241,10 +243,18 @@ class OpenApi
 
         if (!empty($data['group'])) {
             $paymentData['pay']['groupId'] = $data['group'];
+
+            if (self::VM_GROUP === $data['group']) {
+                unset($paymentData['payer']['phone']);
+            }
         }
 
         if (!empty($data['channel'])) {
             $paymentData['pay']['channelId'] = $data['channel'];
+
+            if (self::VM_CHANNEL === $data['channel']) {
+                unset($paymentData['payer']['phone']);
+            }
         }
 
         if (!empty($data['tax_id'])) {
