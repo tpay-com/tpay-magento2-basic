@@ -55,7 +55,7 @@ class Redirect implements ActionInterface
         $additionalPaymentInfo = $this->tpayService->getPayment($orderId)->getData()['additional_information'];
 
         if ($this->additionalPaymentInfoValidator->validateCardData($additionalPaymentInfo)) {
-            return $this->redirectFactory->redirectCartPayment();
+            return $this->redirectFactory->redirectCardPayment();
         }
 
         if ($this->additionalPaymentInfoValidator->validatePresenceOfGroupOrChannel($additionalPaymentInfo) && $this->additionalPaymentInfoValidator->validateBlikIfPresent($additionalPaymentInfo)) {

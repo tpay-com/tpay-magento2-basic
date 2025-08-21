@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!--
+/**
+ *
+ * @category    payment gateway
+ * @package     Tpaycom_Magento2.3
+ * @author      Tpay.com
+ * @copyright   (https://tpay.com)
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <script src="Tpay_Magento2::js/view/payment/success.js" />
+        <css src="Tpay_Magento2::css/view/payment/success.css" />
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block name="checkout.tpay.order_status" template="Tpay_Magento2::success.phtml" before="checkout.success" cacheable="false">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">Tpay\Magento2\ViewModel\Checkout\Success</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

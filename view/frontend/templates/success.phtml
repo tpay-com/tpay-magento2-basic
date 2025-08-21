@@ -1,0 +1,112 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+/** @var \Magento\Framework\Escaper $escaper */
+/** @var \Tpay\Magento2\ViewModel\Checkout\Success $viewModel */
+$viewModel = $block->getViewModel();
+$status = $viewModel->getPaymentStatus();
+if ('non-tpay' === $status) {
+    return;
+}
+$statusUrl = $block->getUrl('magento2basic/tpay/status', ['order_id' => $viewModel->getOrderId(), 'transaction_id' => $viewModel->getTransactionId()]);
+$retryUrl = $block->getUrl('magento2basic/tpay/retry', ['order_id' => $viewModel->getOrderId(), 'transaction_id' => $viewModel->getTransactionId()]);
+
+?>
+
+<div id="tpay_success_status" data-order-id="<?= $viewModel->getOrderId() ?>"
+     data-transaction-id="<?= $escaper->escapeHtmlAttr($viewModel->getTransactionId()) ?>"
+     data-status="<?= $escaper->escapeHtmlAttr($status) ?>"
+     data-status-url="<?= $escaper->escapeHtmlAttr($statusUrl) ?>"
+     data-retry-url="<?= $escaper->escapeHtmlAttr($retryUrl) ?>"
+     data-form-key="<?= $escaper->escapeHtmlAttr($viewModel->getFormKey()) ?>">
+    <div data-role="success" class="tpay_success"
+         <?php if ('success' !== $status): ?>style="display: none"<?php endif; ?>>
+        <div>
+            <img src="<?= $block->getViewFileUrl('Tpay_Magento2::img/success.svg') ?>" alt="Icon">
+        </div>
+        <div class="tpay_message">
+            <p class="tpay_title"><?= $escaper->escapeHtml(__('Payment successful!')) ?></p>
+            <p class="tpay_subtitle"><?= $escaper->escapeHtml(__('Thank You for choosing Tpay')) ?></p>
+        </div>
+        <div class="tpay_underline"></div>
+    </div>
+    <div data-role="error" class="tpay_error"
+         <?php if ('error' !== $status): ?>style="display: none"<?php endif; ?>>
+        <div>
+            <img src="<?= $block->getViewFileUrl('Tpay_Magento2::/img/warning.svg') ?>" alt="Icon">
+        </div>
+        <div class="tpay_message">
+            <p class="tpay_title"><?= $escaper->escapeHtml(__('There was an error during your payment.')) ?></p>
+        </div>
+        <div class="tpay_underline"></div>
+    </div>
+    <div data-role="wait" class="tpay_wait" <?php if ('wait' !== $status): ?>style="display: none"<?php endif; ?>>
+        <div>
+            <img src="<?= $block->getViewFileUrl('Tpay_Magento2::img/device-mobile-check.svg') ?>" alt="Ikona">
+        </div>
+        <div class="tpay_message">
+            <p class="tpay_title">
+                <?= $escaper->escapeHtml(__('Confirm payment in Your banking application.')) ?>
+            </p>
+        </div>
+        <div class="tpay_underline"></div>
+    </div>
+    <div data-role="failed" class="tpay_failed" <?php if ('failed' !== $status): ?>style="display: none"<?php endif; ?>>
+        <div class="tpay_title_wrapper">
+            <h3 class="tpay_title"><?= $escaper->escapeHtml(__('Payment with Tpay')) ?>:</h3>
+            <div class="tpay_title-line"></div>
+        </div>
+
+        <div class="payments-container">
+            <div class="blik_payment" id="tpay_success_blik_block">
+                <input class="payment-input" type="radio" name="payment" value="blik" id="blik-radio" checked="">
+                <div class="payment-option payment-option-blik with-error">
+                    <label class="payment-label" for="blik-radio">
+                        <span class="radio-mark"></span>
+                        <span class="payment-title"><?= $escaper->escapeHtml(__('BLIK')) ?></span>
+                        <img src="<?= $block->getViewFileUrl('Tpay_Magento2::img/tpay--small.svg') ?>" alt="Logo Blik"
+                             class="tpay-ico">
+                        <img src="<?= $block->getViewFileUrl('Tpay_Magento2::img/check.svg') ?>" alt="Check ico"
+                             class="check-ico">
+                    </label>
+                    <div class="blik-code-section">
+                        <label for="blik-code"
+                               class="blik-code-label"><?= $escaper->escapeHtml(__('Provide BLIK code')) ?></label>
+                        <input type="text" id="blik-code" class="blik-input" maxlength="7" placeholder="000 000"
+                               pattern="\d{3} \d{3}">
+                        <p class="error-message" id="tpay_error_message">
+                            <?= $escaper->escapeHtml(__('Payment failed. Try again.')) ?>
+                        </p>
+                        <p class="info-text">
+                            <?= $escaper->escapeHtml(__('By paying, you accept ')) ?><a
+                                href="<?= $escaper->escapeUrl($viewModel->getTermsUrl()) ?>"
+                                target="_blank"><?= $escaper->escapeHtml(__('regulations')) ?>.</a>
+                            <?= $escaper->escapeHtml(__('The personal data administrator is Krajowy Integrator Płatności S.A with its registered office in Poznań. ')) ?>
+                            <a href="<?= $escaper->escapeUrl($viewModel->getRegulationsUrl()) ?>"
+                               target="_blank"><?= $escaper->escapeHtml(__('Read more.')) ?></a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="transfer_payment">
+                <input class="payment-input" type="radio" name="payment" value="bank_transfer" id="bank-transfer-radio">
+                <div class="payment-option">
+                    <label class="payment-label" for="bank-transfer-radio">
+                        <span class="radio-mark"></span>
+                        <span class="payment-title"><?= $escaper->escapeHtml(__('Online payment')) ?></span>
+                        <img src="<?= $block->getViewFileUrl('Tpay_Magento2::img/tpay--small.svg') ?>" alt="Logo Tpay"
+                             class="tpay-ico">
+                        <img src="<?= $block->getViewFileUrl('Tpay_Magento2::img/check.svg') ?>" alt="Check ico"
+                             class="check-ico">
+                    </label>
+                </div>
+            </div>
+        </div>
+        <button class="pay-button" id="payment-button" disabled="">
+            <input type="radio" id="tpay_success_processing"/>
+            <span class="spinner"><img src="<?= $block->getViewFileUrl('Tpay_Magento2::img/spinner.svg') ?>"></span>
+            <span class="label"><?= $escaper->escapeHtml(__('Pay with Tpay!')) ?></span>
+        </button>
+        <div class="section-divider"></div>
+    </div>
+</div>
