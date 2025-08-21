@@ -54,7 +54,7 @@ use Magento\Framework\Escaper;
                 style="max-width: 125px; max-height: 70px;"
                 alt="BLIK">
             <img
-                src="<?= $block->getViewFileUrl('Tpay_Magento2::images/payment-methods/cards.png') ?>"
+                src="<?= $escaper->escapeUrl('https://secure.tpay.com/tpay/web/groups/1031/normal-white-bg.png')  ?>"
                 style="max-width: 125px; max-height: 70px;"
                 alt="Visa / Mastercard">
             <img
@@ -66,11 +66,11 @@ use Magento\Framework\Escaper;
                 style="max-width: 125px; max-height: 70px;"
                 alt="Raty Pekao">
             <img
-                src="<?= $block->getViewFileUrl('Tpay_Magento2::images/payment-methods/apple_pay.png') ?>"
+                src="<?= $escaper->escapeUrl('https://secure.tpay.com/tpay/web/groups/170/normal-white-bg.png') ?>"
                 style="max-width: 125px; max-height: 70px;"
                 alt="Apple Pay">
             <img
-                src="<?= $block->getViewFileUrl('Tpay_Magento2::images/payment-methods/google_pay.png') ?>"
+                src="<?= $escaper->escapeUrl('https://secure.tpay.com/tpay/web/groups/166/normal-white-bg.png') ?>"
                 style="max-width: 125px; max-height: 70px;"
                 alt="Google Pay">
         </div>
