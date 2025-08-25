@@ -10,6 +10,8 @@ use Magento\Framework\App\CacheInterface;
 use Magento\Framework\DataObject;
 use Magento\Framework\Escaper;
 use Magento\Framework\Event\ManagerInterface;
+use Magento\Framework\HTTP\Header;
+use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
 use Magento\Framework\Locale\Resolver;
 use Magento\Framework\UrlInterface;
 use Magento\Framework\Validator\Exception;
@@ -92,6 +94,12 @@ class TpayPayment extends Adapter implements TpayInterface
     /** @var RefundApiFacade */
     private $refundApiFacade;
 
+    /** @var RemoteAddress */
+    private $remoteAddress;
+
+    /** @var Header */
+    private $httpHeaders;
+
     public function __construct(
         UrlInterface $urlBuilder,
         Session $checkoutSession,
@@ -110,6 +118,8 @@ class TpayPayment extends Adapter implements TpayInterface
         string $infoBlockType,
         CacheInterface $cache,
         RefundApiFacade $refundApiFacade,
+        RemoteAddress $remoteAddress,
+        Header $httpHeaders,
         ?CommandPoolInterface $commandPool = null,
         ?ValidatorPoolInterface $validatorPool = null,
         ?CommandManagerInterface $commandExecutor = null,
@@ -126,6 +136,9 @@ class TpayPayment extends Adapter implements TpayInterface
         $this->resolver = $resolver;
         $this->cache = $cache;
         $this->refundApiFacade = $refundApiFacade;
+        $this->remoteAddress = $remoteAddress;
+        $this->httpHeaders = $httpHeaders;
+
         parent::__construct(
             $eventManager,
             $valueHandlerPool,
@@ -218,6 +231,8 @@ class TpayPayment extends Adapter implements TpayInterface
             'module' => 'Magento '.$this->configurationProvider->getMagentoVersion(),
             'currency' => $this->getISOCurrencyCode($order->getBaseCurrencyCode()),
             'language' => $language,
+            'ip' => $this->remoteAddress->getRemoteAddress(),
+            'userAgent' => $this->httpHeaders->getHttpUserAgent(),
         ];
     }
 

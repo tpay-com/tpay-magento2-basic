@@ -209,6 +209,8 @@ class CardOpen
                 'code' => $this->tpayPaymentConfig['zip'],
                 'city' => $this->tpayPaymentConfig['city'],
                 'country' => $this->tpayPaymentConfig['country'],
+                'ip' => $this->tpayPaymentConfig['ip'],
+                'userAgent' => $this->tpayPaymentConfig['userAgent'],
             ],
             'lang' => 'pl',
             'pay' => [
