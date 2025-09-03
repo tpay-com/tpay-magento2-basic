@@ -227,6 +227,8 @@ class OpenApi
                 'code' => $data['zip'],
                 'city' => $data['city'],
                 'country' => $data['country'],
+                'ip' => $data['ip'],
+                'userAgent' => $data['userAgent'],
             ],
             'callbacks' => [
                 'payerUrls' => [
