@@ -1,0 +1,27 @@
+{
+    "tpay_credit_cards": {
+        "column": {
+            "id": true,
+            "cli_auth": true,
+            "cli_id": true,
+            "short_code": true,
+            "vendor": true,
+            "crc": true,
+            "created_at": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "tpay_blik_aliases": {
+        "column": {
+            "id": true,
+            "cli_id": true,
+            "alias": true,
+            "created_at": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}
