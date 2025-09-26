@@ -25,6 +25,12 @@ define(
                 return 'Tpay_Magento2';
             },
 
+            blikCodeChanged: function (obj, event) {
+                if (event.originalEvent) {
+                    $(event.target).val($(event.target).val().replaceAll(/\D/g, ''));
+                }
+            },
+
             afterPlaceOrder: function () {
                 window.location.replace(window.checkoutConfig.tpay.payment.redirectUrl);
             },

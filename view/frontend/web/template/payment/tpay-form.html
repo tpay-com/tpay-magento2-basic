@@ -32,8 +32,8 @@
                                        placeholder="000000"
                                        tabindex="1"
                                        value=""
+                                       data-bind="event: { input: blikCodeChanged }"
                                        class="tpay-input-value tpay-blik-input"
-                                       oninput="this.value = this.value.replace(/\D/g, '')"
                                 />
                             </div>
                         </div>
