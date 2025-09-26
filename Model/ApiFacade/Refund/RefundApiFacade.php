@@ -27,7 +27,7 @@ class RefundApiFacade
     public function makeRefund(InfoInterface $payment, float $amount)
     {
         $storeId = $payment->getOrder()->getStoreId();
-        if (false !== strpos($payment->getLastTransId(), '-')) {
+        if (false !== strpos($payment->getParentTransactionId(), '-')) {
             if ($payment->getAdditionalInformation('transaction_id')) {
                 /** @var OpenApi $openApi */
                 $openApi = $this->openApi->create(['storeId' => $storeId]);
