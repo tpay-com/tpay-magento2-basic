@@ -14,9 +14,8 @@ class NotificationProcessor
 
     /** @var TpayService */
     protected $tpayService;
-    /**
-     * @var RequestInterface
-     */
+
+    /** @var RequestInterface */
     private $request;
 
     public function __construct(NotificationProcessorFactoryInterface $factory, TpayService $tpayService, RequestInterface $request)
@@ -44,6 +43,6 @@ class NotificationProcessor
     {
         $order = $this->tpayService->getOrderById($orderId);
 
-        return $order->getStoreId() ? (int)$order->getStoreId() : null;
+        return $order->getStoreId() ? (int) $order->getStoreId() : null;
     }
 }

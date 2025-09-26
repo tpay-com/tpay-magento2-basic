@@ -10,9 +10,8 @@ class NotificationProcessorFactory implements NotificationProcessorFactoryInterf
 {
     /** @var list<NotificationProcessorInterface> */
     protected $strategies;
-    /**
-     * @var RequestInterface
-     */
+
+    /** @var RequestInterface */
     private $request;
 
     public function __construct(RequestInterface $request, array $strategies = [])

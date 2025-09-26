@@ -12,9 +12,8 @@ class BlikAliasNotificationProcessor implements NotificationProcessorInterface
 {
     /** @var TpayAliasServiceInterface */
     protected $aliasService;
-    /**
-     * @var RequestInterface
-     */
+
+    /** @var RequestInterface */
     private $request;
 
     public function __construct(TpayAliasServiceInterface $aliasService, RequestInterface $request)
