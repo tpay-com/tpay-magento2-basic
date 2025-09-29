@@ -47,6 +47,7 @@ class CacheProvider extends Cache
             // phpcs:ignore Magento2.Security.InsecureFunction
             return serialize($value);
         }
+
         return json_encode($value);
     }
 
@@ -56,19 +57,20 @@ class CacheProvider extends Cache
         if (null !== $data) {
             return $data;
         }
+
         // We have to use serialize
         // phpcs:ignore Magento2.Security.InsecureFunction
-        return unserialize($json,
-            ['allowed_classes' =>
-                [
-                    Token::class,
-                    IssuedAt::class,
-                    Scope::class,
-                    ExpiresIn::class,
-                    TokenType::class,
-                    ClientId::class,
-                    AccessToken::class,
-                ]
+        return unserialize(
+            $json,
+            ['allowed_classes' => [
+                Token::class,
+                IssuedAt::class,
+                Scope::class,
+                ExpiresIn::class,
+                TokenType::class,
+                ClientId::class,
+                AccessToken::class,
+            ],
             ]
         );
     }
