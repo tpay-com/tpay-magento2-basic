@@ -12,7 +12,7 @@ if (class_exists(InstalledVersions::class)) {
     Magento\Framework\Component\ComponentRegistrar::register(
         Magento\Framework\Component\ComponentRegistrar::LIBRARY,
         'tpay-com/tpay-openapi-php',
-        InstalledVersions::getInstallPath('tpay-com/tpay-openapi-php')
+        InstalledVersions::getInstallPath('tpay-com/tpay-openapi-php') . '/src'
     );
 } else {
     foreach (Composer\Autoload\ClassLoader::getRegisteredLoaders() as $loader) {
