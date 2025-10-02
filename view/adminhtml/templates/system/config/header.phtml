@@ -50,27 +50,27 @@ use Magento\Framework\Escaper;
         </div>
         <div class="logos">
             <img
-                src="<?= $block->getViewFileUrl('Tpay_Magento2::images/payment-methods/blik.png') ?>"
+                src="<?= $escaper->escapeUrl($block->getViewFileUrl('Tpay_Magento2::images/payment-methods/blik.png')) ?>"
                 style="max-width: 125px; max-height: 70px;"
                 alt="BLIK">
             <img
-                src="<?= $block->getViewFileUrl('Tpay_Magento2::images/payment-methods/cards.png') ?>"
+                src="<?= $escaper->escapeUrl($block->getViewFileUrl('Tpay_Magento2::images/payment-methods/cards.png')) ?>"
                 style="max-width: 125px; max-height: 70px;"
                 alt="Visa / Mastercard">
             <img
-                src="<?= $block->getViewFileUrl('Tpay_Magento2::images/payment-methods/paypo.svg') ?>"
+                src="<?= $escaper->escapeUrl($block->getViewFileUrl('Tpay_Magento2::images/payment-methods/paypo.svg')) ?>"
                 style="max-width: 125px; max-height: 70px;"
                 alt="PayPo">
             <img
-                src="<?= $block->getViewFileUrl('Tpay_Magento2::images/payment-methods/raty_pekao.png') ?>"
+                src="<?= $escaper->escapeUrl($block->getViewFileUrl('Tpay_Magento2::images/payment-methods/raty_pekao.png')) ?>"
                 style="max-width: 125px; max-height: 70px;"
                 alt="Raty Pekao">
             <img
-                src="<?= $escaper->escapeUrl('https://secure.tpay.com/tpay/web/groups/170/normal-white-bg.png') ?>"
+                src="<?= $escaper->escapeUrl($escaper->escapeUrl('https://secure.tpay.com/tpay/web/groups/170/normal-white-bg.png')) ?>"
                 style="max-width: 125px; max-height: 70px;"
                 alt="Apple Pay">
             <img
-                src="<?= $escaper->escapeUrl('https://secure.tpay.com/tpay/web/groups/166/normal-white-bg.png') ?>"
+                src="<?= $escaper->escapeUrl($escaper->escapeUrl('https://secure.tpay.com/tpay/web/groups/166/normal-white-bg.png')) ?>"
                 style="max-width: 125px; max-height: 70px;"
                 alt="Google Pay">
         </div>

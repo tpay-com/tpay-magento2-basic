@@ -88,7 +88,9 @@ class TransactionApiFacade
         $channels = $this->cache->load($cacheKey);
 
         if ($channels) {
-            return unserialize($channels);
+            // We have to use serialize
+            // phpcs:ignore Magento2.Security.InsecureFunction
+            return unserialize($channels, ['allowed_classes' => [Channel::class]]);
         }
 
         try {
@@ -98,6 +100,8 @@ class TransactionApiFacade
         } catch (TpayException $e) {
             return [];
         }
+        // We have to use serialize
+        // phpcs:ignore Magento2.Security.InsecureFunction
         $this->cache->save(serialize($channels), $cacheKey, [TpayConfigProvider::CACHE_TAG], self::CACHE_LIFETIME);
 
         return $channels;

@@ -12,7 +12,7 @@ $retryUrl = $block->getUrl('magento2basic/tpay/retry', ['order_id' => $viewModel
 
 ?>
 
-<div id="tpay_success_status" data-order-id="<?= $viewModel->getOrderId() ?>"
+<div id="tpay_success_status" data-order-id="<?= $escaper->escapeHtmlAttr($viewModel->getOrderId()) ?>"
      data-transaction-id="<?= $escaper->escapeHtmlAttr($viewModel->getTransactionId()) ?>"
      data-status="<?= $escaper->escapeHtmlAttr($status) ?>"
      data-status-url="<?= $escaper->escapeHtmlAttr($statusUrl) ?>"
@@ -21,7 +21,7 @@ $retryUrl = $block->getUrl('magento2basic/tpay/retry', ['order_id' => $viewModel
     <div data-role="success" class="tpay_success"
          <?php if ('success' !== $status): ?>style="display: none"<?php endif; ?>>
         <div>
-            <img src="<?= $block->getViewFileUrl('Tpay_Magento2::img/success.svg') ?>" alt="Icon">
+            <img src="<?= $escaper->escapeUrl($block->getViewFileUrl('Tpay_Magento2::img/success.svg')) ?>" alt="Icon">
         </div>
         <div class="tpay_message">
             <p class="tpay_title"><?= $escaper->escapeHtml(__('Payment successful!')) ?></p>
@@ -32,7 +32,7 @@ $retryUrl = $block->getUrl('magento2basic/tpay/retry', ['order_id' => $viewModel
     <div data-role="error" class="tpay_error"
          <?php if ('error' !== $status): ?>style="display: none"<?php endif; ?>>
         <div>
-            <img src="<?= $block->getViewFileUrl('Tpay_Magento2::/img/warning.svg') ?>" alt="Icon">
+            <img src="<?= $escaper->escapeUrl($block->getViewFileUrl('Tpay_Magento2::/img/warning.svg')) ?>" alt="Icon">
         </div>
         <div class="tpay_message">
             <p class="tpay_title"><?= $escaper->escapeHtml(__('There was an error during your payment.')) ?></p>
@@ -41,7 +41,7 @@ $retryUrl = $block->getUrl('magento2basic/tpay/retry', ['order_id' => $viewModel
     </div>
     <div data-role="wait" class="tpay_wait" <?php if ('wait' !== $status): ?>style="display: none"<?php endif; ?>>
         <div>
-            <img src="<?= $block->getViewFileUrl('Tpay_Magento2::img/device-mobile-check.svg') ?>" alt="Ikona">
+            <img src="<?= $escaper->escapeUrl($block->getViewFileUrl('Tpay_Magento2::img/device-mobile-check.svg')) ?>" alt="Ikona">
         </div>
         <div class="tpay_message">
             <p class="tpay_title">
@@ -63,10 +63,10 @@ $retryUrl = $block->getUrl('magento2basic/tpay/retry', ['order_id' => $viewModel
                     <label class="payment-label" for="blik-radio">
                         <span class="radio-mark"></span>
                         <span class="payment-title"><?= $escaper->escapeHtml(__('BLIK')) ?></span>
-                        <img src="<?= $block->getViewFileUrl('Tpay_Magento2::img/tpay--small.svg') ?>" alt="Logo Blik"
-                             class="tpay-ico">
-                        <img src="<?= $block->getViewFileUrl('Tpay_Magento2::img/check.svg') ?>" alt="Check ico"
-                             class="check-ico">
+                        <img src="<?= $escaper->escapeUrl($block->getViewFileUrl('Tpay_Magento2::img/tpay--small.svg')) ?>"
+                             alt="Logo Blik" class="tpay-ico">
+                        <img src="<?= $escaper->escapeUrl($block->getViewFileUrl('Tpay_Magento2::img/check.svg')) ?>"
+                             alt="Check ico" class="check-ico">
                     </label>
                     <div class="blik-code-section">
                         <label for="blik-code"
@@ -94,9 +94,9 @@ $retryUrl = $block->getUrl('magento2basic/tpay/retry', ['order_id' => $viewModel
                     <label class="payment-label" for="bank-transfer-radio">
                         <span class="radio-mark"></span>
                         <span class="payment-title"><?= $escaper->escapeHtml(__('Online payment')) ?></span>
-                        <img src="<?= $block->getViewFileUrl('Tpay_Magento2::img/tpay--small.svg') ?>" alt="Logo Tpay"
+                        <img src="<?= $escaper->escapeUrl($block->getViewFileUrl('Tpay_Magento2::img/tpay--small.svg')) ?>" alt="Logo Tpay"
                              class="tpay-ico">
-                        <img src="<?= $block->getViewFileUrl('Tpay_Magento2::img/check.svg') ?>" alt="Check ico"
+                        <img src="<?= $escaper->escapeUrl($block->getViewFileUrl('Tpay_Magento2::img/check.svg')) ?>" alt="Check ico"
                              class="check-ico">
                     </label>
                 </div>
@@ -104,7 +104,7 @@ $retryUrl = $block->getUrl('magento2basic/tpay/retry', ['order_id' => $viewModel
         </div>
         <button class="pay-button" id="payment-button" disabled="">
             <input type="radio" id="tpay_success_processing"/>
-            <span class="spinner"><img src="<?= $block->getViewFileUrl('Tpay_Magento2::img/spinner.svg') ?>"></span>
+            <span class="spinner"><img src="<?= $escaper->escapeUrl($block->getViewFileUrl('Tpay_Magento2::img/spinner.svg')) ?>"></span>
             <span class="label"><?= $escaper->escapeHtml(__('Pay with Tpay!')) ?></span>
         </button>
         <div class="section-divider"></div>

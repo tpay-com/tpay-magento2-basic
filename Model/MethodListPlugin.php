@@ -171,10 +171,10 @@ class MethodListPlugin
     {
         $userAgent = $this->request->getHeader('User-Agent')->getFieldValue();
 
-        if (strpos($userAgent, 'Chrome')) {
+        if (false !== strpos($userAgent, 'Chrome')) {
             return 'Chrome';
         }
-        if (strpos($userAgent, 'Safari')) {
+        if (false !== strpos($userAgent, 'Safari')) {
             return 'Safari';
         }
 

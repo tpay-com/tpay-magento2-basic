@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="tpay_credit_cards" resource="default" engine="innodb" comment="Tpay credit cards">
+        <column xsi:type="int" name="id" unsigned="true" nullable="false" identity="true" comment="ID"/>
+        <column xsi:type="varchar" default="" name="cli_auth" nullable="false" comment="Token"/>
+        <column xsi:type="varchar" default="" name="cli_id" nullable="false" comment="Customer Identifier"/>
+        <column xsi:type="varchar" default="" name="short_code" nullable="false" comment="Description"/>
+        <column xsi:type="varchar" default="" name="vendor" nullable="false" comment="Card vendor"/>
+        <column xsi:type="varchar" default="" name="crc" nullable="false" comment="CRC"/>
+        <column xsi:type="datetime" name="created_at" default="CURRENT_TIMESTAMP" nullable="false"
+                comment="Created At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+    </table>
+
+    <table name="tpay_blik_aliases" resource="default" engine="innodb" comment="Tpay blik aliases">
+        <column xsi:type="int" name="id" unsigned="true" nullable="false" identity="true" comment="ID"/>
+        <column xsi:type="varchar" default="" name="cli_id" nullable="false" comment="Customer Identifier"/>
+        <column xsi:type="varchar" default="" name="alias" nullable="false" comment="BLIK alias"/>
+        <column xsi:type="datetime" name="created_at" default="CURRENT_TIMESTAMP" nullable="false"
+                comment="Created At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+    </table>
+
+</schema>

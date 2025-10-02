@@ -46,6 +46,9 @@ class Success implements ArgumentInterface
             return 'non-tpay';
         }
         $paymentId = $payment->getAdditionalInformation('transaction_id');
+        if (empty($paymentId)) {
+            return 'non-tpay';
+        }
         $this->paymentId = $paymentId;
         $status = $this->transactionApi->getStatus($paymentId);
 
