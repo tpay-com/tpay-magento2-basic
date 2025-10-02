@@ -15,7 +15,7 @@ if (class_exists(InstalledVersions::class)) {
         Magento\Framework\Component\ComponentRegistrar::register(
             Magento\Framework\Component\ComponentRegistrar::LIBRARY,
             'tpay-com/tpay-openapi-php',
-            $path . '/src'
+            $path.'/src'
         );
     } catch (OutOfBoundsException $e) {
     }
