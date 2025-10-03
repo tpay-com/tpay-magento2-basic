@@ -15,7 +15,7 @@
         "composer/composer": "^2.0.9",
         "magento/framework": "^103.0",
         "magento/module-csp": "^100.4.5-p6",
-        "tpay-com/tpay-openapi-php": "^2.0.3",
+        "tpay-com/tpay-openapi-php": "dev-DX-1364-create-merchant-method as 2.0.4",
         "tpay-com/tpay-php": "^2.4.7"
     },
     "suggest": {
