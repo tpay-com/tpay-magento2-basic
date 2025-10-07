@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tpay\Magento2\Notification\Strategy;
 
+use Magento\Framework\App\RequestInterface;
 use Tpay\Magento2\Api\Notification\Strategy\NotificationProcessorInterface;
 use Tpay\Magento2\Service\TpayAliasServiceInterface;
 
@@ -12,14 +13,18 @@ class BlikAliasNotificationProcessor implements NotificationProcessorInterface
     /** @var TpayAliasServiceInterface */
     protected $aliasService;
 
-    public function __construct(TpayAliasServiceInterface $aliasService)
+    /** @var RequestInterface */
+    private $request;
+
+    public function __construct(TpayAliasServiceInterface $aliasService, RequestInterface $request)
     {
         $this->aliasService = $aliasService;
+        $this->request = $request;
     }
 
     public function process(?int $storeId = null)
     {
-        $response = $_POST;
+        $response = $this->request->getPost()->toArray();
         $userId = (int) explode('-', $response['msg_value']['value'])[1];
 
         if ('ALIAS_REGISTER' === $response['event']) {

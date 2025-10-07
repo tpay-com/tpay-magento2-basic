@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Tpay\Magento2\Provider;
 
-use Composer\Autoload\ClassLoader;
+use Composer\InstalledVersions;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ProductMetadataInterface;
+use Magento\Framework\Component\ComponentRegistrar;
+use Magento\Framework\Component\ComponentRegistrarInterface;
 use Magento\Framework\Locale\Resolver;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use OutOfBoundsException;
 use Tpay\Magento2\Api\TpayConfigInterface;
 
 class ConfigurationProvider implements TpayConfigInterface
@@ -36,12 +39,16 @@ class ConfigurationProvider implements TpayConfigInterface
     /** @var Resolver */
     private $localeResolver;
 
-    public function __construct(ScopeConfigInterface $scopeConfig, ProductMetadataInterface $productMetadataInterface, StoreManagerInterface $storeManager, Resolver $localeResolver)
+    /** @var ComponentRegistrarInterface */
+    private $componentRegistrar;
+
+    public function __construct(ScopeConfigInterface $scopeConfig, ProductMetadataInterface $productMetadataInterface, StoreManagerInterface $storeManager, Resolver $localeResolver, ComponentRegistrarInterface $componentRegistrar)
     {
         $this->scopeConfig = $scopeConfig;
         $this->productMetadataInterface = $productMetadataInterface;
         $this->storeManager = $storeManager;
         $this->localeResolver = $localeResolver;
+        $this->componentRegistrar = $componentRegistrar;
     }
 
     public function isTpayActive(): bool
@@ -276,9 +283,18 @@ class ConfigurationProvider implements TpayConfigInterface
 
     private function getTpayPluginVersion(): string
     {
-        $dir = __DIR__.'/../.version';
+        try {
+            if (class_exists(InstalledVersions::class)) {
+                return InstalledVersions::getPrettyVersion('tpaycom/magento2basic');
+            }
+        } catch (OutOfBoundsException $e) {
+        }
+
+        $path = $this->componentRegistrar->getPath(ComponentRegistrar::MODULE, 'Tpay_Magento2');
+
+        $dir = $path.'/.version';
         if (file_exists($dir)) {
-            $version = file_get_contents(__DIR__.'/../.version');
+            $version = file_get_contents($dir);
 
             return rtrim($version, "\n");
         }
@@ -288,27 +304,16 @@ class ConfigurationProvider implements TpayConfigInterface
 
     private function getApisVersions(): array
     {
-        $apiVersions = ['n/a', 'n/a'];
-
-        if (true === method_exists('Composer\Autoload\ClassLoader', 'getRegisteredLoaders')) {
-            $vendorDir = array_keys(ClassLoader::getRegisteredLoaders())[0];
-            $installed = $vendorDir.'/composer/installed.php';
-
-            if (false === file_exists($installed)) {
-                return $apiVersions;
+        try {
+            if (class_exists(InstalledVersions::class)) {
+                return [
+                    InstalledVersions::getPrettyVersion('tpay-com/tpay-openapi-php'),
+                    InstalledVersions::getPrettyVersion('tpay-com/tpay-php'),
+                ];
             }
-
-            $dir = require $installed;
-
-            if (isset($dir['versions']['tpay-com/tpay-openapi-php'])) {
-                $apiVersions[0] = $dir['versions']['tpay-com/tpay-openapi-php']['pretty_version'];
-            }
-
-            if (isset($dir['versions']['tpay-com/tpay-php'])) {
-                $apiVersions[1] = $dir['versions']['tpay-com/tpay-php']['pretty_version'];
-            }
+        } catch (OutOfBoundsException $e) {
         }
 
-        return $apiVersions;
+        return ['n/a', 'n/a'];
     }
 }
