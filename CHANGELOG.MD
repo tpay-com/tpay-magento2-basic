@@ -16,6 +16,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Removed installers and provided declarative schema definitions
   - Improved version detection and registration of dependend libraries
 
+## 2.4.2
+
+### Changed
+- Increased callback urls length
+
 ## 2.4.1
 
 ### Fixed
