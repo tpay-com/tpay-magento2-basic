@@ -228,7 +228,7 @@ class OpenApi
                 'city' => $data['city'],
                 'country' => $data['country'],
                 'ip' => $data['ip'],
-                'userAgent' => $data['userAgent'],
+                'userAgent' => substr($data['userAgent'], 0, 255),
             ],
             'callbacks' => [
                 'payerUrls' => [
