@@ -28,15 +28,27 @@ class NotificationProcessor
     public function process()
     {
         $strategy = $this->factory->create($this->request->getPost()->toArray());
+        $storeId = null;
 
-        if ($strategy instanceof BlikAliasNotificationProcessor) {
-            $storeId = null;
-        } else {
-            $orderId = $this->request->getPost('order_id') ? base64_decode($this->request->getPost('order_id')) : base64_decode($this->request->getPost('tr_crc'));
-            $storeId = $this->getOrderStore($orderId);
+        if (!$strategy instanceof BlikAliasNotificationProcessor) {
+            $orderId = $this->getOrderId();
+            if ($orderId) {
+                $storeId = $this->getOrderStore($orderId);
+            }
         }
 
         $strategy->process($storeId);
+    }
+
+    private function getOrderId(): ?string
+    {
+        $value = $this->request->getPost('order_id') ?? $this->request->getPost('tr_crc');
+
+        if ($value === null) {
+            return null;
+        }
+
+        return base64_decode($value);
     }
 
     private function getOrderStore(string $orderId): ?int
