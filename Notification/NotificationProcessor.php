@@ -44,7 +44,7 @@ class NotificationProcessor
     {
         $value = $this->request->getPost('order_id') ?? $this->request->getPost('tr_crc');
 
-        if ($value === null) {
+        if (null === $value) {
             return null;
         }
 
