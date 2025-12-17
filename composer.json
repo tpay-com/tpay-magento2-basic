@@ -34,8 +34,6 @@
         "phpstan/phpstan": "^2.1",
         "php-cs-fixer/shim": "^3.92",
         "vimeo/psalm": "^5.15.0",
-        "php-stubs/generator": "^0.8.5",
-        "phpstan/extension-installer": "^1.4",
         "php-parallel-lint/php-parallel-lint": "^1.4"
     },
     "scripts": {
@@ -46,8 +44,5 @@
       "cs:sniffer": "./vendor/bin/phpcs --standard=.php-cs.xml -n"
     },
     "config": {
-        "allow-plugins": {
-            "phpstan/extension-installer": true
-        }
     }
 }
