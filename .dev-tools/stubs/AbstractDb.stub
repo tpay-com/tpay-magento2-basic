@@ -1,0 +1,1105 @@
+<?php
+
+namespace Magento\Framework\Data\Collection\Db;
+
+/**
+ * Interface \Magento\Framework\Data\Collection\Db\FetchStrategyInterface
+ *
+ * @api
+ */
+interface FetchStrategyInterface
+{
+    /**
+     * Retrieve all records
+     *
+     * @param Select $select
+     * @param array $bindParams
+     * @return array
+     */
+    public function fetchAll(\Magento\Framework\DB\Select $select, array $bindParams = []);
+}
+namespace Magento\Framework\Data\Collection\Db\FetchStrategy;
+
+class Query implements \Magento\Framework\Data\Collection\Db\FetchStrategyInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function fetchAll(\Magento\Framework\DB\Select $select, array $bindParams = [])
+    {
+    }
+}
+/**
+ * Retrieve collection data from cache, fail over to another fetch strategy, if cache does not exist yet
+ */
+class Cache implements \Magento\Framework\Data\Collection\Db\FetchStrategyInterface
+{
+    /**
+     * @var string
+     */
+    protected $_cacheIdPrefix = '';
+    /**
+     * @var array
+     */
+    protected $_cacheTags = [];
+    /**
+     * @var int|bool|null
+     */
+    protected $_cacheLifetime = null;
+    /**
+     * Constructor
+     *
+     * @param \Magento\Framework\Cache\FrontendInterface $cache
+     * @param \Magento\Framework\Data\Collection\Db\FetchStrategyInterface $fetchStrategy
+     * @param string $cacheIdPrefix
+     * @param array $cacheTags
+     * @param int|bool|null $cacheLifetime
+     * @param SerializerInterface|null $serializer
+     */
+    public function __construct(\Magento\Framework\Cache\FrontendInterface $cache, \Magento\Framework\Data\Collection\Db\FetchStrategyInterface $fetchStrategy, $cacheIdPrefix = '', array $cacheTags = [], $cacheLifetime = null, \Magento\Framework\Serialize\SerializerInterface $serializer = null)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function fetchAll(\Magento\Framework\DB\Select $select, array $bindParams = [])
+    {
+    }
+    /**
+     * Determine cache identifier based on select query
+     *
+     * @param \Magento\Framework\DB\Select|string $select
+     * @return string
+     */
+    protected function _getSelectCacheId($select)
+    {
+    }
+}
+namespace Magento\Framework\Data\Collection;
+
+/**
+ * Filesystem items collection
+ *
+ * Can scan a folder for files and/or folders recursively.
+ * Creates \Magento\Framework\DataObject instance for each item, with its filename and base name
+ *
+ * Supports regexp masks that are applied to files and folders base names.
+ * These masks apply before adding items to collection, during filesystem scanning
+ *
+ * Supports dirsFirst feature, that will make directories be before files, regardless of sorting column.
+ *
+ * Supports some fancy filters.
+ *
+ * At least one target directory must be set
+ *
+ * @api
+ * @since 100.0.2
+ */
+class Filesystem extends \Magento\Framework\Data\Collection
+{
+    /**
+     * Target directory.
+     *
+     * @var string
+     */
+    protected $_targetDirs = [];
+    /**
+     * Whether to collect files.
+     *
+     * @var bool
+     */
+    protected $_collectFiles = true;
+    /**
+     * Whether to collect directories before files.
+     *
+     * @var bool
+     */
+    protected $_dirsFirst = true;
+    /**
+     * Whether to collect recursively.
+     *
+     * @var bool
+     */
+    protected $_collectRecursively = true;
+    /**
+     * Whether to collect dirs.
+     *
+     * @var bool
+     */
+    protected $_collectDirs = false;
+    /**
+     * \Directory names regex pre-filter.
+     *
+     * @var string
+     */
+    protected $_allowedDirsMask = '/^[a-z0-9\\.\\-\\_]+$/i';
+    /**
+     * Filenames regex pre-filter.
+     *
+     * @var string
+     */
+    protected $_allowedFilesMask = '/^[a-z0-9\\.\\-\\_]+\\.[a-z0-9]+$/i';
+    /**
+     * Disallowed filenames regex pre-filter match for better versatility.
+     *
+     * @var string
+     */
+    protected $_disallowedFilesMask = '';
+    /**
+     * Collecting items helper variable.
+     *
+     * @var array
+     */
+    protected $_collectedDirs = [];
+    /**
+     * Collecting items helper variable.
+     *
+     * @var array
+     */
+    protected $_collectedFiles = [];
+    /**
+     * @param EntityFactoryInterface|null $_entityFactory
+     * @param \Magento\Framework\Filesystem $filesystem
+     */
+    public function __construct(\Magento\Framework\Data\Collection\EntityFactoryInterface $_entityFactory = null, \Magento\Framework\Filesystem $filesystem = null)
+    {
+    }
+    /**
+     * Allowed dirs mask setter. Set empty to not filter.
+     *
+     * @param string $regex
+     * @return $this
+     */
+    public function setDirsFilter($regex)
+    {
+    }
+    /**
+     * Allowed files mask setter. Set empty to not filter.
+     *
+     * @param string $regex
+     * @return $this
+     */
+    public function setFilesFilter($regex)
+    {
+    }
+    /**
+     * Disallowed files mask setter. Set empty value to not use this filter.
+     *
+     * @param string $regex
+     * @return $this
+     */
+    public function setDisallowedFilesFilter($regex)
+    {
+    }
+    /**
+     * Set whether to collect dirs.
+     *
+     * @param bool $value
+     * @return $this
+     */
+    public function setCollectDirs($value)
+    {
+    }
+    /**
+     * Set whether to collect files.
+     *
+     * @param bool $value
+     * @return $this
+     */
+    public function setCollectFiles($value)
+    {
+    }
+    /**
+     * Set whether to collect recursively.
+     *
+     * @param bool $value
+     * @return $this
+     */
+    public function setCollectRecursively($value)
+    {
+    }
+    /**
+     * Target directory setter. Adds directory to be scanned.
+     *
+     * @param string $value
+     * @return $this
+     * @throws \Exception
+     */
+    public function addTargetDir($value)
+    {
+    }
+    /**
+     * Set whether to collect directories before files. Works *before* sorting.
+     *
+     * @param bool $value
+     * @return $this
+     */
+    public function setDirsFirst($value)
+    {
+    }
+    /**
+     * Get files from specified directory recursively (if needed).
+     *
+     * @param string|array $dir
+     * @return void
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @throws FileSystemException
+     */
+    protected function _collectRecursive($dir)
+    {
+    }
+    /**
+     * Launch data collecting.
+     *
+     * @param bool $printQuery
+     * @param bool $logQuery
+     * @return $this
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @throws \Exception
+     */
+    public function loadData($printQuery = false, $logQuery = false)
+    {
+    }
+    /**
+     * Callback for sorting items. Currently supports only sorting by one column.
+     *
+     * @param array $a
+     * @param array $b
+     * @return int|void
+     */
+    protected function _usort($a, $b)
+    {
+    }
+    /**
+     * Set select order. Currently supports only sorting by one column.
+     *
+     * @param   string $field
+     * @param   string $direction
+     * @return  Collection
+     */
+    public function setOrder($field, $direction = self::SORT_ORDER_DESC)
+    {
+    }
+    /**
+     * Generate item row basing on the filename.
+     *
+     * @param string $filename
+     * @return array
+     */
+    protected function _generateRow($filename)
+    {
+    }
+    /**
+     * Set a custom filter with callback
+     * The callback must take 3 params:
+     *     string $field       - field key,
+     *     mixed  $filterValue - value to filter by,
+     *     array  $row         - a generated row (before generating varien objects)
+     *
+     * @param string $field
+     * @param mixed $value
+     * @param string $type 'and'|'or'
+     * @param callable $callback
+     * @param bool $isInverted
+     * @return $this
+     */
+    public function addCallbackFilter($field, $value, $type, $callback, $isInverted = false)
+    {
+    }
+    /**
+     * The filters renderer and caller. Applies to each row, renders once.
+     *
+     * @param array $row
+     * @return bool
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    protected function _filterRow($row)
+    {
+    }
+    /**
+     * Invokes specified callback. Skips, if there is no filtered key in the row.
+     *
+     * @param callable $callback
+     * @param array $callbackParams
+     * @return bool
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     */
+    protected function _invokeFilter($callback, $callbackParams)
+    {
+    }
+    /**
+     * Fancy field filter.
+     *
+     * @param string $field
+     * @param mixed $cond
+     * @param string $type 'and' | 'or'
+     * @see Db::addFieldToFilter()
+     * @return $this
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
+    public function addFieldToFilter($field, $cond, $type = 'and')
+    {
+    }
+    /**
+     * Prepare a bracket into filters.
+     *
+     * @param string $bracket
+     * @param bool $isAnd
+     * @return $this
+     */
+    protected function _addFilterBracket($bracket = '(', $isAnd = true)
+    {
+    }
+    /**
+     * Render condition sign before element, if required.
+     *
+     * @param int $increment
+     * @param bool $isAnd
+     * @return string
+     */
+    protected function _renderConditionBeforeFilterElement($increment, $isAnd)
+    {
+    }
+    /**
+     * Does nothing. Intentionally disabled parent method.
+     *
+     * @param string $field
+     * @param string $value
+     * @param string $type
+     * @return $this
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function addFilter($field, $value, $type = 'and')
+    {
+    }
+    /**
+     * Get all ids of collected items.
+     *
+     * @return array
+     */
+    public function getAllIds()
+    {
+    }
+    /**
+     * Callback method for 'like' fancy filter.
+     *
+     * @param string $field
+     * @param mixed $filterValue
+     * @param array $row
+     * @return bool
+     * @see addFieldToFilter()
+     * @see addCallbackFilter()
+     */
+    public function filterCallbackLike($field, $filterValue, $row)
+    {
+    }
+    /**
+     * Callback method for 'eq' fancy filter.
+     *
+     * @param string $field
+     * @param mixed $filterValue
+     * @param array $row
+     * @return bool
+     * @see addFieldToFilter()
+     * @see addCallbackFilter()
+     */
+    public function filterCallbackEq($field, $filterValue, $row)
+    {
+    }
+    /**
+     * Callback method for 'in' fancy filter.
+     *
+     * @param string $field
+     * @param mixed $filterValue
+     * @param array $row
+     * @return bool
+     * @see addFieldToFilter()
+     * @see addCallbackFilter()
+     */
+    public function filterCallbackInArray($field, $filterValue, $row)
+    {
+    }
+    /**
+     * Callback method for 'isnull' fancy filter.
+     *
+     * @param string $field
+     * @param mixed $filterValue
+     * @param array $row
+     * @return bool
+     * @see addFieldToFilter()
+     * @see addCallbackFilter()
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function filterCallbackIsNull($field, $filterValue, $row)
+    {
+    }
+    /**
+     * Callback method for 'moreq' fancy filter.
+     *
+     * @param string $field
+     * @param mixed $filterValue
+     * @param array $row
+     * @return bool
+     * @see addFieldToFilter()
+     * @see addCallbackFilter()
+     */
+    public function filterCallbackIsMoreThan($field, $filterValue, $row)
+    {
+    }
+    /**
+     * Callback method for 'lteq' fancy filter.
+     *
+     * @param string $field
+     * @param mixed $filterValue
+     * @param array $row
+     * @return bool
+     * @see addFieldToFilter()
+     * @see addCallbackFilter()
+     */
+    public function filterCallbackIsLessThan($field, $filterValue, $row)
+    {
+    }
+}
+/**
+ * Interface \Magento\Framework\Data\Collection\EntityFactoryInterface
+ *
+ * @api
+ */
+interface EntityFactoryInterface
+{
+    /**
+     * Create new object instance
+     *
+     * @param string $type
+     * @param array $arguments
+     * @return mixed
+     */
+    public function create($type, array $arguments = []);
+}
+class EntityFactory implements \Magento\Framework\Data\Collection\EntityFactoryInterface
+{
+    /**
+     * Object Manager instance
+     *
+     * @var \Magento\Framework\ObjectManagerInterface
+     */
+    protected $_objectManager = null;
+    /**
+     * Factory constructor
+     *
+     * @param \Magento\Framework\ObjectManagerInterface $objectManager
+     */
+    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager)
+    {
+    }
+    /**
+     * Create class instance with specified parameters
+     *
+     * @param string $className
+     * @param array $data
+     * @throws \LogicException
+     * @return \Magento\Framework\DataObject
+     */
+    public function create($className, array $data = [])
+    {
+    }
+}
+/**
+ * Model object factory
+ */
+class ModelFactory
+{
+    /**
+     * @var \Magento\Framework\ObjectManagerInterface
+     */
+    protected $_objectManager;
+    /**
+     * @param \Magento\Framework\ObjectManagerInterface $objectManager
+     */
+    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager)
+    {
+    }
+    /**
+     * Create new model object
+     *
+     * @param string $model
+     * @param array $data
+     * @throws \InvalidArgumentException
+     * @return \Magento\Framework\Model\AbstractModel
+     */
+    public function create($model, array $data = [])
+    {
+    }
+}
+/**
+ * Base items collection class
+ *
+ * phpcs:disable Magento2.Classes.AbstractApi
+ * @api
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @since 100.0.2
+ */
+abstract class AbstractDb extends \Magento\Framework\Data\Collection
+{
+    /**
+     * DB connection
+     *
+     * @var \Magento\Framework\DB\Adapter\AdapterInterface
+     */
+    protected $_conn;
+    /**
+     * Select object
+     *
+     * @var \Magento\Framework\DB\Select
+     */
+    protected $_select;
+    /**
+     * Identifier field name for collection items
+     *
+     * Can be used by collections with items without defined
+     *
+     * @var string
+     */
+    protected $_idFieldName;
+    /**
+     * List of bound variables for select
+     *
+     * @var array
+     */
+    protected $_bindParams = [];
+    /**
+     * All collection data array
+     * Used for getData method
+     *
+     * @var array
+     */
+    protected $_data = null;
+    /**
+     * Fields map for correlation names & real selected fields
+     *
+     * @var array
+     */
+    protected $_map = null;
+    /**
+     * Database's statement for fetch item one by one
+     *
+     * @var \Zend_Db_Statement_Pdo
+     */
+    protected $_fetchStmt = null;
+    /**
+     * Whether orders are rendered
+     *
+     * @var bool
+     */
+    protected $_isOrdersRendered = false;
+    /**
+     * @var Logger
+     */
+    protected $_logger;
+    /**
+     * Join processor is set only if extension attributes were joined before the collection was loaded.
+     *
+     * @var \Magento\Framework\Api\ExtensionAttribute\JoinProcessorInterface|null
+     */
+    protected $extensionAttributesJoinProcessor;
+    /**
+     * @param EntityFactoryInterface $entityFactory
+     * @param Logger $logger
+     * @param FetchStrategyInterface $fetchStrategy
+     * @param \Magento\Framework\DB\Adapter\AdapterInterface $connection
+     */
+    public function __construct(\Magento\Framework\Data\Collection\EntityFactoryInterface $entityFactory, \Psr\Log\LoggerInterface $logger, \Magento\Framework\Data\Collection\Db\FetchStrategyInterface $fetchStrategy, \Magento\Framework\DB\Adapter\AdapterInterface $connection = null)
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function _resetState() : void
+    {
+    }
+    /**
+     * Get resource instance.
+     *
+     * @return \Magento\Framework\Model\ResourceModel\Db\AbstractDb
+     */
+    public abstract function getResource();
+    /**
+     * Add variable to bind list
+     *
+     * @param string $name
+     * @param mixed $value
+     *
+     * @return $this
+     */
+    public function addBindParam($name, $value)
+    {
+    }
+    /**
+     * Specify collection objects id field name
+     *
+     * @param string $fieldName
+     *
+     * @return $this
+     */
+    protected function _setIdFieldName($fieldName)
+    {
+    }
+    /**
+     * Id field name getter
+     *
+     * @return string
+     */
+    public function getIdFieldName()
+    {
+    }
+    /**
+     * Get collection item identifier
+     *
+     * @param \Magento\Framework\DataObject $item
+     *
+     * @return mixed
+     */
+    protected function _getItemId(\Magento\Framework\DataObject $item)
+    {
+    }
+    /**
+     * Set database connection adapter
+     *
+     * @param \Magento\Framework\DB\Adapter\AdapterInterface $conn
+     *
+     * @return $this
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function setConnection(\Magento\Framework\DB\Adapter\AdapterInterface $conn)
+    {
+    }
+    /**
+     * Get \Magento\Framework\DB\Select instance
+     *
+     * @return Select
+     */
+    public function getSelect()
+    {
+    }
+    /**
+     * Retrieve connection object
+     *
+     * @return AdapterInterface
+     */
+    public function getConnection()
+    {
+    }
+    /**
+     * Get collection size
+     *
+     * @return int
+     */
+    public function getSize()
+    {
+    }
+    /**
+     * Get SQL for get record count
+     *
+     * @return Select
+     */
+    public function getSelectCountSql()
+    {
+    }
+    /**
+     * Get sql select string or object
+     *
+     * @param bool $stringMode
+     *
+     * @return string|\Magento\Framework\DB\Select
+     */
+    public function getSelectSql($stringMode = false)
+    {
+    }
+    /**
+     * Add select order
+     *
+     * @param string $field
+     * @param string $direction
+     *
+     * @return $this
+     */
+    public function setOrder($field, $direction = self::SORT_ORDER_DESC)
+    {
+    }
+    /**
+     * Sets order and direction.
+     *
+     * @param string $field
+     * @param string $direction
+     *
+     * @return $this
+     */
+    public function addOrder($field, $direction = self::SORT_ORDER_DESC)
+    {
+    }
+    /**
+     * Add select order to the beginning
+     *
+     * @param string $field
+     * @param string $direction
+     *
+     * @return $this
+     */
+    public function unshiftOrder($field, $direction = self::SORT_ORDER_DESC)
+    {
+    }
+    /**
+     * Render sql select conditions
+     *
+     * @return  $this
+     */
+    protected function _renderFilters()
+    {
+    }
+    /**
+     * Hook for operations before rendering filters
+     *
+     * @return void
+     * phpcs:disable Magento2.CodeAnalysis.EmptyBlock
+     */
+    protected function _renderFiltersBefore()
+    {
+    }
+    // phpcs:enable
+    /**
+     * Add field filter to collection
+     *
+     * @see self::_getConditionSql for $condition
+     *
+     * @param string|array $field
+     * @param null|string|array $condition
+     *
+     * @return $this
+     */
+    public function addFieldToFilter($field, $condition = null)
+    {
+    }
+    /**
+     * Build sql where condition part
+     *
+     * @param string|array $field
+     * @param null|string|array $condition
+     *
+     * @return string
+     */
+    protected function _translateCondition($field, $condition)
+    {
+    }
+    /**
+     * Try to get mapped field name for filter to collection
+     *
+     * @param string $field
+     *
+     * @return string
+     */
+    protected function _getMappedField($field)
+    {
+    }
+    /**
+     * Retrieve mapper data
+     *
+     * @return array|bool|null
+     */
+    protected function _getMapper()
+    {
+    }
+    /**
+     * Build SQL statement for condition
+     *
+     * If $condition integer or string - exact value will be filtered ('eq' condition)
+     *
+     * If $condition is array - one of the following structures is expected:
+     * - array("from" => $fromValue, "to" => $toValue)
+     * - array("eq" => $equalValue)
+     * - array("neq" => $notEqualValue)
+     * - array("like" => $likeValue)
+     * - array("in" => array($inValues))
+     * - array("nin" => array($notInValues))
+     * - array("notnull" => $valueIsNotNull)
+     * - array("null" => $valueIsNull)
+     * - array("moreq" => $moreOrEqualValue)
+     * - array("gt" => $greaterValue)
+     * - array("lt" => $lessValue)
+     * - array("gteq" => $greaterOrEqualValue)
+     * - array("lteq" => $lessOrEqualValue)
+     * - array("finset" => $valueInSet)
+     * - array("regexp" => $regularExpression)
+     * - array("seq" => $stringValue)
+     * - array("sneq" => $stringValue)
+     *
+     * If non matched - sequential array is expected and OR conditions
+     * will be built using above mentioned structure
+     *
+     * @param string $fieldName
+     * @param integer|string|array $condition
+     *
+     * @return string
+     */
+    protected function _getConditionSql($fieldName, $condition)
+    {
+    }
+    /**
+     * Return the field name for the condition.
+     *
+     * @param string $fieldName
+     *
+     * @return string
+     */
+    protected function _getConditionFieldName($fieldName)
+    {
+    }
+    /**
+     * Render sql select orders
+     *
+     * @return  $this
+     */
+    protected function _renderOrders()
+    {
+    }
+    /**
+     * Render sql select limit
+     *
+     * @return  $this
+     */
+    protected function _renderLimit()
+    {
+    }
+    /**
+     * Set select distinct
+     *
+     * @param bool $flag
+     *
+     * @return $this
+     */
+    public function distinct($flag)
+    {
+    }
+    /**
+     * Before load action
+     *
+     * @return $this
+     */
+    protected function _beforeLoad()
+    {
+    }
+    /**
+     * Load data
+     *
+     * @param bool $printQuery
+     * @param bool $logQuery
+     *
+     * @return $this
+     */
+    public function load($printQuery = false, $logQuery = false)
+    {
+    }
+    /**
+     * Load data with filter in place
+     *
+     * @param bool $printQuery
+     * @param bool $logQuery
+     *
+     * @return $this
+     */
+    public function loadWithFilter($printQuery = false, $logQuery = false)
+    {
+    }
+    /**
+     * Let do something before add loaded item in collection
+     *
+     * @param \Magento\Framework\DataObject $item
+     *
+     * @return \Magento\Framework\DataObject
+     */
+    protected function beforeAddLoadedItem(\Magento\Framework\DataObject $item)
+    {
+    }
+    /**
+     * Returns an items collection.
+     * Returns a collection item that corresponds to the fetched row
+     * and moves the internal data pointer ahead
+     *
+     * @return  \Magento\Framework\Model\AbstractModel|bool
+     */
+    public function fetchItem()
+    {
+    }
+    /**
+     * Overridden to use _idFieldName by default.
+     *
+     * @param string|null $valueField
+     * @param string $labelField
+     * @param array $additional
+     *
+     * @return array
+     */
+    protected function _toOptionArray($valueField = null, $labelField = 'name', $additional = [])
+    {
+    }
+    /**
+     * Overridden to use _idFieldName by default.
+     *
+     * @param string $valueField
+     * @param string $labelField
+     *
+     * @return array
+     */
+    protected function _toOptionHash($valueField = null, $labelField = 'name')
+    {
+    }
+    /**
+     * Get all data array for collection
+     *
+     * @return array
+     */
+    public function getData()
+    {
+    }
+    /**
+     * Process loaded collection data
+     *
+     * @return $this
+     */
+    protected function _afterLoadData()
+    {
+    }
+    /**
+     * Reset loaded for collection data array
+     *
+     * @return $this
+     */
+    public function resetData()
+    {
+    }
+    /**
+     * Process loaded collection
+     *
+     * @return $this
+     */
+    protected function _afterLoad()
+    {
+    }
+    /**
+     * Load the data.
+     *
+     * @param bool $printQuery
+     * @param bool $logQuery
+     *
+     * @return $this
+     */
+    public function loadData($printQuery = false, $logQuery = false)
+    {
+    }
+    /**
+     * Print and/or log query
+     *
+     * @param bool $printQuery
+     * @param bool $logQuery
+     * @param string $sql
+     *
+     * @return $this
+     */
+    public function printLogQuery($printQuery = false, $logQuery = false, $sql = null)
+    {
+    }
+    /**
+     * Log query
+     *
+     * @param string $sql
+     *
+     * @return void
+     */
+    protected function _logQuery($sql)
+    {
+    }
+    /**
+     * Reset collection
+     *
+     * @return $this
+     */
+    protected function _reset()
+    {
+    }
+    /**
+     * Fetch collection data
+     *
+     * @param Select $select
+     *
+     * @return array
+     */
+    protected function _fetchAll(\Magento\Framework\DB\Select $select)
+    {
+    }
+    /**
+     * Add filter to Map
+     *
+     * @param string $filter
+     * @param string $alias
+     * @param string $group  Default: 'fields'.
+     *
+     * @return $this
+     */
+    public function addFilterToMap($filter, $alias, $group = 'fields')
+    {
+    }
+    /**
+     * Clone $this->_select during cloning collection, otherwise both collections will share the same $this->_select
+     *
+     * @return void
+     */
+    public function __clone()
+    {
+    }
+    /**
+     * Init select
+     *
+     * @return void
+     * phpcs:disable Magento2.CodeAnalysis.EmptyBlock
+     */
+    protected function _initSelect()
+    {
+    }
+    // phpcs:enable
+    /**
+     * Join extension attribute.
+     *
+     * @param JoinDataInterface $join
+     * @param JoinProcessorInterface $extensionAttributesJoinProcessor
+     *
+     * @return $this
+     */
+    public function joinExtensionAttribute(\Magento\Framework\Api\ExtensionAttribute\JoinDataInterface $join, \Magento\Framework\Api\ExtensionAttribute\JoinProcessorInterface $extensionAttributesJoinProcessor)
+    {
+    }
+    /**
+     * Get collection item object class name.
+     *
+     * @return string
+     */
+    public function getItemObjectClass()
+    {
+    }
+    /**
+     * @inheritdoc
+     * @since 100.0.11
+     */
+    public function __sleep()
+    {
+    }
+    /**
+     * @inheritdoc
+     * @since 100.0.11
+     */
+    public function __wakeup()
+    {
+    }
+}

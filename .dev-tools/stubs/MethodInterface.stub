@@ -1,0 +1,3651 @@
+<?php
+
+namespace Magento\Payment\Model;
+
+/**
+ * Methods List service class.
+ *
+ * @api
+ * @since 100.0.2
+ */
+class MethodList
+{
+    /**
+     * @var \Magento\Payment\Helper\Data
+     * @see MAGETWO-71174
+     * @deprecated 100.1.0 Do not use this property in case of inheritance.
+     */
+    protected $paymentHelper;
+    /**
+     * @var \Magento\Payment\Model\Checks\SpecificationFactory
+     * @see MAGETWO-71174
+     * @deprecated 100.2.0 Do not use this property in case of inheritance.
+     */
+    protected $methodSpecificationFactory;
+    /**
+     * @param \Magento\Payment\Helper\Data $paymentHelper
+     * @param Checks\SpecificationFactory  $specificationFactory
+     * @param array                        $additionalChecks
+     */
+    public function __construct(\Magento\Payment\Helper\Data $paymentHelper, \Magento\Payment\Model\Checks\SpecificationFactory $specificationFactory, array $additionalChecks = [])
+    {
+    }
+    /**
+     * Returns all available payment methods for the given quote.
+     *
+     * @param \Magento\Quote\Api\Data\CartInterface $quote
+     * @return \Magento\Payment\Model\MethodInterface[]
+     */
+    public function getAvailableMethods(\Magento\Quote\Api\Data\CartInterface $quote = null)
+    {
+    }
+    /**
+     * Check payment method model
+     *
+     * @param \Magento\Payment\Model\MethodInterface $method
+     * @param \Magento\Quote\Api\Data\CartInterface $quote
+     * @return bool
+     */
+    protected function _canUseMethod($method, \Magento\Quote\Api\Data\CartInterface $quote)
+    {
+    }
+}
+namespace Magento\Payment\Model\Cart\SalesModel;
+
+/**
+ * Wrapper interface for accessing sales model data
+ *
+ * @api
+ */
+interface SalesModelInterface
+{
+    /**
+     * Get all items from shopping sales model
+     *
+     * @return array
+     */
+    public function getAllItems();
+    /**
+     * Get base subtotal
+     *
+     * @return float|null
+     */
+    public function getBaseSubtotal();
+    /**
+     * Get base tax amount
+     *
+     * @return float|null
+     */
+    public function getBaseTaxAmount();
+    /**
+     * Get base shipping amount
+     *
+     * @return float|null
+     */
+    public function getBaseShippingAmount();
+    /**
+     * Get base discount amount
+     *
+     * @return float|null
+     */
+    public function getBaseDiscountAmount();
+    /**
+     * Wrapper for \Magento\Framework\DataObject getDataUsingMethod method
+     *
+     * @param string $key
+     * @param mixed $args
+     * @return mixed
+     */
+    public function getDataUsingMethod($key, $args = null);
+    /**
+     * Return object that contains tax related fields
+     *
+     * @return \Magento\Sales\Api\Data\OrderInterface|\Magento\Quote\Api\Data\AddressInterface
+     */
+    public function getTaxContainer();
+}
+/**
+ * Factory for creating payment cart sales models
+ */
+class Factory
+{
+    /**
+     * @var \Magento\Framework\ObjectManagerInterface
+     */
+    protected $_objectManager;
+    /**
+     * @param \Magento\Framework\ObjectManagerInterface $objectManager
+     */
+    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager)
+    {
+    }
+    /**
+     * Wrap sales model with Magento\Payment\Model\Cart\SalesModel\SalesModelInterface
+     *
+     * @param \Magento\Quote\Api\Data\CartInterface $salesModel
+     * @return \Magento\Payment\Model\Cart\SalesModel\SalesModelInterface
+     * @throws \InvalidArgumentException
+     */
+    public function create($salesModel)
+    {
+    }
+}
+/**
+ * Wrapper for \Magento\Sales\Model\Order sales model
+ */
+class Order implements \Magento\Payment\Model\Cart\SalesModel\SalesModelInterface
+{
+    /**
+     * Sales order model instance
+     *
+     * @var \Magento\Sales\Model\Order
+     */
+    protected $_salesModel;
+    /**
+     * @param \Magento\Sales\Model\Order $salesModel
+     */
+    public function __construct(\Magento\Sales\Model\Order $salesModel)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getAllItems()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getBaseSubtotal()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getBaseTaxAmount()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getBaseShippingAmount()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getBaseDiscountAmount()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getDataUsingMethod($key, $args = null)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getTaxContainer()
+    {
+    }
+}
+/**
+ * Wrapper for \Magento\Quote\Model\Quote sales model
+ */
+class Quote implements \Magento\Payment\Model\Cart\SalesModel\SalesModelInterface
+{
+    /**
+     * Sales quote model instance
+     *
+     * @var \Magento\Quote\Model\Quote
+     */
+    protected $_salesModel;
+    /**
+     * @var \Magento\Quote\Model\Quote\Address
+     */
+    protected $_address;
+    /**
+     * @param \Magento\Quote\Model\Quote $salesModel
+     */
+    public function __construct(\Magento\Quote\Model\Quote $salesModel)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getAllItems()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getBaseSubtotal()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getBaseTaxAmount()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getBaseShippingAmount()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getBaseDiscountAmount()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getDataUsingMethod($key, $args = null)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getTaxContainer()
+    {
+    }
+}
+namespace Magento\Payment\Model;
+
+/**
+ * Credit card configuration model
+ *
+ * @api
+ * @since 100.0.2
+ */
+class CcConfig
+{
+    /**
+     * @var \Magento\Payment\Model\Config
+     */
+    protected $config;
+    /**
+     * @var Repository
+     */
+    protected $assetRepo;
+    /**
+     * @var RequestInterface
+     */
+    protected $request;
+    /**
+     * @var UrlInterface
+     */
+    protected $urlBuilder;
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+    /**
+     * @param PaymentConfig $paymentConfig
+     * @param Repository $assetRepo
+     * @param RequestInterface $request
+     * @param UrlInterface $urlBuilder
+     * @param LoggerInterface $logger
+     */
+    public function __construct(\Magento\Payment\Model\Config $paymentConfig, \Magento\Framework\View\Asset\Repository $assetRepo, \Magento\Framework\App\RequestInterface $request, \Magento\Framework\UrlInterface $urlBuilder, \Psr\Log\LoggerInterface $logger)
+    {
+    }
+    /**
+     * Solo/switch card start years
+     *
+     * @return array
+     * @deprecated 100.1.0 unused
+     */
+    public function getSsStartYears()
+    {
+    }
+    /**
+     * Retrieve available credit card types
+     *
+     * @return array
+     */
+    public function getCcAvailableTypes()
+    {
+    }
+    /**
+     * Retrieve credit card expire months
+     *
+     * @return array
+     */
+    public function getCcMonths()
+    {
+    }
+    /**
+     * Retrieve credit card expire years
+     *
+     * @return array
+     */
+    public function getCcYears()
+    {
+    }
+    /**
+     * Retrieve has verification configuration
+     *
+     * @return bool
+     */
+    public function hasVerification()
+    {
+    }
+    /**
+     * Whether switch/solo card type available
+     *
+     * @return bool
+     * @deprecated 100.1.0 unused
+     */
+    public function hasSsCardType()
+    {
+    }
+    /**
+     * Retrieve CVV tooltip image url
+     *
+     * @return string
+     */
+    public function getCvvImageUrl()
+    {
+    }
+    /**
+     * Retrieve url of a view file
+     *
+     * @param string $fileId
+     * @param array $params
+     * @return string
+     */
+    public function getViewFileUrl($fileId, array $params = [])
+    {
+    }
+    /**
+     * Create a file asset that's subject of fallback system
+     *
+     * @param string $fileId
+     * @param array $params
+     * @return \Magento\Framework\View\Asset\File
+     */
+    public function createAsset($fileId, array $params = [])
+    {
+    }
+}
+/**
+ * Interface InfoInterface
+ * @api
+ * @since 100.0.2
+ */
+interface InfoInterface
+{
+    /**
+     * Encrypt data
+     *
+     * @param string $data
+     * @return string
+     */
+    public function encrypt($data);
+    /**
+     * Decrypt data
+     *
+     * @param string $data
+     * @return string
+     */
+    public function decrypt($data);
+    /**
+     * Set Additional information about payment into Payment model
+     *
+     * @param string $key
+     * @param string|null $value
+     * @return mixed
+     */
+    public function setAdditionalInformation($key, $value = null);
+    /**
+     * Check whether there is additional information by specified key
+     *
+     * @param mixed|null $key
+     * @return bool
+     */
+    public function hasAdditionalInformation($key = null);
+    /**
+     * Unsetter for entire additional_information value or one of its element by key
+     *
+     * @param string|null $key
+     * @return $this
+     */
+    public function unsAdditionalInformation($key = null);
+    /**
+     * Getter for entire additional_information value or one of its element by key
+     *
+     * @param string|null $key
+     * @return mixed
+     */
+    public function getAdditionalInformation($key = null);
+    /**
+     * Retrieve payment method model object
+     *
+     * @return \Magento\Payment\Model\MethodInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function getMethodInstance();
+}
+/**
+ * Payment information model
+ *
+ * @api
+ * @since 100.0.2
+ */
+class Info extends \Magento\Framework\Model\AbstractExtensibleModel implements \Magento\Payment\Model\InfoInterface
+{
+    /**
+     * Additional information container
+     *
+     * @var array
+     */
+    protected $_additionalInformation = [];
+    /**
+     * Payment data
+     *
+     * @var \Magento\Payment\Helper\Data
+     */
+    protected $_paymentData;
+    /**
+     * @var \Magento\Framework\Encryption\EncryptorInterface
+     */
+    protected $_encryptor;
+    /**
+     * @param \Magento\Framework\Model\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory
+     * @param \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory
+     * @param \Magento\Payment\Helper\Data $paymentData
+     * @param \Magento\Framework\Encryption\EncryptorInterface $encryptor
+     * @param \Magento\Framework\Model\ResourceModel\AbstractResource $resource
+     * @param \Magento\Framework\Data\Collection\AbstractDb $resourceCollection
+     * @param array $data
+     */
+    public function __construct(\Magento\Framework\Model\Context $context, \Magento\Framework\Registry $registry, \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory, \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory, \Magento\Payment\Helper\Data $paymentData, \Magento\Framework\Encryption\EncryptorInterface $encryptor, \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null, \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null, array $data = [])
+    {
+    }
+    /**
+     * Retrieve data
+     *
+     * @param string $key
+     * @param mixed $index
+     * @return mixed
+     */
+    public function getData($key = '', $index = null)
+    {
+    }
+    /**
+     * Retrieve payment method model object
+     *
+     * @return \Magento\Payment\Model\MethodInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function getMethodInstance()
+    {
+    }
+    /**
+     * Encrypt data
+     *
+     * @param string $data
+     * @return string
+     */
+    public function encrypt($data)
+    {
+    }
+    /**
+     * Decrypt data
+     *
+     * @param string $data
+     * @return string
+     */
+    public function decrypt($data)
+    {
+    }
+    /**
+     * Additional information setter
+     * Updates data inside the 'additional_information' array
+     * or all 'additional_information' if key is data array
+     *
+     * @param string|array $key
+     * @param mixed $value
+     * @return $this
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function setAdditionalInformation($key, $value = null)
+    {
+    }
+    /**
+     * Getter for entire additional_information value or one of its element by key
+     *
+     * @param string $key
+     * @return array|null|mixed
+     */
+    public function getAdditionalInformation($key = null)
+    {
+    }
+    /**
+     * Unsetter for entire additional_information value or one of its element by key
+     *
+     * @param string $key
+     * @return $this
+     */
+    public function unsAdditionalInformation($key = null)
+    {
+    }
+    /**
+     * Check whether there is additional information by specified key
+     *
+     * @param mixed|null $key
+     * @return bool
+     */
+    public function hasAdditionalInformation($key = null)
+    {
+    }
+    /**
+     * Initialize _additionalInformation with $this->_data['additional_information'] if empty
+     *
+     * @return void
+     */
+    protected function _initAdditionalInformation()
+    {
+    }
+}
+class PaymentMethodList implements \Magento\Payment\Api\PaymentMethodListInterface
+{
+    /**
+     * @param PaymentMethodInterfaceFactory $methodFactory
+     * @param Data $helper
+     */
+    public function __construct(\Magento\Payment\Api\Data\PaymentMethodInterfaceFactory $methodFactory, \Magento\Payment\Helper\Data $helper)
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function getList($storeId)
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function getActiveList($storeId)
+    {
+    }
+}
+namespace Magento\Payment\Model\Source;
+
+/**
+ * Payment CC Types Source Model
+ *
+ * Inheritance of this class allowed as is a part of legacy implementation.
+ *
+ * @api
+ * @since 100.0.2
+ */
+class Cctype implements \Magento\Framework\Option\ArrayInterface
+{
+    /**
+     * Allowed CC types
+     *
+     * @var array
+     */
+    protected $_allowedTypes = [];
+    /**
+     * Payment config model
+     *
+     * @var \Magento\Payment\Model\Config
+     */
+    protected $_paymentConfig;
+    /**
+     * Config
+     *
+     * @param \Magento\Payment\Model\Config $paymentConfig
+     */
+    public function __construct(\Magento\Payment\Model\Config $paymentConfig)
+    {
+    }
+    /**
+     * Return allowed cc types for current method
+     *
+     * @return array
+     */
+    public function getAllowedTypes()
+    {
+    }
+    /**
+     * Setter for allowed types
+     *
+     * @param array $values
+     * @return $this
+     */
+    public function setAllowedTypes(array $values)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function toOptionArray()
+    {
+    }
+}
+/**
+ * Automatic invoice create source model
+ *
+ * Inheritance of this class allowed as is a part of legacy implementation.
+ *
+ * @api
+ * @since 100.0.2
+ */
+class Invoice implements \Magento\Framework\Option\ArrayInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function toOptionArray()
+    {
+    }
+}
+namespace Magento\Payment\Model;
+
+/**
+ * Class CcConfigProvider
+ *
+ * @api
+ * @since 100.0.2
+ */
+class CcConfigProvider implements \Magento\Checkout\Model\ConfigProviderInterface
+{
+    /**
+     * @var CcConfig
+     */
+    protected $ccConfig;
+    /**
+     * @var \Magento\Framework\View\Asset\Source
+     */
+    protected $assetSource;
+    /**
+     * @param CcConfig $ccConfig
+     * @param Source $assetSource
+     */
+    public function __construct(\Magento\Payment\Model\CcConfig $ccConfig, \Magento\Framework\View\Asset\Source $assetSource)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getConfig()
+    {
+    }
+    /**
+     * Get icons for available payment methods
+     *
+     * @return array
+     */
+    public function getIcons()
+    {
+    }
+}
+/**
+ * Payment method class.
+ */
+class PaymentMethod implements \Magento\Payment\Api\Data\PaymentMethodInterface
+{
+    /**
+     * @param string $code
+     * @param string $title
+     * @param int $storeId
+     * @param bool $isActive
+     */
+    public function __construct($code, $title, $storeId, $isActive)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getCode()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getTitle()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getStoreId()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getIsActive()
+    {
+    }
+}
+/**
+ * Payment interface
+ * @api
+ * @since 100.0.2
+ */
+interface MethodInterface
+{
+    /**
+     * Different payment actions.
+     */
+    const ACTION_ORDER = 'order';
+    const ACTION_AUTHORIZE = 'authorize';
+    const ACTION_AUTHORIZE_CAPTURE = 'authorize_capture';
+    /**
+     * Different payment method checks.
+     */
+    const CHECK_USE_FOR_COUNTRY = 'country';
+    const CHECK_USE_FOR_CURRENCY = 'currency';
+    const CHECK_USE_CHECKOUT = 'checkout';
+    const CHECK_USE_INTERNAL = 'internal';
+    const CHECK_ORDER_TOTAL_MIN_MAX = 'total';
+    const CHECK_ZERO_TOTAL = 'zero_total';
+    const GROUP_OFFLINE = 'offline';
+    /**
+     * Retrieve payment method code
+     *
+     * @return string
+     *
+     */
+    public function getCode();
+    /**
+     * Retrieve block type for method form generation
+     *
+     * @return string
+     *
+     * @deprecated 100.0.2
+     */
+    public function getFormBlockType();
+    /**
+     * Retrieve payment method title
+     *
+     * @return string
+     *
+     */
+    public function getTitle();
+    /**
+     * Store id setter
+     * @param int $storeId
+     * @return void
+     */
+    public function setStore($storeId);
+    /**
+     * Store id getter
+     * @return int
+     */
+    public function getStore();
+    /**
+     * Check order availability
+     *
+     * @return bool
+     *
+     */
+    public function canOrder();
+    /**
+     * Check authorize availability
+     *
+     * @return bool
+     *
+     */
+    public function canAuthorize();
+    /**
+     * Check capture availability
+     *
+     * @return bool
+     *
+     */
+    public function canCapture();
+    /**
+     * Check partial capture availability
+     *
+     * @return bool
+     *
+     */
+    public function canCapturePartial();
+    /**
+     * Check whether capture can be performed once and no further capture possible
+     *
+     * @return bool
+     *
+     */
+    public function canCaptureOnce();
+    /**
+     * Check refund availability
+     *
+     * @return bool
+     *
+     */
+    public function canRefund();
+    /**
+     * Check partial refund availability for invoice
+     *
+     * @return bool
+     *
+     */
+    public function canRefundPartialPerInvoice();
+    /**
+     * Check void availability
+     * @return bool
+     *
+     */
+    public function canVoid();
+    /**
+     * Using internal pages for input payment data
+     * Can be used in admin
+     *
+     * @return bool
+     */
+    public function canUseInternal();
+    /**
+     * Can be used in regular checkout
+     *
+     * @return bool
+     */
+    public function canUseCheckout();
+    /**
+     * Can be edit order (renew order)
+     *
+     * @return bool
+     *
+     */
+    public function canEdit();
+    /**
+     * Check fetch transaction info availability
+     *
+     * @return bool
+     *
+     */
+    public function canFetchTransactionInfo();
+    /**
+     * Fetch transaction info
+     *
+     * @param InfoInterface $payment
+     * @param string $transactionId
+     * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
+     */
+    public function fetchTransactionInfo(\Magento\Payment\Model\InfoInterface $payment, $transactionId);
+    /**
+     * Retrieve payment system relation flag
+     *
+     * @return bool
+     *
+     */
+    public function isGateway();
+    /**
+     * Retrieve payment method online/offline flag
+     *
+     * @return bool
+     *
+     */
+    public function isOffline();
+    /**
+     * Flag if we need to run payment initialize while order place
+     *
+     * @return bool
+     *
+     */
+    public function isInitializeNeeded();
+    /**
+     * To check billing country is allowed for the payment method
+     *
+     * @param string $country
+     * @return bool
+     */
+    public function canUseForCountry($country);
+    /**
+     * Check method for processing with base currency
+     *
+     * @param string $currencyCode
+     * @return bool
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function canUseForCurrency($currencyCode);
+    /**
+     * Retrieve block type for display method information
+     *
+     * @return string
+     *
+     * @deprecated 100.0.2
+     */
+    public function getInfoBlockType();
+    /**
+     * Retrieve payment information model object
+     *
+     * @return InfoInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
+     *
+     * @deprecated 100.0.2
+     */
+    public function getInfoInstance();
+    /**
+     * Retrieve payment information model object
+     *
+     * @param InfoInterface $info
+     * @return void
+     *
+     * @deprecated 100.0.2
+     */
+    public function setInfoInstance(\Magento\Payment\Model\InfoInterface $info);
+    /**
+     * Validate payment method information object
+     *
+     * @return $this
+     * @throws \Magento\Framework\Exception\LocalizedException
+     *
+     */
+    public function validate();
+    /**
+     * Order payment abstract method
+     *
+     * @param InfoInterface $payment
+     * @param float $amount
+     * @return $this
+     *
+     */
+    public function order(\Magento\Payment\Model\InfoInterface $payment, $amount);
+    /**
+     * Authorize payment abstract method
+     *
+     * @param InfoInterface $payment
+     * @param float $amount
+     * @return $this
+     *
+     */
+    public function authorize(\Magento\Payment\Model\InfoInterface $payment, $amount);
+    /**
+     * Capture payment abstract method
+     *
+     * @param InfoInterface $payment
+     * @param float $amount
+     * @return $this
+     *
+     */
+    public function capture(\Magento\Payment\Model\InfoInterface $payment, $amount);
+    /**
+     * Refund specified amount for payment
+     *
+     * @param InfoInterface $payment
+     * @param float $amount
+     * @return $this
+     *
+     */
+    public function refund(\Magento\Payment\Model\InfoInterface $payment, $amount);
+    /**
+     * Cancel payment abstract method
+     *
+     * @param InfoInterface $payment
+     * @return $this
+     *
+     */
+    public function cancel(\Magento\Payment\Model\InfoInterface $payment);
+    /**
+     * Void payment abstract method
+     *
+     * @param InfoInterface $payment
+     * @return $this
+     *
+     */
+    public function void(\Magento\Payment\Model\InfoInterface $payment);
+    /**
+     * Whether this method can accept or deny payment
+     * @return bool
+     *
+     */
+    public function canReviewPayment();
+    /**
+     * Attempt to accept a payment that us under review
+     *
+     * @param InfoInterface $payment
+     * @return false
+     * @throws \Magento\Framework\Exception\LocalizedException
+     *
+     */
+    public function acceptPayment(\Magento\Payment\Model\InfoInterface $payment);
+    /**
+     * Attempt to deny a payment that us under review
+     *
+     * @param InfoInterface $payment
+     * @return false
+     * @throws \Magento\Framework\Exception\LocalizedException
+     *
+     */
+    public function denyPayment(\Magento\Payment\Model\InfoInterface $payment);
+    /**
+     * Retrieve information from payment configuration
+     *
+     * @param string $field
+     * @param int|string|null|\Magento\Store\Model\Store $storeId
+     *
+     * @return mixed
+     */
+    public function getConfigData($field, $storeId = null);
+    /**
+     * Assign data to info model instance
+     *
+     * @param DataObject $data
+     * @return $this
+     *
+     */
+    public function assignData(\Magento\Framework\DataObject $data);
+    /**
+     * Check whether payment method can be used
+     *
+     * @param CartInterface|null $quote
+     * @return bool
+     *
+     */
+    public function isAvailable(\Magento\Quote\Api\Data\CartInterface $quote = null);
+    /**
+     * Is active
+     *
+     * @param int|null $storeId
+     * @return bool
+     *
+     */
+    public function isActive($storeId = null);
+    /**
+     * Method that will be executed instead of authorize or capture
+     * if flag isInitializeNeeded set to true
+     *
+     * @param string $paymentAction
+     * @param object $stateObject
+     *
+     * @return $this
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
+     */
+    public function initialize($paymentAction, $stateObject);
+    /**
+     * Get config payment action url
+     * Used to universalize payment actions when processing payment place
+     *
+     * @return string
+     *
+     */
+    public function getConfigPaymentAction();
+}
+/**
+ * Default implementation of credits card configuration provider.
+ * Use this class to register payment method that supports credit cards.
+ * Direct injection as a dependency or extending of this class is not recommended.
+ *
+ * @api
+ * @since 100.0.2
+ */
+class CcGenericConfigProvider implements \Magento\Checkout\Model\ConfigProviderInterface
+{
+    /**
+     * @var CcConfig
+     */
+    protected $ccConfig;
+    /**
+     * @var MethodInterface[]
+     */
+    protected $methods = [];
+    /**
+     * @param CcConfig $ccConfig
+     * @param PaymentHelper $paymentHelper
+     * @param array $methodCodes
+     */
+    public function __construct(\Magento\Payment\Model\CcConfig $ccConfig, \Magento\Payment\Helper\Data $paymentHelper, array $methodCodes = [])
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getConfig()
+    {
+    }
+    /**
+     * Solo/switch card start years
+     *
+     * @return array
+     * @deprecated 100.1.0 unused
+     */
+    protected function getSsStartYears()
+    {
+    }
+    /**
+     * Retrieve credit card expire months
+     *
+     * @return array
+     */
+    protected function getCcMonths()
+    {
+    }
+    /**
+     * Retrieve credit card expire years
+     *
+     * @return array
+     */
+    protected function getCcYears()
+    {
+    }
+    /**
+     * Retrieve CVV tooltip image url
+     *
+     * @return string
+     */
+    protected function getCvvImageUrl()
+    {
+    }
+    /**
+     * Retrieve available credit card types
+     *
+     * @param string $methodCode
+     * @return array
+     */
+    protected function getCcAvailableTypes($methodCode)
+    {
+    }
+    /**
+     * Retrieve has verification configuration
+     *
+     * @param string $methodCode
+     * @return bool
+     */
+    protected function hasVerification($methodCode)
+    {
+    }
+    /**
+     * Whether switch/solo card type available
+     *
+     * @param string $methodCode
+     * @return bool
+     * @deprecated 100.1.0 unused
+     */
+    protected function hasSsCardType($methodCode)
+    {
+    }
+}
+/**
+ * Payment additional info class.
+ */
+class PaymentAdditionalInfo implements \Magento\Payment\Api\Data\PaymentAdditionalInfoInterface
+{
+    /**
+     * @inheritdoc
+     */
+    public function getKey()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getValue()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setKey($key)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setValue($value)
+    {
+    }
+}
+namespace Magento\Payment\Model\Method;
+
+/**
+ * Payment method abstract model
+ *
+ * phpcs:disable Magento2.Classes.AbstractApi
+ * @api
+ * @SuppressWarnings(PHPMD.ExcessivePublicCount)
+ * @SuppressWarnings(PHPMD.TooManyFields)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @deprecated 100.0.6
+ * @see \Magento\Payment\Model\Method\Adapter
+ * @see https://developer.adobe.com/commerce/php/development/payments-integrations/payment-gateway/
+ * @since 100.0.2
+ */
+abstract class AbstractMethod extends \Magento\Framework\Model\AbstractExtensibleModel implements \Magento\Payment\Model\MethodInterface, \Magento\Quote\Api\Data\PaymentMethodInterface
+{
+    public const STATUS_UNKNOWN = 'UNKNOWN';
+    public const STATUS_APPROVED = 'APPROVED';
+    public const STATUS_ERROR = 'ERROR';
+    public const STATUS_DECLINED = 'DECLINED';
+    public const STATUS_VOID = 'VOID';
+    public const STATUS_SUCCESS = 'SUCCESS';
+    /**
+     * @var string
+     */
+    protected $_code;
+    /**
+     * @var string
+     */
+    protected $_formBlockType = \Magento\Payment\Block\Form::class;
+    /**
+     * @var string
+     */
+    protected $_infoBlockType = \Magento\Payment\Block\Info::class;
+    /**
+     * @var bool
+     */
+    protected $_isGateway = false;
+    /**
+     * @var bool
+     */
+    protected $_isOffline = false;
+    /**
+     * @var bool
+     */
+    protected $_canOrder = false;
+    /**
+     * @var bool
+     */
+    protected $_canAuthorize = false;
+    /**
+     * @var bool
+     */
+    protected $_canCapture = false;
+    /**
+     * @var bool
+     */
+    protected $_canCapturePartial = false;
+    /**
+     * @var bool
+     */
+    protected $_canCaptureOnce = false;
+    /**
+     * @var bool
+     */
+    protected $_canRefund = false;
+    /**
+     * @var bool
+     */
+    protected $_canRefundInvoicePartial = false;
+    /**
+     * @var bool
+     */
+    protected $_canVoid = false;
+    /**
+     * @var bool
+     */
+    protected $_canUseInternal = true;
+    /**
+     * @var bool
+     */
+    protected $_canUseCheckout = true;
+    /**
+     * @var bool
+     */
+    protected $_isInitializeNeeded = false;
+    /**
+     * @var bool
+     */
+    protected $_canFetchTransactionInfo = false;
+    /**
+     * @var bool
+     */
+    protected $_canReviewPayment = false;
+    /**
+     * TODO: whether a captured transaction may be voided by this gateway
+     * This may happen when amount is captured, but not settled
+     * @var bool
+     */
+    protected $_canCancelInvoice = false;
+    /**
+     * @var array
+     */
+    protected $_debugReplacePrivateDataKeys = [];
+    /**
+     * @var \Magento\Payment\Helper\Data
+     */
+    protected $_paymentData;
+    /**
+     * Core store config
+     *
+     * @var \Magento\Framework\App\Config\ScopeConfigInterface
+     */
+    protected $_scopeConfig;
+    /**
+     * @var Logger
+     */
+    protected $logger;
+    /**
+     * @param \Magento\Framework\Model\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory
+     * @param \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory
+     * @param \Magento\Payment\Helper\Data $paymentData
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param Logger $logger
+     * @param \Magento\Framework\Model\ResourceModel\AbstractResource $resource
+     * @param \Magento\Framework\Data\Collection\AbstractDb $resourceCollection
+     * @param array $data
+     * @param DirectoryHelper $directory
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     */
+    public function __construct(\Magento\Framework\Model\Context $context, \Magento\Framework\Registry $registry, \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory, \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory, \Magento\Payment\Helper\Data $paymentData, \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig, \Magento\Payment\Model\Method\Logger $logger, \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null, \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null, array $data = [], \Magento\Directory\Helper\Data $directory = null)
+    {
+    }
+    /**
+     * Initializes injected data
+     *
+     * @param array $data
+     * @return void
+     */
+    protected function initializeData($data = [])
+    {
+    }
+    /**
+     * @inheritdoc
+     * @deprecated 100.2.0
+     */
+    public function setStore($storeId)
+    {
+    }
+    /**
+     * @inheritdoc
+     * @deprecated 100.2.0
+     */
+    public function getStore()
+    {
+    }
+    /**
+     * Check order availability
+     *
+     * @return bool
+     * @deprecated 100.2.0
+     */
+    public function canOrder()
+    {
+    }
+    /**
+     * Check authorize availability
+     *
+     * @return bool
+     * @deprecated 100.2.0
+     */
+    public function canAuthorize()
+    {
+    }
+    /**
+     * Check capture availability
+     *
+     * @return bool
+     * @deprecated 100.2.0
+     */
+    public function canCapture()
+    {
+    }
+    /**
+     * Check partial capture availability
+     *
+     * @return bool
+     * @deprecated 100.2.0
+     */
+    public function canCapturePartial()
+    {
+    }
+    /**
+     * Check whether capture can be performed once and no further capture possible
+     *
+     * @return bool
+     * @deprecated 100.2.0
+     */
+    public function canCaptureOnce()
+    {
+    }
+    /**
+     * Check refund availability
+     *
+     * @return bool
+     * @deprecated 100.2.0
+     */
+    public function canRefund()
+    {
+    }
+    /**
+     * Check partial refund availability for invoice
+     *
+     * @return bool
+     * @deprecated 100.2.0
+     */
+    public function canRefundPartialPerInvoice()
+    {
+    }
+    /**
+     * Check void availability.
+     *
+     * @return bool
+     * @internal param \Magento\Framework\DataObject $payment
+     * @deprecated 100.2.0
+     */
+    public function canVoid()
+    {
+    }
+    /**
+     * Using internal pages for input payment data.
+     *
+     * Can be used in admin.
+     *
+     * @return bool
+     * @deprecated 100.2.0
+     */
+    public function canUseInternal()
+    {
+    }
+    /**
+     * Can be used in regular checkout
+     *
+     * @return bool
+     * @deprecated 100.2.0
+     */
+    public function canUseCheckout()
+    {
+    }
+    /**
+     * Can be edit order (renew order)
+     *
+     * @return bool
+     * @deprecated 100.2.0
+     */
+    public function canEdit()
+    {
+    }
+    /**
+     * Check fetch transaction info availability
+     *
+     * @return bool
+     * @deprecated 100.2.0
+     */
+    public function canFetchTransactionInfo()
+    {
+    }
+    /**
+     * Fetch transaction info
+     *
+     * @param InfoInterface $payment
+     * @param string $transactionId
+     * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @deprecated 100.2.0
+     */
+    public function fetchTransactionInfo(\Magento\Payment\Model\InfoInterface $payment, $transactionId)
+    {
+    }
+    /**
+     * Retrieve payment system relation flag
+     *
+     * @return bool
+     * @deprecated 100.2.0
+     */
+    public function isGateway()
+    {
+    }
+    /**
+     * Retrieve payment method online/offline flag
+     *
+     * @return bool
+     * @deprecated 100.2.0
+     */
+    public function isOffline()
+    {
+    }
+    /**
+     * Flag if we need to run payment initialize while order place
+     *
+     * @return bool
+     * @deprecated 100.2.0
+     */
+    public function isInitializeNeeded()
+    {
+    }
+    /**
+     * To check billing country is allowed for the payment method
+     *
+     * @param string $country
+     * @return bool
+     * @deprecated 100.2.0
+     */
+    public function canUseForCountry($country)
+    {
+    }
+    /**
+     * Check method for processing with base currency
+     *
+     * @param string $currencyCode
+     * @return bool
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @deprecated 100.2.0
+     */
+    public function canUseForCurrency($currencyCode)
+    {
+    }
+    /**
+     * Retrieve payment method code
+     *
+     * @return string
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @deprecated 100.2.0
+     */
+    public function getCode()
+    {
+    }
+    /**
+     * Retrieve block type for method form generation
+     *
+     * @return string
+     * @deprecated 100.2.0
+     */
+    public function getFormBlockType()
+    {
+    }
+    /**
+     * Retrieve block type for display method information
+     *
+     * @return string
+     * @deprecated 100.2.0
+     */
+    public function getInfoBlockType()
+    {
+    }
+    /**
+     * Retrieve payment information model object
+     *
+     * @return InfoInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @deprecated 100.2.0
+     */
+    public function getInfoInstance()
+    {
+    }
+    /**
+     * Retrieve payment information model object
+     *
+     * @param InfoInterface $info
+     * @return void
+     * @deprecated 100.2.0
+     */
+    public function setInfoInstance(\Magento\Payment\Model\InfoInterface $info)
+    {
+    }
+    /**
+     * Validate payment method information object
+     *
+     * @return $this
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @deprecated 100.2.0
+     */
+    public function validate()
+    {
+    }
+    /**
+     * Order payment abstract method
+     *
+     * @param \Magento\Framework\DataObject|InfoInterface $payment
+     * @param float $amount
+     * @return $this
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @deprecated 100.2.0
+     */
+    public function order(\Magento\Payment\Model\InfoInterface $payment, $amount)
+    {
+    }
+    /**
+     * Authorize payment abstract method
+     *
+     * @param \Magento\Framework\DataObject|InfoInterface $payment
+     * @param float $amount
+     * @return $this
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @deprecated 100.2.0
+     */
+    public function authorize(\Magento\Payment\Model\InfoInterface $payment, $amount)
+    {
+    }
+    /**
+     * Capture payment abstract method
+     *
+     * @param \Magento\Framework\DataObject|InfoInterface $payment
+     * @param float $amount
+     * @return $this
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @deprecated 100.2.0
+     */
+    public function capture(\Magento\Payment\Model\InfoInterface $payment, $amount)
+    {
+    }
+    /**
+     * Refund specified amount for payment
+     *
+     * @param \Magento\Framework\DataObject|InfoInterface $payment
+     * @param float $amount
+     * @return $this
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @deprecated 100.2.0
+     */
+    public function refund(\Magento\Payment\Model\InfoInterface $payment, $amount)
+    {
+    }
+    /**
+     * Cancel payment abstract method
+     *
+     * @param \Magento\Framework\DataObject|InfoInterface $payment
+     * @return $this
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @deprecated 100.2.0
+     */
+    public function cancel(\Magento\Payment\Model\InfoInterface $payment)
+    {
+    }
+    /**
+     * Void payment abstract method
+     *
+     * @param \Magento\Framework\DataObject|InfoInterface $payment
+     * @return $this
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @deprecated 100.2.0
+     */
+    public function void(\Magento\Payment\Model\InfoInterface $payment)
+    {
+    }
+    /**
+     * Whether this method can accept or deny payment.
+     *
+     * @return bool
+     * @deprecated 100.2.0
+     */
+    public function canReviewPayment()
+    {
+    }
+    /**
+     * Attempt to accept a payment that us under review
+     *
+     * @param InfoInterface $payment
+     * @return false
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @deprecated 100.2.0
+     */
+    public function acceptPayment(\Magento\Payment\Model\InfoInterface $payment)
+    {
+    }
+    /**
+     * Attempt to deny a payment that us under review
+     *
+     * @param InfoInterface $payment
+     * @return false
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @deprecated 100.2.0
+     */
+    public function denyPayment(\Magento\Payment\Model\InfoInterface $payment)
+    {
+    }
+    /**
+     * Retrieve payment method title
+     *
+     * @return string
+     * @deprecated 100.2.0
+     */
+    public function getTitle()
+    {
+    }
+    /**
+     * Retrieve information from payment configuration
+     *
+     * @param string $field
+     * @param int|string|null|\Magento\Store\Model\Store $storeId
+     *
+     * @return mixed
+     * @deprecated 100.2.0
+     */
+    public function getConfigData($field, $storeId = null)
+    {
+    }
+    /**
+     * Assign data to info model instance
+     *
+     * @param array|\Magento\Framework\DataObject $data
+     * @return $this
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @deprecated 100.2.0
+     */
+    public function assignData(\Magento\Framework\DataObject $data)
+    {
+    }
+    /**
+     * Check whether payment method can be used
+     *
+     * @param \Magento\Quote\Api\Data\CartInterface|null $quote
+     * @return bool
+     * @deprecated 100.2.0
+     */
+    public function isAvailable(\Magento\Quote\Api\Data\CartInterface $quote = null)
+    {
+    }
+    /**
+     * Is active
+     *
+     * @param int|null $storeId
+     * @return bool
+     * @deprecated 100.2.0
+     */
+    public function isActive($storeId = null)
+    {
+    }
+    /**
+     * Method that will be executed instead of authorize or capture if flag isInitializeNeeded set to true.
+     *
+     * @param string $paymentAction
+     * @param object $stateObject
+     *
+     * @return $this
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @deprecated 100.2.0
+     */
+    public function initialize($paymentAction, $stateObject)
+    {
+    }
+    /**
+     * Get config payment action url.
+     *
+     * Used to universalize payment actions when processing payment place.
+     *
+     * @return string
+     * @deprecated 100.2.0
+     */
+    public function getConfigPaymentAction()
+    {
+    }
+    /**
+     * Log debug data to file
+     *
+     * @param array $debugData
+     * @return void
+     * @deprecated 100.2.0
+     */
+    protected function _debug($debugData)
+    {
+    }
+    /**
+     * Define if debugging is enabled
+     *
+     * @return bool
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
+     * @deprecated 100.2.0
+     */
+    public function getDebugFlag()
+    {
+    }
+    /**
+     * Used to call debug method from not Payment Method context
+     *
+     * @param mixed $debugData
+     * @return void
+     * @deprecated 100.2.0
+     */
+    public function debugData($debugData)
+    {
+    }
+    /**
+     * Return replace keys for debug data
+     *
+     * @return array
+     * @deprecated 100.2.0
+     */
+    public function getDebugReplacePrivateDataKeys()
+    {
+    }
+}
+/**
+ * Substitution payment method for non-existing payments
+ *
+ * @method \Magento\Quote\Api\Data\PaymentMethodExtensionInterface getExtensionAttributes()
+ */
+class Substitution extends \Magento\Payment\Model\Method\AbstractMethod
+{
+    /**
+     * Method code
+     */
+    const CODE = 'substitution';
+    /**
+     * Key of title in instance additional information
+     */
+    const INFO_KEY_TITLE = 'method_title';
+    /**
+     * @var string
+     */
+    protected $_code = self::CODE;
+    /**
+     * @var string
+     */
+    protected $_infoBlockType = \Magento\Payment\Block\Info\Substitution::class;
+    /**
+     * Retrieve payment method title
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+    }
+}
+/**
+ * Class Logger for payment related information (request, response, etc.) which is used for debug.
+ *
+ * @api
+ * @since 100.0.2
+ */
+class Logger
+{
+    const DEBUG_KEYS_MASK = '****';
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+    /**
+     * @param LoggerInterface $logger
+     * @param ConfigInterface|null $config
+     */
+    public function __construct(\Psr\Log\LoggerInterface $logger, \Magento\Payment\Gateway\ConfigInterface $config = null)
+    {
+    }
+    /**
+     * Logs payment related information used for debug
+     *
+     * @param array $data
+     * @param array|null $maskKeys
+     * @param bool|null $forceDebug
+     * @return void
+     */
+    public function debug(array $data, array $maskKeys = null, $forceDebug = null)
+    {
+    }
+    /**
+     * Recursive filter data by private conventions
+     *
+     * @param array $debugData
+     * @param array $debugReplacePrivateDataKeys
+     * @return array
+     */
+    protected function filterDebugData(array $debugData, array $debugReplacePrivateDataKeys)
+    {
+    }
+}
+/**
+ * Class \Magento\Payment\Model\Method\Factory
+ */
+class Factory
+{
+    /**
+     * Object manager
+     *
+     * @var \Magento\Framework\ObjectManagerInterface
+     */
+    protected $_objectManager;
+    /**
+     * Construct
+     *
+     * @param \Magento\Framework\ObjectManagerInterface $objectManager
+     */
+    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager)
+    {
+    }
+    /**
+     * Creates new instances of payment method models
+     *
+     * @param string $className
+     * @param array $data
+     * @return \Magento\Payment\Model\MethodInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function create($className, $data = [])
+    {
+    }
+}
+namespace Magento\Payment\Model;
+
+/**
+ * Responsible for support of `sale` payment operation via Magento payment provider gateway.
+ *
+ * @api
+ * @since 100.4.0
+ */
+interface SaleOperationInterface
+{
+    /**
+     * Checks `sale` payment operation availability.
+     *
+     * @return bool
+     * @since 100.4.0
+     */
+    public function canSale() : bool;
+    /**
+     * Executes `sale` payment operation.
+     *
+     * @param InfoInterface $payment
+     * @param float $amount
+     * @return void
+     * @since 100.4.0
+     */
+    public function sale(\Magento\Payment\Model\InfoInterface $payment, float $amount);
+}
+namespace Magento\Payment\Model\Method;
+
+/**
+ * Payment method facade. Abstract method adapter
+ *
+ * @SuppressWarnings(PHPMD.ExcessivePublicCount)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
+ * @api Use this class as a base for virtual types declaration
+ * @since 100.0.2
+ */
+class Adapter implements \Magento\Payment\Model\MethodInterface, \Magento\Payment\Model\SaleOperationInterface
+{
+    /**
+     * @param ManagerInterface $eventManager
+     * @param ValueHandlerPoolInterface $valueHandlerPool
+     * @param PaymentDataObjectFactory $paymentDataObjectFactory
+     * @param string $code
+     * @param string $formBlockType
+     * @param string $infoBlockType
+     * @param CommandPoolInterface|null $commandPool
+     * @param ValidatorPoolInterface|null $validatorPool
+     * @param CommandManagerInterface|null $commandExecutor
+     * @param LoggerInterface|null $logger
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     */
+    public function __construct(\Magento\Framework\Event\ManagerInterface $eventManager, \Magento\Payment\Gateway\Config\ValueHandlerPoolInterface $valueHandlerPool, \Magento\Payment\Gateway\Data\PaymentDataObjectFactory $paymentDataObjectFactory, $code, $formBlockType, $infoBlockType, \Magento\Payment\Gateway\Command\CommandPoolInterface $commandPool = null, \Magento\Payment\Gateway\Validator\ValidatorPoolInterface $validatorPool = null, \Magento\Payment\Gateway\Command\CommandManagerInterface $commandExecutor = null, \Psr\Log\LoggerInterface $logger = null)
+    {
+    }
+    /**
+     * Returns Validator pool
+     *
+     * @return ValidatorPoolInterface
+     * @throws \DomainException
+     */
+    public function getValidatorPool()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function canOrder()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function canAuthorize()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function canCapture()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function canCapturePartial()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function canCaptureOnce()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function canRefund()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function canRefundPartialPerInvoice()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function canVoid()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function canUseInternal()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function canUseCheckout()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function canEdit()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function canFetchTransactionInfo()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function canReviewPayment()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function isGateway()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function isOffline()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function isInitializeNeeded()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function isAvailable(\Magento\Quote\Api\Data\CartInterface $quote = null)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function isActive($storeId = null)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function canUseForCountry($country)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function canUseForCurrency($currencyCode)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getConfigData($field, $storeId = null)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function validate()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function fetchTransactionInfo(\Magento\Payment\Model\InfoInterface $payment, $transactionId)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function order(\Magento\Payment\Model\InfoInterface $payment, $amount)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function authorize(\Magento\Payment\Model\InfoInterface $payment, $amount)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function capture(\Magento\Payment\Model\InfoInterface $payment, $amount)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function refund(\Magento\Payment\Model\InfoInterface $payment, $amount)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function cancel(\Magento\Payment\Model\InfoInterface $payment)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function void(\Magento\Payment\Model\InfoInterface $payment)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function acceptPayment(\Magento\Payment\Model\InfoInterface $payment)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function denyPayment(\Magento\Payment\Model\InfoInterface $payment)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getCode()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getTitle()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setStore($storeId)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getStore()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getFormBlockType()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getInfoBlockType()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getInfoInstance()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setInfoInstance(\Magento\Payment\Model\InfoInterface $info)
+    {
+    }
+    /**
+     * @inheritdoc
+     * @param DataObject $data
+     * @return $this
+     */
+    public function assignData(\Magento\Framework\DataObject $data)
+    {
+    }
+    /**
+     * @inheritdoc
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function initialize($paymentAction, $stateObject)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getConfigPaymentAction()
+    {
+    }
+    /**
+     * @inheritdoc
+     * @since 100.4.0
+     */
+    public function canSale() : bool
+    {
+    }
+    /**
+     * @inheritdoc
+     * @since 100.4.0
+     */
+    public function sale(\Magento\Payment\Model\InfoInterface $payment, float $amount)
+    {
+    }
+}
+namespace Magento\Payment\Model\Method\Online;
+
+/**
+ * Gateway interface for online payment methods
+ *
+ * @author     Magento Core Team <core@magentocommerce.com>
+ */
+interface GatewayInterface
+{
+    /**
+     * Post request to gateway and return response
+     *
+     * @param Object $request
+     * @param ConfigInterface $config
+     *
+     * @return DataObject
+     *
+     * @throws \Exception
+     */
+    public function postRequest(\Magento\Framework\DataObject $request, \Magento\Payment\Model\Method\ConfigInterface $config);
+}
+namespace Magento\Payment\Model\Method;
+
+/**
+ * Interface for payment methods config
+ *
+ * @deprecated 100.3.0 This interface has no semantic meaning and all it implementations has no joint points.
+ */
+interface ConfigInterface extends \Magento\Payment\Gateway\ConfigInterface
+{
+}
+namespace Magento\Payment\Model\Method\Specification;
+
+/**
+ * Specification Factory
+ */
+class Factory
+{
+    /**
+     * Object Manager
+     *
+     * @var ObjectManagerInterface
+     */
+    protected $objectManager;
+    /**
+     * Factory constructor
+     *
+     * @param ObjectManagerInterface $objectManager
+     */
+    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager)
+    {
+    }
+    /**
+     * Create specification instance
+     *
+     * @param string $specificationClass
+     * @return SpecificationInterface
+     * @throws \InvalidArgumentException
+     */
+    public function create($specificationClass)
+    {
+    }
+}
+namespace Magento\Payment\Model\Method;
+
+/**
+ * Interface SpecificationInterface
+ *
+ * @api
+ * @since 100.0.2
+ */
+interface SpecificationInterface
+{
+    /**
+     * Check specification is satisfied by payment method
+     *
+     * @param string $paymentMethod
+     * @return bool
+     */
+    public function isSatisfiedBy($paymentMethod);
+}
+namespace Magento\Payment\Model\Method\Specification;
+
+/**
+ * Composite specification
+ *
+ * Use this class for virtual types declaration.
+ *
+ * @api
+ * @since 100.0.2
+ */
+class Composite implements \Magento\Payment\Model\Method\SpecificationInterface
+{
+    /**
+     * Specifications collection
+     *
+     * @var SpecificationInterface[]
+     */
+    protected $specifications = [];
+    /**
+     * Construct
+     *
+     * @param Factory $factory
+     * @param array $specifications
+     */
+    public function __construct(\Magento\Payment\Model\Method\Specification\Factory $factory, $specifications = [])
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function isSatisfiedBy($paymentMethod)
+    {
+    }
+}
+/**
+ * Abstract specification
+ *
+ * @api
+ * @since 100.0.2
+ */
+abstract class AbstractSpecification implements \Magento\Payment\Model\Method\SpecificationInterface
+{
+    /**
+     * Payment methods info
+     *
+     * @var array
+     */
+    protected $methodsInfo = [];
+    /**
+     * Construct
+     *
+     * @param PaymentConfig $paymentConfig
+     */
+    public function __construct(\Magento\Payment\Model\Config $paymentConfig)
+    {
+    }
+}
+namespace Magento\Payment\Model\Method;
+
+/**
+ * Payment method instance factory.
+ */
+class InstanceFactory
+{
+    /**
+     * @param \Magento\Payment\Helper\Data $helper
+     */
+    public function __construct(\Magento\Payment\Helper\Data $helper)
+    {
+    }
+    /**
+     * Create payment method instance.
+     *
+     * @param PaymentMethodInterface $paymentMethod
+     * @return \Magento\Payment\Model\MethodInterface
+     */
+    public function create(\Magento\Payment\Api\Data\PaymentMethodInterface $paymentMethod)
+    {
+    }
+}
+/**
+ * Interface TransparentInterface need to be implemented by Payment Method service
+ * which supports transparent redirect feature
+ *
+ * @package Magento\Payment\Model\Method
+ * @api
+ */
+interface TransparentInterface extends \Magento\Payment\Model\MethodInterface
+{
+    /**
+     * Returns payment method configured config
+     *
+     * @return \Magento\Payment\Gateway\ConfigInterface
+     */
+    public function getConfigInterface();
+}
+/**
+ * Credit Card payment method legacy implementation.
+ *
+ * @method \Magento\Quote\Api\Data\PaymentMethodExtensionInterface getExtensionAttributes()
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @deprecated 100.0.8
+ */
+class Cc extends \Magento\Payment\Model\Method\AbstractMethod
+{
+    /**
+     * @var string
+     */
+    protected $_formBlockType = \Magento\Payment\Block\Form\Cc::class;
+    /**
+     * @var string
+     */
+    protected $_infoBlockType = \Magento\Payment\Block\Info\Cc::class;
+    /**
+     * @var bool
+     */
+    protected $_canSaveCc = false;
+    /**
+     * @var \Magento\Framework\Module\ModuleListInterface
+     */
+    protected $_moduleList;
+    /**
+     * @var \Magento\Framework\Stdlib\DateTime\TimezoneInterface
+     */
+    protected $_localeDate;
+    /**
+     * @param \Magento\Framework\Model\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory
+     * @param \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory
+     * @param \Magento\Payment\Helper\Data $paymentData
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param Logger $logger
+     * @param \Magento\Framework\Module\ModuleListInterface $moduleList
+     * @param \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate
+     * @param \Magento\Framework\Model\ResourceModel\AbstractResource $resource
+     * @param \Magento\Framework\Data\Collection\AbstractDb $resourceCollection
+     * @param array $data
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     */
+    public function __construct(\Magento\Framework\Model\Context $context, \Magento\Framework\Registry $registry, \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory, \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory, \Magento\Payment\Helper\Data $paymentData, \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig, \Magento\Payment\Model\Method\Logger $logger, \Magento\Framework\Module\ModuleListInterface $moduleList, \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate, \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null, \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null, array $data = [])
+    {
+    }
+    /**
+     * Validate payment method information object
+     *
+     * @return $this
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
+    public function validate()
+    {
+    }
+    /**
+     * Check if verification should be used.
+     *
+     * @return bool
+     * @api
+     */
+    public function hasVerification()
+    {
+    }
+    /**
+     * Get list of credit cards verification reg exp.
+     *
+     * @return array
+     * @api
+     */
+    public function getVerificationRegEx()
+    {
+    }
+    /**
+     * Validate expiration date
+     *
+     * @param string $expYear
+     * @param string $expMonth
+     * @return bool
+     */
+    protected function _validateExpDate($expYear, $expMonth)
+    {
+    }
+    /**
+     * Assign data to info model instance
+     *
+     * @param \Magento\Framework\DataObject|mixed $data
+     * @return $this
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function assignData(\Magento\Framework\DataObject $data)
+    {
+    }
+    /**
+     * Get code for "other" credit cards.
+     *
+     * @param string $type
+     * @return bool
+     * @api
+     */
+    public function otherCcType($type)
+    {
+    }
+    /**
+     * Validate credit card number
+     *
+     * @param   string $ccNumber
+     * @return  bool
+     * @api
+     */
+    public function validateCcNum($ccNumber)
+    {
+    }
+    /**
+     * Other credit cart type number validation
+     *
+     * @param string $ccNumber
+     * @return bool
+     * @api
+     */
+    public function validateCcNumOther($ccNumber)
+    {
+    }
+    /**
+     * Check whether there are CC types set in configuration
+     *
+     * @param \Magento\Quote\Api\Data\CartInterface|null $quote
+     * @return bool
+     */
+    public function isAvailable(\Magento\Quote\Api\Data\CartInterface $quote = null)
+    {
+    }
+}
+/**
+ * Free payment method
+ * @method \Magento\Quote\Api\Data\PaymentMethodExtensionInterface getExtensionAttributes()
+ *
+ * This is an implementation of payment method that allows order for free.
+ * Magento contains special flow for handling this payment method.
+ * Inheritance is allowed to modify it behavior.
+ *
+ * @api
+ * @since 100.0.2
+ */
+class Free extends \Magento\Payment\Model\Method\AbstractMethod
+{
+    public const PAYMENT_METHOD_FREE_CODE = 'free';
+    /**
+     * XML Paths for configuration constants
+     */
+    public const XML_PATH_PAYMENT_FREE_ACTIVE = 'payment/free/active';
+    public const XML_PATH_PAYMENT_FREE_ORDER_STATUS = 'payment/free/order_status';
+    public const XML_PATH_PAYMENT_FREE_PAYMENT_ACTION = 'payment/free/payment_action';
+    /**
+     * Payment Method features
+     *
+     * @var bool
+     */
+    protected $_canAuthorize = true;
+    /**
+     * Payment code name
+     *
+     * @var string
+     */
+    protected $_code = self::PAYMENT_METHOD_FREE_CODE;
+    /**
+     * @var PriceCurrencyInterface
+     */
+    protected $priceCurrency;
+    /**
+     * @var bool
+     */
+    protected $_isOffline = true;
+    /**
+     * @param \Magento\Framework\Model\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory
+     * @param \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory
+     * @param \Magento\Payment\Helper\Data $paymentData
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param Logger $logger
+     * @param PriceCurrencyInterface $priceCurrency
+     * @param \Magento\Framework\Model\ResourceModel\AbstractResource $resource
+     * @param \Magento\Framework\Data\Collection\AbstractDb $resourceCollection
+     * @param array $data
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     */
+    public function __construct(\Magento\Framework\Model\Context $context, \Magento\Framework\Registry $registry, \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory, \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory, \Magento\Payment\Helper\Data $paymentData, \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig, \Magento\Payment\Model\Method\Logger $logger, \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency, \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null, \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null, array $data = [])
+    {
+    }
+    /**
+     * Check whether method is available
+     *
+     * @param \Magento\Quote\Api\Data\CartInterface|\Magento\Quote\Model\Quote|null $quote
+     * @return bool
+     */
+    public function isAvailable(\Magento\Quote\Api\Data\CartInterface $quote = null)
+    {
+    }
+    /**
+     * Check whether method is enabled in config
+     *
+     * @param \Magento\Quote\Model\Quote|null $quote
+     * @return bool
+     */
+    public function isAvailableInConfig($quote = null)
+    {
+    }
+    /**
+     * Get config payment action, do nothing if status is pending
+     *
+     * @return string|null
+     */
+    public function getConfigPaymentAction()
+    {
+    }
+}
+namespace Magento\Payment\Model;
+
+/**
+ * Provide methods for collecting cart items information of specific sales model entity
+ *
+ * @api
+ * @since 100.0.2
+ */
+class Cart
+{
+    /**#@+
+     * Amounts
+     */
+    public const AMOUNT_TAX = 'tax';
+    public const AMOUNT_SHIPPING = 'shipping';
+    public const AMOUNT_DISCOUNT = 'discount';
+    public const AMOUNT_SUBTOTAL = 'subtotal';
+    /**#@-*/
+    /**
+     * @var SalesModelInterface
+     */
+    protected $_salesModel;
+    /**
+     * Core event manager proxy
+     *
+     * @var ManagerInterface
+     */
+    protected $_eventManager;
+    /**
+     * @var array
+     */
+    protected $_amounts;
+    /**
+     * @var array
+     */
+    protected $_customItems = [];
+    /**
+     * @var array
+     */
+    protected $_salesModelItems = [];
+    /**
+     * @var array
+     */
+    protected $_transferFlags = [];
+    /**
+     * @var bool
+     */
+    protected $_itemsCollectingRequired = true;
+    /**
+     * @param Factory $salesModelFactory
+     * @param ManagerInterface $eventManager
+     * @param CartInterface $salesModel
+     */
+    public function __construct(\Magento\Payment\Model\Cart\SalesModel\Factory $salesModelFactory, \Magento\Framework\Event\ManagerInterface $eventManager, $salesModel)
+    {
+    }
+    /**
+     * Return payment cart sales model
+     *
+     * @return SalesModelInterface
+     */
+    public function getSalesModel()
+    {
+    }
+    /**
+     * Add amount to existing tax amount
+     *
+     * @param float $taxAmount
+     * @return void
+     */
+    public function addTax($taxAmount)
+    {
+    }
+    /**
+     * Set tax. Old value will be overwritten
+     *
+     * @param float $taxAmount
+     * @return void
+     */
+    public function setTax($taxAmount)
+    {
+    }
+    /**
+     * Get tax amount
+     *
+     * @return float
+     */
+    public function getTax()
+    {
+    }
+    /**
+     * Add amount to existing discount amount
+     *
+     * @param float $discountAmount
+     * @return void
+     */
+    public function addDiscount($discountAmount)
+    {
+    }
+    /**
+     * Set discount. Old value will be overwritten
+     *
+     * @param float $discountAmount
+     * @return void
+     */
+    public function setDiscount($discountAmount)
+    {
+    }
+    /**
+     * Get discount amount
+     *
+     * @return float
+     */
+    public function getDiscount()
+    {
+    }
+    /**
+     * Add amount to existing shipping amount
+     *
+     * @param float $shippingAmount
+     * @return void
+     */
+    public function addShipping($shippingAmount)
+    {
+    }
+    /**
+     * Set shipping. Old value will be overwritten
+     *
+     * @param float $shippingAmount
+     * @return void
+     */
+    public function setShipping($shippingAmount)
+    {
+    }
+    /**
+     * Get shipping amount
+     *
+     * @return float
+     */
+    public function getShipping()
+    {
+    }
+    /**
+     * Add amount to existing subtotal amount
+     *
+     * @param float $subtotalAmount
+     * @return void
+     */
+    public function addSubtotal($subtotalAmount)
+    {
+    }
+    /**
+     * Get subtotal amount
+     *
+     * @return float
+     */
+    public function getSubtotal()
+    {
+    }
+    /**
+     * Add custom item (such as discount as line item, shipping as line item, etc)
+     *
+     * @param string $name
+     * @param int $qty
+     * @param float $amount
+     * @param string|null $identifier
+     * @return void
+     */
+    public function addCustomItem($name, $qty, $amount, $identifier = null)
+    {
+    }
+    /**
+     * Get all cart items
+     *
+     * @return array
+     */
+    public function getAllItems()
+    {
+    }
+    /**
+     * Get shipping, tax, subtotal and discount amounts all together
+     *
+     * @return array
+     */
+    public function getAmounts()
+    {
+    }
+    /**
+     * Specify that shipping should be transferred as cart item
+     *
+     * @return void
+     */
+    public function setTransferShippingAsItem()
+    {
+    }
+    /**
+     * Specify that discount should be transferred as cart item
+     *
+     * @return void
+     */
+    public function setTransferDiscountAsItem()
+    {
+    }
+    /**
+     * Collect all items, discounts, taxes, shipping to cart
+     *
+     * @return void
+     */
+    protected function _collectItemsAndAmounts()
+    {
+    }
+    /**
+     * Import items from sales model
+     *
+     * @return void
+     */
+    protected function _importItemsFromSalesModel()
+    {
+    }
+    /**
+     * Calculate subtotal from custom items
+     *
+     * @return void
+     */
+    protected function _calculateCustomItemsSubtotal()
+    {
+    }
+    /**
+     * Method for set transfer flag.
+     *
+     * @param string $flagType
+     * @param bool $value
+     * @return void
+     */
+    protected function _setTransferFlag($flagType, $value)
+    {
+    }
+    /**
+     * Method for set amount.
+     *
+     * @param string $amountType
+     * @param float $amount
+     * @return void
+     */
+    protected function _setAmount($amountType, $amount)
+    {
+    }
+    /**
+     * Method for add amount.
+     *
+     * @param string $amountType
+     * @param float $amount
+     * @return void
+     */
+    protected function _addAmount($amountType, $amount)
+    {
+    }
+    /**
+     * Get amount of specified type
+     *
+     * @param string $amountType
+     * @return float
+     */
+    protected function _getAmount($amountType)
+    {
+    }
+    /**
+     * Create item object from item data
+     *
+     * @param string $name
+     * @param int $qty
+     * @param float $amount
+     * @param null|string $identifier
+     * @return DataObject
+     */
+    protected function _createItemFromData($name, $qty, $amount, $identifier = null)
+    {
+    }
+    /**
+     * Set all amount types to zero
+     *
+     * @return void
+     */
+    protected function _resetAmounts()
+    {
+    }
+}
+namespace Magento\Payment\Model\Config\Source;
+
+class Allmethods implements \Magento\Framework\Option\ArrayInterface
+{
+    /**
+     * Payment data
+     *
+     * @var \Magento\Payment\Helper\Data
+     */
+    protected $_paymentData;
+    /**
+     * @param \Magento\Payment\Helper\Data $paymentData
+     */
+    public function __construct(\Magento\Payment\Helper\Data $paymentData)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function toOptionArray()
+    {
+    }
+}
+/**
+ * @api
+ * @since 100.0.2
+ */
+class Allspecificcountries implements \Magento\Framework\Option\ArrayInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function toOptionArray()
+    {
+    }
+}
+class Cctype implements \Magento\Framework\Option\ArrayInterface
+{
+    /**
+     * Payment config model
+     *
+     * @var \Magento\Payment\Model\Config
+     */
+    protected $_paymentConfig;
+    /**
+     * Construct
+     *
+     * @param \Magento\Payment\Model\Config $paymentConfig
+     */
+    public function __construct(\Magento\Payment\Model\Config $paymentConfig)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function toOptionArray()
+    {
+    }
+}
+namespace Magento\Payment\Model\Config;
+
+class SchemaLocator implements \Magento\Framework\Config\SchemaLocatorInterface
+{
+    /**
+     * Merged config schema file name
+     */
+    const MERGED_CONFIG_SCHEMA = 'payment.xsd';
+    /**
+     * Per file validation schema file name
+     */
+    const PER_FILE_VALIDATION_SCHEMA = 'payment_file.xsd';
+    /**
+     * Path to corresponding XSD file with validation rules for merged config
+     *
+     * @var string
+     */
+    protected $_schema = null;
+    /**
+     * Path to corresponding XSD file with validation rules for separate config files
+     *
+     * @var string
+     */
+    protected $_perFileSchema = null;
+    /**
+     * @param \Magento\Framework\Module\Dir\Reader $moduleReader
+     */
+    public function __construct(\Magento\Framework\Module\Dir\Reader $moduleReader)
+    {
+    }
+    /**
+     * Get path to merged config schema
+     *
+     * @return string|null
+     */
+    public function getSchema()
+    {
+    }
+    /**
+     * Get path to per file validation schema
+     *
+     * @return string|null
+     */
+    public function getPerFileSchema()
+    {
+    }
+}
+class Reader extends \Magento\Framework\Config\Reader\Filesystem
+{
+    /**
+     * List of identifier attributes for merging
+     *
+     * @var array
+     */
+    protected $_idAttributes = ['/payment/credit_cards/type' => 'id', '/payment/groups/group' => 'id', '/payment/methods/method' => 'name'];
+}
+class Converter implements \Magento\Framework\Config\ConverterInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function convert($source)
+    {
+    }
+    /**
+     * Convert credit cards xml tree to array
+     *
+     * @param \DOMXPath $xpath
+     * @return array
+     */
+    protected function convertCreditCards(\DOMXPath $xpath)
+    {
+    }
+    /**
+     * Convert groups xml tree to array
+     *
+     * @param \DOMXPath $xpath
+     * @return array
+     */
+    protected function convertGroups(\DOMXPath $xpath)
+    {
+    }
+    /**
+     * Convert methods xml tree to array
+     *
+     * @param \DOMXPath $xpath
+     * @return array
+     */
+    protected function convertMethods(\DOMXPath $xpath)
+    {
+    }
+}
+namespace Magento\Payment\Model\Checks;
+
+/**
+ * Specification checks interface
+ *
+ * @api
+ * @since 100.0.2
+ */
+interface SpecificationInterface
+{
+    /**
+     * Check whether payment method is applicable to quote
+     *
+     * @param MethodInterface $paymentMethod
+     * @param \Magento\Quote\Model\Quote $quote
+     * @return bool
+     */
+    public function isApplicable(\Magento\Payment\Model\MethodInterface $paymentMethod, \Magento\Quote\Model\Quote $quote);
+}
+/**
+ * Checks that order total is meaningful
+ *
+ * @api
+ * @since 100.0.2
+ */
+class ZeroTotal implements \Magento\Payment\Model\Checks\SpecificationInterface
+{
+    /**
+     * Check whether payment method is applicable to quote
+     * Purposed to allow use in controllers some logic that was implemented in blocks only before
+     *
+     * @param MethodInterface $paymentMethod
+     * @param \Magento\Quote\Model\Quote $quote
+     * @return bool
+     */
+    public function isApplicable(\Magento\Payment\Model\MethodInterface $paymentMethod, \Magento\Quote\Model\Quote $quote)
+    {
+    }
+}
+/**
+ * Checks possibility to use payment method with particular currency
+ *
+ * @api
+ * @since 100.0.2
+ */
+class CanUseForCurrency implements \Magento\Payment\Model\Checks\SpecificationInterface
+{
+    /**
+     * Check whether payment method is applicable to quote
+     * Purposed to allow use in controllers some logic that was implemented in blocks only before
+     *
+     * @param MethodInterface $paymentMethod
+     * @param \Magento\Quote\Model\Quote $quote
+     * @return bool
+     */
+    public function isApplicable(\Magento\Payment\Model\MethodInterface $paymentMethod, \Magento\Quote\Model\Quote $quote)
+    {
+    }
+}
+/**
+ * Checks possibility of payment method to be used in admin area
+ *
+ * @api
+ * @since 100.0.2
+ */
+class CanUseInternal implements \Magento\Payment\Model\Checks\SpecificationInterface
+{
+    /**
+     * Check whether payment method is applicable to quote
+     * Purposed to allow use in controllers some logic that was implemented in blocks only before
+     *
+     * @param MethodInterface $paymentMethod
+     * @param \Magento\Quote\Model\Quote $quote
+     * @return bool
+     */
+    public function isApplicable(\Magento\Payment\Model\MethodInterface $paymentMethod, \Magento\Quote\Model\Quote $quote)
+    {
+    }
+}
+/**
+ * Checks is order total in allowed range or not
+ *
+ * @api
+ * @since 100.0.2
+ */
+class TotalMinMax implements \Magento\Payment\Model\Checks\SpecificationInterface
+{
+    /**
+     * Config value key for min order total
+     */
+    const MIN_ORDER_TOTAL = 'min_order_total';
+    /**
+     * Config value key for max order total
+     */
+    const MAX_ORDER_TOTAL = 'max_order_total';
+    /**
+     * Check whether payment method is applicable to quote
+     *
+     * @param MethodInterface $paymentMethod
+     * @param \Magento\Quote\Model\Quote $quote
+     * @return bool
+     */
+    public function isApplicable(\Magento\Payment\Model\MethodInterface $paymentMethod, \Magento\Quote\Model\Quote $quote)
+    {
+    }
+}
+/**
+ * Combines several checks with logic "AND" operation.
+ * Use this class to register own specifications.
+ *
+ * @api
+ * @since 100.0.2
+ */
+class Composite implements \Magento\Payment\Model\Checks\SpecificationInterface
+{
+    /**
+     * @var \Magento\Payment\Model\Checks\SpecificationInterface[]
+     */
+    protected $list = [];
+    /**
+     * @param SpecificationInterface[] $list
+     */
+    public function __construct(array $list)
+    {
+    }
+    /**
+     * Check whether payment method is applicable to quote
+     *
+     * @param MethodInterface $paymentMethod
+     * @param \Magento\Quote\Model\Quote $quote
+     * @return bool
+     */
+    public function isApplicable(\Magento\Payment\Model\MethodInterface $paymentMethod, \Magento\Quote\Model\Quote $quote)
+    {
+    }
+}
+/**
+ * Checks possibility of payment method to be used in storefront
+ *
+ * @api
+ * @since 100.0.2
+ */
+class CanUseCheckout implements \Magento\Payment\Model\Checks\SpecificationInterface
+{
+    /**
+     * Check whether payment method is applicable to quote
+     *
+     * @param MethodInterface $paymentMethod
+     * @param Quote $quote
+     * @return bool
+     */
+    public function isApplicable(\Magento\Payment\Model\MethodInterface $paymentMethod, \Magento\Quote\Model\Quote $quote)
+    {
+    }
+}
+/**
+ * Checks possibility to use payment method at particular country
+ *
+ * @api
+ * @since 100.0.2
+ */
+class CanUseForCountry implements \Magento\Payment\Model\Checks\SpecificationInterface
+{
+    /**
+     * @var CountryProvider
+     */
+    protected $countryProvider;
+    /**
+     * @param CountryProvider $countryProvider
+     */
+    public function __construct(\Magento\Payment\Model\Checks\CanUseForCountry\CountryProvider $countryProvider)
+    {
+    }
+    /**
+     * Check whether payment method is applicable to quote
+     * @param MethodInterface $paymentMethod
+     * @param Quote $quote
+     * @return bool
+     */
+    public function isApplicable(\Magento\Payment\Model\MethodInterface $paymentMethod, \Magento\Quote\Model\Quote $quote)
+    {
+    }
+}
+namespace Magento\Payment\Model\Checks\CanUseForCountry;
+
+/**
+ * Select country which will be used for payment.
+ *
+ * This class may be extended if logic fo country selection should be modified.
+ *
+ * @api
+ * @since 100.0.2
+ */
+class CountryProvider
+{
+    /**
+     * @var DirectoryHelper
+     */
+    protected $directoryHelper;
+    /**
+     * @param DirectoryHelper $directoryHelper
+     */
+    public function __construct(\Magento\Directory\Helper\Data $directoryHelper)
+    {
+    }
+    /**
+     * Get payment country
+     *
+     * @param Quote $quote
+     * @return int
+     */
+    public function getCountry(\Magento\Quote\Model\Quote $quote)
+    {
+    }
+}
+namespace Magento\Payment\Model\Checks;
+
+/**
+ * Creates complex specification.
+ *
+ * Use this class to register predefined list of specifications that should be added to any complex specification.
+ *
+ * @api
+ * @since 100.0.2
+ */
+class SpecificationFactory
+{
+    /**
+     * Composite Factory
+     *
+     * @var \Magento\Payment\Model\Checks\CompositeFactory
+     */
+    protected $compositeFactory;
+    /**
+     * @var array
+     */
+    protected $mapping;
+    /**
+     * Construct
+     *
+     * @param \Magento\Payment\Model\Checks\CompositeFactory $compositeFactory
+     * @param array $mapping
+     */
+    public function __construct(\Magento\Payment\Model\Checks\CompositeFactory $compositeFactory, array $mapping)
+    {
+    }
+    /**
+     * Creates new instances of payment method models
+     *
+     * @param array $data
+     * @return Composite
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function create($data)
+    {
+    }
+}
+namespace Magento\Payment\Model;
+
+/**
+ * Class IframeConfigProvider
+ * @package Magento\Payment\Model
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
+ * Default implementation of config provider for iframe integrations.
+ * Use this class for virtual types declaration.
+ * Extends from this class only in case of urgency.
+ *
+ * @api
+ * @since 100.0.2
+ */
+class IframeConfigProvider implements \Magento\Checkout\Model\ConfigProviderInterface
+{
+    /**
+     * 30 sec
+     */
+    const TIMEOUT_TIME = 30000;
+    /**
+     * Default length of Cc year field
+     */
+    const DEFAULT_YEAR_LENGTH = 2;
+    /**
+     * Checkout identifier for transparent iframe payments
+     */
+    const CHECKOUT_IDENTIFIER = 'checkout_flow';
+    /**
+     * @var Repository
+     */
+    protected $assetRepo;
+    /**
+     * @var RequestInterface
+     */
+    protected $request;
+    /**
+     * @var UrlInterface
+     */
+    protected $urlBuilder;
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+    /**
+     * Payment method code
+     *
+     * @var string
+     */
+    protected $methodCode;
+    /**
+     * @var \Magento\Payment\Model\Method\AbstractMethod
+     */
+    protected $method;
+    /**
+     * @param Repository $assetRepo
+     * @param RequestInterface $request
+     * @param UrlInterface $urlBuilder
+     * @param LoggerInterface $logger
+     * @param PaymentHelper $paymentHelper
+     * @param string $methodCode
+     */
+    public function __construct(\Magento\Framework\View\Asset\Repository $assetRepo, \Magento\Framework\App\RequestInterface $request, \Magento\Framework\UrlInterface $urlBuilder, \Psr\Log\LoggerInterface $logger, \Magento\Payment\Helper\Data $paymentHelper, $methodCode)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getConfig()
+    {
+    }
+    /**
+     * Get delimiter for date
+     *
+     * @return string
+     */
+    protected function getDateDelim()
+    {
+    }
+    /**
+     * Returns Cc expire year length
+     *
+     * @return int
+     */
+    protected function getExpireDateYearLength()
+    {
+    }
+    /**
+     * Get map of cc_code, cc_num, cc_expdate for gateway
+     * Returns json formatted string
+     *
+     * @return string
+     */
+    protected function getCardFieldsMap()
+    {
+    }
+    /**
+     * Retrieve url of a view file
+     *
+     * @param string $fileId
+     * @param array $params
+     * @return string[]
+     */
+    protected function getViewFileUrl($fileId, array $params = [])
+    {
+    }
+    /**
+     * Retrieve place order url on front
+     *
+     * @return string
+     */
+    protected function getPlaceOrderUrl()
+    {
+    }
+    /**
+     * Retrieve save order url on front
+     *
+     * @return string
+     */
+    protected function getSaveOrderUrl()
+    {
+    }
+    /**
+     * Retrieve gateway url
+     *
+     * @return string
+     */
+    protected function getCgiUrl()
+    {
+    }
+    /**
+     * Retrieve config data value by field name
+     *
+     * @param string $fieldName
+     * @return mixed
+     */
+    protected function getMethodConfigData($fieldName)
+    {
+    }
+}
+namespace Magento\Payment\Model\ResourceModel\Grid;
+
+/**
+ * Sales transaction payment method types option array
+ */
+class TypeList implements \Magento\Framework\Option\ArrayInterface
+{
+    /**
+     * Payment data
+     *
+     * @var \Magento\Payment\Helper\Data
+     */
+    protected $paymentData;
+    /**
+     * @param \Magento\Payment\Helper\Data $paymentData
+     */
+    public function __construct(\Magento\Payment\Helper\Data $paymentData)
+    {
+    }
+    /**
+     * Return option array
+     *
+     * @return array
+     */
+    public function toOptionArray()
+    {
+    }
+}
+/**
+ * Sales transaction types option array
+ */
+class GroupList implements \Magento\Framework\Option\ArrayInterface
+{
+    /**
+     * Payment data
+     *
+     * @var \Magento\Payment\Helper\Data
+     */
+    protected $paymentData;
+    /**
+     * @param \Magento\Payment\Helper\Data $paymentData
+     */
+    public function __construct(\Magento\Payment\Helper\Data $paymentData)
+    {
+    }
+    /**
+     * Return option array
+     *
+     * @return array
+     */
+    public function toOptionArray()
+    {
+    }
+}
+namespace Magento\Payment\Model\Paygate;
+
+class Result extends \Magento\Framework\DataObject
+{
+}
+namespace Magento\Payment\Model;
+
+/**
+ * Payment configuration model
+ *
+ * Used for retrieving configuration data by payment models
+ *
+ * @api
+ * @since 100.0.2
+ */
+class Config
+{
+    public const YEARS_RANGE = 10;
+    /**
+     * @var array
+     */
+    protected $_methods;
+    /**
+     * Core store config
+     *
+     * @var \Magento\Framework\App\Config\ScopeConfigInterface
+     */
+    protected $_scopeConfig;
+    /**
+     * @var \Magento\Framework\Config\DataInterface
+     */
+    protected $_dataStorage;
+    /**
+     * Locale model
+     *
+     * @var \Magento\Framework\Locale\ResolverInterface
+     */
+    protected $localeResolver;
+    /**
+     * @var \Magento\Payment\Model\Method\Factory
+     */
+    protected $_paymentMethodFactory;
+    /**
+     * DateTime
+     *
+     * @var \Magento\Framework\Stdlib\DateTime\DateTime
+     */
+    protected $_date;
+    /**
+     * Construct
+     *
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param \Magento\Payment\Model\Method\Factory $paymentMethodFactory
+     * @param \Magento\Framework\Locale\ResolverInterface $localeResolver
+     * @param \Magento\Framework\Config\DataInterface $dataStorage
+     * @param \Magento\Framework\Stdlib\DateTime\DateTime $date
+     */
+    public function __construct(\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig, \Magento\Payment\Model\Method\Factory $paymentMethodFactory, \Magento\Framework\Locale\ResolverInterface $localeResolver, \Magento\Framework\Config\DataInterface $dataStorage, \Magento\Framework\Stdlib\DateTime\DateTime $date)
+    {
+    }
+    /**
+     * Retrieve active system payments
+     *
+     * @return array
+     */
+    public function getActiveMethods()
+    {
+    }
+    /**
+     * Get list of credit card types
+     *
+     * @return array
+     */
+    public function getCcTypes()
+    {
+    }
+    /**
+     * Retrieve array of payment methods information
+     *
+     * @return array
+     */
+    public function getMethodsInfo()
+    {
+    }
+    /**
+     * Get payment groups
+     *
+     * @return array
+     */
+    public function getGroups()
+    {
+    }
+    /**
+     * Retrieve list of months translation
+     *
+     * @return array
+     */
+    public function getMonths()
+    {
+    }
+    /**
+     * Retrieve array of available years
+     *
+     * @return array
+     */
+    public function getYears()
+    {
+    }
+}

@@ -1,5 +1,9 @@
 <?php
 
+if (!class_exists(Magento\Framework\Component\ComponentRegistrar::class)) {
+    return;
+}
+
 use Composer\InstalledVersions;
 
 if (class_exists(InstalledVersions::class)) {

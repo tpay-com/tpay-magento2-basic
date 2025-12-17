@@ -1,0 +1,70 @@
+<?php
+
+namespace Magento\Csp\Helper;
+
+/**
+ * Helper for classes responsible for rendering and templates.
+ *
+ * Allows to whitelist dynamic sources specific to a certain page.
+ */
+class InlineUtil implements \Magento\Csp\Api\InlineUtilInterface, \Magento\Framework\View\Helper\SecureHtmlRender\SecurityProcessorInterface
+{
+    /**
+     * @param DynamicCollector $dynamicCollector
+     * @param bool $useUnsafeHashes Use 'unsafe-hashes' policy (not supported by CSP v2).
+     * @param HtmlRenderer|null $htmlRenderer
+     * @param ConfigCollector|null $configCollector
+     * @param CspNonceProvider|null $nonceProvider
+     */
+    public function __construct(\Magento\Csp\Model\Collector\DynamicCollector $dynamicCollector, bool $useUnsafeHashes = false, ?\Magento\Framework\View\Helper\SecureHtmlRender\HtmlRenderer $htmlRenderer = null, ?\Magento\Csp\Model\Collector\ConfigCollector $configCollector = null, ?\Magento\Csp\Helper\CspNonceProvider $nonceProvider = null)
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function renderTag(string $tagName, array $attributes, ?string $content = null) : string
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function renderEventListener(string $eventName, string $javascript) : string
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function processTag(\Magento\Framework\View\Helper\SecureHtmlRender\TagData $tagData) : \Magento\Framework\View\Helper\SecureHtmlRender\TagData
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function processEventHandler(\Magento\Framework\View\Helper\SecureHtmlRender\EventHandlerData $eventHandlerData) : \Magento\Framework\View\Helper\SecureHtmlRender\EventHandlerData
+    {
+    }
+}
+/**
+ * This helper class is used to provide nonce for CSP
+ *
+ * It also adds a nonce to the CSP header.
+ */
+class CspNonceProvider
+{
+    /**
+     * @param Random $random
+     * @param DynamicCollector $dynamicCollector
+     */
+    public function __construct(\Magento\Framework\Math\Random $random, \Magento\Csp\Model\Collector\DynamicCollector $dynamicCollector)
+    {
+    }
+    /**
+     * Generate nonce and add it to the CSP header
+     *
+     * @return string
+     * @throws LocalizedException
+     */
+    public function generateNonce() : string
+    {
+    }
+}

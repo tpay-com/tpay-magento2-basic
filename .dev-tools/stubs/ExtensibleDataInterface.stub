@@ -1,0 +1,4300 @@
+<?php
+
+namespace Magento\Framework\Api;
+
+/**
+ * Factory class for instantiation of extension attributes objects.
+ */
+class ExtensionAttributesFactory
+{
+    const EXTENSIBLE_INTERFACE_NAME = \Magento\Framework\Api\ExtensibleDataInterface::class;
+    /**
+     * Object Manager instance
+     *
+     * @var \Magento\Framework\ObjectManagerInterface
+     */
+    protected $objectManager;
+    /**
+     * Factory constructor
+     *
+     * @param \Magento\Framework\ObjectManagerInterface $objectManager
+     */
+    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager)
+    {
+    }
+    /**
+     * Create extension attributes object, custom for each extensible class.
+     *
+     * @param string $extensibleClassName
+     * @param array $data
+     * @return \Magento\Framework\Api\ExtensionAttributesInterface
+     */
+    public function create($extensibleClassName, $data = [])
+    {
+    }
+    /**
+     * Identify concrete extensible interface name based on the class name.
+     *
+     * @param string $extensibleClassName
+     * @return string
+     */
+    public function getExtensibleInterfaceName($extensibleClassName)
+    {
+    }
+}
+/**
+ * Base Builder interface for simple data Objects
+ *
+ * @api
+ */
+interface SimpleBuilderInterface
+{
+    /**
+     * Builds the Data Object
+     *
+     * @return AbstractSimpleObject
+     */
+    public function create();
+    /**
+     * Return data Object data.
+     *
+     * @return array
+     */
+    public function getData();
+}
+/**
+ * Interface for entities which can be extended with extension attributes.
+ *
+ * @api
+ * @since 100.0.2
+ */
+interface ExtensibleDataInterface
+{
+    /**
+     * Key for extension attributes object
+     */
+    const EXTENSION_ATTRIBUTES_KEY = 'extension_attributes';
+}
+/**
+ * Interface for entities which can be extended with custom attributes.
+ *
+ * @api
+ * @since 100.0.2
+ */
+interface CustomAttributesDataInterface extends \Magento\Framework\Api\ExtensibleDataInterface
+{
+    /**
+     * Array key for custom attributes
+     */
+    const CUSTOM_ATTRIBUTES = 'custom_attributes';
+    /**
+     * Get an attribute value.
+     *
+     * @param string $attributeCode
+     * @return \Magento\Framework\Api\AttributeInterface|null
+     */
+    public function getCustomAttribute($attributeCode);
+    /**
+     * Set an attribute value for a given attribute code
+     *
+     * @param string $attributeCode
+     * @param mixed $attributeValue
+     * @return $this
+     */
+    public function setCustomAttribute($attributeCode, $attributeValue);
+    /**
+     * Retrieve custom attributes values.
+     *
+     * @return \Magento\Framework\Api\AttributeInterface[]|null
+     */
+    public function getCustomAttributes();
+    /**
+     * Set array of custom attributes
+     *
+     * @param \Magento\Framework\Api\AttributeInterface[] $attributes
+     * @return $this
+     * @throws \LogicException
+     */
+    public function setCustomAttributes(array $attributes);
+}
+class ObjectFactory
+{
+    /**
+     * @var \Magento\Framework\ObjectManagerInterface
+     */
+    protected $objectManager;
+    /**
+     * @param \Magento\Framework\ObjectManagerInterface $objectManager
+     */
+    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager)
+    {
+    }
+    /**
+     * Create data object
+     *
+     * @param string $className
+     * @param array $arguments
+     * @return object
+     */
+    public function create($className, array $arguments)
+    {
+    }
+    /**
+     * Get data object
+     *
+     * @param string $className
+     * @return object
+     */
+    public function get($className)
+    {
+    }
+}
+/**
+ * Image content validation interface
+ *
+ * @api
+ * @since 100.0.2
+ */
+interface ImageContentValidatorInterface
+{
+    /**
+     * Check if gallery entry content is valid
+     *
+     * @param ImageContentInterface $imageContent
+     * @return bool
+     * @throws InputException
+     */
+    public function isValid(\Magento\Framework\Api\Data\ImageContentInterface $imageContent);
+}
+/**
+ * Class for Image content validation
+ */
+class ImageContentValidator implements \Magento\Framework\Api\ImageContentValidatorInterface
+{
+    /**
+     * @param array $allowedMimeTypes
+     */
+    public function __construct(array $allowedMimeTypes = [])
+    {
+    }
+    /**
+     * Check if gallery entry content is valid
+     *
+     * @param ImageContentInterface $imageContent
+     * @return bool
+     * @throws InputException
+     */
+    public function isValid(\Magento\Framework\Api\Data\ImageContentInterface $imageContent)
+    {
+    }
+    /**
+     * Check if given mime type is valid
+     *
+     * @param string $mimeType
+     * @return bool
+     */
+    protected function isMimeTypeValid($mimeType)
+    {
+    }
+    /**
+     * Check if given filename is valid
+     *
+     * @param string $name
+     * @return bool
+     */
+    protected function isNameValid($name)
+    {
+    }
+}
+/**
+ * Base Class for simple data Objects
+ * @SuppressWarnings(PHPMD.NumberOfChildren)
+ *
+ * @api
+ */
+abstract class AbstractSimpleObject
+{
+    /**
+     * @var array
+     */
+    protected $_data;
+    /**
+     * Initialize internal storage
+     *
+     * @param array $data
+     */
+    public function __construct(array $data = [])
+    {
+    }
+    /**
+     * Retrieves a value from the data array if set, or null otherwise.
+     *
+     * @param string $key
+     * @return mixed|null
+     */
+    protected function _get($key)
+    {
+    }
+    /**
+     * Set value for the given key
+     *
+     * @param string $key
+     * @param mixed $value
+     * @return $this
+     */
+    public function setData($key, $value)
+    {
+    }
+    /**
+     * Return Data Object data in array format.
+     *
+     * @return array
+     */
+    public function __toArray()
+    {
+    }
+}
+/**
+ * Base Class for extensible data Objects
+ *
+ * @SuppressWarnings(PHPMD.NumberOfChildren)
+ * phpcs:disable Magento2.Classes.AbstractApi
+ * @api
+ * @deprecated 103.0.0
+ * @see \Magento\Framework\Model\AbstractExtensibleModel
+ * @since 100.0.2
+ */
+abstract class AbstractExtensibleObject extends \Magento\Framework\Api\AbstractSimpleObject implements \Magento\Framework\Api\CustomAttributesDataInterface
+{
+    /**
+     * Array key for custom attributes
+     */
+    const CUSTOM_ATTRIBUTES_KEY = 'custom_attributes';
+    /**
+     * @var \Magento\Framework\Api\ExtensionAttributesFactory
+     */
+    protected $extensionFactory;
+    /**
+     * @var AttributeValueFactory
+     */
+    protected $attributeValueFactory;
+    /**
+     * @var string[]
+     */
+    protected $customAttributesCodes;
+    /**
+     * Initialize internal storage
+     *
+     * @param \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory
+     * @param AttributeValueFactory $attributeValueFactory
+     * @param array $data
+     */
+    public function __construct(\Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory, \Magento\Framework\Api\AttributeValueFactory $attributeValueFactory, $data = [])
+    {
+    }
+    /**
+     * Get an attribute value.
+     *
+     * @param string $attributeCode
+     * @return \Magento\Framework\Api\AttributeInterface|null null if the attribute has not been set
+     */
+    public function getCustomAttribute($attributeCode)
+    {
+    }
+    /**
+     * Retrieve custom attributes values.
+     *
+     * @return \Magento\Framework\Api\AttributeInterface[]|null
+     */
+    public function getCustomAttributes()
+    {
+    }
+    /**
+     * Set array of custom attributes
+     *
+     * @param \Magento\Framework\Api\AttributeInterface[] $attributes
+     * @return $this
+     * @throws \LogicException
+     */
+    public function setCustomAttributes(array $attributes)
+    {
+    }
+    /**
+     * Set an attribute value for a given attribute code
+     *
+     * @param string $attributeCode
+     * @param mixed $attributeValue
+     * @return $this
+     */
+    public function setCustomAttribute($attributeCode, $attributeValue)
+    {
+    }
+    /**
+     * Get a list of custom attribute codes.
+     *
+     * By default, entity can be extended only using extension attributes functionality.
+     *
+     * @return string[]
+     */
+    protected function getCustomAttributesCodes()
+    {
+    }
+    /**
+     * Receive a list of EAV attributes using provided metadata service.
+     *
+     * Can be used in child classes, which represent EAV entities.
+     *
+     * @param \Magento\Framework\Api\MetadataServiceInterface $metadataService
+     * @return string[]
+     */
+    protected function getEavAttributesCodes(\Magento\Framework\Api\MetadataServiceInterface $metadataService)
+    {
+    }
+    /**
+     * Retrieve existing extension attributes object or create a new one.
+     *
+     * @return \Magento\Framework\Api\ExtensionAttributesInterface
+     */
+    protected function _getExtensionAttributes()
+    {
+    }
+    /**
+     * Set an extension attributes object.
+     *
+     * @param \Magento\Framework\Api\ExtensionAttributesInterface $extensionAttributes
+     * @return $this
+     */
+    protected function _setExtensionAttributes(\Magento\Framework\Api\ExtensionAttributesInterface $extensionAttributes)
+    {
+    }
+}
+/**
+ * Interface for custom attribute value.
+ *
+ * @api
+ * @since 100.0.2
+ */
+interface AttributeInterface
+{
+    /**#@+
+     * Constant used as key into $_data
+     */
+    const ATTRIBUTE_CODE = 'attribute_code';
+    const VALUE = 'value';
+    /**#@-*/
+    /**
+     * Get attribute code
+     *
+     * @return string
+     */
+    public function getAttributeCode();
+    /**
+     * Set attribute code
+     *
+     * @param string $attributeCode
+     * @return $this
+     */
+    public function setAttributeCode($attributeCode);
+    /**
+     * Get attribute value
+     *
+     * @return mixed
+     */
+    public function getValue();
+    /**
+     * Set attribute value
+     *
+     * @param mixed $value
+     * @return $this
+     */
+    public function setValue($value);
+}
+/**
+ * Custom Attribute Data object
+ */
+class AttributeValue extends \Magento\Framework\Api\AbstractSimpleObject implements \Magento\Framework\Api\AttributeInterface
+{
+    /**
+     * Get attribute code
+     *
+     * @return string
+     */
+    public function getAttributeCode()
+    {
+    }
+    /**
+     * Get attribute value
+     *
+     * @return mixed
+     */
+    public function getValue()
+    {
+    }
+    /**
+     * Set attribute code
+     *
+     * @param string $attributeCode
+     * @return $this
+     */
+    public function setAttributeCode($attributeCode)
+    {
+    }
+    /**
+     * Set attribute value
+     *
+     * @param mixed $value
+     * @return $this
+     */
+    public function setValue($value)
+    {
+    }
+}
+/**
+ * Base Builder Class for simple data Objects
+ * @deprecated 103.0.0 Every builder should have own implementation of \Magento\Framework\Api\SimpleBuilderInterface
+ * @SuppressWarnings(PHPMD.NumberOfChildren)
+ */
+abstract class AbstractSimpleObjectBuilder implements \Magento\Framework\Api\SimpleBuilderInterface, \Magento\Framework\ObjectManager\ResetAfterRequestInterface
+{
+    /**
+     * @var array
+     */
+    protected $data;
+    /**
+     * @var ObjectFactory
+     */
+    protected $objectFactory;
+    /**
+     * @param ObjectFactory $objectFactory
+     */
+    public function __construct(\Magento\Framework\Api\ObjectFactory $objectFactory)
+    {
+    }
+    /**
+     * Builds the Data Object
+     *
+     * @return AbstractSimpleObject
+     */
+    public function create()
+    {
+    }
+    /**
+     * Overwrite data in Object.
+     *
+     * @param string $key
+     * @param mixed $value
+     *
+     * @return $this
+     */
+    protected function _set($key, $value)
+    {
+    }
+    /**
+     * Return the Data type class name
+     *
+     * @return string
+     */
+    protected function _getDataObjectType()
+    {
+    }
+    /**
+     * Return data Object data.
+     *
+     * @return array
+     */
+    public function getData()
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function _resetState() : void
+    {
+    }
+}
+/**
+ * Builder for SearchCriteria Service Data Object
+ *
+ * @api
+ */
+class SearchCriteriaBuilder extends \Magento\Framework\Api\AbstractSimpleObjectBuilder
+{
+    /**
+     * @var FilterGroupBuilder
+     */
+    protected $_filterGroupBuilder;
+    /**
+     * @var \Magento\Framework\Api\FilterBuilder
+     */
+    protected $filterBuilder;
+    /**
+     * @param ObjectFactory $objectFactory
+     * @param FilterGroupBuilder $filterGroupBuilder
+     * @param FilterBuilder $filterBuilder
+     */
+    public function __construct(\Magento\Framework\Api\ObjectFactory $objectFactory, \Magento\Framework\Api\Search\FilterGroupBuilder $filterGroupBuilder, \Magento\Framework\Api\FilterBuilder $filterBuilder)
+    {
+    }
+    /**
+     * Builds the SearchCriteria Data Object
+     *
+     * @return SearchCriteria
+     */
+    public function create()
+    {
+    }
+    /**
+     * Create a filter group based on the filter array provided and add to the filter groups
+     *
+     * @param \Magento\Framework\Api\Filter[] $filter
+     * @return $this
+     */
+    public function addFilters(array $filter)
+    {
+    }
+    /**
+     * Add search filter
+     *
+     * @param string $field
+     * @param mixed $value
+     * @param string $conditionType
+     * @return $this
+     */
+    public function addFilter($field, $value, $conditionType = 'eq')
+    {
+    }
+    /**
+     * Set filter groups
+     *
+     * @param \Magento\Framework\Api\Search\FilterGroup[] $filterGroups
+     * @return $this
+     */
+    public function setFilterGroups(array $filterGroups)
+    {
+    }
+    /**
+     * Add sort order
+     *
+     * @param SortOrder $sortOrder
+     * @return $this
+     */
+    public function addSortOrder($sortOrder)
+    {
+    }
+    /**
+     * Set sort orders
+     *
+     * @param SortOrder[] $sortOrders
+     * @return $this
+     */
+    public function setSortOrders(array $sortOrders)
+    {
+    }
+    /**
+     * Set page size
+     *
+     * @param int $pageSize
+     * @return $this
+     */
+    public function setPageSize($pageSize)
+    {
+    }
+    /**
+     * Set current page
+     *
+     * @param int $currentPage
+     * @return $this
+     */
+    public function setCurrentPage($currentPage)
+    {
+    }
+}
+/**
+ * Search results interface.
+ *
+ * @api
+ * @since 100.0.2
+ */
+interface SearchResultsInterface
+{
+    /**
+     * Get items list.
+     *
+     * @return \Magento\Framework\Api\ExtensibleDataInterface[]
+     */
+    public function getItems();
+    /**
+     * Set items list.
+     *
+     * @param \Magento\Framework\Api\ExtensibleDataInterface[] $items
+     * @return $this
+     */
+    public function setItems(array $items);
+    /**
+     * Get search criteria.
+     *
+     * @return \Magento\Framework\Api\SearchCriteriaInterface
+     */
+    public function getSearchCriteria();
+    /**
+     * Set search criteria.
+     *
+     * @param \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria
+     * @return $this
+     */
+    public function setSearchCriteria(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria);
+    /**
+     * Get total count.
+     *
+     * @return int
+     */
+    public function getTotalCount();
+    /**
+     * Set total count.
+     *
+     * @param int $totalCount
+     * @return $this
+     */
+    public function setTotalCount($totalCount);
+}
+/**
+ * SearchResults Service Data Object used for the search service requests
+ *
+ * @SuppressWarnings(PHPMD.NumberOfChildren)
+ */
+class SearchResults extends \Magento\Framework\Api\AbstractSimpleObject implements \Magento\Framework\Api\SearchResultsInterface
+{
+    const KEY_ITEMS = 'items';
+    const KEY_SEARCH_CRITERIA = 'search_criteria';
+    const KEY_TOTAL_COUNT = 'total_count';
+    /**
+     * Get items
+     *
+     * @return \Magento\Framework\Api\AbstractExtensibleObject[]
+     */
+    public function getItems()
+    {
+    }
+    /**
+     * Set items
+     *
+     * @param \Magento\Framework\Api\AbstractExtensibleObject[] $items
+     * @return $this
+     */
+    public function setItems(array $items)
+    {
+    }
+    /**
+     * Get search criteria
+     *
+     * @return \Magento\Framework\Api\SearchCriteria
+     */
+    public function getSearchCriteria()
+    {
+    }
+    /**
+     * Set search criteria
+     *
+     * @param SearchCriteriaInterface $searchCriteria
+     * @return $this
+     */
+    public function setSearchCriteria(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria)
+    {
+    }
+    /**
+     * Get total count
+     *
+     * @return int
+     */
+    public function getTotalCount()
+    {
+    }
+    /**
+     * Set total count
+     *
+     * @param int $count
+     * @return $this
+     */
+    public function setTotalCount($count)
+    {
+    }
+}
+/**
+ * Groups two or more filters together using 'OR' or 'AND' strategy
+ */
+class CombinedFilterGroup extends \Magento\Framework\Api\AbstractSimpleObject
+{
+    /**
+     * Constants defined for keys of  data array
+     */
+    const FILTERS = 'filters';
+    const COMBINATION_MODE = 'combination_mode';
+    /**
+     * Possible aggregation strategies for filters
+     */
+    const COMBINED_WITH_AND = 'AND';
+    const COMBINED_WITH_OR = 'OR';
+    /**
+     * Returns a list of filters in this group
+     *
+     * @return \Magento\Framework\Api\Filter[]|null
+     */
+    public function getFilters()
+    {
+    }
+    /**
+     * Set filters
+     *
+     * @param \Magento\Framework\Api\Filter[] $filters
+     * @return $this
+     * @codeCoverageIgnore
+     */
+    public function setFilters(array $filters = null) : self
+    {
+    }
+    /**
+     * @return mixed|null
+     */
+    public function getCombinationMode()
+    {
+    }
+    /**
+     * @param string $mode
+     * @return $this
+     * @throws InputException
+     */
+    public function setCombinationMode(string $mode) : self
+    {
+    }
+}
+namespace Magento\Framework\Api\Data;
+
+/**
+ * Video Content data interface
+ *
+ * @api
+ * @since 100.0.2
+ */
+interface VideoContentInterface extends \Magento\Framework\Api\ExtensibleDataInterface
+{
+    const TYPE = 'media_type';
+    const PROVIDER = 'video_provider';
+    const URL = 'video_url';
+    const TITLE = 'video_title';
+    const DESCRIPTION = 'video_description';
+    const METADATA = 'video_metadata';
+    /**
+     * Retrieve MIME type
+     *
+     * @return string
+     */
+    public function getMediaType();
+    /**
+     * Set MIME type
+     *
+     * @param string $mimeType
+     * @return $this
+     */
+    public function setMediaType($mimeType);
+    /**
+     * Get provider
+     *
+     * @return string
+     */
+    public function getVideoProvider();
+    /**
+     * Set provider
+     *
+     * @param string $data
+     * @return $this
+     */
+    public function setVideoProvider($data);
+    /**
+     * Get video URL
+     *
+     * @return string
+     */
+    public function getVideoUrl();
+    /**
+     * Set video URL
+     *
+     * @param string $data
+     * @return $this
+     */
+    public function setVideoUrl($data);
+    /**
+     * Get Title
+     *
+     * @return string
+     */
+    public function getVideoTitle();
+    /**
+     * Set Title
+     *
+     * @param string $data
+     * @return $this
+     */
+    public function setVideoTitle($data);
+    /**
+     * Get video Description
+     *
+     * @return string
+     */
+    public function getVideoDescription();
+    /**
+     * Set video Description
+     *
+     * @param string $data
+     * @return $this
+     */
+    public function setVideoDescription($data);
+    /**
+     * Get Metadata
+     *
+     * @return string
+     */
+    public function getVideoMetadata();
+    /**
+     * Set Metadata
+     *
+     * @param string $data
+     * @return $this
+     */
+    public function setVideoMetadata($data);
+}
+/**
+ * Image Content data interface
+ *
+ * @api
+ * @since 100.0.2
+ */
+interface ImageContentInterface
+{
+    const BASE64_ENCODED_DATA = 'base64_encoded_data';
+    const TYPE = 'type';
+    const NAME = 'name';
+    /**
+     * Retrieve media data (base64 encoded content)
+     *
+     * @return string
+     */
+    public function getBase64EncodedData();
+    /**
+     * Set media data (base64 encoded content)
+     *
+     * @param string $data
+     * @return $this
+     */
+    public function setBase64EncodedData($data);
+    /**
+     * Retrieve MIME type
+     *
+     * @return string
+     */
+    public function getType();
+    /**
+     * Set MIME type
+     *
+     * @param string $mimeType
+     * @return $this
+     */
+    public function setType($mimeType);
+    /**
+     * Retrieve image name
+     *
+     * @return string
+     */
+    public function getName();
+    /**
+     * Set image name
+     *
+     * @param string $name
+     * @return $this
+     */
+    public function setName($name);
+}
+namespace Magento\Framework\Api;
+
+/**
+ * Interface Attribute Type Resolver
+ *
+ * @api
+ */
+interface AttributeTypeResolverInterface
+{
+    /**
+     * Resolve attribute type
+     *
+     * @param string $attributeCode
+     * @param object $value
+     * @param string $context
+     * @return string
+     */
+    public function resolveObjectType($attributeCode, $value, $context);
+}
+/**
+ * Provides metadata about an attribute.
+ *
+ * @api
+ * @since 100.0.2
+ */
+interface MetadataObjectInterface
+{
+    /**
+     * Retrieve code of the attribute.
+     *
+     * @return string
+     */
+    public function getAttributeCode();
+    /**
+     * Set code of the attribute.
+     *
+     * @param string $attributeCode
+     * @return $this
+     */
+    public function setAttributeCode($attributeCode);
+}
+namespace Magento\Framework\Api\Test\Unit;
+
+class StubAbstractSimpleObjectBuilder extends \Magento\Framework\Api\AbstractSimpleObjectBuilder
+{
+}
+namespace Magento\Framework\Api\Test\Unit\Api;
+
+/**
+ * Unit test class for \Magento\Framework\Api\ImageProcessor
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
+class ImageProcessorTest extends \PHPUnit\Framework\TestCase
+{
+    /**
+     * @var ImageProcessor
+     */
+    protected $imageProcessor;
+    /**
+     * @var ObjectManager
+     */
+    protected $objectManager;
+    /**
+     * @var Filesystem|MockObject
+     */
+    protected $fileSystemMock;
+    /**
+     * @var ImageContentValidatorInterface|MockObject
+     */
+    protected $contentValidatorMock;
+    /**
+     * @var DataObjectHelper|MockObject
+     */
+    protected $dataObjectHelperMock;
+    /**
+     * @var LoggerInterface|MockObject
+     */
+    protected $loggerMock;
+    /**
+     * @var Uploader|MockObject
+     */
+    protected $uploaderMock;
+    /**
+     * @var WriteInterface|MockObject
+     */
+    protected $directoryWriteMock;
+    protected function setUp() : void
+    {
+    }
+    public function testSaveWithNoImageData()
+    {
+    }
+    public function testSaveInputException()
+    {
+    }
+    public function testSaveWithNoPreviousData()
+    {
+    }
+    public function testSaveWithPreviousData()
+    {
+    }
+    public function testSaveWithoutFileExtension()
+    {
+    }
+}
+/**
+ * Unit test class for \Magento\Framework\Api\ImageContentValidator
+ */
+class ImageContentValidatorTest extends \PHPUnit\Framework\TestCase
+{
+    /**
+     * @var ImageContentValidator
+     */
+    protected $imageContentValidator;
+    /**
+     * @var ObjectManager
+     */
+    protected $objectManager;
+    protected function setUp() : void
+    {
+    }
+    public function testIsValidEmptyContent()
+    {
+    }
+    public function testIsValidEmptyProperties()
+    {
+    }
+    public function testIsValidInvalidMIMEType()
+    {
+    }
+    public function testIsValidInvalidName()
+    {
+    }
+    public function testIsValid()
+    {
+    }
+}
+namespace Magento\Framework\Api\Test\Unit\Data;
+
+class AttributeValueTest extends \PHPUnit\Framework\TestCase
+{
+    const ATTRIBUTE_CODE = 'ATTRIBUTE_CODE';
+    const STRING_VALUE = 'VALUE';
+    const INTEGER_VALUE = 1;
+    const FLOAT_VALUE = 1.0;
+    const BOOLEAN_VALUE = true;
+    public function testConstructorAndGettersWithString()
+    {
+    }
+    public function testConstructorAndGettersWithInteger()
+    {
+    }
+    public function testConstructorAndGettersWithFloat()
+    {
+    }
+    public function testConstructorAndGettersWithBoolean()
+    {
+    }
+}
+namespace Magento\Framework\Api\Test\Unit\ExtensionAttribute\Config;
+
+class XsdTest extends \PHPUnit\Framework\TestCase
+{
+    /**
+     * @var string
+     */
+    protected $_schemaFile;
+    protected function setUp() : void
+    {
+    }
+    /**
+     * @param string $fixtureXml
+     * @param array $expectedErrors
+     * @dataProvider exemplarXmlDataProvider
+     */
+    public function testExemplarXml($fixtureXml, array $expectedErrors)
+    {
+    }
+    /**
+     * @return array
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
+    public function exemplarXmlDataProvider()
+    {
+    }
+}
+/**
+ * Test for \Magento\Framework\Api\ExtensionAttribute\Config\SchemaLocator
+ */
+class SchemaLocatorTest extends \PHPUnit\Framework\TestCase
+{
+    /**
+     * @var SchemaLocator
+     */
+    protected $model;
+    /** @var UrnResolver */
+    protected $urnResolver;
+    protected function setUp() : void
+    {
+    }
+    public function testGetSchema()
+    {
+    }
+    public function testGetPerFileSchema()
+    {
+    }
+}
+class ConverterTest extends \PHPUnit\Framework\TestCase
+{
+    /**
+     * @var Converter
+     */
+    protected $_converter;
+    /**
+     * Initialize parameters
+     */
+    protected function setUp() : void
+    {
+    }
+    /**
+     * Test invalid data
+     */
+    public function testInvalidData()
+    {
+    }
+    /**
+     * Test empty data
+     */
+    public function testConvertNoElements()
+    {
+    }
+    /**
+     * Test converting valid data object config
+     */
+    public function testConvert()
+    {
+    }
+    /**
+     * Test converting valid data object config
+     */
+    public function testConvertWithJoinDirectives()
+    {
+    }
+}
+class ReaderTest extends \PHPUnit\Framework\TestCase
+{
+    /**
+     * @var Reader
+     */
+    protected $_reader;
+    /**
+     * Prepare parameters
+     */
+    protected function setUp() : void
+    {
+    }
+    /**
+     * Test creating object
+     */
+    public function testInstanceof()
+    {
+    }
+}
+namespace Magento\Framework\Api\Test\Unit\SearchCriteria\CollectionProcessor;
+
+class PaginationProcessorTest extends \PHPUnit\Framework\TestCase
+{
+    public function testProcess()
+    {
+    }
+}
+class JoinProcessorTest extends \PHPUnit\Framework\TestCase
+{
+    /**
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
+    public function testProcess()
+    {
+    }
+    public function testProcessWithException()
+    {
+    }
+}
+namespace Magento\Framework\Api\Test\Unit\SearchCriteria\CollectionProcessor\ConditionProcessor;
+
+class CustomConditionProviderTest extends \PHPUnit\Framework\TestCase
+{
+    protected function setUp() : void
+    {
+    }
+    public function testPositiveHasProcessorForField()
+    {
+    }
+    public function testNegativeHasProcessorForField()
+    {
+    }
+    public function testPositiveGetProcessorByField()
+    {
+    }
+    public function testNegativeGetProcessorByFieldExceptionFieldIsAbsent()
+    {
+    }
+    public function testNegativeGetProcessorByFieldExceptionWrongClass()
+    {
+    }
+}
+namespace Magento\Framework\Api\Test\Unit\SearchCriteria\CollectionProcessor;
+
+class FilterProcessorTest extends \PHPUnit\Framework\TestCase
+{
+    /**
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
+    public function testProcess()
+    {
+    }
+    public function testProcessWithException()
+    {
+    }
+}
+class SortingProcessorTest extends \PHPUnit\Framework\TestCase
+{
+    public function testProcess()
+    {
+    }
+    public function testProcessWithDefaults()
+    {
+    }
+}
+namespace Magento\Framework\Api\Test\Unit\SearchCriteria;
+
+class CollectionProcessorTest extends \PHPUnit\Framework\TestCase
+{
+    public function testProcess()
+    {
+    }
+    public function testProcessWithException()
+    {
+    }
+}
+namespace Magento\Framework\Api\Test\Unit;
+
+class ExtensibleDataObjectConverterTest extends \PHPUnit\Framework\TestCase
+{
+    /** @var  ExtensibleDataObjectConverter */
+    protected $converter;
+    /** @var  DataObjectProcessor|MockObject */
+    protected $processor;
+    /** @var  ExtensibleDataInterface|MockObject */
+    protected $dataObject;
+    protected function setUp() : void
+    {
+    }
+    /**
+     * Test toNestedArray() method without custom attributes.
+     */
+    public function testToNestedArray()
+    {
+    }
+    /**
+     * Test toNestedArray() method with custom attributes and with skipped custom attribute.
+     */
+    public function testToNestedArrayCustom()
+    {
+    }
+}
+class AbstractSimpleObjectBuilderTest extends \PHPUnit\Framework\TestCase
+{
+    protected function setUp() : void
+    {
+    }
+    public function testCreate()
+    {
+    }
+}
+/**
+ * @covers \Magento\Framework\Api\SortOrder
+ */
+class SortOrderTest extends \PHPUnit\Framework\TestCase
+{
+    protected function setUp() : void
+    {
+    }
+    public function testItReturnsNullIfNoOrderIsSet()
+    {
+    }
+    /**
+     * @dataProvider sortOrderDirectionProvider
+     */
+    public function testItReturnsTheCorrectValuesIfSortOrderIsSet($sortOrder)
+    {
+    }
+    /**
+     * @return array
+     */
+    public function sortOrderDirectionProvider()
+    {
+    }
+    /**
+     * @param mixed $invalidDirection
+     * @dataProvider invalidSortDirectionProvider
+     */
+    public function testItThrowsAnExceptionIfAnInvalidSortOrderIsSet($invalidDirection)
+    {
+    }
+    /**
+     * @return array
+     */
+    public function invalidSortDirectionProvider()
+    {
+    }
+    public function testTheSortDirectionCanBeSpecifiedCaseInsensitive()
+    {
+    }
+    public function testItValidatesADirectionAssignedDuringInstantiation()
+    {
+    }
+    public function testValidateField()
+    {
+    }
+}
+/**
+ * Class Stub for testing AbstractSimpleObjectBuilder class
+ */
+class StubAbstractSimpleObject extends \Magento\Framework\Api\AbstractSimpleObject
+{
+}
+namespace Magento\Framework\Api\Test\Unit\StubAbstractSimpleObjectBuilder;
+
+class InterceptorTest extends \PHPUnit\Framework\TestCase
+{
+    protected function setUp() : void
+    {
+    }
+    public function testCreate()
+    {
+    }
+}
+class Interceptor extends \Magento\Framework\Api\Test\Unit\StubAbstractSimpleObjectBuilder
+{
+}
+namespace Magento\Framework\Api\Test\Unit\Code\Generator;
+
+class ExtensionAttributesInterfaceGeneratorTest extends \PHPUnit\Framework\TestCase
+{
+    public function testGenerate()
+    {
+    }
+    public function testValidateException()
+    {
+    }
+}
+/**
+ * Class BuilderTest
+ */
+abstract class EntityChildTestAbstract extends \PHPUnit\Framework\TestCase
+{
+    /**
+     * @var Io|MockObject
+     */
+    protected $ioObjectMock;
+    /**
+     * @var EntityAbstract
+     */
+    protected $generator;
+    /**
+     * @var ClassGenerator|MockObject
+     */
+    protected $classGenerator;
+    /** @var MockObject|DefinedClasses */
+    protected $definedClassesMock;
+    /**
+     * @return mixed
+     */
+    protected abstract function getSourceClassName();
+    /**
+     * @return mixed
+     */
+    protected abstract function getResultClassName();
+    /**
+     * @return mixed
+     */
+    protected abstract function getGeneratorClassName();
+    /**
+     * @return mixed
+     */
+    protected abstract function getOutputFileName();
+    protected function setUp() : void
+    {
+    }
+    /**
+     * generate repository name
+     */
+    public function testGenerate()
+    {
+    }
+    protected function mockDefinedClassesCall()
+    {
+    }
+}
+/**
+ * Interface for ExtensibleSample
+ */
+interface ExtensibleSampleInterface extends \Magento\Framework\Api\ExtensibleDataInterface
+{
+    /**
+     * @return array
+     */
+    public function getItems();
+    /**
+     * @return string
+     */
+    public function getName();
+    /**
+     * @return int
+     */
+    public function getCount();
+    /**
+     * @return int
+     */
+    public function getCreatedAt();
+}
+class ExtensibleSample extends \Magento\Framework\Model\AbstractExtensibleModel implements \Magento\Framework\Api\Test\Unit\Code\Generator\ExtensibleSampleInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function getItems()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getCount()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getCreatedAt()
+    {
+    }
+}
+/**
+ * Class Sample for Proxy and Factory generation
+ */
+class Sample
+{
+    /**
+     * @var array
+     */
+    protected $messages = [];
+    /**
+     * @return array
+     */
+    public function getMessages()
+    {
+    }
+}
+class GenerateMapperTest extends \PHPUnit\Framework\TestCase
+{
+    /**
+     * @var MockObject
+     */
+    protected $ioObjectMock;
+    /**
+     * Prepare test env
+     */
+    protected function setUp() : void
+    {
+    }
+    /**
+     * Create mock for class \Magento\Framework\Code\Generator\Io
+     */
+    public function testGenerate()
+    {
+    }
+}
+class ExtensionAttributesGeneratorTest extends \PHPUnit\Framework\TestCase
+{
+    /**
+     * @var Config|MockObject
+     */
+    protected $configMock;
+    /**
+     * @var TypeProcessor|MockObject
+     */
+    protected $typeProcessorMock;
+    /**
+     * @var ExtensionAttributesGenerator|MockObject
+     */
+    protected $model;
+    protected function setUp() : void
+    {
+    }
+    public function testGenerate()
+    {
+    }
+    public function testGenerateEmptyExtension()
+    {
+    }
+    public function testValidateException()
+    {
+    }
+    /**
+     * Check if generated code matches provided expected result.
+     *
+     * @param string $expectedResult
+     * @return void
+     */
+    protected function validateGeneratedCode($expectedResult)
+    {
+    }
+}
+class GenerateSearchResultsTest extends \PHPUnit\Framework\TestCase
+{
+    /**
+     * @var MockObject
+     */
+    protected $ioObjectMock;
+    /**
+     * Create mock for class \Magento\Framework\Code\Generator\Io
+     */
+    protected function setUp() : void
+    {
+    }
+    /**
+     * Generate SearchResult class
+     */
+    public function testGenerate()
+    {
+    }
+}
+namespace Magento\Framework\Api\Test\Unit;
+
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
+class DataObjectHelperTest extends \PHPUnit\Framework\TestCase
+{
+    /**
+     * @var DataObjectHelper
+     */
+    protected $dataObjectHelper;
+    /**
+     * @var ObjectManager
+     */
+    protected $objectManager;
+    /**
+     * @var ObjectFactory|MockObject
+     */
+    protected $objectFactoryMock;
+    /**
+     * @var TypeProcessor
+     */
+    protected $typeProcessor;
+    /**
+     * @var DataObjectProcessor|MockObject
+     */
+    protected $objectProcessorMock;
+    /**
+     * @var AttributeValueFactory|MockObject
+     */
+    protected $attributeValueFactoryMock;
+    /**
+     * @var MethodsMap|MockObject
+     */
+    protected $methodsMapProcessor;
+    /**
+     * @var JoinProcessor|MockObject
+     */
+    protected $joinProcessorMock;
+    /**
+     * @inheritdoc
+     */
+    protected function setUp() : void
+    {
+    }
+    /**
+     * @return void
+     */
+    public function testPopulateWithArrayWithSimpleAttributes() : void
+    {
+    }
+    /**
+     * @return void
+     */
+    public function testPopulateWithArrayWithCustomAttribute() : void
+    {
+    }
+    /**
+     * @return void
+     */
+    public function testPopulateWithArrayWithCustomAttributes() : void
+    {
+    }
+    /**
+     * @return void
+     */
+    public function testPopulateWithArrayWithOrderPaymentAttributes() : void
+    {
+    }
+    /**
+     * @param array $data1
+     * @param array $data2
+     *
+     * @return void
+     * @dataProvider dataProviderForTestMergeDataObjects
+     */
+    public function testMergeDataObjects($data1, $data2) : void
+    {
+    }
+    /**
+     * @return array
+     */
+    public function dataProviderForTestMergeDataObjects() : array
+    {
+    }
+}
+namespace Magento\Framework\Api\Test\Unit\Search;
+
+class SearchResultTest extends \PHPUnit\Framework\TestCase
+{
+    /**
+     * Set up
+     */
+    protected function setUp() : void
+    {
+    }
+    /**
+     * Test getItems
+     */
+    public function testGetItems()
+    {
+    }
+}
+namespace Magento\Framework\Api;
+
+/**
+ * Builder for Filter Service Data Object.
+ *
+ * @api
+ * @method Filter create()
+ * @since 100.0.2
+ */
+class FilterBuilder extends \Magento\Framework\Api\AbstractSimpleObjectBuilder
+{
+    /**
+     * Set field
+     *
+     * @param string $field
+     * @return $this
+     */
+    public function setField($field)
+    {
+    }
+    /**
+     * Set value
+     *
+     * @param string|array $value
+     * @return $this
+     */
+    public function setValue($value)
+    {
+    }
+    /**
+     * Set condition type
+     *
+     * @param string $conditionType
+     * @return $this
+     */
+    public function setConditionType($conditionType)
+    {
+    }
+}
+namespace Magento\Framework\Api\ExtensionAttribute;
+
+/**
+ * Join processor helper class
+ */
+class JoinProcessorHelper
+{
+    /**
+     * Initialize dependencies.
+     *
+     * @param Config $config
+     * @param JoinDataInterfaceFactory $joinDataInterfaceFactory
+     */
+    public function __construct(\Magento\Framework\Api\ExtensionAttribute\Config $config, \Magento\Framework\Api\ExtensionAttribute\JoinDataInterfaceFactory $joinDataInterfaceFactory)
+    {
+    }
+    /**
+     * Generate a list of select fields with mapping of client facing attribute names to field names used in SQL select.
+     *
+     * @param string $attributeCode
+     * @param array $selectFields
+     * @return array
+     */
+    public function getSelectFieldsMap($attributeCode, $selectFields)
+    {
+    }
+    /**
+     * Generate reference table alias.
+     *
+     * @param string $attributeCode
+     * @return string
+     */
+    public function getReferenceTableAlias($attributeCode)
+    {
+    }
+    /**
+     * Returns config data values
+     *
+     * @return array|mixed|null
+     */
+    public function getConfigData()
+    {
+    }
+    /**
+     * JoinDataInterface getter
+     *
+     * @return JoinDataInterface
+     */
+    public function getJoinDataInterface()
+    {
+    }
+}
+/**
+ * Join processor allows to join extension attributes during collections loading.
+ *
+ * @api
+ * @since 100.0.2
+ */
+interface JoinProcessorInterface
+{
+    /**
+     * Processes extension attributes join instructions to add necessary joins to the collection of extensible entities.
+     *
+     * @param DbCollection $collection
+     * @param string|null $extensibleEntityClass
+     * @return void
+     * @throws \LogicException
+     */
+    public function process(\Magento\Framework\Data\Collection\AbstractDb $collection, $extensibleEntityClass = null);
+    /**
+     * Extract extension attributes into separate extension object.
+     *
+     * Complex extension attributes will be populated using flat data loaded.
+     * Data items used for extension object population are unset from the $data.
+     *
+     * @param string $extensibleEntityClass
+     * @param array $data
+     * @return array
+     * @throws \LogicException
+     */
+    public function extractExtensionAttributes($extensibleEntityClass, array $data);
+}
+/**
+ * Join processor allows to join extension attributes during collections loading.
+ */
+class JoinProcessor implements \Magento\Framework\Api\ExtensionAttribute\JoinProcessorInterface
+{
+    /**
+     * Object Manager instance
+     *
+     * @var \Magento\Framework\ObjectManagerInterface
+     */
+    protected $objectManager;
+    /**
+     * Initialize dependencies.
+     *
+     * @param \Magento\Framework\ObjectManagerInterface $objectManager
+     * @param TypeProcessor $typeProcessor
+     * @param ExtensionAttributesFactory $extensionAttributesFactory
+     * @param JoinProcessorHelper $joinProcessorHelper
+     */
+    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager, \Magento\Framework\Reflection\TypeProcessor $typeProcessor, \Magento\Framework\Api\ExtensionAttributesFactory $extensionAttributesFactory, \Magento\Framework\Api\ExtensionAttribute\JoinProcessorHelper $joinProcessorHelper)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function process(\Magento\Framework\Data\Collection\AbstractDb $collection, $extensibleEntityClass = null)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function extractExtensionAttributes($extensibleEntityClass, array $data)
+    {
+    }
+}
+/**
+ * Interface of data holder for extension attribute joins.
+ *
+ * @api
+ * @since 100.0.2
+ */
+interface JoinDataInterface
+{
+    const SELECT_FIELD_EXTERNAL_ALIAS = 'external_alias';
+    const SELECT_FIELD_INTERNAL_ALIAS = 'internal_alias';
+    const SELECT_FIELD_WITH_DB_PREFIX = 'with_db_prefix';
+    const SELECT_FIELD_SETTER = 'setter';
+    /**
+     * Get attribute code.
+     *
+     * @return string
+     */
+    public function getAttributeCode();
+    /**
+     * Set attribute code.
+     *
+     * @param string $attributeCode
+     * @return $this
+     */
+    public function setAttributeCode($attributeCode);
+    /**
+     * Get reference table name.
+     *
+     * @return string
+     */
+    public function getReferenceTable();
+    /**
+     * Set reference table name.
+     *
+     * @param string $referenceTable
+     * @return $this
+     */
+    public function setReferenceTable($referenceTable);
+    /**
+     * Get reference table alias.
+     *
+     * @return string
+     */
+    public function getReferenceTableAlias();
+    /**
+     * Set reference table alias.
+     *
+     * @param string $referenceTableAlias
+     * @return $this
+     */
+    public function setReferenceTableAlias($referenceTableAlias);
+    /**
+     * Get reference field.
+     *
+     * @return string
+     */
+    public function getReferenceField();
+    /**
+     * Set reference field.
+     *
+     * @param string $referenceField
+     * @return $this
+     */
+    public function setReferenceField($referenceField);
+    /**
+     * Get join field.
+     *
+     * @return string
+     */
+    public function getJoinField();
+    /**
+     * Set join field.
+     *
+     * @param string $joinField
+     * @return $this
+     */
+    public function setJoinField($joinField);
+    /**
+     * Get select fields.
+     *
+     * @return array
+     */
+    public function getSelectFields();
+    /**
+     * Set select field.
+     *
+     * @param array $selectFields
+     * @return $this
+     */
+    public function setSelectFields(array $selectFields);
+}
+/**
+ * Factory class for @see
+ * \Magento\Framework\Api\ExtensionAttribute\JoinDataInterface
+ *
+ * @api
+ */
+class JoinDataInterfaceFactory
+{
+    /**
+     * Object Manager instance
+     *
+     * @var \Magento\Framework\ObjectManagerInterface
+     */
+    protected $_objectManager = null;
+    /**
+     * Instance name to create
+     *
+     * @var string
+     */
+    protected $_instanceName = null;
+    /**
+     * Factory constructor
+     *
+     * @param \Magento\Framework\ObjectManagerInterface $objectManager
+     * @param string $instanceName
+     */
+    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager, $instanceName = \Magento\Framework\Api\ExtensionAttribute\JoinDataInterface::class)
+    {
+    }
+    /**
+     * Create class instance with specified parameters
+     *
+     * @param array $data
+     * @return \Magento\Framework\Api\ExtensionAttribute\JoinData
+     */
+    public function create(array $data = [])
+    {
+    }
+}
+namespace Magento\Framework\Api\ExtensionAttribute\Config;
+
+class SchemaLocator implements \Magento\Framework\Config\SchemaLocatorInterface
+{
+    /**
+     * @var \Magento\Framework\Config\Dom\UrnResolver
+     */
+    protected $urnResolver;
+    /**
+     */
+    public function __construct(\Magento\Framework\Config\Dom\UrnResolver $urnResolver)
+    {
+    }
+    /**
+     * Get path to merged config schema
+     *
+     * @return string
+     */
+    public function getSchema()
+    {
+    }
+    /**
+     * Get path to pre file validation schema
+     *
+     * @return string
+     */
+    public function getPerFileSchema()
+    {
+    }
+}
+class Reader extends \Magento\Framework\Config\Reader\Filesystem
+{
+    /**
+     * List of id attributes for merge
+     *
+     * @var array
+     */
+    protected $_idAttributes = ['/config/extension_attributes' => 'for', '/config/extension_attributes/attribute' => 'code'];
+    /**
+     * @param \Magento\Framework\Config\FileResolverInterface $fileResolver
+     * @param \Magento\Framework\Api\ExtensionAttribute\Config\Converter $converter
+     * @param \Magento\Framework\Api\ExtensionAttribute\Config\SchemaLocator $schemaLocator
+     * @param \Magento\Framework\Config\ValidationStateInterface $validationState
+     * @param string $fileName
+     * @param array $idAttributes
+     * @param string $domDocumentClass
+     * @param string $defaultScope
+     */
+    public function __construct(\Magento\Framework\Config\FileResolverInterface $fileResolver, \Magento\Framework\Api\ExtensionAttribute\Config\Converter $converter, \Magento\Framework\Api\ExtensionAttribute\Config\SchemaLocator $schemaLocator, \Magento\Framework\Config\ValidationStateInterface $validationState, $fileName = 'extension_attributes.xml', $idAttributes = [], $domDocumentClass = \Magento\Framework\Config\Dom::class, $defaultScope = 'global')
+    {
+    }
+}
+class Converter implements \Magento\Framework\Config\ConverterInterface
+{
+    const RESOURCE_PERMISSIONS = "resourceRefs";
+    const DATA_TYPE = "type";
+    const JOIN_DIRECTIVE = "join";
+    const JOIN_REFERENCE_TABLE = "join_reference_table";
+    const JOIN_REFERENCE_FIELD = "join_reference_field";
+    const JOIN_ON_FIELD = "join_on_field";
+    const JOIN_FIELDS = "fields";
+    const JOIN_FIELD = "field";
+    const JOIN_FIELD_COLUMN = "column";
+    /**
+     * Convert dom node tree to array
+     *
+     * @param \DOMDocument $source
+     * @return array
+     */
+    public function convert($source)
+    {
+    }
+}
+namespace Magento\Framework\Api\ExtensionAttribute;
+
+/**
+ * Data holder for extension attribute joins.
+ *
+ * @api
+ * @codeCoverageIgnore
+ */
+class JoinData implements \Magento\Framework\Api\ExtensionAttribute\JoinDataInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function getAttributeCode()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function setAttributeCode($attributeCode)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getReferenceTable()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function setReferenceTable($referenceTable)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getReferenceTableAlias()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function setReferenceTableAlias($referenceTableAlias)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getReferenceField()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function setReferenceField($referenceField)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getJoinField()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function setJoinField($joinField)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getSelectFields()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function setSelectFields(array $selectFields)
+    {
+    }
+}
+/**
+ * Extension attributes config
+ */
+class Config extends \Magento\Framework\Config\Data
+{
+    /**
+     * Cache identifier
+     */
+    const CACHE_ID = 'extension_attributes_config';
+    /**
+     * Constructor
+     *
+     * @param Reader $reader
+     * @param CacheInterface $cache
+     * @param string $cacheId|null
+     * @param SerializerInterface|null $serializer
+     */
+    public function __construct(\Magento\Framework\Api\ExtensionAttribute\Config\Reader $reader, \Magento\Framework\Config\CacheInterface $cache, $cacheId = self::CACHE_ID, \Magento\Framework\Serialize\SerializerInterface $serializer = null)
+    {
+    }
+}
+namespace Magento\Framework\Api\SearchCriteria;
+
+/**
+ * @api
+ * @since 101.0.0
+ */
+interface CollectionProcessorInterface
+{
+    /**
+     * Apply Search Criteria to Collection
+     *
+     * @param SearchCriteriaInterface $searchCriteria
+     * @param AbstractDb $collection
+     * @throws \InvalidArgumentException
+     * @return void
+     * @since 101.0.0
+     */
+    public function process(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria, \Magento\Framework\Data\Collection\AbstractDb $collection);
+}
+class CollectionProcessor implements \Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface
+{
+    /**
+     * @param CollectionProcessorInterface[] $processors
+     */
+    public function __construct(array $processors)
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function process(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria, \Magento\Framework\Data\Collection\AbstractDb $collection)
+    {
+    }
+}
+namespace Magento\Framework\Api\SearchCriteria\CollectionProcessor;
+
+/**
+ * Search criteria join processor
+ */
+class JoinProcessor implements \Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface
+{
+    /**
+     * @param CustomJoinInterface[] $customJoins
+     * @param array $fieldMapping
+     */
+    public function __construct(array $customJoins = [], array $fieldMapping = [])
+    {
+    }
+    /**
+     * Apply Search Criteria Filters to collection only if we need this
+     *
+     * @param SearchCriteriaInterface $searchCriteria
+     * @param AbstractDb $collection
+     * @return void
+     */
+    public function process(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria, \Magento\Framework\Data\Collection\AbstractDb $collection)
+    {
+    }
+}
+/**
+ * Collection processor that adds filters to collection based on passed search criteria
+ *
+ * Difference between FilterProcessor is that AdvancedFilterProcessor gives ability
+ * to add filters using different combination strategies
+ *
+ * For example you can add such filters:
+ *
+ * Select * FROM some_table
+ * WHERE
+ *  field_1 = 10
+ *  AND (
+ *      field_2 in (1,2,3)
+ *      OR
+ *      field_3 like '%banana%'
+ *  )
+ */
+class AdvancedFilterProcessor implements \Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface
+{
+    /**
+     * @param CustomConditionInterface $defaultConditionProcessor
+     * @param ConditionManager $conditionManager
+     * @param CustomConditionProviderInterface $customConditionProvider
+     */
+    public function __construct(\Magento\Framework\Api\SearchCriteria\CollectionProcessor\ConditionProcessor\CustomConditionInterface $defaultConditionProcessor, \Magento\Framework\Search\Adapter\Mysql\ConditionManager $conditionManager, \Magento\Framework\Api\SearchCriteria\CollectionProcessor\ConditionProcessor\CustomConditionProviderInterface $customConditionProvider)
+    {
+    }
+    /**
+     * Apply Search Criteria Filters to collection
+     *
+     * @param SearchCriteriaInterface $searchCriteria
+     * @param AbstractDb $collection
+     * @return void
+     */
+    public function process(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria, \Magento\Framework\Data\Collection\AbstractDb $collection)
+    {
+    }
+}
+class FilterProcessor implements \Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface
+{
+    /**
+     * @param CustomFilterInterface[] $customFilters
+     * @param array $fieldMapping
+     */
+    public function __construct(array $customFilters = [], array $fieldMapping = [])
+    {
+    }
+    /**
+     * Apply Search Criteria Filters to collection
+     *
+     * @param SearchCriteriaInterface $searchCriteria
+     * @param AbstractDb $collection
+     * @return void
+     */
+    public function process(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria, \Magento\Framework\Data\Collection\AbstractDb $collection)
+    {
+    }
+}
+namespace Magento\Framework\Api\SearchCriteria\CollectionProcessor\FilterProcessor;
+
+/**
+ * @api
+ * @since 101.0.0
+ */
+interface CustomFilterInterface
+{
+    /**
+     * Apply Custom Filter to Collection
+     *
+     * @param Filter $filter
+     * @param AbstractDb $collection
+     * @return bool Whether the filter was applied
+     * @since 101.0.0
+     */
+    public function apply(\Magento\Framework\Api\Filter $filter, \Magento\Framework\Data\Collection\AbstractDb $collection);
+}
+namespace Magento\Framework\Api\SearchCriteria\CollectionProcessor\JoinProcessor;
+
+/**
+ * @api
+ * @since 101.0.0
+ */
+interface CustomJoinInterface
+{
+    /**
+     * Make custom joins to collection
+     *
+     * @param AbstractDb $collection
+     * @return bool
+     * @since 101.0.0
+     */
+    public function apply(\Magento\Framework\Data\Collection\AbstractDb $collection);
+}
+namespace Magento\Framework\Api\SearchCriteria\CollectionProcessor\ConditionProcessor;
+
+/**
+ * Implement it to build SQL conditions from Magento\Framework\Api\Filter
+ *
+ * Multiple conditions can be combined into groups with AND or OR combination
+ * and applied to select queries as WHERE parts to filter entity collections
+ *
+ * For example:
+ *      Select *
+ *      FROM `catalog_product_entity`
+ *      WHERE
+ *          CustomCondition_1
+ *          AND
+ *          (CustomCondition_2 OR CustomCondition_3)
+ *
+ * @api
+ */
+interface CustomConditionInterface
+{
+    /**
+     * @param Filter $filter
+     * @return string
+     */
+    public function build(\Magento\Framework\Api\Filter $filter) : string;
+}
+/**
+ * Provides collections of custom condition processors (CustomConditionInterface)
+ *
+ * Used to store processors as mapping attributeName => CustomConditionInterface
+ * You can use di.xml to configure with any custom conditions you need
+ *
+ * @api
+ */
+interface CustomConditionProviderInterface
+{
+    /**
+     * Get custom processor by field name
+     *
+     * @param string $fieldName
+     * @return CustomConditionInterface
+     * @throws InputException
+     */
+    public function getProcessorByField(string $fieldName) : \Magento\Framework\Api\SearchCriteria\CollectionProcessor\ConditionProcessor\CustomConditionInterface;
+    /**
+     * Check if collection has custom processor for given field name
+     *
+     * @param string $fieldName
+     * @return bool
+     */
+    public function hasProcessorForField(string $fieldName) : bool;
+}
+/**
+ * Collection of all custom condition processors
+ */
+class CustomConditionProvider implements \Magento\Framework\Api\SearchCriteria\CollectionProcessor\ConditionProcessor\CustomConditionProviderInterface
+{
+    /**
+     * @param array $customConditionProcessors
+     * @throws InputException
+     */
+    public function __construct(array $customConditionProcessors = [])
+    {
+    }
+    /**
+     * Get custom processor by field name
+     *
+     * @param string $fieldName
+     * @return CustomConditionInterface
+     * @throws InputException
+     */
+    public function getProcessorByField(string $fieldName) : \Magento\Framework\Api\SearchCriteria\CollectionProcessor\ConditionProcessor\CustomConditionInterface
+    {
+    }
+    /**
+     * Check if collection has custom processor for given field name
+     *
+     * @param string $fieldName
+     * @return bool
+     */
+    public function hasProcessorForField(string $fieldName) : bool
+    {
+    }
+}
+namespace Magento\Framework\Api\SearchCriteria\CollectionProcessor;
+
+class PaginationProcessor implements \Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface
+{
+    /**
+     * Apply Search Criteria Pagination to collection
+     *
+     * @param SearchCriteriaInterface $searchCriteria
+     * @param AbstractDb $collection
+     * @return void
+     */
+    public function process(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria, \Magento\Framework\Data\Collection\AbstractDb $collection)
+    {
+    }
+}
+class SortingProcessor implements \Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface
+{
+    /**
+     * @param array $fieldMapping
+     * @param array $defaultOrders
+     */
+    public function __construct(array $fieldMapping = [], array $defaultOrders = [])
+    {
+    }
+    /**
+     * Apply Search Criteria Sorting Orders to collection
+     *
+     * @param SearchCriteriaInterface $searchCriteria
+     * @param AbstractDb $collection
+     * @return void
+     */
+    public function process(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria, \Magento\Framework\Data\Collection\AbstractDb $collection)
+    {
+    }
+}
+namespace Magento\Framework\Api;
+
+/**
+ * MetadataService returns custom attribute metadata for a given class or interface it implements
+ *
+ * @api
+ * @since 100.0.2
+ */
+interface MetadataServiceInterface
+{
+    /**
+     * Get custom attribute metadata for the given class or interfaces it implements.
+     *
+     * @param string|null $dataObjectClassName Data object class name
+     * @return \Magento\Framework\Api\MetadataObjectInterface[]
+     */
+    public function getCustomAttributesMetadata($dataObjectClassName = null);
+}
+/**
+ * Data object converter.
+ */
+class SimpleDataObjectConverter
+{
+    /**
+     * @var DataObjectProcessor
+     */
+    protected $dataObjectProcessor;
+    /**
+     * @param DataObjectProcessor $dataObjectProcessor
+     */
+    public function __construct(\Magento\Framework\Reflection\DataObjectProcessor $dataObjectProcessor)
+    {
+    }
+    /**
+     * Convert nested array into flat array.
+     *
+     * @param ExtensibleDataInterface $dataObject
+     * @param string $dataObjectType
+     * @return array
+     */
+    public function toFlatArray(\Magento\Framework\Api\ExtensibleDataInterface $dataObject, $dataObjectType = null)
+    {
+    }
+    /**
+     * Convert keys to camelCase
+     *
+     * @param array $dataArray
+     * @return \stdClass
+     */
+    public function convertKeysToCamelCase(array $dataArray)
+    {
+    }
+    /**
+     * Check if the array is a simple(one dimensional and not nested) and a sequential(non-associative) array
+     *
+     * @param array $data
+     * @return bool
+     */
+    protected function _isSimpleSequentialArray(array $data)
+    {
+    }
+    /**
+     * Convert multidimensional object/array into multidimensional array of primitives.
+     *
+     * @param object|array $input
+     * @param bool $removeItemNode Remove Item node from arrays if true
+     * @return array
+     * @throws \InvalidArgumentException
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    public function convertStdObjectToArray($input, $removeItemNode = false)
+    {
+    }
+    /**
+     * Unpack associative array packed by SOAP server into key-value
+     *
+     * @param mixed $data
+     * @return array Unpacked associative array if array was passed as argument or original value otherwise
+     */
+    protected function _unpackAssociativeArray($data)
+    {
+    }
+    /**
+     * Converts an input string from snake_case to upper CamelCase.
+     *
+     * @param string $input
+     * @return string
+     */
+    public static function snakeCaseToUpperCamelCase($input)
+    {
+    }
+    /**
+     * Converts an input string from snake_case to camelCase.
+     *
+     * @param string $input
+     * @return string
+     */
+    public static function snakeCaseToCamelCase($input)
+    {
+    }
+    /**
+     * Convert a CamelCase string read from method into field key in snake_case
+     *
+     * For example [DefaultShipping => default_shipping, Postcode => postcode]
+     *
+     * @param string $name
+     * @return string
+     */
+    public static function camelCaseToSnakeCase($name)
+    {
+    }
+}
+/**
+ * Class Uploader specific to uploading images using services
+ */
+class Uploader extends \Magento\Framework\File\Uploader
+{
+    /**
+     * Avoid running the default constructor specific to FILE upload
+     *
+     * phpcs:disable Magento2.CodeAnalysis.EmptyBlock
+     */
+    public function __construct()
+    {
+    }
+    /**
+     * Explicitly set the file attributes instead of setting it via constructor
+     *
+     * @param array $fileAttributes
+     * @return void
+     * @throws \Exception
+     */
+    public function processFileAttributes($fileAttributes)
+    {
+    }
+}
+/**
+ * Marker interface for all extension attributes interfaces.
+ *
+ * @api
+ * @since 100.0.2
+ */
+interface ExtensionAttributesInterface
+{
+}
+/**
+ * Search criteria interface.
+ *
+ * @api
+ * @since 100.0.2
+ */
+interface SearchCriteriaInterface
+{
+    /**
+     * Get a list of filter groups.
+     *
+     * @return \Magento\Framework\Api\Search\FilterGroup[]
+     */
+    public function getFilterGroups();
+    /**
+     * Set a list of filter groups.
+     *
+     * @param \Magento\Framework\Api\Search\FilterGroup[] $filterGroups
+     * @return $this
+     */
+    public function setFilterGroups(array $filterGroups = null);
+    /**
+     * Get sort order.
+     *
+     * @return \Magento\Framework\Api\SortOrder[]|null
+     */
+    public function getSortOrders();
+    /**
+     * Set sort order.
+     *
+     * @param \Magento\Framework\Api\SortOrder[] $sortOrders
+     * @return $this
+     */
+    public function setSortOrders(array $sortOrders = null);
+    /**
+     * Get page size.
+     *
+     * @return int|null
+     */
+    public function getPageSize();
+    /**
+     * Set page size.
+     *
+     * @param int $pageSize
+     * @return $this
+     */
+    public function setPageSize($pageSize);
+    /**
+     * Get current page.
+     *
+     * @return int|null
+     */
+    public function getCurrentPage();
+    /**
+     * Set current page.
+     *
+     * @param int $currentPage
+     * @return $this
+     */
+    public function setCurrentPage($currentPage);
+}
+/**
+ * Class to convert Extensible Data Object array to flat array
+ */
+class ExtensibleDataObjectConverter
+{
+    /**
+     * @var DataObjectProcessor
+     */
+    protected $dataObjectProcessor;
+    /**
+     * @param DataObjectProcessor $dataObjectProcessor
+     */
+    public function __construct(\Magento\Framework\Reflection\DataObjectProcessor $dataObjectProcessor)
+    {
+    }
+    /**
+     * Convert AbstractExtensibleObject into a nested array.
+     *
+     * @param ExtensibleDataInterface $dataObject
+     * @param string[] $skipAttributes
+     * @param string $dataObjectType
+     * @return array
+     */
+    public function toNestedArray(\Magento\Framework\Api\ExtensibleDataInterface $dataObject, $skipAttributes = [], $dataObjectType = null)
+    {
+    }
+    /**
+     * Convert AbstractExtensibleObject into flat array.
+     *
+     * @param ExtensibleDataInterface $dataObject
+     * @param string[] $skipCustomAttributes
+     * @param string $dataObjectType
+     * @return array
+     */
+    public function toFlatArray(\Magento\Framework\Api\ExtensibleDataInterface $dataObject, $skipCustomAttributes = [], $dataObjectType = null)
+    {
+    }
+    /**
+     * Convert Extensible Data Object custom attributes in sequential array format.
+     *
+     * @param array $extensibleObjectData
+     * @return array
+     */
+    public static function convertCustomAttributesToSequentialArray($extensibleObjectData)
+    {
+    }
+}
+/**
+ * Interface ImageProcessorInterface
+ *
+ * @api
+ * @since 100.0.2
+ */
+interface ImageProcessorInterface
+{
+    /**
+     * Process Data objects with image type custom attributes and update custom attribute values with saved image paths
+     *
+     * @param CustomAttributesDataInterface $dataObjectWithCustomAttributes
+     * @param string $entityType entity type
+     * @param CustomAttributesDataInterface $previousCustomerData
+     * @return CustomAttributesDataInterface
+     */
+    public function save(\Magento\Framework\Api\CustomAttributesDataInterface $dataObjectWithCustomAttributes, $entityType, \Magento\Framework\Api\CustomAttributesDataInterface $previousCustomerData = null);
+    /**
+     * Process image and save it to the entity's media directory
+     *
+     * @param string $entityType
+     * @param ImageContentInterface $imageContent
+     * @return string Relative path of the file where image was saved
+     * @throws InputException
+     */
+    public function processImageContent($entityType, $imageContent);
+}
+/**
+ * Service class allow populating object from array data
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
+class DataObjectHelper
+{
+    /**
+     * @var ObjectFactory
+     */
+    protected $objectFactory;
+    /**
+     * @var \Magento\Framework\Reflection\DataObjectProcessor
+     */
+    protected $objectProcessor;
+    /**
+     * @var \Magento\Framework\Reflection\TypeProcessor
+     */
+    protected $typeProcessor;
+    /**
+     * @var \Magento\Framework\Api\ExtensionAttributesFactory
+     */
+    protected $extensionFactory;
+    /**
+     * @var \Magento\Framework\Api\ExtensionAttribute\JoinProcessorInterface
+     */
+    protected $joinProcessor;
+    /**
+     * @var MethodsMap
+     */
+    protected $methodsMapProcessor;
+    /**
+     * @param ObjectFactory $objectFactory
+     * @param \Magento\Framework\Reflection\DataObjectProcessor $objectProcessor
+     * @param \Magento\Framework\Reflection\TypeProcessor $typeProcessor
+     * @param \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory
+     * @param \Magento\Framework\Api\ExtensionAttribute\JoinProcessorInterface $joinProcessor
+     * @param MethodsMap $methodsMapProcessor
+     */
+    public function __construct(\Magento\Framework\Api\ObjectFactory $objectFactory, \Magento\Framework\Reflection\DataObjectProcessor $objectProcessor, \Magento\Framework\Reflection\TypeProcessor $typeProcessor, \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory, \Magento\Framework\Api\ExtensionAttribute\JoinProcessorInterface $joinProcessor, \Magento\Framework\Reflection\MethodsMap $methodsMapProcessor)
+    {
+    }
+    /**
+     * Populate data object using data in array format.
+     *
+     * @param mixed $dataObject
+     * @param array $data
+     * @param string $interfaceName
+     * @return $this
+     */
+    public function populateWithArray($dataObject, array $data, $interfaceName)
+    {
+    }
+    /**
+     * Update Data Object with the data from array
+     *
+     * @param mixed $dataObject
+     * @param array $data
+     * @param string $interfaceName
+     * @return $this
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     */
+    protected function _setDataValues($dataObject, array $data, $interfaceName)
+    {
+    }
+    /**
+     * Set complex (like object) value using $methodName based on return type of $getterMethodName
+     *
+     * @param mixed $dataObject
+     * @param string $getterMethodName
+     * @param string $methodName
+     * @param array $value
+     * @param string $interfaceName
+     * @return $this
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    protected function setComplexValue($dataObject, $getterMethodName, $methodName, array $value, $interfaceName)
+    {
+    }
+    /**
+     * Merges second object onto the first
+     *
+     * @param string $interfaceName
+     * @param mixed $firstDataObject
+     * @param mixed $secondDataObject
+     * @return $this
+     * @throws \LogicException
+     */
+    public function mergeDataObjects($interfaceName, $firstDataObject, $secondDataObject)
+    {
+    }
+    /**
+     * Filter attribute value objects for a provided data interface type from an array of custom attribute value objects
+     *
+     * @param AttributeValue[] $attributeValues Array of custom attribute
+     * @param string $type Data interface type
+     * @return AttributeValue[]
+     */
+    public function getCustomAttributeValueByType(array $attributeValues, $type)
+    {
+    }
+    /**
+     * Set custom attributes using the $attributeKeys parameter.
+     *
+     * @param mixed $dataObject
+     * @param array $data
+     * @param array $attributeKeys
+     * @return array
+     */
+    public function setCustomAttributes(mixed $dataObject, array $data, array $attributeKeys) : array
+    {
+    }
+}
+/**
+ * Default implementation of metadata service, which does not return any real attributes.
+ */
+class DefaultMetadataService implements \Magento\Framework\Api\MetadataServiceInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function getCustomAttributesMetadata($dataObjectClassName = null)
+    {
+    }
+}
+/**
+ * Filter which can be used by any methods from service layer.
+ *
+ * @api
+ * @codeCoverageIgnore
+ * @since 100.0.2
+ */
+class Filter extends \Magento\Framework\Api\AbstractSimpleObject
+{
+    /**#@+
+     * Constants for Data Object keys
+     */
+    const KEY_FIELD = 'field';
+    const KEY_VALUE = 'value';
+    const KEY_CONDITION_TYPE = 'condition_type';
+    /**
+     * Get field
+     *
+     * @return string
+     */
+    public function getField()
+    {
+    }
+    /**
+     * Set field
+     *
+     * @param string $field
+     * @return $this
+     */
+    public function setField($field)
+    {
+    }
+    /**
+     * Get value
+     *
+     * @return string
+     */
+    public function getValue()
+    {
+    }
+    /**
+     * Set value
+     *
+     * @param string $value
+     * @return $this
+     */
+    public function setValue($value)
+    {
+    }
+    /**
+     * Get condition type
+     *
+     * @return string|null
+     */
+    public function getConditionType()
+    {
+    }
+    /**
+     * Set condition type
+     *
+     * @param string $conditionType
+     * @return $this
+     */
+    public function setConditionType($conditionType)
+    {
+    }
+}
+/**
+ * Interface CriteriaInterface
+ *
+ * @api
+ */
+interface CriteriaInterface
+{
+    const PART_FIELDS = 'fields';
+    const PART_FILTERS = 'filters';
+    const PART_ORDERS = 'orders';
+    const PART_CRITERIA_LIST = 'criteria_list';
+    const PART_LIMIT = 'limit';
+    const SORT_ORDER_ASC = 'ASC';
+    const SORT_ORDER_DESC = 'DESC';
+    /**
+     * Get associated Mapper Interface name
+     *
+     * @return string
+     */
+    public function getMapperInterfaceName();
+    /**
+     * Add field to select
+     *
+     * @param string|array $field
+     * @param string|null $alias
+     * @return void
+     */
+    public function addField($field, $alias = null);
+    /**
+     * Add field filter to collection
+     *
+     * If $condition integer or string - exact value will be filtered ('eq' condition)
+     *
+     * If $condition is array - one of the following structures is expected:
+     * <pre>
+     * - ["from" => $fromValue, "to" => $toValue]
+     * - ["eq" => $equalValue]
+     * - ["neq" => $notEqualValue]
+     * - ["like" => $likeValue]
+     * - ["in" => [$inValues]]
+     * - ["nin" => [$notInValues]]
+     * - ["notnull" => $valueIsNotNull]
+     * - ["null" => $valueIsNull]
+     * - ["moreq" => $moreOrEqualValue]
+     * - ["gt" => $greaterValue]
+     * - ["lt" => $lessValue]
+     * - ["gteq" => $greaterOrEqualValue]
+     * - ["lteq" => $lessOrEqualValue]
+     * - ["finset" => $valueInSet]
+     * </pre>
+     *
+     * If non matched - sequential parallel arrays are expected and OR conditions
+     * will be built using above mentioned structure.
+     *
+     * Example:
+     * <pre>
+     * $field = ['age', 'name'];
+     * $condition = [42, ['like' => 'Mage']];
+     * $type = 'or';
+     * </pre>
+     * The above would find where age equal to 42 OR name like %Mage%.
+     *
+     * @param string $name
+     * @param string|array $field
+     * @param string|int|array $condition
+     * @param string $type
+     * @throws \Magento\Framework\Exception\LocalizedException if some error in the input could be detected.
+     * @return void
+     */
+    public function addFilter($name, $field, $condition = null, $type = 'and');
+    /**
+     * self::setOrder() alias
+     *
+     * @param string $field
+     * @param string $direction
+     * @param bool $unShift
+     * @return void
+     */
+    public function addOrder($field, $direction = self::SORT_ORDER_DESC, $unShift = false);
+    /**
+     * Set Query limit
+     *
+     * @param int $offset
+     * @param int $size
+     * @return void
+     */
+    public function setLimit($offset, $size);
+    /**
+     * Removes field from select
+     *
+     * @param string|null $field
+     * @param bool $isAlias Alias identifier
+     * @return void
+     */
+    public function removeField($field, $isAlias = false);
+    /**
+     * Removes all fields from select
+     *
+     * @return void
+     */
+    public function removeAllFields();
+    /**
+     * Removes filter by name
+     *
+     * @param string $name
+     * @return void
+     */
+    public function removeFilter($name);
+    /**
+     * Removes all filters
+     *
+     * @return void
+     */
+    public function removeAllFilters();
+    /**
+     * Get Criteria objects added to current Composite Criteria
+     *
+     * @return \Magento\Framework\Api\CriteriaInterface[]
+     */
+    public function getCriteriaList();
+    /**
+     * Get list of filters
+     *
+     * @return string[]
+     */
+    public function getFilters();
+    /**
+     * Get ordering criteria
+     *
+     * @return string[]
+     */
+    public function getOrders();
+    /**
+     * Get limit
+     * (['offset', 'page'])
+     *
+     * @return string[]
+     */
+    public function getLimit();
+    /**
+     * Retrieve criteria part
+     *
+     * @param string $name
+     * @param mixed $default
+     * @return mixed
+     */
+    public function getPart($name, $default = null);
+    /**
+     * Return all criteria parts as array
+     *
+     * @return array
+     */
+    public function toArray();
+    /**
+     * Reset criteria
+     *
+     * @return void
+     */
+    public function reset();
+}
+namespace Magento\Framework\Api\Code\Generator;
+
+/**
+ * Class Repository
+ */
+class Mapper extends \Magento\Framework\Code\Generator\EntityAbstract
+{
+    /**
+     * Entity type
+     */
+    const ENTITY_TYPE = 'mapper';
+    /**
+     * Retrieve class properties
+     *
+     * @return array
+     */
+    protected function _getClassProperties()
+    {
+    }
+    /**
+     * Returns source factory property Name
+     *
+     * @return string
+     */
+    protected function _getSourceBuilderPropertyName()
+    {
+    }
+    /**
+     * Get default constructor definition for generated class
+     *
+     * @return array
+     */
+    protected function _getDefaultConstructorDefinition()
+    {
+    }
+    /**
+     * Returns list of methods for class generator
+     *
+     * @return array
+     */
+    protected function _getClassMethods()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    protected function _validateData()
+    {
+    }
+}
+/**
+ * Class Builder
+ */
+class SearchResults extends \Magento\Framework\Code\Generator\EntityAbstract
+{
+    /**
+     * Entity type
+     */
+    const ENTITY_TYPE = 'searchResults';
+    /**
+     * Search result default class
+     * @deprecated
+     */
+    const SEARCH_RESULT = '\\' . \Magento\Framework\Api\SearchResults::class;
+    /**
+     * Retrieve class properties
+     *
+     * @return array
+     */
+    protected function _getClassProperties()
+    {
+    }
+    /**
+     * Returns list of methods for class generator
+     *
+     * @return array
+     */
+    protected function _getClassMethods()
+    {
+    }
+    /**
+     * Returns default constructor definition
+     *
+     * @return array
+     */
+    protected function _getDefaultConstructorDefinition()
+    {
+    }
+    /**
+     * Generate code
+     *
+     * @return string
+     */
+    protected function _generateCode()
+    {
+    }
+}
+/**
+ * Code generator for data object extensions.
+ */
+class ExtensionAttributesGenerator extends \Magento\Framework\Code\Generator\EntityAbstract
+{
+    public const ENTITY_TYPE = 'extension';
+    public const EXTENSION_SUFFIX = 'Extension';
+    /**
+     * @var \Magento\Framework\Api\ExtensionAttribute\Config
+     */
+    protected $config;
+    /**
+     * @var array
+     */
+    protected $allCustomAttributes;
+    /**
+     * Initialize dependencies.
+     *
+     * @param \Magento\Framework\Api\ExtensionAttribute\Config $config
+     * @param string|null $sourceClassName
+     * @param string|null $resultClassName
+     * @param Io $ioObject
+     * @param \Magento\Framework\Code\Generator\CodeGeneratorInterface $classGenerator
+     * @param DefinedClasses $definedClasses
+     */
+    public function __construct(\Magento\Framework\Api\ExtensionAttribute\Config $config, $sourceClassName = null, $resultClassName = null, \Magento\Framework\Code\Generator\Io $ioObject = null, \Magento\Framework\Code\Generator\CodeGeneratorInterface $classGenerator = null, \Magento\Framework\Code\Generator\DefinedClasses $definedClasses = null)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    protected function _getDefaultConstructorDefinition()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    protected function _getClassProperties()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    protected function _getClassMethods()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    protected function _validateData()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    protected function _generateCode()
+    {
+    }
+    /**
+     * Get class, which should be used as a parent for generated class.
+     *
+     * @return string
+     */
+    protected function getExtendedClass()
+    {
+    }
+    /**
+     * Retrieve a list of attributes associated with current source class.
+     *
+     * @return array
+     */
+    protected function getCustomAttributes()
+    {
+    }
+    /**
+     * Ensure that result class name corresponds to the source class name.
+     *
+     * @return bool
+     */
+    protected function validateResultClassName()
+    {
+    }
+}
+/**
+ * Code generator for data object extension interfaces.
+ */
+class ExtensionAttributesInterfaceGenerator extends \Magento\Framework\Api\Code\Generator\ExtensionAttributesGenerator
+{
+    const ENTITY_TYPE = 'extensionInterface';
+    const EXTENSION_INTERFACE_SUFFIX = 'ExtensionInterface';
+    /**
+     * Initialize dependencies.
+     *
+     * @param \Magento\Framework\Api\ExtensionAttribute\Config $config
+     * @param string|null $sourceClassName
+     * @param string|null $resultClassName
+     * @param Io $ioObject
+     * @param \Magento\Framework\Code\Generator\CodeGeneratorInterface $classGenerator
+     * @param DefinedClasses $definedClasses
+     */
+    public function __construct(\Magento\Framework\Api\ExtensionAttribute\Config $config, $sourceClassName = null, $resultClassName = null, \Magento\Framework\Code\Generator\Io $ioObject = null, \Magento\Framework\Code\Generator\CodeGeneratorInterface $classGenerator = null, \Magento\Framework\Code\Generator\DefinedClasses $definedClasses = null)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    protected function getExtendedClass()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    protected function validateResultClassName()
+    {
+    }
+}
+class ExtensionAttributesInterfaceFactoryGenerator extends \Magento\Framework\ObjectManager\Code\Generator\Factory
+{
+    /**
+     * {@inheritdoc}
+     */
+    const ENTITY_TYPE = 'extensionInterfaceFactory';
+    /**
+     * Initialize dependencies.
+     *
+     * @param string|null $sourceClassName
+     * @param string|null $resultClassName
+     * @param Io $ioObject
+     * @param CodeGeneratorInterface $classGenerator
+     * @param DefinedClasses $definedClasses
+     */
+    public function __construct($sourceClassName = null, $resultClassName = null, \Magento\Framework\Code\Generator\Io $ioObject = null, \Magento\Framework\Code\Generator\CodeGeneratorInterface $classGenerator = null, \Magento\Framework\Code\Generator\DefinedClasses $definedClasses = null)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    protected function getResultClassSuffix()
+    {
+    }
+}
+namespace Magento\Framework\Api;
+
+/**
+ * Data Object for SearchCriteria
+ * @codeCoverageIgnore
+ */
+class SearchCriteria extends \Magento\Framework\Api\AbstractSimpleObject implements \Magento\Framework\Api\SearchCriteriaInterface
+{
+    /**#@+
+     * Constants for Data Object keys
+     */
+    const FILTER_GROUPS = 'filter_groups';
+    const SORT_ORDERS = 'sort_orders';
+    const PAGE_SIZE = 'page_size';
+    const CURRENT_PAGE = 'current_page';
+    /**
+     * Get a list of filter groups.
+     *
+     * @return \Magento\Framework\Api\Search\FilterGroup[]
+     */
+    public function getFilterGroups()
+    {
+    }
+    /**
+     * Get sort order.
+     *
+     * @return \Magento\Framework\Api\SortOrder[]|null
+     */
+    public function getSortOrders()
+    {
+    }
+    /**
+     * Get page size.
+     *
+     * @return int|null
+     */
+    public function getPageSize()
+    {
+    }
+    /**
+     * Get current page.
+     *
+     * @return int|null
+     */
+    public function getCurrentPage()
+    {
+    }
+    /**
+     * Set a list of filter groups.
+     *
+     * @param \Magento\Framework\Api\Search\FilterGroup[] $filterGroups
+     * @return $this
+     */
+    public function setFilterGroups(array $filterGroups = null)
+    {
+    }
+    /**
+     * Set sort order.
+     *
+     * @param \Magento\Framework\Api\SortOrder[] $sortOrders
+     * @return $this
+     */
+    public function setSortOrders(array $sortOrders = null)
+    {
+    }
+    /**
+     * Set page size.
+     *
+     * @param int $pageSize
+     * @return $this
+     */
+    public function setPageSize($pageSize)
+    {
+    }
+    /**
+     * Set current page.
+     *
+     * @param int $currentPage
+     * @return $this
+     */
+    public function setCurrentPage($currentPage)
+    {
+    }
+}
+/**
+ * Data object for sort order.
+ *
+ * @api
+ * @since 100.0.2
+ */
+class SortOrder extends \Magento\Framework\Api\AbstractSimpleObject
+{
+    const FIELD = 'field';
+    const DIRECTION = 'direction';
+    const SORT_ASC = 'ASC';
+    const SORT_DESC = 'DESC';
+    /**
+     * Initialize object and validate sort direction
+     *
+     * @param array $data
+     * @throws InputException
+     */
+    public function __construct(array $data = [])
+    {
+    }
+    /**
+     * Get sorting field.
+     *
+     * @return string
+     */
+    public function getField()
+    {
+    }
+    /**
+     * Set sorting field.
+     *
+     * @param string $field
+     * @throws InputException
+     *
+     * @return $this
+     */
+    public function setField($field)
+    {
+    }
+    /**
+     * Get sorting direction.
+     *
+     * @return string
+     */
+    public function getDirection()
+    {
+    }
+    /**
+     * Set sorting direction.
+     *
+     * @param string $direction
+     * @throws InputException
+     *
+     * @return $this
+     */
+    public function setDirection($direction)
+    {
+    }
+}
+/**
+ * Image Content data object
+ *
+ * @codeCoverageIgnore
+ */
+class ImageContent extends \Magento\Framework\Api\AbstractSimpleObject implements \Magento\Framework\Api\Data\ImageContentInterface
+{
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     */
+    public function getBase64EncodedData()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     */
+    public function getType()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     */
+    public function getName()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     *
+     * @param string $data
+     * @return $this
+     */
+    public function setBase64EncodedData($data)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     *
+     * @param string $mimeType
+     * @return $this
+     */
+    public function setType($mimeType)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     *
+     * @param string $name
+     * @return $this
+     */
+    public function setName($name)
+    {
+    }
+}
+/**
+ * Base for service collections
+ */
+abstract class AbstractServiceCollection extends \Magento\Framework\Data\Collection
+{
+    /**
+     * Filters on specific fields
+     *
+     * Each filter has the following structure
+     * <pre>
+     * [
+     *     'field'     => $field,
+     *     'condition' => $condition,
+     * ]
+     * </pre>
+     * @see addFieldToFilter() for more information on conditions
+     *
+     * @var array
+     */
+    protected $fieldFilters = [];
+    /**
+     * @var FilterBuilder
+     */
+    protected $filterBuilder;
+    /**
+     * @var SearchCriteriaBuilder
+     */
+    protected $searchCriteriaBuilder;
+    /**
+     * @var \Magento\Framework\Api\SortOrderBuilder
+     */
+    protected $sortOrderBuilder;
+    /**
+     * @param EntityFactoryInterface $entityFactory
+     * @param FilterBuilder $filterBuilder
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param \Magento\Framework\Api\SortOrderBuilder $sortOrderBuilder
+     */
+    public function __construct(\Magento\Framework\Data\Collection\EntityFactoryInterface $entityFactory, \Magento\Framework\Api\FilterBuilder $filterBuilder, \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder, \Magento\Framework\Api\SortOrderBuilder $sortOrderBuilder)
+    {
+    }
+    /**
+     * Add field filter to collection
+     *
+     * If $condition integer or string - exact value will be filtered ('eq' condition)
+     *
+     * If $condition is array - one of the following structures is expected:
+     * <pre>
+     * - ["from" => $fromValue, "to" => $toValue]
+     * - ["eq" => $equalValue]
+     * - ["neq" => $notEqualValue]
+     * - ["like" => $likeValue]
+     * - ["in" => [$inValues]]
+     * - ["nin" => [$notInValues]]
+     * - ["notnull" => $valueIsNotNull]
+     * - ["null" => $valueIsNull]
+     * - ["moreq" => $moreOrEqualValue]
+     * - ["gt" => $greaterValue]
+     * - ["lt" => $lessValue]
+     * - ["gteq" => $greaterOrEqualValue]
+     * - ["lteq" => $lessOrEqualValue]
+     * - ["finset" => $valueInSet]
+     * - ["regexp" => $regularExpression]
+     * - ["seq" => $stringValue]
+     * - ["sneq" => $stringValue]
+     * </pre>
+     *
+     * If non matched - sequential parallel arrays are expected and OR conditions
+     * will be built using above mentioned structure.
+     *
+     * Example:
+     * <pre>
+     * $field = ['age', 'name'];
+     * $condition = [42, ['like' => 'Mage']];
+     * or
+     * ['rate', 'tax_postcode']
+     * [['from'=>"3",'to'=>'8.25'], ['like' =>'%91000%']];
+     * </pre>
+     * The above would find where age equal to 42 OR name like %Mage%.
+     *
+     * @param string|array $field
+     * @param string|int|array $condition
+     * @throws LocalizedException if some error in the input could be detected.
+     * @return $this
+     */
+    public function addFieldToFilter($field, $condition)
+    {
+    }
+    /**
+     * Creates a search criteria DTO based on the array of field filters.
+     *
+     * @return SearchCriteria
+     */
+    protected function getSearchCriteria()
+    {
+    }
+    /**
+     * Creates a filter DTO for given field/condition
+     *
+     * @param string $field Field for new filter
+     * @param string|array $condition Condition for new filter.
+     * @return Filter
+     */
+    protected function createFilterData($field, $condition)
+    {
+    }
+}
+/**
+ * Class to provide possibility to search for any object's property value by the name and value of another property
+ */
+class ArrayObjectSearch
+{
+    /**
+     * Search for the value's value by specified key's name-value pair in the object
+     * <pre>
+     * Example of usage:
+     * $data = array(
+     *     ValidationRuleBuilderObject('name' => 'min_text_length', 'value' => 0)
+     *     ValidationRuleBuilderObject('name' => 'max_text_length', 'value' => 255)
+     *     ValidationRuleBuilderObject('anyOtherName' => 'customName', 'anyOtherValue' => 'customValue')
+     * );
+     *
+     * Call:
+     * $maxDateValue = ArrayObjectSearch::getArrayElementByName(
+     *     $data,
+     *     'max_text_length'
+     * );
+     * By default function looks for `value`'s value by the `name`'s value
+     * Result: 255
+     *
+     * Call:
+     * $customValue = ArrayObjectSearch::getArrayElementByName(
+     *     $data,
+     *     'customName',   //what key value to look for
+     *     'anyOtherName', //where to look for
+     *     'anyOtherValue' //where to return from
+     * );
+     * Result: 'customValue'
+     * </pre>
+     * @param object $data Object to search in
+     * @param string $keyValue Value of the key property to search for
+     * @param string $keyName Name of the key property to search for
+     * @param string $valueName Name of the value property name
+     * @return null|mixed
+     */
+    public static function getArrayElementByName($data, $keyValue, $keyName = 'name', $valueName = 'value')
+    {
+    }
+}
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
+class ImageProcessor implements \Magento\Framework\Api\ImageProcessorInterface
+{
+    /**
+     * @var array
+     */
+    protected $mimeTypeExtensionMap = ['image/jpg' => 'jpg', 'image/jpeg' => 'jpg', 'image/gif' => 'gif', 'image/png' => 'png'];
+    /**
+     * @var \Psr\Log\LoggerInterface
+     */
+    protected $logger;
+    /**
+     * @param Filesystem $fileSystem
+     * @param ImageContentValidatorInterface $contentValidator
+     * @param DataObjectHelper $dataObjectHelper
+     * @param \Psr\Log\LoggerInterface $logger
+     * @param Uploader $uploader
+     */
+    public function __construct(\Magento\Framework\Filesystem $fileSystem, \Magento\Framework\Api\ImageContentValidatorInterface $contentValidator, \Magento\Framework\Api\DataObjectHelper $dataObjectHelper, \Psr\Log\LoggerInterface $logger, \Magento\Framework\Api\Uploader $uploader)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function save(\Magento\Framework\Api\CustomAttributesDataInterface $dataObjectWithCustomAttributes, $entityType, \Magento\Framework\Api\CustomAttributesDataInterface $previousCustomerData = null)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function processImageContent($entityType, $imageContent)
+    {
+    }
+    /**
+     * Get mime type extension
+     *
+     * @param string $mimeType
+     * @return string
+     */
+    protected function getMimeTypeExtension($mimeType)
+    {
+    }
+}
+class AttributeValueFactory
+{
+    /**
+     * Entity class name
+     */
+    const CLASS_NAME = \Magento\Framework\Api\AttributeValue::class;
+    /**
+     * Object Manager instance
+     *
+     * @var ObjectManagerInterface
+     */
+    protected $_objectManager = null;
+    /**
+     * Factory constructor
+     *
+     * @param ObjectManagerInterface $objectManager
+     */
+    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager)
+    {
+    }
+    /**
+     * Create class instance with specified parameters
+     *
+     * @return AttributeValue
+     */
+    public function create()
+    {
+    }
+}
+/**
+ * Builder for sort order data object.
+ * @method SortOrder create()
+ *
+ * @api
+ * @since 100.0.2
+ */
+class SortOrderBuilder extends \Magento\Framework\Api\AbstractSimpleObjectBuilder
+{
+    /**
+     * Set sorting field.
+     *
+     * @param string $field
+     * @return $this
+     */
+    public function setField($field)
+    {
+    }
+    /**
+     * Set sorting direction.
+     *
+     * @param string $direction
+     * @return $this
+     */
+    public function setDirection($direction)
+    {
+    }
+    /**
+     * @return $this
+     */
+    public function setAscendingDirection()
+    {
+    }
+    /**
+     * @return $this
+     */
+    public function setDescendingDirection()
+    {
+    }
+}
+namespace Magento\Framework\Api\Search;
+
+/**
+ * Interface ReportingInterface
+ *
+ * @api
+ */
+interface ReportingInterface
+{
+    /**
+     * @param SearchCriteriaInterface $searchCriteria
+     * @return SearchResultInterface
+     */
+    public function search(\Magento\Framework\Api\Search\SearchCriteriaInterface $searchCriteria);
+}
+/**
+ * Groups two or more filters together using a logical OR
+ *
+ * @api
+ * @since 100.0.2
+ */
+class FilterGroup extends \Magento\Framework\Api\AbstractSimpleObject
+{
+    const FILTERS = 'filters';
+    /**
+     * Returns a list of filters in this group
+     *
+     * @return \Magento\Framework\Api\Filter[]|null
+     */
+    public function getFilters()
+    {
+    }
+    /**
+     * Set filters
+     *
+     * @param \Magento\Framework\Api\Filter[] $filters
+     * @return $this
+     * @codeCoverageIgnore
+     */
+    public function setFilters(array $filters = null)
+    {
+    }
+}
+/**
+ * Interface Search Document
+ *
+ * @api
+ */
+interface DocumentInterface extends \Magento\Framework\Api\CustomAttributesDataInterface
+{
+    const ID = 'id';
+    /**
+     * @return int
+     */
+    public function getId();
+    /**
+     * @param int $id
+     * @return $this
+     */
+    public function setId($id);
+}
+/**
+ * Builder for SearchCriteria Service Data Object
+ *
+ * @api
+ * @since 100.0.2
+ */
+class SearchCriteriaBuilder extends \Magento\Framework\Api\AbstractSimpleObjectBuilder
+{
+    /**
+     * @var SortOrderBuilder
+     */
+    protected $sortOrderBuilder;
+    /**
+     * @var FilterGroupBuilder
+     */
+    protected $filterGroupBuilder;
+    /**
+     * @param ObjectFactory $objectFactory
+     * @param FilterGroupBuilder $filterGroupBuilder
+     * @param SortOrderBuilder $sortOrderBuilder
+     */
+    public function __construct(\Magento\Framework\Api\ObjectFactory $objectFactory, \Magento\Framework\Api\Search\FilterGroupBuilder $filterGroupBuilder, \Magento\Framework\Api\SortOrderBuilder $sortOrderBuilder)
+    {
+    }
+    /**
+     * Builds the SearchCriteria Data Object
+     *
+     * @return SearchCriteria
+     */
+    public function create()
+    {
+    }
+    /**
+     * Create a filter group based on the filter array provided and add to the filter groups
+     *
+     * @param \Magento\Framework\Api\Filter $filter
+     * @return $this
+     */
+    public function addFilter(\Magento\Framework\Api\Filter $filter)
+    {
+    }
+    /**
+     * @param string $field
+     * @param string $direction
+     * @return $this
+     */
+    public function addSortOrder($field, $direction)
+    {
+    }
+    /**
+     * Set page size
+     *
+     * @param int $pageSize
+     * @return $this
+     */
+    public function setPageSize($pageSize)
+    {
+    }
+    /**
+     * Set current page
+     *
+     * @param int $currentPage
+     * @return $this
+     */
+    public function setCurrentPage($currentPage)
+    {
+    }
+}
+/**
+ * Interface for facet Bucket
+ *
+ * @api
+ */
+interface BucketInterface
+{
+    /**
+     * Get field name
+     *
+     * @return string
+     */
+    public function getName();
+    /**
+     * Get field values
+     *
+     * @return \Magento\Framework\Api\Search\AggregationValueInterface[]
+     */
+    public function getValues();
+}
+/**
+ * Interface SearchResultInterface
+ *
+ * @api
+ * @since 100.0.2
+ */
+interface SearchResultInterface extends \Magento\Framework\Api\SearchResultsInterface
+{
+    /**#@+
+     * Constants defined for keys of data array
+     */
+    const TOTAL_COUNT = 'total_count';
+    const SEARCH_CRITERIA = 'search_criteria';
+    const ITEMS = 'items';
+    const AGGREGATIONS = 'aggregations';
+    /**#@-*/
+    /**
+     * @return \Magento\Framework\Api\Search\DocumentInterface[]
+     */
+    public function getItems();
+    /**
+     * Set items list.
+     *
+     * @param \Magento\Framework\Api\Search\DocumentInterface[] $items
+     * @return $this
+     */
+    public function setItems(array $items = null);
+    /**
+     * @return \Magento\Framework\Api\Search\AggregationInterface
+     */
+    public function getAggregations();
+    /**
+     * @param \Magento\Framework\Api\Search\AggregationInterface $aggregations
+     * @return $this
+     */
+    public function setAggregations($aggregations);
+    /**
+     * Get search criteria.
+     *
+     * @return \Magento\Framework\Api\Search\SearchCriteriaInterface
+     */
+    public function getSearchCriteria();
+}
+class SearchResult extends \Magento\Framework\Api\AbstractSimpleObject implements \Magento\Framework\Api\Search\SearchResultInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function getAggregations()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function setAggregations($aggregations)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getItems()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function setItems(array $items = null)
+    {
+    }
+    /**
+     * Get search criteria.
+     *
+     * @return SearchCriteriaInterface
+     */
+    public function getSearchCriteria()
+    {
+    }
+    /**
+     * Set search criteria.
+     *
+     * @param BaseSearchCriteriaInterface $searchCriteria
+     * @return $this
+     */
+    public function setSearchCriteria(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria = null)
+    {
+    }
+    /**
+     * Get total count.
+     *
+     * @return int
+     */
+    public function getTotalCount()
+    {
+    }
+    /**
+     * Set total count.
+     *
+     * @param int $totalCount
+     * @return $this
+     */
+    public function setTotalCount($totalCount)
+    {
+    }
+}
+/**
+ * @api
+ */
+class SearchCriteriaFactory
+{
+    /**
+     * Object manager
+     *
+     * @var \Magento\Framework\ObjectManagerInterface
+     */
+    protected $_objectManager;
+    /**
+     * Instance name to create
+     *
+     * @var string
+     */
+    protected $_instanceName = null;
+    /**
+     * @param \Magento\Framework\ObjectManagerInterface $objectManager
+     * @param string $instanceName
+     */
+    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager, $instanceName = \Magento\Framework\Api\Search\SearchCriteria::class)
+    {
+    }
+    /**
+     * Create class instance with specified parameters
+     *
+     * @param array $data
+     * @return SearchCriteriaInterface
+     */
+    public function create(array $data = [])
+    {
+    }
+}
+class SearchResultFactory
+{
+    /**
+     * Object manager
+     *
+     * @var \Magento\Framework\ObjectManagerInterface
+     */
+    protected $_objectManager;
+    /**
+     * Instance name to create
+     *
+     * @var string
+     */
+    protected $_instanceName = null;
+    /**
+     * @param \Magento\Framework\ObjectManagerInterface $objectManager
+     * @param string $instanceName
+     */
+    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager, $instanceName = \Magento\Framework\Api\Search\SearchResult::class)
+    {
+    }
+    /**
+     * Create class instance with specified parameters
+     *
+     * @param array $data
+     * @return SearchResultInterface
+     */
+    public function create(array $data = [])
+    {
+    }
+}
+/**
+ * Interface SearchCriteriaInterface
+ *
+ * @api
+ * @package Magento\Framework\Api\Search
+ * @since 100.0.2
+ */
+interface SearchCriteriaInterface extends \Magento\Framework\Api\SearchCriteriaInterface
+{
+    /**
+     * @return string
+     */
+    public function getRequestName();
+    /**
+     * @param string $requestName
+     * @return $this
+     */
+    public function setRequestName($requestName);
+}
+/**
+ * Search API for all requests
+ *
+ * @api
+ * @since 100.0.2
+ */
+interface SearchInterface
+{
+    /**
+     * Make Full Text Search and return found Documents
+     *
+     * @param \Magento\Framework\Api\Search\SearchCriteriaInterface $searchCriteria
+     * @return \Magento\Framework\Api\Search\SearchResultInterface
+     */
+    public function search(\Magento\Framework\Api\Search\SearchCriteriaInterface $searchCriteria);
+}
+/**
+ * @api
+ * @since 100.0.2
+ */
+class Document extends \Magento\Framework\Api\AbstractSimpleObject implements \Magento\Framework\Api\Search\DocumentInterface, \IteratorAggregate
+{
+    /**
+     * @inheritdoc
+     */
+    public function getId()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setId($id)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getCustomAttribute($attributeCode)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setCustomAttribute($attributeCode, $attributeValue)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getCustomAttributes()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setCustomAttributes(array $attributes)
+    {
+    }
+    /**
+     * Implementation of \IteratorAggregate::getIterator()
+     *
+     * @return \ArrayIterator
+     * @since 100.1.0
+     */
+    #[\ReturnTypeWillChange]
+    public function getIterator()
+    {
+    }
+}
+/**
+ * Interface Aggregation to get faceted data
+ *
+ * @api
+ */
+interface AggregationInterface
+{
+    /**
+     * Get Document field
+     *
+     * @param string $bucketName
+     * @return \Magento\Framework\Api\Search\BucketInterface
+     */
+    public function getBucket($bucketName);
+    /**
+     * Get all Document fields
+     *
+     * @return \Magento\Framework\Api\Search\BucketInterface[]
+     */
+    public function getBuckets();
+    /**
+     * Get Document field names
+     *
+     * @return string[]
+     */
+    public function getBucketNames();
+}
+/**
+ * @api
+ * @since 100.0.2
+ */
+class SearchCriteria extends \Magento\Framework\Api\SearchCriteria implements \Magento\Framework\Api\Search\SearchCriteriaInterface
+{
+    const REQUEST_NAME = 'request_name';
+    /**
+     * {@inheritdoc}
+     */
+    public function getRequestName()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function setRequestName($requestName)
+    {
+    }
+}
+/**
+ * Builder for FilterGroup Data.
+ *
+ * @api
+ * @since 100.0.2
+ */
+class FilterGroupBuilder extends \Magento\Framework\Api\AbstractSimpleObjectBuilder
+{
+    /**
+     * @var FilterBuilder
+     */
+    protected $_filterBuilder;
+    /**
+     * @param ObjectFactory $objectFactory
+     * @param FilterBuilder $filterBuilder
+     */
+    public function __construct(\Magento\Framework\Api\ObjectFactory $objectFactory, \Magento\Framework\Api\FilterBuilder $filterBuilder)
+    {
+    }
+    /**
+     * Add filter
+     *
+     * @param \Magento\Framework\Api\Filter $filter
+     * @return $this
+     */
+    public function addFilter(\Magento\Framework\Api\Filter $filter)
+    {
+    }
+    /**
+     * Set filters
+     *
+     * @param \Magento\Framework\Api\Filter[] $filters
+     * @return $this
+     */
+    public function setFilters(array $filters)
+    {
+    }
+}
+/**
+ * @api
+ */
+class DocumentFactory
+{
+    /**
+     * Object manager
+     *
+     * @var \Magento\Framework\ObjectManagerInterface
+     */
+    protected $_objectManager;
+    /**
+     * Instance name to create
+     *
+     * @var string
+     */
+    protected $_instanceName = null;
+    /**
+     * @param \Magento\Framework\ObjectManagerInterface $objectManager
+     * @param string $instanceName
+     */
+    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager, $instanceName = \Magento\Framework\Api\Search\Document::class)
+    {
+    }
+    /**
+     * Create class instance with specified parameters
+     *
+     * @param array $data
+     * @return DocumentInterface
+     */
+    public function create(array $data = [])
+    {
+    }
+}
+/**
+ * Interface Aggregation Value
+ *
+ * @api
+ */
+interface AggregationValueInterface
+{
+    /**
+     * Get aggregation
+     *
+     * @return string|array
+     */
+    public function getValue();
+    /**
+     * Get metrics
+     *
+     * @return mixed[]
+     */
+    public function getMetrics();
+}
+namespace Magento\Framework\Api;
+
+/**
+ * Base data object for custom attribute metadata
+ */
+class AttributeMetadata extends \Magento\Framework\Api\AbstractSimpleObject implements \Magento\Framework\Api\MetadataObjectInterface
+{
+    const ATTRIBUTE_CODE = 'attribute_code';
+    /**
+     * Retrieve code of the attribute.
+     *
+     * @return string|null
+     */
+    public function getAttributeCode()
+    {
+    }
+    /**
+     * Set code of the attribute.
+     *
+     * @param string $attributeCode
+     * @return $this
+     */
+    public function setAttributeCode($attributeCode)
+    {
+    }
+}

@@ -1,0 +1,2430 @@
+<?php
+
+namespace Magento\Checkout\Model;
+
+interface AddressComparatorInterface
+{
+    /**
+     * Returns true/false, after addresses comparison
+     *
+     * @param AddressInterface|null $address1
+     * @param AddressInterface|null $address2
+     * @return bool
+     */
+    public function isEqual(?\Magento\Quote\Api\Data\AddressInterface $address1, ?\Magento\Quote\Api\Data\AddressInterface $address2) : bool;
+}
+namespace Magento\Checkout\Model\Cart;
+
+/**
+ * @api
+ * @since 100.0.2
+ */
+class ImageProvider
+{
+    /**
+     * @var \Magento\Quote\Api\CartItemRepositoryInterface
+     */
+    protected $itemRepository;
+    /**
+     * @var \Magento\Checkout\CustomerData\ItemPoolInterface
+     * @deprecated 100.2.7 No need for the pool as images are resolved in the default item implementation
+     * @see \Magento\Checkout\CustomerData\DefaultItem::getProductForThumbnail
+     */
+    protected $itemPool;
+    /**
+     * @var \Magento\Checkout\CustomerData\DefaultItem
+     * @since 100.2.7
+     */
+    protected $customerDataItem;
+    /**
+     * @param \Magento\Quote\Api\CartItemRepositoryInterface $itemRepository
+     * @param \Magento\Checkout\CustomerData\ItemPoolInterface $itemPool
+     * @param DefaultItem|null $customerDataItem
+     * @param \Magento\Catalog\Helper\Image $imageHelper
+     * @param \Magento\Catalog\Model\Product\Configuration\Item\ItemResolverInterface $itemResolver
+     */
+    public function __construct(\Magento\Quote\Api\CartItemRepositoryInterface $itemRepository, \Magento\Checkout\CustomerData\ItemPoolInterface $itemPool, \Magento\Checkout\CustomerData\DefaultItem $customerDataItem = null, \Magento\Catalog\Helper\Image $imageHelper = null, \Magento\Catalog\Model\Product\Configuration\Item\ItemResolverInterface $itemResolver = null)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getImages($cartId)
+    {
+    }
+}
+class CollectQuote
+{
+    /**
+     * @var \Magento\Customer\Model\Session
+     */
+    protected $customerSession;
+    /**
+     * @var \Magento\Customer\Api\CustomerRepositoryInterface
+     */
+    protected $customerRepository;
+    /**
+     * @var \Magento\Customer\Api\AddressRepositoryInterface
+     */
+    protected $addressRepository;
+    /**
+     * @var \Magento\Quote\Api\Data\EstimateAddressInterfaceFactory
+     */
+    protected $estimatedAddressFactory;
+    /**
+     * @var \Magento\Quote\Api\ShippingMethodManagementInterface
+     */
+    protected $shippingMethodManager;
+    /**
+     * @var \Magento\Quote\Api\CartRepositoryInterface
+     */
+    protected $quoteRepository;
+    /**
+     * @param \Magento\Customer\Model\Session $customerSession
+     * @param \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository
+     * @param \Magento\Customer\Api\AddressRepositoryInterface $addressRepository
+     * @param \Magento\Quote\Api\Data\EstimateAddressInterfaceFactory $estimatedAddressFactory
+     * @param \Magento\Quote\Api\ShippingMethodManagementInterface $shippingMethodManager
+     * @param \Magento\Quote\Api\CartRepositoryInterface $quoteRepository
+     * @codeCoverageIgnore
+     */
+    public function __construct(\Magento\Customer\Model\Session $customerSession, \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository, \Magento\Customer\Api\AddressRepositoryInterface $addressRepository, \Magento\Quote\Api\Data\EstimateAddressInterfaceFactory $estimatedAddressFactory, \Magento\Quote\Api\ShippingMethodManagementInterface $shippingMethodManager, \Magento\Quote\Api\CartRepositoryInterface $quoteRepository)
+    {
+    }
+    /**
+     * @param \Magento\Quote\Model\Quote $quote
+     * @return void
+     */
+    public function collect(\Magento\Quote\Model\Quote $quote)
+    {
+    }
+}
+/**
+ * Interface RequestInfoFilterInterface used by composite and leafs to implement filtering
+ * @api
+ * @since 100.1.2
+ */
+interface RequestInfoFilterInterface
+{
+    /**
+     * Filters the data object by an array of parameters
+     *
+     * @param \Magento\Framework\DataObject $params
+     * @return RequestInfoFilterInterface
+     * @since 100.1.2
+     */
+    public function filter(\Magento\Framework\DataObject $params);
+}
+/**
+ * Class RequestInfoFilter used for filtering data from a request
+ */
+class RequestInfoFilter implements \Magento\Checkout\Model\Cart\RequestInfoFilterInterface
+{
+    /**
+     * @param array $filterList
+     */
+    public function __construct(array $filterList = [])
+    {
+    }
+    /**
+     * Filters the data with values from filterList
+     *
+     * @param \Magento\Framework\DataObject $params
+     * @return $this
+     */
+    public function filter(\Magento\Framework\DataObject $params)
+    {
+    }
+}
+namespace Magento\Checkout\Model;
+
+/**
+ * Interface ConfigProviderInterface
+ * @api
+ * @since 100.0.2
+ */
+interface ConfigProviderInterface
+{
+    /**
+     * Retrieve assoc array of checkout configuration
+     *
+     * @return array
+     */
+    public function getConfig();
+}
+namespace Magento\Checkout\Model\Cart;
+
+/**
+ * Class CheckoutSummaryConfigProvider provides configuration for checkout summary block
+ */
+class CheckoutSummaryConfigProvider implements \Magento\Checkout\Model\ConfigProviderInterface
+{
+    /**
+     * @param UrlInterface $urlBuilder
+     * @param ScopeConfigInterface $scopeConfig
+     */
+    public function __construct(\Magento\Framework\UrlInterface $urlBuilder, \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getConfig()
+    {
+    }
+}
+/**
+ * Class RequestInfoFilterComposite
+ * @api
+ * @since 100.1.2
+ */
+class RequestInfoFilterComposite implements \Magento\Checkout\Model\Cart\RequestInfoFilterInterface
+{
+    /**
+     * @param RequestInfoFilter[] $filters
+     */
+    public function __construct($filters = [])
+    {
+    }
+    /**
+     * Loops through all leafs of the composite and calls filter method
+     *
+     * @param \Magento\Framework\DataObject $params
+     * @return $this
+     * @since 100.1.2
+     */
+    public function filter(\Magento\Framework\DataObject $params)
+    {
+    }
+}
+/**
+ * Cart request quantity processor
+ */
+class RequestQuantityProcessor
+{
+    /**
+     * RequestQuantityProcessor constructor.
+     * @param ResolverInterface $localeResolver
+     */
+    public function __construct(\Magento\Framework\Locale\ResolverInterface $localeResolver)
+    {
+    }
+    /**
+     * Process cart request data
+     *
+     * @param array $cartData
+     * @return array
+     */
+    public function process(array $cartData) : array
+    {
+    }
+    /**
+     * Prepare quantity with taking into account decimal separator by locale
+     *
+     * @param int|float|string|array $quantity
+     * @return int|float|string|array
+     */
+    public function prepareQuantity($quantity)
+    {
+    }
+}
+/**
+ * Shopping cart interface
+ *
+ * @api
+ * @author      Magento Core Team <core@magentocommerce.com>
+ * @deprecated 100.1.0 Use \Magento\Quote\Api\Data\CartInterface instead
+ * @see \Magento\Quote\Api\Data\CartInterface
+ * @since 100.0.2
+ */
+interface CartInterface
+{
+    /**
+     * Add product to shopping cart (quote)
+     *
+     * @param int|\Magento\Catalog\Model\Product $productInfo
+     * @param array|float|int|\Magento\Framework\DataObject|null $requestInfo
+     * @return $this
+     */
+    public function addProduct($productInfo, $requestInfo = null);
+    /**
+     * Save cart
+     *
+     * @return $this
+     * @abstract
+     */
+    public function saveQuote();
+    /**
+     * Associate quote with the cart
+     *
+     * @param Quote $quote
+     * @return $this
+     * @abstract
+     */
+    public function setQuote(\Magento\Quote\Model\Quote $quote);
+    /**
+     * Get quote object associated with cart
+     *
+     * @return Quote
+     * @abstract
+     */
+    public function getQuote();
+}
+namespace Magento\Checkout\Model;
+
+class GuestTotalsInformationManagement implements \Magento\Checkout\Api\GuestTotalsInformationManagementInterface
+{
+    /**
+     * @var \Magento\Quote\Model\QuoteIdMaskFactory
+     */
+    protected $quoteIdMaskFactory;
+    /**
+     * @var \Magento\Checkout\Api\TotalsInformationManagementInterface
+     */
+    protected $totalsInformationManagement;
+    /**
+     * @param \Magento\Quote\Model\QuoteIdMaskFactory $quoteIdMaskFactory
+     * @param \Magento\Checkout\Api\TotalsInformationManagementInterface $totalsInformationManagement
+     * @codeCoverageIgnore
+     */
+    public function __construct(\Magento\Quote\Model\QuoteIdMaskFactory $quoteIdMaskFactory, \Magento\Checkout\Api\TotalsInformationManagementInterface $totalsInformationManagement)
+    {
+    }
+    /**
+     * {@inheritDoc}
+     */
+    public function calculate($cartId, \Magento\Checkout\Api\Data\TotalsInformationInterface $addressInformation)
+    {
+    }
+}
+/**
+ * Provides frontend with payments CAPTCHA configuration.
+ *
+ * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
+ */
+class PaymentCaptchaConfigProvider implements \Magento\Checkout\Model\ConfigProviderInterface
+{
+    /**
+     * @param StoreManagerInterface $storeManager
+     * @param Helper $captchaData
+     * @param CustomerSession $customerSession
+     */
+    public function __construct(\Magento\Store\Model\StoreManagerInterface $storeManager, \Magento\Captcha\Helper\Data $captchaData, \Magento\Customer\Model\Session $customerSession)
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function getConfig()
+    {
+    }
+}
+class GuestShippingInformationManagement implements \Magento\Checkout\Api\GuestShippingInformationManagementInterface
+{
+    /**
+     * @var \Magento\Quote\Model\QuoteIdMaskFactory
+     */
+    protected $quoteIdMaskFactory;
+    /**
+     * @var \Magento\Checkout\Api\ShippingInformationManagementInterface
+     */
+    protected $shippingInformationManagement;
+    /**
+     * @param \Magento\Quote\Model\QuoteIdMaskFactory $quoteIdMaskFactory
+     * @param \Magento\Checkout\Api\ShippingInformationManagementInterface $shippingInformationManagement
+     * @codeCoverageIgnore
+     */
+    public function __construct(\Magento\Quote\Model\QuoteIdMaskFactory $quoteIdMaskFactory, \Magento\Checkout\Api\ShippingInformationManagementInterface $shippingInformationManagement)
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function saveAddressInformation($cartId, \Magento\Checkout\Api\Data\ShippingInformationInterface $addressInformation)
+    {
+    }
+}
+class AddressComparator implements \Magento\Checkout\Model\AddressComparatorInterface
+{
+    /**
+     * AddressComparator constructor
+     *
+     * @param SerializerInterface $serializer
+     */
+    public function __construct(\Magento\Framework\Serialize\SerializerInterface $serializer)
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function isEqual(?\Magento\Quote\Api\Data\AddressInterface $address1, ?\Magento\Quote\Api\Data\AddressInterface $address2) : bool
+    {
+    }
+}
+/**
+ * @codeCoverageIgnoreStart
+ */
+class ShippingInformation extends \Magento\Framework\Model\AbstractExtensibleModel implements \Magento\Checkout\Api\Data\ShippingInformationInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function getShippingAddress()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function setShippingAddress(\Magento\Quote\Api\Data\AddressInterface $address)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getBillingAddress()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function setBillingAddress(\Magento\Quote\Api\Data\AddressInterface $address)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getShippingMethodCode()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function setShippingMethodCode($code)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getShippingCarrierCode()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function setShippingCarrierCode($code)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getExtensionAttributes()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function setExtensionAttributes(\Magento\Checkout\Api\Data\ShippingInformationExtensionInterface $extensionAttributes)
+    {
+    }
+}
+namespace Magento\Checkout\Model\Plugin;
+
+/**
+ * Recollect quote when customer group updated through API
+ */
+class RecollectQuoteOnCustomerGroupChange
+{
+    /**
+     * Initialize Constructor
+     *
+     * @param CartRepositoryInterface $cartRepository
+     * @param CustomerRepositoryInterface $customerRepository
+     */
+    public function __construct(\Magento\Quote\Api\CartRepositoryInterface $cartRepository, \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository)
+    {
+    }
+    /**
+     * Plugin around create customer that triggers to update and recollect all customer cart
+     *
+     * @param CustomerResource $subject
+     * @param callable $proceed
+     * @param AbstractModel $customer
+     * @return CustomerResource
+     *
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function aroundSave(\Magento\Customer\Model\ResourceModel\Customer $subject, callable $proceed, \Magento\Framework\Model\AbstractModel $customer) : \Magento\Customer\Model\ResourceModel\Customer
+    {
+    }
+}
+namespace Magento\Checkout\Model;
+
+/**
+ * Composite checkout configuration provider.
+ *
+ * @see \Magento\Checkout\Model\ConfigProviderInterface
+ * @api
+ * @since 100.0.2
+ */
+class CompositeConfigProvider implements \Magento\Checkout\Model\ConfigProviderInterface
+{
+    /**
+     * @param ConfigProviderInterface[] $configProviders
+     * @codeCoverageIgnore
+     */
+    public function __construct(array $configProviders)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getConfig()
+    {
+    }
+}
+/**
+ * Utilize CAPTCHA as a rate-limiting mechanism.
+ */
+class CaptchaRateLimiter
+{
+    /**
+     * @param UserContextInterface $userContext
+     * @param CustomerRepositoryInterface $customerRepo
+     * @param CaptchaHelper $captchaHelper
+     * @param RequestInterface $request
+     * @param CaptchaResolver $captchaResolver
+     * @param string $captchaId
+     */
+    public function __construct(\Magento\Authorization\Model\UserContextInterface $userContext, \Magento\Customer\Api\CustomerRepositoryInterface $customerRepo, \Magento\Captcha\Helper\Data $captchaHelper, \Magento\Framework\App\RequestInterface $request, \Magento\Captcha\Observer\CaptchaStringResolver $captchaResolver, string $captchaId)
+    {
+    }
+    /**
+     * Validate CAPTCHA if necessary.
+     *
+     * @return void
+     * @throws LocalizedException
+     */
+    public function limit() : void
+    {
+    }
+}
+namespace Magento\Checkout\Model\Adminhtml;
+
+/**
+ * BillingAddressDisplayOptions gets list of configuration options for billing address displaying on
+ * the Payment step on checkout
+ */
+class BillingAddressDisplayOptions implements \Magento\Framework\Option\ArrayInterface
+{
+    /**
+     * Return array of options for billing address displaying on checkout payment step
+     *
+     * @return array:
+     * [
+     *  ['label' => 'Payment Method', 'value' => 0],
+     *  ['label' => 'Payment Page', 'value' => 1]
+     * ]
+     */
+    public function toOptionArray()
+    {
+    }
+}
+namespace Magento\Checkout\Model;
+
+/**
+ * @codeCoverageIgnoreStart
+ */
+class TotalsInformation extends \Magento\Framework\Model\AbstractExtensibleModel implements \Magento\Checkout\Api\Data\TotalsInformationInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function getAddress()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function setAddress(\Magento\Quote\Api\Data\AddressInterface $address)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getShippingMethodCode()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function setShippingMethodCode($code)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getShippingCarrierCode()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function setShippingCarrierCode($code)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getExtensionAttributes()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function setExtensionAttributes(\Magento\Checkout\Api\Data\TotalsInformationExtensionInterface $extensionAttributes)
+    {
+    }
+}
+namespace Magento\Checkout\Model\StoreSwitcher;
+
+/**
+ * Process checkout data redirected from origin store
+ *
+ * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
+ */
+class RedirectDataPostprocessor implements \Magento\Store\Model\StoreSwitcher\RedirectDataPostprocessorInterface
+{
+    /**
+     * @param CartRepositoryInterface $quoteRepository
+     * @param CustomerSession $customerSession
+     * @param CheckoutSession $checkoutSession
+     * @param LoggerInterface $logger
+     */
+    public function __construct(\Magento\Quote\Api\CartRepositoryInterface $quoteRepository, \Magento\Customer\Model\Session $customerSession, \Magento\Checkout\Model\Session $checkoutSession, \Psr\Log\LoggerInterface $logger)
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function process(\Magento\Store\Model\StoreSwitcher\ContextInterface $context, array $data) : void
+    {
+    }
+}
+/**
+ * Collect checkout data to be redirected to target store
+ *
+ * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
+ */
+class RedirectDataPreprocessor implements \Magento\Store\Model\StoreSwitcher\RedirectDataPreprocessorInterface
+{
+    /**
+     * @param CustomerSession $customerSession
+     * @param CheckoutSession $checkoutSession
+     */
+    public function __construct(\Magento\Customer\Model\Session $customerSession, \Magento\Checkout\Model\Session $checkoutSession)
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function process(\Magento\Store\Model\StoreSwitcher\ContextInterface $context, array $data) : array
+    {
+    }
+}
+namespace Magento\Checkout\Model;
+
+/**
+ * @codeCoverageIgnoreStart
+ */
+class PaymentDetails extends \Magento\Framework\Model\AbstractExtensibleModel implements \Magento\Checkout\Api\Data\PaymentDetailsInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function getPaymentMethods()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function setPaymentMethods($paymentMethods)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getTotals()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function setTotals($totals)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     *
+     * @return \Magento\Checkout\Api\Data\PaymentDetailsExtensionInterface|null
+     */
+    public function getExtensionAttributes()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     *
+     * @param \Magento\Checkout\Api\Data\PaymentDetailsExtensionInterface $extensionAttributes
+     * @return $this
+     */
+    public function setExtensionAttributes(\Magento\Checkout\Api\Data\PaymentDetailsExtensionInterface $extensionAttributes)
+    {
+    }
+}
+/**
+ * Guest payment information management model.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+ */
+class GuestPaymentInformationManagement implements \Magento\Checkout\Api\GuestPaymentInformationManagementInterface
+{
+    /**
+     * @var \Magento\Quote\Api\GuestBillingAddressManagementInterface
+     */
+    protected $billingAddressManagement;
+    /**
+     * @var \Magento\Quote\Api\GuestPaymentMethodManagementInterface
+     */
+    protected $paymentMethodManagement;
+    /**
+     * @var \Magento\Quote\Api\GuestCartManagementInterface
+     */
+    protected $cartManagement;
+    /**
+     * @var \Magento\Checkout\Api\PaymentInformationManagementInterface
+     */
+    protected $paymentInformationManagement;
+    /**
+     * @var \Magento\Quote\Model\QuoteIdMaskFactory
+     */
+    protected $quoteIdMaskFactory;
+    /**
+     * @var CartRepositoryInterface
+     */
+    protected $cartRepository;
+    /**
+     * @param \Magento\Quote\Api\GuestBillingAddressManagementInterface $billingAddressManagement
+     * @param \Magento\Quote\Api\GuestPaymentMethodManagementInterface $paymentMethodManagement
+     * @param \Magento\Quote\Api\GuestCartManagementInterface $cartManagement
+     * @param \Magento\Checkout\Api\PaymentInformationManagementInterface $paymentInformationManagement
+     * @param \Magento\Quote\Model\QuoteIdMaskFactory $quoteIdMaskFactory
+     * @param CartRepositoryInterface $cartRepository
+     * @param Logger $logger
+     * @param PaymentProcessingRateLimiterInterface|null $paymentsRateLimiter
+     * @param PaymentSavingRateLimiterInterface|null $savingRateLimiter
+     * @param AddressComparatorInterface|null $addressComparator
+     * @codeCoverageIgnore
+     */
+    public function __construct(\Magento\Quote\Api\GuestBillingAddressManagementInterface $billingAddressManagement, \Magento\Quote\Api\GuestPaymentMethodManagementInterface $paymentMethodManagement, \Magento\Quote\Api\GuestCartManagementInterface $cartManagement, \Magento\Checkout\Api\PaymentInformationManagementInterface $paymentInformationManagement, \Magento\Quote\Model\QuoteIdMaskFactory $quoteIdMaskFactory, \Magento\Quote\Api\CartRepositoryInterface $cartRepository, \Psr\Log\LoggerInterface $logger, ?\Magento\Checkout\Api\PaymentProcessingRateLimiterInterface $paymentsRateLimiter = null, ?\Magento\Checkout\Api\PaymentSavingRateLimiterInterface $savingRateLimiter = null, ?\Magento\Checkout\Model\AddressComparatorInterface $addressComparator = null)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function savePaymentInformationAndPlaceOrder($cartId, $email, \Magento\Quote\Api\Data\PaymentInterface $paymentMethod, \Magento\Quote\Api\Data\AddressInterface $billingAddress = null)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function savePaymentInformation($cartId, $email, \Magento\Quote\Api\Data\PaymentInterface $paymentMethod, \Magento\Quote\Api\Data\AddressInterface $billingAddress = null)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getPaymentInformation($cartId)
+    {
+    }
+}
+namespace Magento\Checkout\Model\Type;
+
+/**
+ * Checkout type onepage model
+ *
+ * @api
+ * @SuppressWarnings(PHPMD.TooManyFields)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
+class Onepage
+{
+    /**
+     * Checkout types: Checkout as Guest, Register, Logged In Customer
+     */
+    const METHOD_GUEST = 'guest';
+    const METHOD_REGISTER = 'register';
+    const METHOD_CUSTOMER = 'customer';
+    const USE_FOR_SHIPPING = 1;
+    const NOT_USE_FOR_SHIPPING = 0;
+    /**
+     * @var \Magento\Customer\Model\Session
+     */
+    protected $_customerSession;
+    /**
+     * @var \Magento\Checkout\Model\Session
+     */
+    protected $_checkoutSession;
+    /**
+     * @var \Magento\Quote\Model\Quote
+     */
+    protected $_quote = null;
+    /**
+     * @var \Magento\Checkout\Helper\Data
+     */
+    protected $_helper;
+    /**
+     * @var \Psr\Log\LoggerInterface
+     */
+    protected $_logger;
+    /**
+     * Customer url
+     *
+     * @var \Magento\Customer\Model\Url
+     */
+    protected $_customerUrl;
+    /**
+     * Core event manager proxy
+     *
+     * @var \Magento\Framework\Event\ManagerInterface
+     */
+    protected $_eventManager = null;
+    /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
+    protected $_storeManager;
+    /**
+     * @var \Magento\Framework\App\RequestInterface
+     */
+    protected $_request;
+    /**
+     * @var \Magento\Customer\Model\AddressFactory
+     */
+    protected $_customrAddrFactory;
+    /**
+     * @var \Magento\Customer\Model\FormFactory
+     */
+    protected $_customerFormFactory;
+    /**
+     * @var \Magento\Customer\Model\CustomerFactory
+     */
+    protected $_customerFactory;
+    /**
+     * @var \Magento\Sales\Model\OrderFactory
+     */
+    protected $_orderFactory;
+    /**
+     * @var \Magento\Framework\DataObject\Copy
+     */
+    protected $_objectCopyService;
+    /**
+     * @var \Magento\Framework\Message\ManagerInterface
+     */
+    protected $messageManager;
+    /**
+     * @var \Magento\Customer\Model\Metadata\FormFactory
+     */
+    protected $_formFactory;
+    /**
+     * @var CustomerDataFactory
+     */
+    protected $customerDataFactory;
+    /**
+     * @var \Magento\Framework\Math\Random
+     */
+    protected $mathRandom;
+    /**
+     * @var AddressRepositoryInterface
+     */
+    protected $addressRepository;
+    /**
+     * @var AccountManagementInterface
+     */
+    protected $accountManagement;
+    /**
+     * @var OrderSender
+     */
+    protected $orderSender;
+    /**
+     * @var \Magento\Quote\Api\CartRepositoryInterface
+     */
+    protected $quoteRepository;
+    /**
+     * @var CustomerRepositoryInterface
+     */
+    protected $customerRepository;
+    /**
+     * @var \Magento\Framework\Api\ExtensibleDataObjectConverter
+     */
+    protected $extensibleDataObjectConverter;
+    /**
+     * @var \Magento\Quote\Api\CartManagementInterface
+     */
+    protected $quoteManagement;
+    /**
+     * @var \Magento\Framework\Api\DataObjectHelper
+     */
+    protected $dataObjectHelper;
+    /**
+     * @var \Magento\Quote\Model\Quote\TotalsCollector
+     */
+    protected $totalsCollector;
+    /**
+     * @param \Magento\Framework\Event\ManagerInterface $eventManager
+     * @param \Magento\Checkout\Helper\Data $helper
+     * @param \Magento\Customer\Model\Url $customerUrl
+     * @param \Psr\Log\LoggerInterface $logger
+     * @param \Magento\Checkout\Model\Session $checkoutSession
+     * @param \Magento\Customer\Model\Session $customerSession
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Magento\Framework\App\RequestInterface $request
+     * @param \Magento\Customer\Model\AddressFactory $customrAddrFactory
+     * @param \Magento\Customer\Model\FormFactory $customerFormFactory
+     * @param \Magento\Customer\Model\CustomerFactory $customerFactory
+     * @param \Magento\Sales\Model\OrderFactory $orderFactory
+     * @param \Magento\Framework\DataObject\Copy $objectCopyService
+     * @param \Magento\Framework\Message\ManagerInterface $messageManager
+     * @param \Magento\Customer\Model\Metadata\FormFactory $formFactory
+     * @param CustomerDataFactory $customerDataFactory
+     * @param \Magento\Framework\Math\Random $mathRandom
+     * @param \Magento\Framework\Encryption\EncryptorInterface $encryptor
+     * @param AddressRepositoryInterface $addressRepository
+     * @param AccountManagementInterface $accountManagement
+     * @param OrderSender $orderSender
+     * @param CustomerRepositoryInterface $customerRepository
+     * @param \Magento\Quote\Api\CartRepositoryInterface $quoteRepository
+     * @param \Magento\Framework\Api\ExtensibleDataObjectConverter $extensibleDataObjectConverter
+     * @param \Magento\Quote\Api\CartManagementInterface $quoteManagement
+     * @param \Magento\Framework\Api\DataObjectHelper $dataObjectHelper
+     * @param \Magento\Quote\Model\Quote\TotalsCollector $totalsCollector
+     * @codeCoverageIgnore
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     */
+    public function __construct(\Magento\Framework\Event\ManagerInterface $eventManager, \Magento\Checkout\Helper\Data $helper, \Magento\Customer\Model\Url $customerUrl, \Psr\Log\LoggerInterface $logger, \Magento\Checkout\Model\Session $checkoutSession, \Magento\Customer\Model\Session $customerSession, \Magento\Store\Model\StoreManagerInterface $storeManager, \Magento\Framework\App\RequestInterface $request, \Magento\Customer\Model\AddressFactory $customrAddrFactory, \Magento\Customer\Model\FormFactory $customerFormFactory, \Magento\Customer\Model\CustomerFactory $customerFactory, \Magento\Sales\Model\OrderFactory $orderFactory, \Magento\Framework\DataObject\Copy $objectCopyService, \Magento\Framework\Message\ManagerInterface $messageManager, \Magento\Customer\Model\Metadata\FormFactory $formFactory, \Magento\Customer\Api\Data\CustomerInterfaceFactory $customerDataFactory, \Magento\Framework\Math\Random $mathRandom, \Magento\Framework\Encryption\EncryptorInterface $encryptor, \Magento\Customer\Api\AddressRepositoryInterface $addressRepository, \Magento\Customer\Api\AccountManagementInterface $accountManagement, \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender, \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository, \Magento\Quote\Api\CartRepositoryInterface $quoteRepository, \Magento\Framework\Api\ExtensibleDataObjectConverter $extensibleDataObjectConverter, \Magento\Quote\Api\CartManagementInterface $quoteManagement, \Magento\Framework\Api\DataObjectHelper $dataObjectHelper, \Magento\Quote\Model\Quote\TotalsCollector $totalsCollector)
+    {
+    }
+    /**
+     * Get frontend checkout session object
+     *
+     * @return \Magento\Checkout\Model\Session
+     * @codeCoverageIgnore
+     */
+    public function getCheckout()
+    {
+    }
+    /**
+     * Quote object getter
+     *
+     * @return \Magento\Quote\Model\Quote
+     */
+    public function getQuote()
+    {
+    }
+    /**
+     * Declare checkout quote instance
+     *
+     * @param \Magento\Quote\Model\Quote $quote
+     * @return $this
+     * @codeCoverageIgnore
+     */
+    public function setQuote(\Magento\Quote\Model\Quote $quote)
+    {
+    }
+    /**
+     * Get customer session object
+     *
+     * @return \Magento\Customer\Model\Session
+     * @codeCoverageIgnore
+     */
+    public function getCustomerSession()
+    {
+    }
+    /**
+     * Initialize quote state to be valid for one page checkout
+     *
+     * @return $this
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     */
+    public function initCheckout()
+    {
+    }
+    /**
+     * Get quote checkout method
+     *
+     * @return string
+     */
+    public function getCheckoutMethod()
+    {
+    }
+    /**
+     * Specify checkout method
+     *
+     * @param   string $method
+     * @return  array
+     */
+    public function saveCheckoutMethod($method)
+    {
+    }
+    /**
+     * Check whether checkout method is "register"
+     *
+     * @return bool
+     */
+    protected function isCheckoutMethodRegister()
+    {
+    }
+    /**
+     * Save checkout shipping address
+     *
+     * @param   array $data
+     * @param   int $customerAddressId
+     * @return  array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     */
+    public function saveShipping($data, $customerAddressId)
+    {
+    }
+    /**
+     * Specify quote shipping method
+     *
+     * @param   string $shippingMethod
+     * @return  array
+     */
+    public function saveShippingMethod($shippingMethod)
+    {
+    }
+    /**
+     * Specify quote payment method
+     *
+     * @param   array $data
+     * @return  array
+     */
+    public function savePayment($data)
+    {
+    }
+    /**
+     * Validate quote state to be integrated with one page checkout process
+     *
+     * @return void
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    protected function validate()
+    {
+    }
+    /**
+     * Prepare quote for guest checkout order submit
+     *
+     * @return $this
+     */
+    protected function _prepareGuestQuote()
+    {
+    }
+    /**
+     * Prepare quote for customer registration and customer order submit
+     *
+     * @return void
+     */
+    protected function _prepareNewCustomerQuote()
+    {
+    }
+    /**
+     * Prepare quote for customer order submit
+     *
+     * @return void
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    protected function _prepareCustomerQuote()
+    {
+    }
+    /**
+     * Involve new customer to system
+     *
+     * @return $this
+     */
+    protected function _involveNewCustomer()
+    {
+    }
+    /**
+     * Create order based on checkout type. Create customer if necessary.
+     *
+     * @return $this
+     */
+    public function saveOrder()
+    {
+    }
+    /**
+     * Check if customer email exists
+     *
+     * @param string $email
+     * @param int $websiteId
+     * @return false|\Magento\Customer\Model\Customer
+     * @codeCoverageIgnore
+     */
+    protected function _customerEmailExists($email, $websiteId = null)
+    {
+    }
+    /**
+     * Get last order increment id by order id
+     *
+     * @return string
+     */
+    public function getLastOrderId()
+    {
+    }
+}
+namespace Magento\Checkout\Model;
+
+/**
+ * Payment information management service.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
+class PaymentInformationManagement implements \Magento\Checkout\Api\PaymentInformationManagementInterface
+{
+    /**
+     * @var \Magento\Quote\Api\BillingAddressManagementInterface
+     * @deprecated 100.1.0 This call was substituted to eliminate extra quote::save call
+     * @see not in use anymore
+     */
+    protected $billingAddressManagement;
+    /**
+     * @var \Magento\Quote\Api\PaymentMethodManagementInterface
+     */
+    protected $paymentMethodManagement;
+    /**
+     * @var \Magento\Quote\Api\CartManagementInterface
+     */
+    protected $cartManagement;
+    /**
+     * @var PaymentDetailsFactory
+     */
+    protected $paymentDetailsFactory;
+    /**
+     * @var \Magento\Quote\Api\CartTotalRepositoryInterface
+     */
+    protected $cartTotalsRepository;
+    /**
+     * @param \Magento\Quote\Api\BillingAddressManagementInterface $billingAddressManagement
+     * @param \Magento\Quote\Api\PaymentMethodManagementInterface $paymentMethodManagement
+     * @param \Magento\Quote\Api\CartManagementInterface $cartManagement
+     * @param PaymentDetailsFactory $paymentDetailsFactory
+     * @param \Magento\Quote\Api\CartTotalRepositoryInterface $cartTotalsRepository
+     * @param PaymentProcessingRateLimiterInterface|null $paymentRateLimiter
+     * @param PaymentSavingRateLimiterInterface|null $saveRateLimiter
+     * @param CartRepositoryInterface|null $cartRepository
+     * @param AddressRepositoryInterface|null $addressRepository
+     * @param AddressComparatorInterface|null $addressComparator
+     * @param LoggerInterface|null $logger
+     * @codeCoverageIgnore
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     */
+    public function __construct(\Magento\Quote\Api\BillingAddressManagementInterface $billingAddressManagement, \Magento\Quote\Api\PaymentMethodManagementInterface $paymentMethodManagement, \Magento\Quote\Api\CartManagementInterface $cartManagement, \Magento\Checkout\Model\PaymentDetailsFactory $paymentDetailsFactory, \Magento\Quote\Api\CartTotalRepositoryInterface $cartTotalsRepository, ?\Magento\Checkout\Api\PaymentProcessingRateLimiterInterface $paymentRateLimiter = null, ?\Magento\Checkout\Api\PaymentSavingRateLimiterInterface $saveRateLimiter = null, ?\Magento\Quote\Api\CartRepositoryInterface $cartRepository = null, ?\Magento\Customer\Api\AddressRepositoryInterface $addressRepository = null, ?\Magento\Checkout\Model\AddressComparatorInterface $addressComparator = null, ?\Psr\Log\LoggerInterface $logger = null)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function savePaymentInformationAndPlaceOrder($cartId, \Magento\Quote\Api\Data\PaymentInterface $paymentMethod, \Magento\Quote\Api\Data\AddressInterface $billingAddress = null)
+    {
+    }
+    /**
+     * @inheritdoc
+     *
+     * @throws LocalizedException
+     */
+    public function savePaymentInformation($cartId, \Magento\Quote\Api\Data\PaymentInterface $paymentMethod, \Magento\Quote\Api\Data\AddressInterface $billingAddress = null)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getPaymentInformation($cartId)
+    {
+    }
+}
+/**
+ * Class AgreementsValidator
+ */
+class AgreementsValidator implements \Magento\Checkout\Api\AgreementsValidatorInterface
+{
+    /**
+     * Default validator
+     *
+     * @param int[] $agreementIds
+     *
+     * @return bool
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @codeCoverageIgnore
+     */
+    public function isValid($agreementIds = [])
+    {
+    }
+}
+/**
+ * Shopping cart model
+ *
+ * @api
+ * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @deprecated 100.1.0 Use \Magento\Quote\Model\Quote instead
+ * @see \Magento\Quote\Api\Data\CartInterface
+ * @since 100.0.2
+ */
+class Cart extends \Magento\Framework\DataObject implements \Magento\Checkout\Model\Cart\CartInterface
+{
+    /**
+     * Shopping cart items summary quantity(s)
+     *
+     * @var int|null
+     */
+    protected $_summaryQty;
+    /**
+     * List of product ids in shopping cart
+     *
+     * @var int[]|null
+     */
+    protected $_productIds;
+    /**
+     * Core event manager proxy
+     *
+     * @var \Magento\Framework\Event\ManagerInterface
+     */
+    protected $_eventManager;
+    /**
+     * Core store config
+     *
+     * @var \Magento\Framework\App\Config\ScopeConfigInterface
+     */
+    protected $_scopeConfig;
+    /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
+    protected $_storeManager;
+    /**
+     * @var \Magento\Checkout\Model\ResourceModel\Cart
+     */
+    protected $_resourceCart;
+    /**
+     * @var Session
+     */
+    protected $_checkoutSession;
+    /**
+     * @var \Magento\Customer\Model\Session
+     */
+    protected $_customerSession;
+    /**
+     * @var \Magento\Framework\Message\ManagerInterface
+     */
+    protected $messageManager;
+    /**
+     * @var \Magento\CatalogInventory\Api\StockRegistryInterface
+     */
+    protected $stockRegistry;
+    /**
+     * @var \Magento\CatalogInventory\Api\StockStateInterface
+     */
+    protected $stockState;
+    /**
+     * @var \Magento\Quote\Api\CartRepositoryInterface
+     */
+    protected $quoteRepository;
+    /**
+     * @var ProductRepositoryInterface
+     */
+    protected $productRepository;
+    /**
+     * @param \Magento\Framework\Event\ManagerInterface $eventManager
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Magento\Checkout\Model\ResourceModel\Cart $resourceCart
+     * @param Session $checkoutSession
+     * @param \Magento\Customer\Model\Session $customerSession
+     * @param \Magento\Framework\Message\ManagerInterface $messageManager
+     * @param \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry
+     * @param \Magento\CatalogInventory\Api\StockStateInterface $stockState
+     * @param \Magento\Quote\Api\CartRepositoryInterface $quoteRepository
+     * @param ProductRepositoryInterface $productRepository
+     * @param array $data
+     * @codeCoverageIgnore
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     */
+    public function __construct(\Magento\Framework\Event\ManagerInterface $eventManager, \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig, \Magento\Store\Model\StoreManagerInterface $storeManager, \Magento\Checkout\Model\ResourceModel\Cart $resourceCart, \Magento\Checkout\Model\Session $checkoutSession, \Magento\Customer\Model\Session $customerSession, \Magento\Framework\Message\ManagerInterface $messageManager, \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry, \Magento\CatalogInventory\Api\StockStateInterface $stockState, \Magento\Quote\Api\CartRepositoryInterface $quoteRepository, \Magento\Catalog\Api\ProductRepositoryInterface $productRepository, array $data = [])
+    {
+    }
+    /**
+     * Get shopping cart resource model
+     *
+     * @return \Magento\Checkout\Model\ResourceModel\Cart
+     * @codeCoverageIgnore
+     */
+    protected function _getResource()
+    {
+    }
+    /**
+     * Retrieve checkout session model
+     *
+     * @return Session
+     * @codeCoverageIgnore
+     */
+    public function getCheckoutSession()
+    {
+    }
+    /**
+     * Retrieve customer session model
+     *
+     * @return \Magento\Customer\Model\Session
+     * @codeCoverageIgnore
+     */
+    public function getCustomerSession()
+    {
+    }
+    /**
+     * List of shopping cart items
+     *
+     * @return \Magento\Eav\Model\Entity\Collection\AbstractCollection|array
+     */
+    public function getItems()
+    {
+    }
+    /**
+     * Retrieve array of cart product ids
+     *
+     * @return array
+     */
+    public function getQuoteProductIds()
+    {
+    }
+    /**
+     * Get quote object associated with cart. By default it is current customer session quote
+     *
+     * @return \Magento\Quote\Model\Quote
+     */
+    public function getQuote()
+    {
+    }
+    /**
+     * Set quote object associated with the cart
+     *
+     * @param \Magento\Quote\Model\Quote $quote
+     * @return $this
+     * @codeCoverageIgnore
+     */
+    public function setQuote(\Magento\Quote\Model\Quote $quote)
+    {
+    }
+    /**
+     * Reinitialize cart quote state
+     *
+     * @return $this
+     */
+    protected function reinitializeState()
+    {
+    }
+    /**
+     * Convert order item to quote item
+     *
+     * @param \Magento\Sales\Model\Order\Item $orderItem
+     * @param true|null $qtyFlag if is null set product qty like in order
+     * @return $this
+     */
+    public function addOrderItem($orderItem, $qtyFlag = null)
+    {
+    }
+    /**
+     * Get product object based on requested product information
+     *
+     * @param Product|int|string $productInfo
+     * @return Product
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    protected function _getProduct($productInfo)
+    {
+    }
+    /**
+     * Get request for product add to cart procedure
+     *
+     * @param \Magento\Framework\DataObject|int|array $requestInfo
+     * @return \Magento\Framework\DataObject
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    protected function _getProductRequest($requestInfo)
+    {
+    }
+    /**
+     * Add product to shopping cart (quote)
+     *
+     * @param int|Product $productInfo
+     * @param \Magento\Framework\DataObject|int|array $requestInfo
+     * @return $this
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    public function addProduct($productInfo, $requestInfo = null)
+    {
+    }
+    /**
+     * Adding products to cart by ids
+     *
+     * @param  int[] $productIds
+     * @return $this
+     */
+    public function addProductsByIds($productIds)
+    {
+    }
+    /**
+     * Returns suggested quantities for items.
+     * Can be used to automatically fix user entered quantities before updating cart
+     * so that cart contains valid qty values
+     *
+     * The $data is an array of ($quoteItemId => (item info array with 'qty' key), ...)
+     *
+     * @param   array $data
+     * @return  array
+     */
+    public function suggestItemsQty($data)
+    {
+    }
+    /**
+     * Update cart items information
+     *
+     * @param  array $data
+     * @return $this
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     */
+    public function updateItems($data)
+    {
+    }
+    /**
+     * Remove item from cart
+     *
+     * @param  int $itemId
+     * @return $this
+     * @codeCoverageIgnore
+     */
+    public function removeItem($itemId)
+    {
+    }
+    /**
+     * Save cart
+     *
+     * @return $this
+     */
+    public function save()
+    {
+    }
+    /**
+     * Save cart (implement interface method)
+     *
+     * @return void
+     * @codeCoverageIgnore
+     */
+    public function saveQuote()
+    {
+    }
+    /**
+     * Mark all quote items as deleted (empty shopping cart)
+     *
+     * @return $this
+     * @codeCoverageIgnore
+     */
+    public function truncate()
+    {
+    }
+    /**
+     * Get product ids.
+     *
+     * @return int[]
+     */
+    public function getProductIds()
+    {
+    }
+    /**
+     * Get shopping cart items summary (includes config settings)
+     *
+     * @return int|float
+     */
+    public function getSummaryQty()
+    {
+    }
+    /**
+     * Get shopping cart items count
+     *
+     * @return int
+     * @codeCoverageIgnore
+     */
+    public function getItemsCount()
+    {
+    }
+    /**
+     * Get shopping cart summary qty
+     *
+     * @return int|float
+     * @codeCoverageIgnore
+     */
+    public function getItemsQty()
+    {
+    }
+    /**
+     * Update item in shopping cart (quote)
+     * $requestInfo - either qty (int) or buyRequest in form of array or \Magento\Framework\DataObject
+     * $updatingParams - information on how to perform update, passed to Quote->updateItem() method
+     *
+     * @param int $itemId
+     * @param int|array|\Magento\Framework\DataObject $requestInfo
+     * @param null|array|\Magento\Framework\DataObject $updatingParams
+     * @return \Magento\Quote\Model\Quote\Item|string
+     * @throws \Magento\Framework\Exception\LocalizedException
+     *
+     * @see \Magento\Quote\Model\Quote::updateItem()
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    public function updateItem($itemId, $requestInfo = null, $updatingParams = null)
+    {
+    }
+}
+namespace Magento\Checkout\Model\Config\Source\Cart;
+
+class Summary implements \Magento\Framework\Option\ArrayInterface
+{
+    /**
+     * @return array
+     * @codeCoverageIgnore
+     */
+    public function toOptionArray()
+    {
+    }
+}
+namespace Magento\Checkout\Model;
+
+/**
+ * Utilize CAPTCHA to limit payment processing requests.
+ */
+class CaptchaPaymentProcessingRateLimiter implements \Magento\Checkout\Api\PaymentProcessingRateLimiterInterface
+{
+    public const CAPTCHA_FORM = 'payment_processing_request';
+    /**
+     * CaptchaPaymentProcessingRateLimiter constructor.
+     *
+     * @param UserContextInterface $userContext
+     * @param CustomerRepositoryInterface $customerRepo
+     * @param CaptchaHelper $captchaHelper
+     * @param RequestInterface $request
+     * @param CaptchaResolver $captchaResolver
+     * @param CaptchaRateLimiterFactory|null $limiterFactory
+     */
+    public function __construct(\Magento\Authorization\Model\UserContextInterface $userContext, \Magento\Customer\Api\CustomerRepositoryInterface $customerRepo, \Magento\Captcha\Helper\Data $captchaHelper, \Magento\Framework\App\RequestInterface $request, \Magento\Captcha\Observer\CaptchaStringResolver $captchaResolver, ?\Magento\Checkout\Model\CaptchaRateLimiterFactory $limiterFactory)
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function limit() : void
+    {
+    }
+}
+/**
+ * Utilize CAPTCHA to limit save payment requests.
+ */
+class CaptchaPaymentSavingRateLimiter implements \Magento\Checkout\Api\PaymentSavingRateLimiterInterface
+{
+    public const CAPTCHA_FORM = 'payment_saving_request';
+    /**
+     * CaptchaPaymentProcessingRateLimiter constructor.
+     *
+     * @param CaptchaRateLimiterFactory $limiterFactory
+     */
+    public function __construct(\Magento\Checkout\Model\CaptchaRateLimiterFactory $limiterFactory)
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function limit() : void
+    {
+    }
+}
+/**
+ * Class checkout shipping information management
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
+class ShippingInformationManagement implements \Magento\Checkout\Api\ShippingInformationManagementInterface
+{
+    /**
+     * @var PaymentMethodManagementInterface
+     */
+    protected \Magento\Quote\Api\PaymentMethodManagementInterface $paymentMethodManagement;
+    /**
+     * @var PaymentDetailsFactory
+     */
+    protected \Magento\Checkout\Model\PaymentDetailsFactory $paymentDetailsFactory;
+    /**
+     * @var CartTotalRepositoryInterface
+     */
+    protected \Magento\Quote\Api\CartTotalRepositoryInterface $cartTotalsRepository;
+    /**
+     * @var CartRepositoryInterface
+     */
+    protected \Magento\Quote\Api\CartRepositoryInterface $quoteRepository;
+    /**
+     * @var Logger
+     */
+    protected \Psr\Log\LoggerInterface $logger;
+    /**
+     * @var QuoteAddressValidator
+     */
+    protected \Magento\Quote\Model\QuoteAddressValidator $addressValidator;
+    /**
+     * @var AddressRepositoryInterface
+     * @deprecated 100.2.0
+     * @see AddressRepositoryInterface
+     */
+    protected \Magento\Customer\Api\AddressRepositoryInterface $addressRepository;
+    /**
+     * @var ScopeConfigInterface
+     * @deprecated 100.2.0
+     * @see ScopeConfigInterface
+     */
+    protected \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig;
+    /**
+     * @var TotalsCollector
+     * @deprecated 100.2.0
+     * @see TotalsCollector
+     */
+    protected \Magento\Quote\Model\Quote\TotalsCollector $totalsCollector;
+    /**
+     * @var ShippingAssignmentFactory
+     */
+    protected \Magento\Quote\Model\ShippingAssignmentFactory $shippingAssignmentFactory;
+    /**
+     * @param PaymentMethodManagementInterface $paymentMethodManagement
+     * @param PaymentDetailsFactory $paymentDetailsFactory
+     * @param CartTotalRepositoryInterface $cartTotalsRepository
+     * @param CartRepositoryInterface $quoteRepository
+     * @param QuoteAddressValidator $addressValidator
+     * @param Logger $logger
+     * @param AddressRepositoryInterface $addressRepository
+     * @param ScopeConfigInterface $scopeConfig
+     * @param TotalsCollector $totalsCollector
+     * @param CartExtensionFactory|null $cartExtensionFactory
+     * @param ShippingAssignmentFactory|null $shippingAssignmentFactory
+     * @param ShippingFactory|null $shippingFactory
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     */
+    public function __construct(\Magento\Quote\Api\PaymentMethodManagementInterface $paymentMethodManagement, \Magento\Checkout\Model\PaymentDetailsFactory $paymentDetailsFactory, \Magento\Quote\Api\CartTotalRepositoryInterface $cartTotalsRepository, \Magento\Quote\Api\CartRepositoryInterface $quoteRepository, \Magento\Quote\Model\QuoteAddressValidator $addressValidator, \Psr\Log\LoggerInterface $logger, \Magento\Customer\Api\AddressRepositoryInterface $addressRepository, \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig, \Magento\Quote\Model\Quote\TotalsCollector $totalsCollector, \Magento\Quote\Api\Data\CartExtensionFactory $cartExtensionFactory = null, \Magento\Quote\Model\ShippingAssignmentFactory $shippingAssignmentFactory = null, \Magento\Quote\Model\ShippingFactory $shippingFactory = null)
+    {
+    }
+    /**
+     * Save address information.
+     *
+     * @param int $cartId
+     * @param ShippingInformationInterface $addressInformation
+     * @return PaymentDetailsInterface
+     * @throws InputException
+     * @throws NoSuchEntityException
+     * @throws StateException
+     */
+    public function saveAddressInformation($cartId, \Magento\Checkout\Api\Data\ShippingInformationInterface $addressInformation) : \Magento\Checkout\Api\Data\PaymentDetailsInterface
+    {
+    }
+    /**
+     * Validate quote
+     *
+     * @param Quote $quote
+     * @throws InputException
+     * @return void
+     */
+    protected function validateQuote(\Magento\Quote\Model\Quote $quote) : void
+    {
+    }
+}
+/**
+ * @deprecated 100.1.0
+ * @see we don't recommend this approach anymore
+ */
+class Sidebar
+{
+    /**
+     * @var Cart
+     */
+    protected $cart;
+    /**
+     * @var HelperData
+     */
+    protected $helperData;
+    /**
+     * @var ResolverInterface
+     */
+    protected $resolver;
+    /**
+     * @var int
+     */
+    protected $summaryQty;
+    /**
+     * @param Cart $cart
+     * @param HelperData $helperData
+     * @param ResolverInterface $resolver
+     * @codeCoverageIgnore
+     */
+    public function __construct(\Magento\Checkout\Model\Cart $cart, \Magento\Checkout\Helper\Data $helperData, \Magento\Framework\Locale\ResolverInterface $resolver)
+    {
+    }
+    /**
+     * Compile response data
+     *
+     * @param string $error
+     * @return array
+     */
+    public function getResponseData($error = '')
+    {
+    }
+    /**
+     * Check if required quote item exist
+     *
+     * @param int $itemId
+     * @throws LocalizedException
+     * @return $this
+     */
+    public function checkQuoteItem($itemId)
+    {
+    }
+    /**
+     * Remove quote item
+     *
+     * @param int $itemId
+     * @return $this
+     */
+    public function removeQuoteItem($itemId)
+    {
+    }
+    /**
+     * Update quote item
+     *
+     * @param int $itemId
+     * @param int $itemQty
+     * @throws LocalizedException
+     * @return $this
+     */
+    public function updateQuoteItem($itemId, $itemQty)
+    {
+    }
+    /**
+     * Apply normalization filter to item qty value
+     *
+     * @param int $itemQty
+     * @return int|array
+     */
+    protected function normalize($itemQty)
+    {
+    }
+    /**
+     * Retrieve summary qty
+     *
+     * @return int
+     */
+    protected function getSummaryQty()
+    {
+    }
+    /**
+     * Retrieve summary qty text
+     *
+     * @return string
+     */
+    protected function getSummaryText()
+    {
+    }
+    /**
+     * Retrieve subtotal block html
+     *
+     * @return string
+     */
+    protected function getSubtotalHtml()
+    {
+    }
+}
+/**
+ * Default Config Provider for checkout
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.TooManyFields)
+ * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
+ */
+class DefaultConfigProvider implements \Magento\Checkout\Model\ConfigProviderInterface
+{
+    /**
+     * @var QuoteIdMaskFactory
+     */
+    protected $quoteIdMaskFactory;
+    /**
+     * @var LocaleFormat
+     */
+    protected $localeFormat;
+    /**
+     * @var \Magento\Customer\Model\Address\Mapper
+     */
+    protected $addressMapper;
+    /**
+     * @var \Magento\Customer\Model\Address\Config
+     */
+    protected $addressConfig;
+    /**
+     * @var FormKey
+     */
+    protected $formKey;
+    /**
+     * @var \Magento\Catalog\Helper\Image
+     */
+    protected $imageHelper;
+    /**
+     * @var \Magento\Framework\View\ConfigInterface
+     */
+    protected $viewConfig;
+    /**
+     * @var \Magento\Directory\Model\Country\Postcode\ConfigInterface
+     */
+    protected $postCodesConfig;
+    /**
+     * @var \Magento\Directory\Helper\Data
+     */
+    protected $directoryHelper;
+    /**
+     * @var Cart\ImageProvider
+     */
+    protected $imageProvider;
+    /**
+     * @var CartTotalRepositoryInterface
+     */
+    protected $cartTotalRepository;
+    /**
+     * @var ScopeConfigInterface
+     */
+    protected $scopeConfig;
+    /**
+     * @var \Magento\Shipping\Model\Config
+     */
+    protected $shippingMethodConfig;
+    /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
+    protected $storeManager;
+    /**
+     * @var \Magento\Quote\Api\PaymentMethodManagementInterface
+     */
+    protected $paymentMethodManagement;
+    /**
+     * @var UrlInterface
+     */
+    protected $urlBuilder;
+    /**
+     * @param CheckoutHelper $checkoutHelper
+     * @param Session $checkoutSession
+     * @param CustomerRepository $customerRepository
+     * @param CustomerSession $customerSession
+     * @param CustomerUrlManager $customerUrlManager
+     * @param HttpContext $httpContext
+     * @param \Magento\Quote\Api\CartRepositoryInterface $quoteRepository
+     * @param QuoteItemRepository $quoteItemRepository
+     * @param ShippingMethodManager $shippingMethodManager
+     * @param ConfigurationPool $configurationPool
+     * @param QuoteIdMaskFactory $quoteIdMaskFactory
+     * @param LocaleFormat $localeFormat
+     * @param \Magento\Customer\Model\Address\Mapper $addressMapper
+     * @param \Magento\Customer\Model\Address\Config $addressConfig
+     * @param FormKey $formKey
+     * @param \Magento\Catalog\Helper\Image $imageHelper
+     * @param \Magento\Framework\View\ConfigInterface $viewConfig
+     * @param \Magento\Directory\Model\Country\Postcode\ConfigInterface $postCodesConfig
+     * @param Cart\ImageProvider $imageProvider
+     * @param \Magento\Directory\Helper\Data $directoryHelper
+     * @param CartTotalRepositoryInterface $cartTotalRepository
+     * @param ScopeConfigInterface $scopeConfig
+     * @param \Magento\Shipping\Model\Config $shippingMethodConfig
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Magento\Quote\Api\PaymentMethodManagementInterface $paymentMethodManagement
+     * @param UrlInterface $urlBuilder
+     * @param CaptchaConfigPostProcessorInterface $configPostProcessor
+     * @param AddressMetadataInterface $addressMetadata
+     * @param AttributeOptionManagementInterface $attributeOptionManager
+     * @param CustomerAddressDataProvider|null $customerAddressData
+     * @param Escaper|null $escaper
+     * @codeCoverageIgnore
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     */
+    public function __construct(\Magento\Checkout\Helper\Data $checkoutHelper, \Magento\Checkout\Model\Session $checkoutSession, \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository, \Magento\Customer\Model\Session $customerSession, \Magento\Customer\Model\Url $customerUrlManager, \Magento\Framework\App\Http\Context $httpContext, \Magento\Quote\Api\CartRepositoryInterface $quoteRepository, \Magento\Quote\Api\CartItemRepositoryInterface $quoteItemRepository, \Magento\Quote\Api\ShippingMethodManagementInterface $shippingMethodManager, \Magento\Catalog\Helper\Product\ConfigurationPool $configurationPool, \Magento\Quote\Model\QuoteIdMaskFactory $quoteIdMaskFactory, \Magento\Framework\Locale\FormatInterface $localeFormat, \Magento\Customer\Model\Address\Mapper $addressMapper, \Magento\Customer\Model\Address\Config $addressConfig, \Magento\Framework\Data\Form\FormKey $formKey, \Magento\Catalog\Helper\Image $imageHelper, \Magento\Framework\View\ConfigInterface $viewConfig, \Magento\Directory\Model\Country\Postcode\ConfigInterface $postCodesConfig, \Magento\Checkout\Model\Cart\ImageProvider $imageProvider, \Magento\Directory\Helper\Data $directoryHelper, \Magento\Quote\Api\CartTotalRepositoryInterface $cartTotalRepository, \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig, \Magento\Shipping\Model\Config $shippingMethodConfig, \Magento\Store\Model\StoreManagerInterface $storeManager, \Magento\Quote\Api\PaymentMethodManagementInterface $paymentMethodManagement, \Magento\Framework\UrlInterface $urlBuilder, \Magento\Captcha\Api\CaptchaConfigPostProcessorInterface $configPostProcessor, \Magento\Customer\Api\AddressMetadataInterface $addressMetadata = null, \Magento\Eav\Api\AttributeOptionManagementInterface $attributeOptionManager = null, \Magento\Customer\Model\Address\CustomerAddressDataProvider $customerAddressData = null, \Magento\Framework\Escaper $escaper = null)
+    {
+    }
+    /**
+     * Return configuration array
+     *
+     * @return array|mixed
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function getConfig()
+    {
+    }
+    /**
+     * Retrieve formatted item options view
+     *
+     * @param \Magento\Quote\Api\Data\CartItemInterface $item
+     * @return array
+     */
+    protected function getFormattedOptionValue($item)
+    {
+    }
+    /**
+     * Retrieve customer registration URL
+     *
+     * @return string
+     * @codeCoverageIgnore
+     */
+    public function getRegisterUrl()
+    {
+    }
+    /**
+     * Retrieve checkout URL
+     *
+     * @return string
+     * @codeCoverageIgnore
+     */
+    public function getCheckoutUrl()
+    {
+    }
+    /**
+     * Retrieve checkout URL
+     *
+     * @return string
+     * @codeCoverageIgnore
+     */
+    public function pageNotFoundUrl()
+    {
+    }
+    /**
+     * Retrieve default success page URL
+     *
+     * @return string
+     * @codeCoverageIgnore
+     */
+    public function getDefaultSuccessPageUrl()
+    {
+    }
+    /**
+     * Return base static url.
+     *
+     * @return string
+     * @codeCoverageIgnore
+     */
+    protected function getStaticBaseUrl()
+    {
+    }
+}
+/**
+ * Represents the session data for the checkout process
+ *
+ * @api
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
+ * @SuppressWarnings(PHPMD.TooManyFields)
+ * @since 100.0.2
+ */
+class Session extends \Magento\Framework\Session\SessionManager
+{
+    public const CHECKOUT_STATE_BEGIN = 'begin';
+    /**
+     * Quote instance
+     *
+     * @var Quote
+     */
+    protected $_quote;
+    /**
+     * Customer Data Object
+     *
+     * @var CustomerInterface|null
+     */
+    protected $_customer;
+    /**
+     * Whether load only active quote
+     *
+     * @var bool
+     */
+    protected $_loadInactive = false;
+    /**
+     * Loaded order instance
+     *
+     * @var \Magento\Sales\Model\Order
+     */
+    protected $_order;
+    /**
+     * @var \Magento\Sales\Model\OrderFactory
+     */
+    protected $_orderFactory;
+    /**
+     * @var \Magento\Customer\Model\Session
+     */
+    protected $_customerSession;
+    /**
+     * @var \Magento\Quote\Api\CartRepositoryInterface
+     */
+    protected $quoteRepository;
+    /**
+     * @var \Magento\Framework\HTTP\PhpEnvironment\RemoteAddress
+     */
+    protected $_remoteAddress;
+    /**
+     * @var \Magento\Framework\Event\ManagerInterface
+     */
+    protected $_eventManager;
+    /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
+    protected $_storeManager;
+    /**
+     * @var \Magento\Customer\Api\CustomerRepositoryInterface
+     */
+    protected $customerRepository;
+    /**
+     * @var QuoteIdMaskFactory
+     */
+    protected $quoteIdMaskFactory;
+    /**
+     * @var bool
+     */
+    protected $isQuoteMasked;
+    /**
+     * @var \Magento\Quote\Model\QuoteFactory
+     */
+    protected $quoteFactory;
+    /**
+     * @param \Magento\Framework\App\Request\Http $request
+     * @param \Magento\Framework\Session\SidResolverInterface $sidResolver
+     * @param \Magento\Framework\Session\Config\ConfigInterface $sessionConfig
+     * @param \Magento\Framework\Session\SaveHandlerInterface $saveHandler
+     * @param \Magento\Framework\Session\ValidatorInterface $validator
+     * @param \Magento\Framework\Session\StorageInterface $storage
+     * @param \Magento\Framework\Stdlib\CookieManagerInterface $cookieManager
+     * @param \Magento\Framework\Stdlib\Cookie\CookieMetadataFactory $cookieMetadataFactory
+     * @param \Magento\Framework\App\State $appState
+     * @param \Magento\Sales\Model\OrderFactory $orderFactory
+     * @param \Magento\Customer\Model\Session $customerSession
+     * @param \Magento\Quote\Api\CartRepositoryInterface $quoteRepository
+     * @param \Magento\Framework\HTTP\PhpEnvironment\RemoteAddress $remoteAddress
+     * @param \Magento\Framework\Event\ManagerInterface $eventManager
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository
+     * @param QuoteIdMaskFactory $quoteIdMaskFactory
+     * @param \Magento\Quote\Model\QuoteFactory $quoteFactory
+     * @param LoggerInterface|null $logger
+     * @throws \Magento\Framework\Exception\SessionException
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     */
+    public function __construct(\Magento\Framework\App\Request\Http $request, \Magento\Framework\Session\SidResolverInterface $sidResolver, \Magento\Framework\Session\Config\ConfigInterface $sessionConfig, \Magento\Framework\Session\SaveHandlerInterface $saveHandler, \Magento\Framework\Session\ValidatorInterface $validator, \Magento\Framework\Session\StorageInterface $storage, \Magento\Framework\Stdlib\CookieManagerInterface $cookieManager, \Magento\Framework\Stdlib\Cookie\CookieMetadataFactory $cookieMetadataFactory, \Magento\Framework\App\State $appState, \Magento\Sales\Model\OrderFactory $orderFactory, \Magento\Customer\Model\Session $customerSession, \Magento\Quote\Api\CartRepositoryInterface $quoteRepository, \Magento\Framework\HTTP\PhpEnvironment\RemoteAddress $remoteAddress, \Magento\Framework\Event\ManagerInterface $eventManager, \Magento\Store\Model\StoreManagerInterface $storeManager, \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository, \Magento\Quote\Model\QuoteIdMaskFactory $quoteIdMaskFactory, \Magento\Quote\Model\QuoteFactory $quoteFactory, \Psr\Log\LoggerInterface $logger = null)
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function _resetState() : void
+    {
+    }
+    /**
+     * Set customer data.
+     *
+     * @param CustomerInterface|null $customer
+     * @return \Magento\Checkout\Model\Session
+     * @codeCoverageIgnore
+     */
+    public function setCustomerData($customer)
+    {
+    }
+    /**
+     * Check whether current session has quote
+     *
+     * @return bool
+     * @codeCoverageIgnore
+     */
+    public function hasQuote()
+    {
+    }
+    /**
+     * Set quote to be loaded even if inactive
+     *
+     * @param bool $load
+     * @return $this
+     * @codeCoverageIgnore
+     */
+    public function setLoadInactive($load = true)
+    {
+    }
+    /**
+     * Get checkout quote instance by current session
+     *
+     * @return Quote
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws NoSuchEntityException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     */
+    public function getQuote()
+    {
+    }
+    /**
+     * Return the quote's key
+     *
+     * @return string
+     * @codeCoverageIgnore
+     */
+    protected function _getQuoteIdKey()
+    {
+    }
+    /**
+     * Set the current session's quote id
+     *
+     * @param int $quoteId
+     * @return void
+     * @codeCoverageIgnore
+     */
+    public function setQuoteId($quoteId)
+    {
+    }
+    /**
+     * Return the current quote's ID
+     *
+     * @return int
+     * @codeCoverageIgnore
+     */
+    public function getQuoteId()
+    {
+    }
+    /**
+     * Load data for customer quote and merge with current quote
+     *
+     * @return $this
+     */
+    public function loadCustomerQuote()
+    {
+    }
+    /**
+     * Associate data to a specified step of the checkout process
+     *
+     * @param string $step
+     * @param array|string $data
+     * @param bool|string|null $value
+     * @return $this
+     */
+    public function setStepData($step, $data, $value = null)
+    {
+    }
+    /**
+     * Return the data associated to a specified step
+     *
+     * @param string|null $step
+     * @param string|null $data
+     * @return array|string|bool
+     */
+    public function getStepData($step = null, $data = null)
+    {
+    }
+    /**
+     * Destroy/end a session and unset all data associated with it
+     *
+     * @return $this
+     */
+    public function clearQuote()
+    {
+    }
+    /**
+     * Unset all session data and quote
+     *
+     * @return $this
+     */
+    public function clearStorage()
+    {
+    }
+    /**
+     * Clear misc checkout parameters
+     *
+     * @return void
+     */
+    public function clearHelperData()
+    {
+    }
+    /**
+     * Revert the state of the checkout to the beginning
+     *
+     * @return $this
+     * @codeCoverageIgnore
+     */
+    public function resetCheckout()
+    {
+    }
+    /**
+     * Replace the quote in the session with a specified object
+     *
+     * @param Quote $quote
+     * @return $this
+     */
+    public function replaceQuote($quote)
+    {
+    }
+    /**
+     * Get order instance based on last order ID
+     *
+     * @return \Magento\Sales\Model\Order
+     */
+    public function getLastRealOrder()
+    {
+    }
+    /**
+     * Restore last active quote
+     *
+     * @return bool True if quote restored successfully, false otherwise
+     */
+    public function restoreQuote()
+    {
+    }
+    /**
+     * Flag whether or not the quote uses a masked quote id
+     *
+     * @param bool $isQuoteMasked
+     * @return void
+     * @codeCoverageIgnore
+     */
+    protected function setIsQuoteMasked($isQuoteMasked)
+    {
+    }
+    /**
+     * Return if the quote has a masked quote id
+     *
+     * @return bool|null
+     * @codeCoverageIgnore
+     */
+    protected function isQuoteMasked()
+    {
+    }
+}
+namespace Magento\Checkout\Model\Backpressure;
+
+/**
+ * Identifies which checkout related functionality needs backpressure management
+ */
+class WebapiRequestTypeExtractor implements \Magento\Framework\Webapi\Backpressure\BackpressureRequestTypeExtractorInterface
+{
+    /**
+     * @param OrderLimitConfigManager $config
+     */
+    public function __construct(\Magento\Quote\Model\Backpressure\OrderLimitConfigManager $config)
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function extract(string $service, string $method, string $endpoint) : ?string
+    {
+    }
+}
+namespace Magento\Checkout\Model\ResourceModel;
+
+/**
+ * Resource model for Checkout Cart
+ *
+ * @author      Magento Core Team <core@magentocommerce.com>
+ */
+class Cart extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
+{
+    /**
+     * Model initialization
+     *
+     * @return void
+     * @codeCoverageIgnore
+     */
+    protected function _construct()
+    {
+    }
+    /**
+     * Fetch items summary
+     *
+     * @param int $quoteId
+     * @return array
+     */
+    public function fetchItemsSummary($quoteId)
+    {
+    }
+    /**
+     * Fetch items
+     *
+     * @param int $quoteId
+     * @return array
+     */
+    public function fetchItems($quoteId)
+    {
+    }
+    /**
+     * Make collection not to load products that are in specified quote
+     *
+     * @param \Magento\Catalog\Model\ResourceModel\Product\Collection $collection
+     * @param int $quoteId
+     * @return $this
+     */
+    public function addExcludeProductFilter($collection, $quoteId)
+    {
+    }
+}
+namespace Magento\Checkout\Model;
+
+/**
+ * Class for management of totals information.
+ */
+class TotalsInformationManagement implements \Magento\Checkout\Api\TotalsInformationManagementInterface
+{
+    /**
+     * @var CartTotalRepositoryInterface
+     */
+    protected $cartTotalRepository;
+    /**
+     * Quote repository.
+     *
+     * @var CartRepositoryInterface
+     */
+    protected $cartRepository;
+    /**
+     * @param CartRepositoryInterface $cartRepository
+     * @param CartTotalRepositoryInterface $cartTotalRepository
+     * @codeCoverageIgnore
+     */
+    public function __construct(\Magento\Quote\Api\CartRepositoryInterface $cartRepository, \Magento\Quote\Api\CartTotalRepositoryInterface $cartTotalRepository)
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function calculate($cartId, \Magento\Checkout\Api\Data\TotalsInformationInterface $addressInformation)
+    {
+    }
+    /**
+     * Check if quote have items.
+     *
+     * @param \Magento\Quote\Model\Quote $quote
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @return void
+     */
+    protected function validateQuote(\Magento\Quote\Model\Quote $quote)
+    {
+    }
+}
+namespace Magento\Checkout\Model\Layout;
+
+/**
+ * Depersonalize customer data.
+ *
+ * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
+ */
+class DepersonalizePlugin
+{
+    /**
+     * @param DepersonalizeChecker $depersonalizeChecker
+     * @param CheckoutSession $checkoutSession
+     * @codeCoverageIgnore
+     */
+    public function __construct(\Magento\PageCache\Model\DepersonalizeChecker $depersonalizeChecker, \Magento\Checkout\Model\Session $checkoutSession)
+    {
+    }
+    /**
+     * Resolve quote data if the depersonalization is needed.
+     *
+     * @param LayoutInterface $subject
+     * @return void
+     */
+    public function beforeGenerateXml(\Magento\Framework\View\LayoutInterface $subject)
+    {
+    }
+    /**
+     * Change sensitive customer data if the depersonalization is needed.
+     *
+     * @param LayoutInterface $subject
+     * @return void
+     */
+    public function afterGenerateElements(\Magento\Framework\View\LayoutInterface $subject)
+    {
+    }
+}
+/**
+ * Abstract totals processor.
+ *
+ * Can be used to process totals information that will be rendered during checkout.
+ * Abstract class provides sorting routing to sort total information based on configuration settings.
+ *
+ * phpcs:disable Magento2.Classes.AbstractApi
+ * @api
+ * @since 100.0.2
+ */
+abstract class AbstractTotalsProcessor
+{
+    /**
+     * Core store config
+     *
+     * @var ScopeConfigInterface
+     */
+    protected $scopeConfig;
+    /**
+     * @param ScopeConfigInterface $scopeConfig
+     * @codeCoverageIgnore
+     */
+    public function __construct(\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig)
+    {
+    }
+    /**
+     * Sort total information based on configuration settings.
+     *
+     * @param array $totals
+     * @return array
+     */
+    public function sortTotals($totals)
+    {
+    }
+}
+namespace Magento\Checkout\Model\Session;
+
+/**
+ * Test if checkout session valid for success action
+ *
+ * @api
+ * @since 100.0.2
+ */
+class SuccessValidator
+{
+    /**
+     * @var \Magento\Checkout\Model\Session
+     */
+    protected $checkoutSession;
+    /**
+     * @param \Magento\Checkout\Model\Session $checkoutSession
+     * @codeCoverageIgnore
+     */
+    public function __construct(\Magento\Checkout\Model\Session $checkoutSession)
+    {
+    }
+    /**
+     * @return bool
+     */
+    public function isValid()
+    {
+    }
+}

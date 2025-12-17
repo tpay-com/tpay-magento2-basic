@@ -1,0 +1,2261 @@
+<?php
+
+namespace Magento\Framework\Data\Form;
+
+/**
+ * Abstract class for form, column and fieldset
+ *
+ * @author      Magento Core Team <core@magentocommerce.com>
+ */
+class AbstractForm extends \Magento\Framework\DataObject
+{
+    /**
+     * Form level elements collection
+     *
+     * @var Collection
+     */
+    protected $_elements;
+    /**
+     * Element type classes
+     *
+     * @var array
+     */
+    protected $_types = [];
+    /**
+     * @var Factory
+     */
+    protected $_factoryElement;
+    /**
+     * @var CollectionFactory
+     */
+    protected $_factoryCollection;
+    /**
+     * @var array
+     */
+    protected $customAttributes = [];
+    /**
+     * @param Factory $factoryElement
+     * @param CollectionFactory $factoryCollection
+     * @param array $data
+     */
+    public function __construct(\Magento\Framework\Data\Form\Element\Factory $factoryElement, \Magento\Framework\Data\Form\Element\CollectionFactory $factoryCollection, $data = [])
+    {
+    }
+    /**
+     * Internal constructor, that is called from real constructor
+     *
+     * Please override this one instead of overriding real __construct constructor
+     *
+     * @return void
+     * @codingStandardsIgnoreStart
+     */
+    protected function _construct()
+    {
+    }
+    /**
+     * Add element type
+     *
+     * @param string $type
+     * @param string $className
+     * @return $this
+     */
+    public function addType($type, $className)
+    {
+    }
+    /**
+     * Get elements collection
+     *
+     * @return Collection
+     */
+    public function getElements()
+    {
+    }
+    /**
+     * Disable elements
+     *
+     * @param boolean $readonly
+     * @param boolean $useDisabled
+     * @return $this
+     */
+    public function setReadonly($readonly, $useDisabled = false)
+    {
+    }
+    /**
+     * Add form element
+     *
+     * @param AbstractElement $element
+     * @param bool|string|null $after
+     * @return $this
+     */
+    public function addElement(\Magento\Framework\Data\Form\Element\AbstractElement $element, $after = null)
+    {
+    }
+    /**
+     * Add child element
+     *
+     * If $after parameter is false - then element adds to end of collection
+     * If $after parameter is null - then element adds to befin of collection
+     * If $after parameter is string - then element adds after of the element with some id
+     *
+     * @param string $elementId
+     * @param string $type
+     * @param array $config
+     * @param bool|string|null $after
+     * @return AbstractElement
+     */
+    public function addField($elementId, $type, $config, $after = false)
+    {
+    }
+    /**
+     * Enter description here...
+     *
+     * @param string $elementId
+     * @return $this
+     */
+    public function removeField($elementId)
+    {
+    }
+    /**
+     * Add fieldset
+     *
+     * @param string $elementId
+     * @param array $config
+     * @param bool|string|null $after
+     * @param bool $isAdvanced
+     * @return Fieldset
+     */
+    public function addFieldset($elementId, $config, $after = false, $isAdvanced = false)
+    {
+    }
+    /**
+     * Add column element
+     *
+     * @param string $elementId
+     * @param array $config
+     * @return Column
+     */
+    public function addColumn($elementId, $config)
+    {
+    }
+    /**
+     * Convert elements to array
+     *
+     * @param array $arrAttributes
+     * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function convertToArray(array $arrAttributes = [])
+    {
+    }
+    /**
+     * Add custom attribute
+     *
+     * @param string $key
+     * @param mixed $value
+     * @return $this
+     */
+    public function addCustomAttribute($key, $value)
+    {
+    }
+    /**
+     * Convert data into string with defined keys and values
+     *
+     * @param array $keys
+     * @param string $valueSeparator
+     * @param string $fieldSeparator
+     * @param string $quote
+     * @return string
+     */
+    public function serialize($keys = [], $valueSeparator = '=', $fieldSeparator = ' ', $quote = '"')
+    {
+    }
+}
+namespace Magento\Framework\Data\Form\Filter;
+
+/**
+ * @api
+ * @since 100.0.2
+ */
+interface FilterInterface
+{
+    /**
+     * Returns the result of filtering $value
+     *
+     * @param string $value
+     * @return string
+     */
+    public function inputFilter($value);
+    /**
+     * Returns the result of filtering $value
+     *
+     * @param string $value
+     * @return string
+     */
+    public function outputFilter($value);
+}
+/**
+ * EscapeHtml Form Filter Data
+ */
+class Escapehtml implements \Magento\Framework\Data\Form\Filter\FilterInterface
+{
+    /**
+     * @param Escaper|null $escaper
+     */
+    public function __construct(\Magento\Framework\Escaper $escaper = null)
+    {
+    }
+    /**
+     * Returns the result of filtering $value
+     *
+     * @param string $value
+     * @return string
+     */
+    public function inputFilter($value)
+    {
+    }
+    /**
+     * Returns the result of filtering $value
+     *
+     * @param string $value
+     * @return string
+     */
+    public function outputFilter($value)
+    {
+    }
+}
+class Striptags implements \Magento\Framework\Data\Form\Filter\FilterInterface
+{
+    /**
+     * Returns the result of filtering $value
+     *
+     * @param string $value
+     * @return string
+     */
+    public function inputFilter($value)
+    {
+    }
+    /**
+     * Returns the result of filtering $value
+     *
+     * @param string $value
+     * @return string
+     */
+    public function outputFilter($value)
+    {
+    }
+}
+/**
+ * Form Input/Output Strip HTML tags Filter
+ */
+class Date implements \Magento\Framework\Data\Form\Filter\FilterInterface
+{
+    /**
+     * @var string
+     */
+    protected $_dateFormat;
+    /**
+     * @var ResolverInterface
+     */
+    protected $localeResolver;
+    /**
+     * Initialize filter
+     *
+     * @param string|null $format \DateTime input/output format
+     * @param ResolverInterface|null $localeResolver
+     */
+    public function __construct(string $format = null, \Magento\Framework\Locale\ResolverInterface $localeResolver = null)
+    {
+    }
+    /**
+     * Returns the result of filtering $value
+     *
+     * @param string $value
+     * @return string
+     * @throws Exception
+     */
+    public function inputFilter($value)
+    {
+    }
+    /**
+     * Returns the result of filtering $value
+     *
+     * @param string $value
+     * @return string
+     * @throws Exception
+     */
+    public function outputFilter($value)
+    {
+    }
+}
+class Trim implements \Magento\Framework\Data\Form\Filter\FilterInterface
+{
+    /**
+     * Returns the result of filtering $value
+     *
+     * @param string $value
+     * @return string
+     */
+    public function inputFilter($value)
+    {
+    }
+    /**
+     * Returns the result of filtering $value
+     *
+     * @param string $value
+     * @return string
+     */
+    public function outputFilter($value)
+    {
+    }
+}
+namespace Magento\Framework\Data\Form;
+
+/**
+ * Class FormKey
+ *
+ * @api
+ *
+ * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
+ * @since 100.0.2
+ */
+class FormKey
+{
+    /**
+     * Form key
+     */
+    const FORM_KEY = '_form_key';
+    /**
+     * @var \Magento\Framework\Math\Random
+     */
+    protected $mathRandom;
+    /**
+     * @var \Magento\Framework\Session\SessionManagerInterface
+     */
+    protected $session;
+    /**
+     * @var \Magento\Framework\Escaper
+     * @since 100.0.3
+     */
+    protected $escaper;
+    /**
+     * @param \Magento\Framework\Math\Random $mathRandom
+     * @param \Magento\Framework\Session\SessionManagerInterface $session
+     * @param \Magento\Framework\Escaper $escaper
+     */
+    public function __construct(\Magento\Framework\Math\Random $mathRandom, \Magento\Framework\Session\SessionManagerInterface $session, \Magento\Framework\Escaper $escaper)
+    {
+    }
+    /**
+     * Retrieve Session Form Key
+     *
+     * @return string A 16 bit unique key for forms
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function getFormKey()
+    {
+    }
+    /**
+     * Determine if the form key is present in the session
+     *
+     * @return bool
+     */
+    public function isPresent()
+    {
+    }
+    /**
+     * Set the value of the form key
+     *
+     * @param string $value
+     * @return void
+     */
+    public function set($value)
+    {
+    }
+}
+class ElementFactory
+{
+    /**
+     * @var \Magento\Framework\ObjectManagerInterface
+     */
+    protected $_objectManager;
+    /**
+     * @param \Magento\Framework\ObjectManagerInterface $objectManager
+     */
+    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager)
+    {
+    }
+    /**
+     * Create Magento data form with provided params
+     *
+     * @param string $elementClass
+     * @param array $data
+     * @return \Magento\Framework\Data\Form\Element\AbstractElement
+     */
+    public function create($elementClass, array $data = [])
+    {
+    }
+}
+namespace Magento\Framework\Data\Form\FormKey;
+
+/**
+ * @api
+ * @since 100.0.2
+ */
+class Validator
+{
+    /**
+     * @var \Magento\Framework\Data\Form\FormKey
+     */
+    protected $_formKey;
+    /**
+     * @param \Magento\Framework\Data\Form\FormKey $formKey
+     */
+    public function __construct(\Magento\Framework\Data\Form\FormKey $formKey)
+    {
+    }
+    /**
+     * Validate form key
+     *
+     * @param \Magento\Framework\App\RequestInterface $request
+     * @return bool
+     */
+    public function validate(\Magento\Framework\App\RequestInterface $request)
+    {
+    }
+}
+namespace Magento\Framework\Data\Form;
+
+class FilterFactory
+{
+    /**
+     * @var ObjectManagerInterface
+     */
+    protected $objectManager;
+    /**
+     * @param ObjectManagerInterface $objectManager
+     */
+    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager)
+    {
+    }
+    /**
+     * Create filter instance
+     *
+     * @param string $filterCode
+     * @param array $data
+     * @return FilterInterface
+     */
+    public function create($filterCode, array $data = [])
+    {
+    }
+}
+namespace Magento\Framework\Data\Form\Element;
+
+/**
+ * Data form abstract class
+ *
+ * phpcs:disable Magento2.Classes.AbstractApi
+ * @api
+ * @SuppressWarnings(PHPMD.NumberOfChildren)
+ * @since 100.0.2
+ */
+abstract class AbstractElement extends \Magento\Framework\Data\Form\AbstractForm
+{
+    /**
+     * @var string|int
+     */
+    protected $_id;
+    /**
+     * @var string
+     */
+    protected $_type;
+    /**
+     * @var Form
+     */
+    protected $_form;
+    /**
+     * @var array
+     */
+    protected $_elements;
+    /**
+     * @var RendererInterface
+     */
+    protected $_renderer;
+    /**
+     * Shows whether current element belongs to Basic or Advanced form layout
+     *
+     * @var bool
+     */
+    protected $_advanced = false;
+    /**
+     * @var Escaper
+     */
+    protected $_escaper;
+    /**
+     * @param Factory $factoryElement
+     * @param CollectionFactory $factoryCollection
+     * @param Escaper $escaper
+     * @param array $data
+     * @param SecureHtmlRenderer|null $secureRenderer
+     * @param Random|null $random
+     */
+    public function __construct(\Magento\Framework\Data\Form\Element\Factory $factoryElement, \Magento\Framework\Data\Form\Element\CollectionFactory $factoryCollection, \Magento\Framework\Escaper $escaper, $data = [], ?\Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer = null, ?\Magento\Framework\Math\Random $random = null)
+    {
+    }
+    /**
+     * Add form element
+     *
+     * @param AbstractElement $element
+     * @param bool $after
+     * @return Form
+     */
+    public function addElement(\Magento\Framework\Data\Form\Element\AbstractElement $element, $after = false)
+    {
+    }
+    /**
+     * Shows whether current element belongs to Basic or Advanced form layout
+     *
+     * @return bool
+     */
+    public function isAdvanced()
+    {
+    }
+    /**
+     * Set _advanced layout property
+     *
+     * @param bool $advanced
+     * @return $this
+     */
+    public function setAdvanced($advanced)
+    {
+    }
+    /**
+     * Get id.
+     *
+     * @return string|int
+     */
+    public function getId()
+    {
+    }
+    /**
+     * Get type.
+     *
+     * @return string
+     */
+    public function getType()
+    {
+    }
+    /**
+     * Get form
+     *
+     * @return Form
+     */
+    public function getForm()
+    {
+    }
+    /**
+     * Set the Id.
+     *
+     * @param string|int $id
+     * @return $this
+     */
+    public function setId($id)
+    {
+    }
+    /**
+     * Get the Html Id.
+     *
+     * @return string
+     */
+    public function getHtmlId()
+    {
+    }
+    /**
+     * Get the name.
+     *
+     * @return mixed
+     */
+    public function getName()
+    {
+    }
+    /**
+     * Set the type.
+     *
+     * @param string $type
+     * @return $this
+     */
+    public function setType($type)
+    {
+    }
+    /**
+     * Set form.
+     *
+     * @param AbstractForm $form
+     * @return $this
+     */
+    public function setForm($form)
+    {
+    }
+    /**
+     * Remove field
+     *
+     * @param string $elementId
+     * @return AbstractForm
+     */
+    public function removeField($elementId)
+    {
+    }
+    /**
+     * Return the attributes for Html.
+     *
+     * @return string[]
+     */
+    public function getHtmlAttributes()
+    {
+    }
+    /**
+     * Add a class.
+     *
+     * @param string $class
+     * @return $this
+     */
+    public function addClass($class)
+    {
+    }
+    /**
+     * Remove CSS class
+     *
+     * @param string $class
+     * @return $this
+     */
+    public function removeClass($class)
+    {
+    }
+    /**
+     * Escape a string's contents.
+     *
+     * @param string $string
+     * @return string
+     */
+    protected function _escape($string)
+    {
+    }
+    /**
+     * Return the escaped value of the element specified by the given index.
+     *
+     * @param null|int|string $index
+     * @return string
+     */
+    public function getEscapedValue($index = null)
+    {
+    }
+    /**
+     * Set the renderer.
+     *
+     * @param RendererInterface $renderer
+     * @return $this
+     */
+    public function setRenderer(\Magento\Framework\Data\Form\Element\Renderer\RendererInterface $renderer)
+    {
+    }
+    /**
+     * Get the renderer.
+     *
+     * @return RendererInterface
+     */
+    public function getRenderer()
+    {
+    }
+    /**
+     * Get Ui Id.
+     *
+     * @param null|string $suffix
+     * @return string
+     */
+    protected function _getUiId($suffix = null)
+    {
+    }
+    /**
+     * Get the Html for the element.
+     *
+     * @return string
+     */
+    public function getElementHtml()
+    {
+    }
+    /**
+     * Get the before element html.
+     *
+     * @return mixed
+     */
+    public function getBeforeElementHtml()
+    {
+    }
+    /**
+     * Get the after element html.
+     *
+     * @return mixed
+     */
+    public function getAfterElementHtml()
+    {
+    }
+    /**
+     * Get the after element Javascript.
+     *
+     * @return mixed
+     */
+    public function getAfterElementJs()
+    {
+    }
+    /**
+     * Render HTML for element's label
+     *
+     * @param string $idSuffix
+     * @param string $scopeLabel
+     * @return string
+     */
+    public function getLabelHtml($idSuffix = '', $scopeLabel = '')
+    {
+    }
+    /**
+     * Get the default html.
+     *
+     * @return mixed
+     */
+    public function getDefaultHtml()
+    {
+    }
+    /**
+     * Get the html.
+     *
+     * @return mixed
+     */
+    public function getHtml()
+    {
+    }
+    /**
+     * Get the html.
+     *
+     * @return mixed
+     */
+    public function toHtml()
+    {
+    }
+    /**
+     * Serialize the element.
+     *
+     * @param string[] $attributes
+     * @param string $valueSeparator
+     * @param string $fieldSeparator
+     * @param string $quote
+     * @return string
+     */
+    public function serialize($attributes = [], $valueSeparator = '=', $fieldSeparator = ' ', $quote = '"')
+    {
+    }
+    /**
+     * Indicates the elements readonly status.
+     *
+     * @return mixed
+     */
+    public function getReadonly()
+    {
+    }
+    /**
+     * Get the container Id.
+     *
+     * @return mixed
+     */
+    public function getHtmlContainerId()
+    {
+    }
+    /**
+     * Add specified values to element values
+     *
+     * @param string|int|array $values
+     * @param bool $overwrite
+     * @return $this
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    public function addElementValues($values, $overwrite = false)
+    {
+    }
+    /**
+     * Lock element
+     *
+     * @return void
+     */
+    public function lock()
+    {
+    }
+    /**
+     * Is element locked
+     *
+     * @return bool
+     */
+    public function isLocked()
+    {
+    }
+}
+/**
+ * Form checkbox element
+ */
+class Checkbox extends \Magento\Framework\Data\Form\Element\AbstractElement
+{
+    /**
+     * @param Factory $factoryElement
+     * @param CollectionFactory $factoryCollection
+     * @param Escaper $escaper
+     * @param array $data
+     */
+    public function __construct(\Magento\Framework\Data\Form\Element\Factory $factoryElement, \Magento\Framework\Data\Form\Element\CollectionFactory $factoryCollection, \Magento\Framework\Escaper $escaper, $data = [])
+    {
+    }
+    /**
+     * Get HTML attributes
+     *
+     * @return string[]
+     */
+    public function getHtmlAttributes()
+    {
+    }
+    /**
+     * Get Element HTML
+     *
+     * @return string
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     */
+    public function getElementHtml()
+    {
+    }
+    /**
+     * Set check status of checkbox
+     *
+     * @param bool $value
+     *
+     * @return Checkbox
+     */
+    public function setIsChecked($value = false)
+    {
+    }
+    /**
+     * Return check status of checkbox
+     *
+     * @return bool
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
+     */
+    public function getIsChecked()
+    {
+    }
+}
+class File extends \Magento\Framework\Data\Form\Element\AbstractElement
+{
+    /**
+     * @param \Magento\Framework\Data\Form\Element\Factory $factoryElement
+     * @param \Magento\Framework\Data\Form\Element\CollectionFactory $factoryCollection
+     * @param \Magento\Framework\Escaper $escaper
+     * @param array $data
+     */
+    public function __construct(\Magento\Framework\Data\Form\Element\Factory $factoryElement, \Magento\Framework\Data\Form\Element\CollectionFactory $factoryCollection, \Magento\Framework\Escaper $escaper, $data = [])
+    {
+    }
+}
+/**
+ * Form element Factory
+ *
+ * @api
+ */
+class Factory
+{
+    /**
+     * @var ObjectManagerInterface
+     */
+    protected $_objectManager;
+    /**
+     * Standard library element types
+     *
+     * @var string[]
+     */
+    protected $_standardTypes = ['button', 'checkbox', 'checkboxes', 'column', 'date', 'editablemultiselect', 'editor', 'fieldset', 'file', 'gallery', 'hidden', 'image', 'imagefile', 'label', 'link', 'multiline', 'multiselect', 'note', 'obscure', 'password', 'radio', 'radios', 'reset', 'select', 'submit', 'text', 'textarea', 'time'];
+    /**
+     * @param ObjectManagerInterface $objectManager
+     */
+    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager)
+    {
+    }
+    /**
+     * Factory method
+     *
+     * @param string $elementType Standard element type or Custom element class
+     * @param array $config
+     * @return AbstractElement
+     * @throws \InvalidArgumentException
+     */
+    public function create($elementType, array $config = [])
+    {
+    }
+}
+/**
+ * Form select element
+ *
+ * @api
+ * @author      Magento Core Team <core@magentocommerce.com>
+ * @since 100.0.2
+ */
+class Select extends \Magento\Framework\Data\Form\Element\AbstractElement
+{
+    /**
+     * @param Factory $factoryElement
+     * @param CollectionFactory $factoryCollection
+     * @param Escaper $escaper
+     * @param array $data
+     * @param SecureHtmlRenderer|null $secureRenderer
+     * @param Random|null $random
+     */
+    public function __construct(\Magento\Framework\Data\Form\Element\Factory $factoryElement, \Magento\Framework\Data\Form\Element\CollectionFactory $factoryCollection, \Magento\Framework\Escaper $escaper, $data = [], ?\Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer = null, ?\Magento\Framework\Math\Random $random = null)
+    {
+    }
+    /**
+     * Get the element Html.
+     *
+     * @return string
+     */
+    public function getElementHtml()
+    {
+    }
+    /**
+     * Format an option as Html
+     *
+     * @param array $option
+     * @param array $selected
+     * @return string
+     */
+    protected function _optionToHtml($option, $selected)
+    {
+    }
+    /**
+     * Prepare options.
+     *
+     * @return void
+     */
+    protected function _prepareOptions()
+    {
+    }
+    /**
+     * Get the Html attributes.
+     *
+     * @return string[]
+     */
+    public function getHtmlAttributes()
+    {
+    }
+}
+class CollectionFactory
+{
+    /**
+     * @var ObjectManagerInterface
+     */
+    protected $_objectManager;
+    /**
+     * @param ObjectManagerInterface $objectManager
+     */
+    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager)
+    {
+    }
+    /**
+     * Create collection factory with specified parameters
+     *
+     * @param array $data
+     * @return Collection
+     */
+    public function create(array $data = [])
+    {
+    }
+}
+/**
+ * Category form input image element
+ *
+ * @api
+ */
+class Image extends \Magento\Framework\Data\Form\Element\AbstractElement
+{
+    /**
+     * @var UrlInterface
+     */
+    protected $_urlBuilder;
+    /**
+     * @param Factory $factoryElement
+     * @param CollectionFactory $factoryCollection
+     * @param Escaper $escaper
+     * @param UrlInterface $urlBuilder
+     * @param array $data
+     * @param SecureHtmlRenderer|null $secureRenderer
+     * @param Random|null $random
+     */
+    public function __construct(\Magento\Framework\Data\Form\Element\Factory $factoryElement, \Magento\Framework\Data\Form\Element\CollectionFactory $factoryCollection, \Magento\Framework\Escaper $escaper, \Magento\Framework\UrlInterface $urlBuilder, $data = [], ?\Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer = null, ?\Magento\Framework\Math\Random $random = null)
+    {
+    }
+    /**
+     * Return element html code
+     *
+     * @return string
+     */
+    public function getElementHtml()
+    {
+    }
+    /**
+     * Return html code of delete checkbox element
+     *
+     * @return string
+     */
+    protected function _getDeleteCheckbox()
+    {
+    }
+    /**
+     * Return html code of hidden element
+     *
+     * @return string
+     */
+    protected function _getHiddenInput()
+    {
+    }
+    /**
+     * Get image preview url
+     *
+     * @return string
+     */
+    protected function _getUrl()
+    {
+    }
+    /**
+     * Return name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+    }
+}
+/**
+ * Form time element
+ *
+ * @author      Magento Core Team <core@magentocommerce.com>
+ */
+class Time extends \Magento\Framework\Data\Form\Element\AbstractElement
+{
+    /**
+     * @param Factory $factoryElement
+     * @param CollectionFactory $factoryCollection
+     * @param Escaper $escaper
+     * @param array $data
+     * @param SecureHtmlRenderer|null $secureRenderer
+     */
+    public function __construct(\Magento\Framework\Data\Form\Element\Factory $factoryElement, \Magento\Framework\Data\Form\Element\CollectionFactory $factoryCollection, \Magento\Framework\Escaper $escaper, $data = [], ?\Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer = null)
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function getName()
+    {
+    }
+    /**
+     * @inheritDoc
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     */
+    public function getElementHtml()
+    {
+    }
+}
+/**
+ * Form textarea element.
+ *
+ * @author      Magento Core Team <core@magentocommerce.com>
+ */
+class Textarea extends \Magento\Framework\Data\Form\Element\AbstractElement
+{
+    /**
+     * Default number of rows
+     */
+    const DEFAULT_ROWS = 2;
+    /**
+     * Default number of columns
+     */
+    const DEFAULT_COLS = 15;
+    /**
+     * @param Factory $factoryElement
+     * @param CollectionFactory $factoryCollection
+     * @param Escaper $escaper
+     * @param array $data
+     */
+    public function __construct(\Magento\Framework\Data\Form\Element\Factory $factoryElement, \Magento\Framework\Data\Form\Element\CollectionFactory $factoryCollection, \Magento\Framework\Escaper $escaper, $data = [])
+    {
+    }
+    /**
+     * Return the HTML attributes
+     *
+     * @return string[]
+     */
+    public function getHtmlAttributes()
+    {
+    }
+    /**
+     * Return the element as HTML
+     *
+     * @return string
+     */
+    public function getElementHtml()
+    {
+    }
+}
+/**
+ * Form hidden element
+ */
+class Hidden extends \Magento\Framework\Data\Form\Element\AbstractElement
+{
+    /**
+     * @param Factory $factoryElement
+     * @param CollectionFactory $factoryCollection
+     * @param Escaper $escaper
+     * @param array $data
+     */
+    public function __construct(\Magento\Framework\Data\Form\Element\Factory $factoryElement, \Magento\Framework\Data\Form\Element\CollectionFactory $factoryCollection, \Magento\Framework\Escaper $escaper, $data = [])
+    {
+    }
+    /**
+     * Get default HTML
+     *
+     * @return mixed
+     */
+    public function getDefaultHtml()
+    {
+    }
+}
+class Reset extends \Magento\Framework\Data\Form\Element\AbstractElement
+{
+    /**
+     * @param \Magento\Framework\Data\Form\Element\Factory $factoryElement
+     * @param \Magento\Framework\Data\Form\Element\CollectionFactory $factoryCollection
+     * @param \Magento\Framework\Escaper $escaper
+     * @param array $data
+     */
+    public function __construct(\Magento\Framework\Data\Form\Element\Factory $factoryElement, \Magento\Framework\Data\Form\Element\CollectionFactory $factoryCollection, \Magento\Framework\Escaper $escaper, $data = [])
+    {
+    }
+}
+/**
+ * Form element collection
+ */
+class Collection implements \ArrayAccess, \IteratorAggregate, \Countable
+{
+    /**
+     * Class constructor
+     *
+     * @param AbstractForm $container
+     */
+    public function __construct(\Magento\Framework\Data\Form\AbstractForm $container)
+    {
+    }
+    /**
+     * Implementation of \IteratorAggregate::getIterator()
+     *
+     * @return \ArrayIterator
+     */
+    #[\ReturnTypeWillChange]
+    public function getIterator()
+    {
+    }
+    /**
+     * Implementation of \ArrayAccess:offsetSet()
+     *
+     * @param mixed $key
+     * @param mixed $value
+     * @return void
+     */
+    #[\ReturnTypeWillChange]
+    public function offsetSet($key, $value)
+    {
+    }
+    /**
+     * Implementation of \ArrayAccess:offsetGet()
+     *
+     * @param mixed $key
+     * @return AbstractElement
+     */
+    #[\ReturnTypeWillChange]
+    public function offsetGet($key)
+    {
+    }
+    /**
+     * Implementation of \ArrayAccess:offsetUnset()
+     *
+     * @param mixed $key
+     * @return void
+     */
+    #[\ReturnTypeWillChange]
+    public function offsetUnset($key)
+    {
+    }
+    /**
+     * Implementation of \ArrayAccess:offsetExists()
+     *
+     * @param mixed $key
+     * @return boolean
+     */
+    #[\ReturnTypeWillChange]
+    public function offsetExists($key)
+    {
+    }
+    /**
+     * Add element to collection
+     *
+     * @todo get it straight with $after
+     * @param AbstractElement $element
+     * @param bool|string $after
+     * @return AbstractElement
+     */
+    public function add(\Magento\Framework\Data\Form\Element\AbstractElement $element, $after = false)
+    {
+    }
+    /**
+     * Sort elements by values using a user-defined comparison function
+     *
+     * @param mixed $callback
+     * @return $this
+     */
+    public function usort($callback)
+    {
+    }
+    /**
+     * Remove element from collection
+     *
+     * @param mixed $elementId
+     * @return $this
+     */
+    public function remove($elementId)
+    {
+    }
+    /**
+     * Count elements in collection
+     *
+     * @return int
+     */
+    #[\ReturnTypeWillChange]
+    public function count()
+    {
+    }
+    /**
+     * Find element by ID
+     *
+     * @param mixed $elementId
+     * @return AbstractElement
+     */
+    public function searchById($elementId)
+    {
+    }
+}
+class Submit extends \Magento\Framework\Data\Form\Element\AbstractElement
+{
+    /**
+     * @param Factory $factoryElement
+     * @param CollectionFactory $factoryCollection
+     * @param Escaper $escaper
+     * @param array $data
+     */
+    public function __construct(\Magento\Framework\Data\Form\Element\Factory $factoryElement, \Magento\Framework\Data\Form\Element\CollectionFactory $factoryCollection, \Magento\Framework\Escaper $escaper, $data = [])
+    {
+    }
+    /**
+     * @return mixed
+     */
+    public function getHtml()
+    {
+    }
+}
+class Button extends \Magento\Framework\Data\Form\Element\AbstractElement
+{
+    /**
+     * Additional html attributes
+     *
+     * @var string[]
+     */
+    protected $_htmlAttributes = ['data-mage-init'];
+    /**
+     * @param Factory $factoryElement
+     * @param CollectionFactory $factoryCollection
+     * @param Escaper $escaper
+     * @param array $data
+     */
+    public function __construct(\Magento\Framework\Data\Form\Element\Factory $factoryElement, \Magento\Framework\Data\Form\Element\CollectionFactory $factoryCollection, \Magento\Framework\Escaper $escaper, $data = [])
+    {
+    }
+    /**
+     * Html attributes
+     *
+     * @return string[]
+     */
+    public function getHtmlAttributes()
+    {
+    }
+}
+class Radio extends \Magento\Framework\Data\Form\Element\AbstractElement
+{
+    /**
+     * @param \Magento\Framework\Data\Form\Element\Factory $factoryElement
+     * @param \Magento\Framework\Data\Form\Element\CollectionFactory $factoryCollection
+     * @param \Magento\Framework\Escaper $escaper
+     * @param array $data
+     */
+    public function __construct(\Magento\Framework\Data\Form\Element\Factory $factoryElement, \Magento\Framework\Data\Form\Element\CollectionFactory $factoryCollection, \Magento\Framework\Escaper $escaper, $data = [])
+    {
+    }
+}
+/**
+ * Form fieldset
+ *
+ * @api
+ * @since 100.0.2
+ */
+class Fieldset extends \Magento\Framework\Data\Form\Element\AbstractElement
+{
+    /**
+     * @param Factory $factoryElement
+     * @param CollectionFactory $factoryCollection
+     * @param Escaper $escaper
+     * @param array $data
+     */
+    public function __construct(\Magento\Framework\Data\Form\Element\Factory $factoryElement, \Magento\Framework\Data\Form\Element\CollectionFactory $factoryCollection, \Magento\Framework\Escaper $escaper, $data = [])
+    {
+    }
+    /**
+     * Get elements html
+     *
+     * @return string
+     */
+    public function getElementHtml()
+    {
+    }
+    /**
+     * Get Children element's array
+     *
+     * @return AbstractElement[]
+     */
+    public function getChildren()
+    {
+    }
+    /**
+     * Get Children element's html
+     *
+     * @return string
+     */
+    public function getChildrenHtml()
+    {
+    }
+    /**
+     * Get Basic elements' array
+     *
+     * @return AbstractElement[]
+     */
+    public function getBasicChildren()
+    {
+    }
+    /**
+     * Get Basic elements' html in sorted order
+     *
+     * @return string
+     */
+    public function getBasicChildrenHtml()
+    {
+    }
+    /**
+     * Get Number of Basic Children
+     *
+     * @return int
+     */
+    public function getCountBasicChildren()
+    {
+    }
+    /**
+     * Get Advanced elements'
+     *
+     * @return array
+     */
+    public function getAdvancedChildren()
+    {
+    }
+    /**
+     * Get Advanced elements' html in sorted order
+     *
+     * @return string
+     */
+    public function getAdvancedChildrenHtml()
+    {
+    }
+    /**
+     * Whether fieldset contains advance section
+     *
+     * @return bool
+     */
+    public function hasAdvanced()
+    {
+    }
+    /**
+     * Get SubFieldset
+     *
+     * @return AbstractElement[]
+     */
+    public function getSubFieldset()
+    {
+    }
+    /**
+     * Enter description here...
+     *
+     * @return string
+     */
+    public function getSubFieldsetHtml()
+    {
+    }
+    /**
+     * Enter description here...
+     *
+     * @return string
+     */
+    public function getDefaultHtml()
+    {
+    }
+    /**
+     * Add field to fieldset
+     *
+     * @param string $elementId
+     * @param string $type
+     * @param array $config
+     * @param bool $after
+     * @param bool $isAdvanced
+     * @return AbstractElement
+     */
+    public function addField($elementId, $type, $config, $after = false, $isAdvanced = false)
+    {
+    }
+    /**
+     * Return elements as html string
+     *
+     * @param AbstractElement[] $elements
+     * @return string
+     */
+    protected function _elementsToHtml($elements)
+    {
+    }
+}
+/**
+ * Multi-select form element widget.
+ */
+class Multiselect extends \Magento\Framework\Data\Form\Element\AbstractElement
+{
+    /**
+     * @param Factory $factoryElement
+     * @param CollectionFactory $factoryCollection
+     * @param Escaper $escaper
+     * @param array $data
+     * @param SecureHtmlRenderer|null $secureRenderer
+     * @param Random|null $random
+     */
+    public function __construct(\Magento\Framework\Data\Form\Element\Factory $factoryElement, \Magento\Framework\Data\Form\Element\CollectionFactory $factoryCollection, \Magento\Framework\Escaper $escaper, $data = [], ?\Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer = null, ?\Magento\Framework\Math\Random $random = null)
+    {
+    }
+    /**
+     * Get the name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+    }
+    /**
+     * Get the element as HTML
+     *
+     * @return string
+     */
+    public function getElementHtml()
+    {
+    }
+    /**
+     * Get the HTML attributes
+     *
+     * @return string[]
+     */
+    public function getHtmlAttributes()
+    {
+    }
+    /**
+     * Get the default HTML
+     *
+     * @return string
+     */
+    public function getDefaultHtml()
+    {
+    }
+    /**
+     * Get the  name of the JS object
+     *
+     * @return string
+     */
+    public function getJsObjectName()
+    {
+    }
+    /**
+     * Render an option for the select.
+     *
+     * @param array $option
+     * @param string[] $selected
+     * @return string
+     */
+    protected function _optionToHtml($option, $selected)
+    {
+    }
+}
+/**
+ * Form editable multiselect element.
+ */
+class Editablemultiselect extends \Magento\Framework\Data\Form\Element\Multiselect
+{
+    /**
+     * @param Factory $factoryElement
+     * @param CollectionFactory $factoryCollection
+     * @param Escaper $escaper
+     * @param array $data
+     * @param \Magento\Framework\Serialize\Serializer\Json|null $serializer
+     * @param SecureHtmlRenderer|null $secureRenderer
+     * @param Random|null $random
+     */
+    public function __construct(\Magento\Framework\Data\Form\Element\Factory $factoryElement, \Magento\Framework\Data\Form\Element\CollectionFactory $factoryCollection, \Magento\Framework\Escaper $escaper, array $data = [], \Magento\Framework\Serialize\Serializer\Json $serializer = null, ?\Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer = null, ?\Magento\Framework\Math\Random $random = null)
+    {
+    }
+    /**
+     * Name of the default JavaScript class that is used to make multiselect editable
+     *
+     * This class must define init() method and receive configuration in the constructor
+     */
+    public const DEFAULT_ELEMENT_JS_CLASS = 'EditableMultiselect';
+    /**
+     * Retrieve HTML markup of the element
+     *
+     * @return string
+     * @throws \InvalidArgumentException
+     */
+    public function getElementHtml()
+    {
+    }
+    /**
+     * Retrieve HTML markup of given select option
+     *
+     * @param array $option
+     * @param string[] $selected
+     *
+     * @return string
+     */
+    protected function _optionToHtml($option, $selected)
+    {
+    }
+}
+/**
+ * Date element
+ */
+class Date extends \Magento\Framework\Data\Form\Element\AbstractElement
+{
+    /**
+     * @var \DateTime
+     */
+    protected $_value;
+    /**
+     * @var TimezoneInterface
+     */
+    protected $localeDate;
+    /**
+     * @param Factory $factoryElement
+     * @param CollectionFactory $factoryCollection
+     * @param Escaper $escaper
+     * @param TimezoneInterface $localeDate
+     * @param array $data
+     */
+    public function __construct(\Magento\Framework\Data\Form\Element\Factory $factoryElement, \Magento\Framework\Data\Form\Element\CollectionFactory $factoryCollection, \Magento\Framework\Escaper $escaper, \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate, $data = [])
+    {
+    }
+    /**
+     * Initial scope of method was to limit timestamp on x64 systems to mimic x32 systems,
+     * but keeping the method for compatibility:
+     * If script executes on x64 system, converts large numeric values to timestamp limit
+     *
+     * @param int $value
+     * @return int
+     */
+    protected function _toTimestamp($value)
+    {
+    }
+    /**
+     * Set date value
+     *
+     * @param mixed $value
+     * @return $this
+     */
+    public function setValue($value)
+    {
+    }
+    /**
+     * Get date value as string.
+     *
+     * Format can be specified, or it will be taken from $this->getFormat()
+     *
+     * @param string $format (compatible with \DateTime)
+     * @return string
+     */
+    public function getValue($format = null)
+    {
+    }
+    /**
+     * Get value instance, if any
+     *
+     * @return \DateTime
+     */
+    public function getValueInstance()
+    {
+    }
+    /**
+     * Output the input field and assign calendar instance to it.
+     * In order to output the date:
+     * - the value must be instantiated (\DateTime)
+     * - output format must be set (compatible with \DateTime)
+     *
+     * @throws \Exception
+     * @return string
+     */
+    public function getElementHtml()
+    {
+    }
+}
+class Multiline extends \Magento\Framework\Data\Form\Element\AbstractElement
+{
+    /**
+     * @param Factory $factoryElement
+     * @param CollectionFactory $factoryCollection
+     * @param Escaper $escaper
+     * @param array $data
+     */
+    public function __construct(\Magento\Framework\Data\Form\Element\Factory $factoryElement, \Magento\Framework\Data\Form\Element\CollectionFactory $factoryCollection, \Magento\Framework\Escaper $escaper, $data = [])
+    {
+    }
+    /**
+     * Get HTML attributes
+     *
+     * @return string[]
+     */
+    public function getHtmlAttributes()
+    {
+    }
+    /**
+     * Get label HTML
+     *
+     * @param int $suffix
+     * @param string $scopeLabel
+     *
+     * @return string
+     */
+    public function getLabelHtml($suffix = 0, $scopeLabel = '')
+    {
+    }
+    /**
+     * Get element HTML
+     *
+     * @return string
+     */
+    public function getElementHtml()
+    {
+    }
+    /**
+     * Get default HTML
+     *
+     * @return mixed
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     */
+    public function getDefaultHtml()
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function getEscapedValue($index = null)
+    {
+    }
+}
+/**
+ * Link form element widget.
+ */
+class Link extends \Magento\Framework\Data\Form\Element\AbstractElement
+{
+    /**
+     * @param Factory $factoryElement
+     * @param CollectionFactory $factoryCollection
+     * @param Escaper $escaper
+     * @param array $data
+     * @param SecureHtmlRenderer|null $secureHtmlRenderer
+     * @param Random|null $random
+     */
+    public function __construct(\Magento\Framework\Data\Form\Element\Factory $factoryElement, \Magento\Framework\Data\Form\Element\CollectionFactory $factoryCollection, \Magento\Framework\Escaper $escaper, $data = [], ?\Magento\Framework\View\Helper\SecureHtmlRenderer $secureHtmlRenderer = null, ?\Magento\Framework\Math\Random $random = null)
+    {
+    }
+    /**
+     * Generates element html
+     *
+     * @return string
+     */
+    public function getElementHtml()
+    {
+    }
+    /**
+     * Prepare array of anchor attributes
+     *
+     * @return string[]
+     */
+    public function getHtmlAttributes()
+    {
+    }
+}
+/**
+ * Radio buttons form element widget.
+ */
+class Radios extends \Magento\Framework\Data\Form\Element\AbstractElement
+{
+    /**
+     * @param Factory $factoryElement
+     * @param CollectionFactory $factoryCollection
+     * @param Escaper $escaper
+     * @param array $data
+     * @param SecureHtmlRenderer|null $secureRenderer
+     */
+    public function __construct(\Magento\Framework\Data\Form\Element\Factory $factoryElement, \Magento\Framework\Data\Form\Element\CollectionFactory $factoryCollection, \Magento\Framework\Escaper $escaper, $data = [], ?\Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer = null)
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function getElementHtml()
+    {
+    }
+    /**
+     * Render choices.
+     *
+     * @param array $option
+     * @param string[] $selected
+     * @return string
+     */
+    protected function _optionToHtml($option, $selected)
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function getHtmlAttributes()
+    {
+    }
+    /**
+     * Get a choice's HTML attributes.
+     *
+     * @param array $option
+     * @return string
+     */
+    protected function getRadioButtonAttributes($option)
+    {
+    }
+}
+/**
+ * Gallery form element widget.
+ */
+class Gallery extends \Magento\Framework\Data\Form\Element\AbstractElement
+{
+    /**
+     * @param Factory $factoryElement
+     * @param CollectionFactory $factoryCollection
+     * @param Escaper $escaper
+     * @param array $data
+     * @param SecureHtmlRenderer|null $secureRenderer
+     * @param Random|null $random
+     */
+    public function __construct(\Magento\Framework\Data\Form\Element\Factory $factoryElement, \Magento\Framework\Data\Form\Element\CollectionFactory $factoryCollection, \Magento\Framework\Escaper $escaper, $data = [], ?\Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer = null, ?\Magento\Framework\Math\Random $random = null)
+    {
+    }
+    /**
+     * @inheritDoc
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     */
+    public function getElementHtml()
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function getName()
+    {
+    }
+    /**
+     * Get name in the usual way.
+     *
+     * @return string|null
+     */
+    public function getParentName()
+    {
+    }
+}
+class Column extends \Magento\Framework\Data\Form\Element\AbstractElement
+{
+    /**
+     * @param \Magento\Framework\Data\Form\Element\Factory $factoryElement
+     * @param \Magento\Framework\Data\Form\Element\CollectionFactory $factoryCollection
+     * @param \Magento\Framework\Escaper $escaper
+     * @param array $data
+     */
+    public function __construct(\Magento\Framework\Data\Form\Element\Factory $factoryElement, \Magento\Framework\Data\Form\Element\CollectionFactory $factoryCollection, \Magento\Framework\Escaper $escaper, $data = [])
+    {
+    }
+}
+/**
+ * Class Password
+ *
+ * Password input type
+ */
+class Password extends \Magento\Framework\Data\Form\Element\AbstractElement
+{
+    /**
+     * @param Factory $factoryElement
+     * @param CollectionFactory $factoryCollection
+     * @param Escaper $escaper
+     * @param array $data
+     */
+    public function __construct(\Magento\Framework\Data\Form\Element\Factory $factoryElement, \Magento\Framework\Data\Form\Element\CollectionFactory $factoryCollection, \Magento\Framework\Escaper $escaper, $data = [])
+    {
+    }
+    /**
+     * Get field html
+     *
+     * @return mixed
+     */
+    public function getHtml()
+    {
+    }
+}
+class Obscure extends \Magento\Framework\Data\Form\Element\Password
+{
+    /**
+     * @var string
+     */
+    protected $_obscuredValue = '******';
+    /**
+     * Hide value to make sure it will not show in HTML
+     *
+     * @param string $index
+     * @return string
+     */
+    public function getEscapedValue($index = null)
+    {
+    }
+    /**
+     * Returns list of html attributes possible to output in HTML
+     *
+     * @return string[]
+     */
+    public function getHtmlAttributes()
+    {
+    }
+}
+/**
+ * Form editor element
+ */
+class Editor extends \Magento\Framework\Data\Form\Element\Textarea
+{
+    /**
+     * Editor constructor.
+     * @param Factory $factoryElement
+     * @param CollectionFactory $factoryCollection
+     * @param Escaper $escaper
+     * @param array $data
+     * @param \Magento\Framework\Serialize\Serializer\Json|null $serializer
+     * @param Random|null $random
+     * @param SecureHtmlRenderer|null $secureRenderer
+     * @throws \RuntimeException
+     */
+    public function __construct(\Magento\Framework\Data\Form\Element\Factory $factoryElement, \Magento\Framework\Data\Form\Element\CollectionFactory $factoryCollection, \Magento\Framework\Escaper $escaper, $data = [], \Magento\Framework\Serialize\Serializer\Json $serializer = null, ?\Magento\Framework\Math\Random $random = null, ?\Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer = null)
+    {
+    }
+    /**
+     * Returns buttons translation
+     *
+     * @return array
+     */
+    protected function getButtonTranslations()
+    {
+    }
+    /**
+     * Returns JS config
+     *
+     * @return bool|string
+     * @throws \InvalidArgumentException
+     */
+    protected function getJsonConfig()
+    {
+    }
+    /**
+     * Fetch config options from plugin.  If $key is passed, return only that option key's value
+     *
+     * @param string $pluginName
+     * @param string|null $key
+     * @return mixed all options or single option if $key is passed; null if nonexistent
+     */
+    public function getPluginConfigOptions($pluginName, $key = null)
+    {
+    }
+    /**
+     * Returns element html
+     *
+     * @return string
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
+    public function getElementHtml()
+    {
+    }
+    /**
+     * Returns theme
+     *
+     * @return mixed
+     */
+    public function getTheme()
+    {
+    }
+    /**
+     * Return Editor top Buttons HTML
+     *
+     * @return string
+     */
+    protected function _getButtonsHtml()
+    {
+    }
+    /**
+     * Return HTML button to toggling WYSIWYG
+     *
+     * @param bool $visible
+     * @return string
+     */
+    protected function _getToggleButtonHtml($visible = true)
+    {
+    }
+    /**
+     * Prepare Html buttons for additional WYSIWYG features
+     *
+     * @param bool $visible Display button or not
+     * @return string
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     */
+    protected function _getPluginButtonsHtml($visible = true)
+    {
+    }
+    /**
+     * Prepare button options array to create button html
+     *
+     * @param array $options
+     * @return array
+     */
+    protected function _prepareButtonOptions($options)
+    {
+    }
+    /**
+     * Check if plugin button options have required values
+     *
+     * @param array $pluginOptions
+     * @return boolean
+     */
+    protected function _checkPluginButtonOptions($pluginOptions)
+    {
+    }
+    /**
+     * Convert options
+     *
+     * Convert options by replacing template constructions ( like {{var_name}} )
+     * with data from this element object
+     *
+     * @param array $options
+     * @return array
+     */
+    protected function _prepareOptions($options)
+    {
+    }
+    /**
+     * Return custom button HTML
+     *
+     * @param array $data Button params
+     * @return string
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     */
+    protected function _getButtonHtml($data)
+    {
+    }
+    /**
+     * Wraps Editor HTML into div if 'use_container' config option is set to true
+     *
+     * If 'no_display' config option is set to true, the div will be invisible
+     *
+     * @param string $html HTML code to wrap
+     * @return string
+     */
+    protected function _wrapIntoContainer($html)
+    {
+    }
+    /**
+     * Editor config retriever
+     *
+     * @param string $key Config var key
+     * @return mixed
+     */
+    public function getConfig($key = null)
+    {
+    }
+    /**
+     * Translate string using defined helper
+     *
+     * @param string $string String to be translated
+     * @return \Magento\Framework\Phrase
+     */
+    public function translate($string)
+    {
+    }
+    /**
+     * Check whether Wysiwyg is enabled or not
+     *
+     * @return bool
+     */
+    public function isEnabled()
+    {
+    }
+    /**
+     * Check whether Wysiwyg is loaded on demand or not
+     *
+     * @return bool
+     */
+    public function isHidden()
+    {
+    }
+    /**
+     * Is Toggle Button Visible
+     *
+     * @return bool
+     */
+    protected function isToggleButtonVisible()
+    {
+    }
+    /**
+     * Returns inline js to initialize wysiwyg adapter
+     *
+     * @param string $jsSetupObject
+     * @param string $forceLoad
+     * @return string
+     */
+    protected function getInlineJs($jsSetupObject, $forceLoad)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getHtmlId()
+    {
+    }
+}
+/**
+ * Label form element.
+ */
+class Label extends \Magento\Framework\Data\Form\Element\AbstractElement
+{
+    /**
+     * @param \Magento\Framework\Data\Form\Element\Factory $factoryElement
+     * @param \Magento\Framework\Data\Form\Element\CollectionFactory $factoryCollection
+     * @param \Magento\Framework\Escaper $escaper
+     * @param array $data
+     */
+    public function __construct(\Magento\Framework\Data\Form\Element\Factory $factoryElement, \Magento\Framework\Data\Form\Element\CollectionFactory $factoryCollection, \Magento\Framework\Escaper $escaper, $data = [])
+    {
+    }
+    /**
+     * Retrieve Element HTML
+     *
+     * @return string
+     */
+    public function getElementHtml()
+    {
+    }
+}
+namespace Magento\Framework\Data\Form\Element\Renderer;
+
+/**
+ * @api
+ * @since 100.0.2
+ */
+interface RendererInterface
+{
+    /**
+     * Render form element as HTML
+     *
+     * @param \Magento\Framework\Data\Form\Element\AbstractElement $element
+     * @return string
+     */
+    public function render(\Magento\Framework\Data\Form\Element\AbstractElement $element);
+}
+namespace Magento\Framework\Data\Form\Element;
+
+class Imagefile extends \Magento\Framework\Data\Form\Element\AbstractElement
+{
+    /**
+     * @param \Magento\Framework\Data\Form\Element\Factory $factoryElement
+     * @param \Magento\Framework\Data\Form\Element\CollectionFactory $factoryCollection
+     * @param \Magento\Framework\Escaper $escaper
+     * @param array $data
+     */
+    public function __construct(\Magento\Framework\Data\Form\Element\Factory $factoryElement, \Magento\Framework\Data\Form\Element\CollectionFactory $factoryCollection, \Magento\Framework\Escaper $escaper, $data = [])
+    {
+    }
+}
+/**
+ * Form text element
+ */
+class Text extends \Magento\Framework\Data\Form\Element\AbstractElement
+{
+    /**
+     * @param Factory $factoryElement
+     * @param CollectionFactory $factoryCollection
+     * @param Escaper $escaper
+     * @param array $data
+     */
+    public function __construct(\Magento\Framework\Data\Form\Element\Factory $factoryElement, \Magento\Framework\Data\Form\Element\CollectionFactory $factoryCollection, \Magento\Framework\Escaper $escaper, $data = [])
+    {
+    }
+    /**
+     * Get the HTML
+     *
+     * @return mixed
+     */
+    public function getHtml()
+    {
+    }
+    /**
+     * Get the attributes
+     *
+     * @return string[]
+     */
+    public function getHtmlAttributes()
+    {
+    }
+}
+/**
+ * Form note element
+ */
+class Note extends \Magento\Framework\Data\Form\Element\AbstractElement
+{
+    /**
+     * @param Factory $factoryElement
+     * @param CollectionFactory $factoryCollection
+     * @param Escaper $escaper
+     * @param array $data
+     */
+    public function __construct(\Magento\Framework\Data\Form\Element\Factory $factoryElement, \Magento\Framework\Data\Form\Element\CollectionFactory $factoryCollection, \Magento\Framework\Escaper $escaper, $data = [])
+    {
+    }
+    /**
+     * Get element HTML
+     *
+     * @return string
+     */
+    public function getElementHtml()
+    {
+    }
+}
+/**
+ * Form select element
+ */
+class Checkboxes extends \Magento\Framework\Data\Form\Element\AbstractElement
+{
+    /**
+     * @param Factory $factoryElement
+     * @param CollectionFactory $factoryCollection
+     * @param Escaper $escaper
+     * @param array $data
+     */
+    public function __construct(\Magento\Framework\Data\Form\Element\Factory $factoryElement, \Magento\Framework\Data\Form\Element\CollectionFactory $factoryCollection, \Magento\Framework\Escaper $escaper, $data = [])
+    {
+    }
+    /**
+     * Retrieve allow attributes
+     *
+     * @return string[]
+     */
+    public function getHtmlAttributes()
+    {
+    }
+    /**
+     * Prepare value list
+     *
+     * @return array
+     */
+    protected function _prepareValues()
+    {
+    }
+    /**
+     * Retrieve HTML
+     *
+     * @return string
+     */
+    public function getElementHtml()
+    {
+    }
+    /**
+     * Was given value selected?
+     *
+     * @param string $value
+     * @return string|null
+     */
+    public function getChecked($value)
+    {
+    }
+    /**
+     * Was value disabled for selection?
+     *
+     * @param string $value
+     * @return string|null
+     */
+    public function getDisabled($value)
+    {
+    }
+    /**
+     * Get onclick event handler.
+     *
+     * @param string $value
+     * @return string|null
+     */
+    public function getOnclick($value = '$value')
+    {
+    }
+    /**
+     * Get onchange event handler.
+     *
+     * @param string $value
+     * @return string|null
+     */
+    public function getOnchange($value = '$value')
+    {
+    }
+    /**
+     * Render a checkbox.
+     *
+     * @param array $option
+     * @return string
+     */
+    protected function _optionToHtml($option)
+    {
+    }
+}

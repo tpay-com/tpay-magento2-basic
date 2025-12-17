@@ -1,0 +1,685 @@
+<?php
+
+namespace Magento\Framework\Controller\Index;
+
+class Index extends \Magento\Framework\App\Action\Action
+{
+    /**
+     * @return void
+     */
+    public function execute()
+    {
+    }
+}
+namespace Magento\Framework\Controller;
+
+/**
+ * An abstraction of result that controller actions must return
+ * The point of this kind of object is to encapsulate all information/objects relevant to the result
+ * and be able to set it to the HTTP response
+ *
+ * @api
+ * @since 100.0.2
+ */
+interface ResultInterface
+{
+    /**
+     * @param int $httpCode
+     * @return $this
+     */
+    public function setHttpResponseCode($httpCode);
+    /**
+     * Set a header
+     *
+     * If $replace is true, replaces any headers already defined with that
+     * $name.
+     *
+     * @param string $name
+     * @param string $value
+     * @param boolean $replace
+     * @return $this
+     */
+    public function setHeader($name, $value, $replace = false);
+    /**
+     * Render result and set to response
+     *
+     * @param ResponseInterface $response
+     * @return $this
+     */
+    public function renderResult(\Magento\Framework\App\ResponseInterface $response);
+}
+abstract class AbstractResult implements \Magento\Framework\Controller\ResultInterface
+{
+    /**
+     * @var int
+     */
+    protected $httpResponseCode;
+    /**
+     * @var array
+     */
+    protected $headers = [];
+    /**
+     * @var string
+     */
+    protected $statusHeaderCode;
+    /**
+     * @var string
+     */
+    protected $statusHeaderVersion;
+    /**
+     * @var string
+     */
+    protected $statusHeaderPhrase;
+    /**
+     * Set response code to result
+     *
+     * @param int $httpCode
+     * @return $this
+     */
+    public function setHttpResponseCode($httpCode)
+    {
+    }
+    /**
+     * Set a header
+     *
+     * If $replace is true, replaces any headers already defined with that
+     * $name.
+     *
+     * @param string $name
+     * @param string $value
+     * @param boolean $replace
+     * @return $this
+     */
+    public function setHeader($name, $value, $replace = false)
+    {
+    }
+    /**
+     * @param int|string $httpCode
+     * @param null|int|string $version
+     * @param null|string $phrase
+     * @return $this
+     */
+    public function setStatusHeader($httpCode, $version = null, $phrase = null)
+    {
+    }
+    /**
+     * @param HttpResponseInterface $response
+     * @return $this
+     */
+    protected function applyHttpHeaders(\Magento\Framework\App\Response\HttpInterface $response)
+    {
+    }
+    /**
+     * @param HttpResponseInterface $response
+     * @return $this
+     */
+    protected abstract function render(\Magento\Framework\App\Response\HttpInterface $response);
+    /**
+     * Render content
+     *
+     * @param HttpResponseInterface|ResponseInterface $response
+     * @return $this
+     */
+    public function renderResult(\Magento\Framework\App\ResponseInterface $response)
+    {
+    }
+}
+namespace Magento\Framework\Controller\Test\Unit\Controller\Index;
+
+class IndexTest extends \PHPUnit\Framework\TestCase
+{
+    public function testExecute()
+    {
+    }
+}
+namespace Magento\Framework\Controller\Test\Unit\Controller;
+
+class NorouteTest extends \PHPUnit\Framework\TestCase
+{
+    /**
+     * @var \Magento\Framework\Controller\Noroute
+     */
+    protected $_controller;
+    /**
+     * @var MockObject
+     */
+    protected $_requestMock;
+    /**
+     * @var MockObject
+     */
+    protected $_viewMock;
+    /**
+     * @var MockObject
+     */
+    protected $_statusMock;
+    protected function setUp() : void
+    {
+    }
+    public function testIndexActionWhenStatusNotLoaded()
+    {
+    }
+    public function testIndexActionWhenStatusLoaded()
+    {
+    }
+    public function testIndexActionWhenStatusNotInstanceofMagentoObject()
+    {
+    }
+}
+namespace Magento\Framework\Controller\Test\Unit\Router\Route;
+
+class FactoryTest extends \PHPUnit\Framework\TestCase
+{
+    /**
+     * @var ObjectManager|MockObject
+     */
+    protected $objectManager;
+    /**
+     * @var RouteFactory|MockObject
+     */
+    protected $factory;
+    protected function setUp() : void
+    {
+    }
+    /**
+     * @test
+     * @return void
+     */
+    public function testCreateRoute()
+    {
+    }
+    /**
+     * @test
+     * @return void
+     */
+    public function testCreateRouteNegative()
+    {
+    }
+}
+namespace Magento\Framework\Controller\Test\Unit\Result;
+
+class RawTest extends \PHPUnit\Framework\TestCase
+{
+    /** @var Raw */
+    protected $raw;
+    /** @var HttpResponseInterface|MockObject*/
+    protected $response;
+    /** @var ObjectManagerHelper */
+    protected $objectManagerHelper;
+    protected function setUp() : void
+    {
+    }
+    public function testSetContents()
+    {
+    }
+    public function testRender()
+    {
+    }
+}
+class RedirectTest extends \PHPUnit\Framework\TestCase
+{
+    /** @var Redirect */
+    protected $redirect;
+    /** @var RedirectInterface|MockObject */
+    protected $redirectInterface;
+    /** @var UrlInterface|MockObject */
+    protected $urlBuilder;
+    /** @var UrlInterface|MockObject */
+    protected $urlInterface;
+    /** @var HttpResponseInterface|MockObject */
+    protected $response;
+    protected function setUp() : void
+    {
+    }
+    public function testSetRefererUrl()
+    {
+    }
+    public function testSetRefererOrBaseUrl()
+    {
+    }
+    public function testSetUrl()
+    {
+    }
+    public function testSetPath()
+    {
+    }
+    /**
+     * @return array
+     */
+    public function httpRedirectResponseStatusCodes()
+    {
+    }
+    /**
+     * @param int $expectedStatusCode
+     * @param int|null $actualStatusCode
+     * @dataProvider httpRedirectResponseStatusCodes
+     */
+    public function testRender($expectedStatusCode, $actualStatusCode)
+    {
+    }
+}
+/**
+ *
+ * @covers \Magento\Framework\Controller\Result\Json
+ */
+class JsonTest extends \PHPUnit\Framework\TestCase
+{
+    /**
+     * @return void
+     */
+    public function testRenderResult()
+    {
+    }
+}
+class RedirectFactoryTest extends \PHPUnit\Framework\TestCase
+{
+    protected function setUp() : void
+    {
+    }
+    public function testCreate()
+    {
+    }
+}
+class ForwardTest extends \PHPUnit\Framework\TestCase
+{
+    /** @var Forward */
+    protected $forward;
+    /** @var Http|MockObject */
+    protected $requestInterface;
+    /** @var ObjectManagerHelper */
+    protected $objectManagerHelper;
+    protected function setUp() : void
+    {
+    }
+    public function testSetModule()
+    {
+    }
+    public function testSetController()
+    {
+    }
+    public function testSetParams()
+    {
+    }
+    public function testForward()
+    {
+    }
+    public function testForwardWithParams()
+    {
+    }
+}
+namespace Magento\Framework\Controller;
+
+/**
+ * Result Factory
+ *
+ * @api
+ * @since 100.0.2
+ */
+class ResultFactory
+{
+    /**#@+
+     * Allowed result types
+     */
+    const TYPE_JSON = 'json';
+    const TYPE_RAW = 'raw';
+    const TYPE_REDIRECT = 'redirect';
+    const TYPE_FORWARD = 'forward';
+    const TYPE_LAYOUT = 'layout';
+    const TYPE_PAGE = 'page';
+    /**#@-*/
+    /**#@-*/
+    protected $typeMap = [self::TYPE_JSON => \Magento\Framework\Controller\Result\Json::class, self::TYPE_RAW => \Magento\Framework\Controller\Result\Raw::class, self::TYPE_REDIRECT => \Magento\Framework\Controller\Result\Redirect::class, self::TYPE_FORWARD => \Magento\Framework\Controller\Result\Forward::class, self::TYPE_LAYOUT => \Magento\Framework\View\Result\Layout::class, self::TYPE_PAGE => \Magento\Framework\View\Result\Page::class];
+    /**
+     * Constructor
+     *
+     * @param ObjectManagerInterface $objectManager
+     * @param array $typeMap
+     */
+    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager, array $typeMap = [])
+    {
+    }
+    /**
+     * Add or override result types
+     *
+     * @param array $typeMap
+     * @return void
+     */
+    protected function mergeTypes(array $typeMap)
+    {
+    }
+    /**
+     * Create new page regarding its type
+     *
+     * @param string $type
+     * @param array $arguments
+     * @throws \InvalidArgumentException
+     * @return ResultInterface
+     */
+    public function create($type, array $arguments = [])
+    {
+    }
+}
+namespace Magento\Framework\Controller\Router\Route;
+
+class Factory
+{
+    /**
+     * @var ObjectManager
+     */
+    protected $objectManager;
+    /**
+     * @param ObjectManager $objectManager
+     */
+    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager)
+    {
+    }
+    /**
+     * Create route instance.
+     *
+     * @param string $routeClass
+     * @param string $route Map used to match with later submitted URL path
+     * @return RouterInterface
+     * @throws \LogicException If specified route class does not implement proper interface.
+     */
+    public function createRoute($routeClass, $route)
+    {
+    }
+}
+namespace Magento\Framework\Controller\Noroute;
+
+class Index extends \Magento\Framework\App\Action\Action
+{
+    /**
+     * Noroute application handler
+     *
+     * @return void
+     */
+    public function execute()
+    {
+    }
+}
+namespace Magento\Framework\Controller\Result;
+
+/**
+ * Forward Controller Result
+ *
+ * @api
+ */
+class Forward extends \Magento\Framework\Controller\AbstractResult
+{
+    /**
+     * @var \Magento\Framework\App\RequestInterface
+     */
+    protected $request;
+    /**
+     * @var string
+     */
+    protected $module;
+    /**
+     * @var string
+     */
+    protected $controller;
+    /**
+     * @var array
+     */
+    protected $params = [];
+    /**
+     * @param RequestInterface $request
+     */
+    public function __construct(\Magento\Framework\App\RequestInterface $request)
+    {
+    }
+    /**
+     * @param string $module
+     * @return $this
+     */
+    public function setModule($module)
+    {
+    }
+    /**
+     * @param string $controller
+     * @return $this
+     */
+    public function setController($controller)
+    {
+    }
+    /**
+     * @param array $params
+     * @return $this
+     */
+    public function setParams(array $params)
+    {
+    }
+    /**
+     * @param string $action
+     * @return $this
+     */
+    public function forward($action)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    protected function render(\Magento\Framework\App\Response\HttpInterface $response)
+    {
+    }
+}
+/**
+ * In many cases controller actions may result in a redirect
+ * so this is a result object that implements all necessary properties of a HTTP redirect
+ *
+ * @api
+ * @since 100.0.2
+ */
+class Redirect extends \Magento\Framework\Controller\AbstractResult
+{
+    /**
+     * @var RedirectInterface
+     */
+    protected $redirect;
+    /**
+     * @var UrlInterface
+     */
+    protected $urlBuilder;
+    /**
+     * @var string
+     */
+    protected $url;
+    /**
+     * Constructor
+     *
+     * @param App\Response\RedirectInterface $redirect
+     * @param UrlInterface $urlBuilder
+     */
+    public function __construct(\Magento\Framework\App\Response\RedirectInterface $redirect, \Magento\Framework\UrlInterface $urlBuilder)
+    {
+    }
+    /**
+     * Set url from referer
+     *
+     * @return $this
+     */
+    public function setRefererUrl()
+    {
+    }
+    /**
+     * Set referer url or base if referer is not exist
+     *
+     * @return $this
+     */
+    public function setRefererOrBaseUrl()
+    {
+    }
+    /**
+     * URL Setter
+     * @param string $url
+     * @return $this
+     */
+    public function setUrl($url)
+    {
+    }
+    /**
+     * Set url by path
+     *
+     * @param string $path
+     * @param array $params
+     * @return $this
+     */
+    public function setPath($path, array $params = [])
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    protected function render(\Magento\Framework\App\Response\HttpInterface $response)
+    {
+    }
+}
+/**
+ * A possible implementation of JSON response type (instead of hardcoding json_encode() all over the place)
+ * Actual for controller actions that serve ajax requests
+ *
+ * @api
+ * @since 100.0.2
+ */
+class Json extends \Magento\Framework\Controller\AbstractResult
+{
+    /**
+     * @var \Magento\Framework\Translate\InlineInterface
+     */
+    protected $translateInline;
+    /**
+     * @var string
+     */
+    protected $json;
+    /**
+     * @param \Magento\Framework\Translate\InlineInterface $translateInline
+     * @param \Magento\Framework\Serialize\Serializer\Json $serializer
+     */
+    public function __construct(\Magento\Framework\Translate\InlineInterface $translateInline, \Magento\Framework\Serialize\Serializer\Json $serializer = null)
+    {
+    }
+    /**
+     * Set json data
+     *
+     * @param mixed $data
+     * @param boolean $cycleCheck Optional; whether or not to check for object recursion; off by default
+     * @param array $options Additional options used during encoding
+     * @return $this
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function setData($data, $cycleCheck = false, $options = [])
+    {
+    }
+    /**
+     * @param string $jsonData
+     * @return $this
+     */
+    public function setJsonData($jsonData)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    protected function render(\Magento\Framework\App\Response\HttpInterface $response)
+    {
+    }
+}
+/**
+ * A result that contains raw response - may be good for passing through files,
+ * returning result of downloads or some other binary contents
+ *
+ * @api
+ */
+class Raw extends \Magento\Framework\Controller\AbstractResult
+{
+    /**
+     * @var string
+     */
+    protected $contents;
+    /**
+     * @param string $contents
+     * @return $this
+     */
+    public function setContents($contents)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    protected function render(\Magento\Framework\App\Response\HttpInterface $response)
+    {
+    }
+}
+/**
+ * Factory class for @see \Magento\Framework\Controller\Result\Json
+ *
+ * @api
+ */
+class JsonFactory
+{
+    /**
+     * Object Manager instance
+     *
+     * @var \Magento\Framework\ObjectManagerInterface
+     */
+    protected $objectManager = null;
+    /**
+     * Instance name to create
+     *
+     * @var string
+     */
+    protected $instanceName = null;
+    /**
+     * Factory constructor
+     *
+     * @param \Magento\Framework\ObjectManagerInterface $objectManager
+     * @param string $instanceName
+     */
+    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager, $instanceName = \Magento\Framework\Controller\Result\Json::class)
+    {
+    }
+    /**
+     * Create class instance with specified parameters
+     *
+     * @param array $data
+     * @return \Magento\Framework\Controller\Result\Json
+     */
+    public function create(array $data = [])
+    {
+    }
+}
+/**
+ * @api
+ * @since 100.0.2
+ */
+class RedirectFactory
+{
+    /**
+     * Object Manager instance
+     *
+     * @var ObjectManagerInterface
+     */
+    protected $objectManager;
+    /**
+     * Instance name to create
+     *
+     * @var string
+     */
+    protected $instanceName;
+    /**
+     * @param ObjectManagerInterface $objectManager
+     * @param string $instanceName
+     */
+    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager, $instanceName = \Magento\Framework\Controller\Result\Redirect::class)
+    {
+    }
+    /**
+     * Create class instance with specified parameters
+     *
+     * @param array $data
+     * @return \Magento\Framework\Controller\Result\Redirect
+     */
+    public function create(array $data = [])
+    {
+    }
+}

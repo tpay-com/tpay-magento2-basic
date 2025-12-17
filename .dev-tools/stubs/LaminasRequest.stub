@@ -1,0 +1,388 @@
+<?php
+
+namespace Laminas\Http\PhpEnvironment;
+
+/**
+ * Functionality for determining client IP address.
+ */
+class RemoteAddress
+{
+    /**
+     * Whether to use proxy addresses or not.
+     *
+     * As default this setting is disabled - IP address is mostly needed to increase
+     * security. HTTP_* are not reliable since can easily be spoofed. It can be enabled
+     * just for more flexibility, but if user uses proxy to connect to trusted services
+     * it's his/her own risk, only reliable field for IP address is $_SERVER['REMOTE_ADDR'].
+     *
+     * @var bool
+     */
+    protected $useProxy = false;
+    /**
+     * List of trusted proxy IP addresses
+     *
+     * @var array
+     */
+    protected $trustedProxies = [];
+    /**
+     * HTTP header to introspect for proxies
+     *
+     * @var string
+     */
+    protected $proxyHeader = 'HTTP_X_FORWARDED_FOR';
+    /**
+     * Changes proxy handling setting.
+     *
+     * This must be static method, since validators are recovered automatically
+     * at session read, so this is the only way to switch setting.
+     *
+     * @param  bool  $useProxy Whether to check also proxied IP addresses.
+     * @return $this
+     */
+    public function setUseProxy($useProxy = true)
+    {
+    }
+    /**
+     * Checks proxy handling setting.
+     *
+     * @return bool Current setting value.
+     */
+    public function getUseProxy()
+    {
+    }
+    /**
+     * Set list of trusted proxy addresses
+     *
+     * @param  array $trustedProxies
+     * @return $this
+     */
+    public function setTrustedProxies(array $trustedProxies)
+    {
+    }
+    /**
+     * Set the header to introspect for proxy IPs
+     *
+     * @param  string $header
+     * @return $this
+     */
+    public function setProxyHeader($header = 'X-Forwarded-For')
+    {
+    }
+    /**
+     * Returns client IP address.
+     *
+     * @return string IP address.
+     */
+    public function getIpAddress()
+    {
+    }
+    /**
+     * Attempt to get the IP address for a proxied client
+     *
+     * @see http://tools.ietf.org/html/draft-ietf-appsawg-http-forwarded-10#section-5.2
+     *
+     * @return false|string
+     */
+    protected function getIpAddressFromProxy()
+    {
+    }
+    /**
+     * Normalize a header string
+     *
+     * Normalizes a header string to a format that is compatible with
+     * $_SERVER
+     *
+     * @param  string $header
+     * @return string
+     */
+    protected function normalizeProxyHeader($header)
+    {
+    }
+}
+/**
+ * HTTP Request for current PHP environment
+ */
+class Request extends \Laminas\Http\Request
+{
+    /**
+     * Base URL of the application.
+     *
+     * @var string
+     */
+    protected $baseUrl;
+    /**
+     * Base Path of the application.
+     *
+     * @var string
+     */
+    protected $basePath;
+    /**
+     * Actual request URI, independent of the platform.
+     *
+     * @var string
+     */
+    protected $requestUri;
+    /**
+     * PHP server params ($_SERVER)
+     *
+     * @var ParametersInterface
+     */
+    protected $serverParams;
+    /**
+     * PHP environment params ($_ENV)
+     *
+     * @var ParametersInterface
+     */
+    protected $envParams;
+    /**
+     * Construct
+     * Instantiates request.
+     *
+     * @param bool $allowCustomMethods
+     */
+    public function __construct($allowCustomMethods = true)
+    {
+    }
+    /**
+     * Get raw request body
+     *
+     * @return string
+     */
+    public function getContent()
+    {
+    }
+    /**
+     * Set cookies
+     *
+     * Instantiate and set cookies.
+     *
+     * @param string|array<string, string> $cookie
+     * @return $this
+     */
+    public function setCookies($cookie)
+    {
+    }
+    /**
+     * Set the request URI.
+     *
+     * @param  string $requestUri
+     * @return $this
+     */
+    public function setRequestUri($requestUri)
+    {
+    }
+    /**
+     * Get the request URI.
+     *
+     * @return string
+     */
+    public function getRequestUri()
+    {
+    }
+    /**
+     * Set the base URL.
+     *
+     * @param  string $baseUrl
+     * @return $this
+     */
+    public function setBaseUrl($baseUrl)
+    {
+    }
+    /**
+     * Get the base URL.
+     *
+     * @return string
+     */
+    public function getBaseUrl()
+    {
+    }
+    /**
+     * Set the base path.
+     *
+     * @param  string $basePath
+     * @return $this
+     */
+    public function setBasePath($basePath)
+    {
+    }
+    /**
+     * Get the base path.
+     *
+     * @return string
+     */
+    public function getBasePath()
+    {
+    }
+    /**
+     * Provide an alternate Parameter Container implementation for server parameters in this object,
+     * (this is NOT the primary API for value setting, for that see getServer())
+     *
+     * @return $this
+     */
+    public function setServer(\Laminas\Stdlib\ParametersInterface $server)
+    {
+    }
+    /**
+     * Return the parameter container responsible for server parameters or a single parameter value.
+     *
+     * @see http://www.faqs.org/rfcs/rfc3875.html
+     *
+     * @param string|null           $name            Parameter name to retrieve, or null to get the whole container.
+     * @param mixed|null            $default         Default value to use when the parameter is missing.
+     * @return ParametersInterface|mixed
+     */
+    public function getServer($name = null, $default = null)
+    {
+    }
+    /**
+     * Provide an alternate Parameter Container implementation for env parameters in this object,
+     * (this is NOT the primary API for value setting, for that see env())
+     *
+     * @return $this
+     */
+    public function setEnv(\Laminas\Stdlib\ParametersInterface $env)
+    {
+    }
+    /**
+     * Return the parameter container responsible for env parameters or a single parameter value.
+     *
+     * @param string|null           $name            Parameter name to retrieve, or null to get the whole container.
+     * @param mixed|null            $default         Default value to use when the parameter is missing.
+     * @return ParametersInterface|mixed
+     */
+    public function getEnv($name = null, $default = null)
+    {
+    }
+    /**
+     * Convert PHP superglobal $_FILES into more sane parameter=value structure
+     * This handles form file input with brackets (name=files[])
+     *
+     * @return array
+     */
+    protected function mapPhpFiles()
+    {
+    }
+    /**
+     * @param array        $array
+     * @param string       $paramName
+     * @param int|string   $index
+     * @param string|array $value
+     */
+    protected function mapPhpFileParam(&$array, $paramName, $index, $value)
+    {
+    }
+    /**
+     * Detect the base URI for the request
+     *
+     * Looks at a variety of criteria in order to attempt to autodetect a base
+     * URI, including rewrite URIs, proxy URIs, etc.
+     *
+     * @return string
+     */
+    protected function detectRequestUri()
+    {
+    }
+    /**
+     * Auto-detect the base path from the request environment
+     *
+     * Uses a variety of criteria in order to detect the base URL of the request
+     * (i.e., anything additional to the document root).
+     *
+     * @return string
+     */
+    protected function detectBaseUrl()
+    {
+    }
+    /**
+     * Autodetect the base path of the request
+     *
+     * Uses several criteria to determine the base path of the request.
+     *
+     * @return string
+     */
+    protected function detectBasePath()
+    {
+    }
+}
+/**
+ * HTTP Response for current PHP environment
+ */
+class Response extends \Laminas\Http\Response
+{
+    /**
+     * @deprecated This property is deprecated, and will be removed
+     *
+     * @var bool
+     */
+    public $headersSent;
+    /**
+     * The current used version
+     * (The value will be detected on getVersion)
+     *
+     * @var null|string
+     */
+    protected $version;
+    /** @var bool */
+    protected $contentSent = false;
+    /**
+     * Return the HTTP version for this response
+     *
+     * @see \Laminas\Http\AbstractMessage::getVersion()
+     *
+     * @return string
+     */
+    public function getVersion()
+    {
+    }
+    /**
+     * Detect the current used protocol version.
+     * If detection failed it falls back to version 1.0.
+     *
+     * @return string
+     */
+    protected function detectVersion()
+    {
+    }
+    /**
+     * @return bool
+     */
+    public function headersSent()
+    {
+    }
+    /**
+     * @return bool
+     */
+    public function contentSent()
+    {
+    }
+    /**
+     * @return void
+     */
+    public function setHeadersSentHandler(callable $handler)
+    {
+    }
+    /**
+     * Send HTTP headers
+     *
+     * @return $this
+     */
+    public function sendHeaders()
+    {
+    }
+    /**
+     * Send content
+     *
+     * @return $this
+     */
+    public function sendContent()
+    {
+    }
+    /**
+     * Send HTTP response
+     *
+     * @return $this
+     */
+    public function send()
+    {
+    }
+}
