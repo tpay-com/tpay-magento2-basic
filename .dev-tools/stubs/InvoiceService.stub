@@ -1,0 +1,447 @@
+<?php
+
+namespace Magento\Sales\Model\Service;
+
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
+class OrderService implements \Magento\Sales\Api\OrderManagementInterface
+{
+    /**
+     * @var \Magento\Sales\Api\OrderRepositoryInterface
+     */
+    protected $orderRepository;
+    /**
+     * @var \Magento\Sales\Api\OrderStatusHistoryRepositoryInterface
+     */
+    protected $historyRepository;
+    /**
+     * @var \Magento\Framework\Api\SearchCriteriaBuilder
+     */
+    protected $criteriaBuilder;
+    /**
+     * @var \Magento\Framework\Api\FilterBuilder
+     */
+    protected $filterBuilder;
+    /**
+     * @var \Magento\Sales\Model\OrderNotifier
+     */
+    protected $notifier;
+    /**
+     * @var \Magento\Framework\Event\ManagerInterface
+     */
+    protected $eventManager;
+    /**
+     * @var \Magento\Sales\Model\Order\Email\Sender\OrderCommentSender
+     */
+    protected $orderCommentSender;
+    /**
+     * Constructor
+     *
+     * @param \Magento\Sales\Api\OrderRepositoryInterface $orderRepository
+     * @param \Magento\Sales\Api\OrderStatusHistoryRepositoryInterface $historyRepository
+     * @param \Magento\Framework\Api\SearchCriteriaBuilder $criteriaBuilder
+     * @param \Magento\Framework\Api\FilterBuilder $filterBuilder
+     * @param \Magento\Sales\Model\OrderNotifier $notifier
+     * @param \Magento\Framework\Event\ManagerInterface $eventManager
+     * @param \Magento\Sales\Model\Order\Email\Sender\OrderCommentSender $orderCommentSender
+     * @param \Magento\Sales\Api\PaymentFailuresInterface $paymentFailures
+     * @param LoggerInterface $logger
+     * @param OrderMutexInterface|null $orderMutex
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     */
+    public function __construct(\Magento\Sales\Api\OrderRepositoryInterface $orderRepository, \Magento\Sales\Api\OrderStatusHistoryRepositoryInterface $historyRepository, \Magento\Framework\Api\SearchCriteriaBuilder $criteriaBuilder, \Magento\Framework\Api\FilterBuilder $filterBuilder, \Magento\Sales\Model\OrderNotifier $notifier, \Magento\Framework\Event\ManagerInterface $eventManager, \Magento\Sales\Model\Order\Email\Sender\OrderCommentSender $orderCommentSender, \Magento\Sales\Api\PaymentFailuresInterface $paymentFailures, \Psr\Log\LoggerInterface $logger, ?\Magento\Sales\Model\OrderMutexInterface $orderMutex = null)
+    {
+    }
+    /**
+     * Order cancel
+     *
+     * @param int $id
+     * @return bool
+     */
+    public function cancel($id)
+    {
+    }
+    /**
+     * Returns list of comments attached to order
+     *
+     * @param int $id
+     * @return \Magento\Sales\Api\Data\OrderStatusHistorySearchResultInterface
+     */
+    public function getCommentsList($id)
+    {
+    }
+    /**
+     * Add comment to order
+     *
+     * @param int $id
+     * @param \Magento\Sales\Api\Data\OrderStatusHistoryInterface $statusHistory
+     * @return bool
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function addComment($id, \Magento\Sales\Api\Data\OrderStatusHistoryInterface $statusHistory)
+    {
+    }
+    /**
+     * Notify user
+     *
+     * @param int $id
+     * @return bool
+     */
+    public function notify($id)
+    {
+    }
+    /**
+     * Returns order status
+     *
+     * @param int $id
+     * @return string
+     */
+    public function getStatus($id)
+    {
+    }
+    /**
+     * Order hold
+     *
+     * @param int $id
+     * @return bool
+     */
+    public function hold($id)
+    {
+    }
+    /**
+     * Order un hold
+     *
+     * @param int $id
+     * @return bool
+     */
+    public function unHold($id)
+    {
+    }
+    /**
+     * Perform place order.
+     *
+     * @param \Magento\Sales\Api\Data\OrderInterface $order
+     * @return \Magento\Sales\Api\Data\OrderInterface
+     * @throws \Exception
+     */
+    public function place(\Magento\Sales\Api\Data\OrderInterface $order)
+    {
+    }
+    /**
+     * Order state setter.
+     *
+     * If status is specified, will add order status history with specified comment
+     * the setData() cannot be overridden because of compatibility issues with resource model
+     * By default allows to set any state. Can also update status to default or specified value
+     * Complete and closed states are encapsulated intentionally
+     *
+     * @param \Magento\Sales\Api\Data\OrderInterface $order
+     * @param string $state
+     * @param string|bool $status
+     * @param string $comment
+     * @param bool $isCustomerNotified
+     * @param bool $shouldProtectState
+     * @return \Magento\Sales\Model\Service\OrderService
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function setState(\Magento\Sales\Api\Data\OrderInterface $order, $state, $status = false, $comment = '', $isCustomerNotified = null, $shouldProtectState = true)
+    {
+    }
+}
+/**
+ * Class CreditmemoService
+ * Provides functionality to work with Creditmemo
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
+class CreditmemoService implements \Magento\Sales\Api\CreditmemoManagementInterface
+{
+    /**
+     * @var \Magento\Sales\Api\CreditmemoRepositoryInterface
+     */
+    protected $creditmemoRepository;
+    /**
+     * @var \Magento\Sales\Api\CreditmemoCommentRepositoryInterface
+     */
+    protected $commentRepository;
+    /**
+     * @var \Magento\Framework\Api\SearchCriteriaBuilder
+     */
+    protected $searchCriteriaBuilder;
+    /**
+     * @var \Magento\Framework\Api\FilterBuilder
+     */
+    protected $filterBuilder;
+    /**
+     * @var \Magento\Sales\Model\Order\CreditmemoNotifier
+     */
+    protected $creditmemoNotifier;
+    /**
+     * @var \Magento\Framework\Pricing\PriceCurrencyInterface
+     */
+    protected $priceCurrency;
+    /**
+     * @var \Magento\Framework\Event\ManagerInterface
+     */
+    protected $eventManager;
+    /**
+     * @param \Magento\Sales\Api\CreditmemoRepositoryInterface $creditmemoRepository
+     * @param \Magento\Sales\Api\CreditmemoCommentRepositoryInterface $creditmemoCommentRepository
+     * @param \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param \Magento\Framework\Api\FilterBuilder $filterBuilder
+     * @param \Magento\Sales\Model\Order\CreditmemoNotifier $creditmemoNotifier
+     * @param \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency
+     * @param \Magento\Framework\Event\ManagerInterface $eventManager
+     */
+    public function __construct(\Magento\Sales\Api\CreditmemoRepositoryInterface $creditmemoRepository, \Magento\Sales\Api\CreditmemoCommentRepositoryInterface $creditmemoCommentRepository, \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder, \Magento\Framework\Api\FilterBuilder $filterBuilder, \Magento\Sales\Model\Order\CreditmemoNotifier $creditmemoNotifier, \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency, \Magento\Framework\Event\ManagerInterface $eventManager)
+    {
+    }
+    /**
+     * Cancel an existing creditmemo
+     *
+     * @param int $id Credit Memo Id
+     * @return void
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function cancel($id)
+    {
+    }
+    /**
+     * Returns list of comments attached to creditmemo
+     *
+     * @param int $id
+     * @return \Magento\Sales\Api\Data\CreditmemoCommentSearchResultInterface
+     */
+    public function getCommentsList($id)
+    {
+    }
+    /**
+     * Notify user
+     *
+     * @param int $id
+     * @return bool
+     */
+    public function notify($id)
+    {
+    }
+    /**
+     * Prepare creditmemo to refund and save it.
+     *
+     * @param \Magento\Sales\Api\Data\CreditmemoInterface $creditmemo
+     * @param bool $offlineRequested
+     * @return \Magento\Sales\Api\Data\CreditmemoInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function refund(\Magento\Sales\Api\Data\CreditmemoInterface $creditmemo, $offlineRequested = false)
+    {
+    }
+    /**
+     * Validates if credit memo is available for refund.
+     *
+     * @param \Magento\Sales\Api\Data\CreditmemoInterface $creditmemo
+     * @return bool
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    protected function validateForRefund(\Magento\Sales\Api\Data\CreditmemoInterface $creditmemo)
+    {
+    }
+}
+/**
+ * Class ShipmentService
+ */
+class ShipmentService implements \Magento\Sales\Api\ShipmentManagementInterface
+{
+    /**
+     * Repository
+     *
+     * @var \Magento\Sales\Api\ShipmentCommentRepositoryInterface
+     */
+    protected $commentRepository;
+    /**
+     * Search Criteria Builder
+     *
+     * @var \Magento\Framework\Api\SearchCriteriaBuilder
+     */
+    protected $criteriaBuilder;
+    /**
+     * Filter Builder
+     *
+     * @var \Magento\Framework\Api\FilterBuilder
+     */
+    protected $filterBuilder;
+    /**
+     * Repository
+     *
+     * @var \Magento\Sales\Api\ShipmentRepositoryInterface
+     */
+    protected $repository;
+    /**
+     * Shipment Notifier
+     *
+     * @var \Magento\Shipping\Model\ShipmentNotifier
+     */
+    protected $notifier;
+    /**
+     * Constructor
+     *
+     * @param \Magento\Sales\Api\ShipmentCommentRepositoryInterface $commentRepository
+     * @param \Magento\Framework\Api\SearchCriteriaBuilder $criteriaBuilder
+     * @param \Magento\Framework\Api\FilterBuilder $filterBuilder
+     * @param \Magento\Sales\Api\ShipmentRepositoryInterface $repository
+     * @param \Magento\Shipping\Model\ShipmentNotifier $notifier
+     */
+    public function __construct(\Magento\Sales\Api\ShipmentCommentRepositoryInterface $commentRepository, \Magento\Framework\Api\SearchCriteriaBuilder $criteriaBuilder, \Magento\Framework\Api\FilterBuilder $filterBuilder, \Magento\Sales\Api\ShipmentRepositoryInterface $repository, \Magento\Shipping\Model\ShipmentNotifier $notifier)
+    {
+    }
+    /**
+     * Returns shipment label
+     *
+     * @param int $id
+     * @return string
+     */
+    public function getLabel($id)
+    {
+    }
+    /**
+     * Returns list of comments attached to shipment
+     * @param int $id
+     * @return \Magento\Sales\Api\Data\ShipmentCommentSearchResultInterface
+     */
+    public function getCommentsList($id)
+    {
+    }
+    /**
+     * Notify user
+     *
+     * @param int $id
+     * @return bool
+     */
+    public function notify($id)
+    {
+    }
+}
+/**
+ * Service is responsible for handling failed payment transactions.
+ *
+ * It depends on Stores > Configuration > Sales > Checkout > Payment Failed Emails configuration.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
+class PaymentFailuresService implements \Magento\Sales\Api\PaymentFailuresInterface
+{
+    /**
+     * @param ScopeConfigInterface $scopeConfig
+     * @param StateInterface $inlineTranslation
+     * @param TransportBuilder $transportBuilder
+     * @param TimezoneInterface $localeDate
+     * @param CartRepositoryInterface $cartRepository
+     * @param LoggerInterface|null $logger
+     */
+    public function __construct(\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig, \Magento\Framework\Translate\Inline\StateInterface $inlineTranslation, \Magento\Framework\Mail\Template\TransportBuilder $transportBuilder, \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate, \Magento\Quote\Api\CartRepositoryInterface $cartRepository, \Psr\Log\LoggerInterface $logger = null)
+    {
+    }
+    /**
+     * Sends an email about failed transaction.
+     *
+     * @param int $cartId
+     * @param string $message
+     * @param string $checkoutType
+     * @return PaymentFailuresInterface
+     */
+    public function handle(int $cartId, string $message, string $checkoutType = 'onepage') : \Magento\Sales\Api\PaymentFailuresInterface
+    {
+    }
+}
+/**
+ * Class InvoiceService
+ *
+ * @api
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
+class InvoiceService implements \Magento\Sales\Api\InvoiceManagementInterface
+{
+    /**
+     * @var \Magento\Sales\Api\InvoiceRepositoryInterface
+     */
+    protected $repository;
+    /**
+     * @var \Magento\Sales\Api\InvoiceCommentRepositoryInterface
+     */
+    protected $commentRepository;
+    /**
+     * @var \Magento\Framework\Api\SearchCriteriaBuilder
+     */
+    protected $criteriaBuilder;
+    /**
+     * @var \Magento\Framework\Api\FilterBuilder
+     */
+    protected $filterBuilder;
+    /**
+     * @var \Magento\Sales\Model\Order\InvoiceNotifier
+     */
+    protected $invoiceNotifier;
+    /**
+     * @var \Magento\Sales\Api\OrderRepositoryInterface
+     */
+    protected $orderRepository;
+    /**
+     * @var \Magento\Sales\Model\Convert\Order
+     */
+    protected $orderConverter;
+    /**
+     * @param \Magento\Sales\Api\InvoiceRepositoryInterface $repository
+     * @param \Magento\Sales\Api\InvoiceCommentRepositoryInterface $commentRepository
+     * @param \Magento\Framework\Api\SearchCriteriaBuilder $criteriaBuilder
+     * @param \Magento\Framework\Api\FilterBuilder $filterBuilder
+     * @param \Magento\Sales\Model\Order\InvoiceNotifier $notifier
+     * @param \Magento\Sales\Api\OrderRepositoryInterface $orderRepository
+     * @param \Magento\Sales\Model\Convert\Order $orderConverter
+     * @param JsonSerializer $serializer
+     */
+    public function __construct(\Magento\Sales\Api\InvoiceRepositoryInterface $repository, \Magento\Sales\Api\InvoiceCommentRepositoryInterface $commentRepository, \Magento\Framework\Api\SearchCriteriaBuilder $criteriaBuilder, \Magento\Framework\Api\FilterBuilder $filterBuilder, \Magento\Sales\Model\Order\InvoiceNotifier $notifier, \Magento\Sales\Api\OrderRepositoryInterface $orderRepository, \Magento\Sales\Model\Convert\Order $orderConverter, \Magento\Framework\Serialize\Serializer\Json $serializer)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setCapture($id)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getCommentsList($id)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function notify($id)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setVoid($id)
+    {
+    }
+    /**
+     * Creates an invoice based on the order and quantities provided.
+     *
+     * Explanation for `if` statements:
+     * - using qty defined in `$preparedItemsQty` is prioritized
+     * - if qty is not defined and item is dummy, get ordered qty
+     * - if qty is not defined, get qty to invoice
+     * - else qty is 0
+     *
+     * @param Order $order
+     * @param array $orderItemsQtyToInvoice
+     * @return Invoice
+     * @throws LocalizedException
+     * @throws \Exception
+     */
+    public function prepareInvoice(\Magento\Sales\Model\Order $order, array $orderItemsQtyToInvoice = []) : \Magento\Sales\Api\Data\InvoiceInterface
+    {
+    }
+}

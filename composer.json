@@ -13,8 +13,6 @@
         "php": ">=7.1",
         "ext-json": "*",
         "composer-runtime-api": "^2.0",
-        "magento/framework": "^103.0",
-        "magento/module-csp": "^100.4.5-p6",
         "tpay-com/tpay-openapi-php": "^2.2.3",
         "tpay-com/tpay-php": "^2.4.7"
     },
@@ -29,5 +27,27 @@
         "files": [
             "registration.php"
         ]
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "*",
+        "tpay-com/coding-standards": "^1.1",
+        "phpstan/phpstan": "^2.1",
+        "php-cs-fixer/shim": "^3.92",
+        "vimeo/psalm": "^5.15.0",
+        "php-stubs/generator": "^0.8.5",
+        "phpstan/extension-installer": "^1.4",
+        "php-parallel-lint/php-parallel-lint": "^1.4"
+    },
+    "scripts": {
+      "cs:lint": "./vendor/bin/parallel-lint .",
+      "cs:fixer": "./vendor/bin/php-cs-fixer fix -vvv --dry-run --diff",
+      "cs:phpstan": "./vendor/bin/phpstan",
+      "cs:psalm": "./vendor/bin/psalm",
+      "cs:sniffer": "./vendor/bin/phpcs --standard=.php-cs.xml -n"
+    },
+    "config": {
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        }
     }
 }

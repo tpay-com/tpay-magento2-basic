@@ -1,0 +1,715 @@
+<?php
+
+namespace Magento\Payment\Gateway\Data;
+
+/**
+ * Interface OrderAdapterInterface
+ * @api
+ * @since 100.0.2
+ */
+interface OrderAdapterInterface
+{
+    /**
+     * Returns currency code
+     *
+     * @return string
+     */
+    public function getCurrencyCode();
+    /**
+     * Returns order increment id
+     *
+     * @return string
+     */
+    public function getOrderIncrementId();
+    /**
+     * Returns customer ID
+     *
+     * @return int|null
+     */
+    public function getCustomerId();
+    /**
+     * Returns billing address
+     *
+     * @return AddressAdapterInterface|null
+     */
+    public function getBillingAddress();
+    /**
+     * Returns shipping address
+     *
+     * @return AddressAdapterInterface|null
+     */
+    public function getShippingAddress();
+    /**
+     * Returns order store id
+     *
+     * @return int
+     */
+    public function getStoreId();
+    /**
+     * Returns order id
+     *
+     * @return int
+     */
+    public function getId();
+    /**
+     * Returns order grand total amount
+     *
+     * @return float
+     */
+    public function getGrandTotalAmount();
+    /**
+     * Returns list of line items in the cart
+     *
+     * @return array
+     */
+    public function getItems();
+    /**
+     * Gets the remote IP address for the order.
+     *
+     * @return string|null Remote IP address.
+     */
+    public function getRemoteIp();
+}
+/**
+ * Interface PaymentDataObjectInterface
+ * @package Magento\Payment\Gateway\Data
+ * @api
+ * @since 100.0.2
+ */
+interface PaymentDataObjectInterface
+{
+    /**
+     * Returns order
+     *
+     * @return OrderAdapterInterface
+     */
+    public function getOrder();
+    /**
+     * Returns payment
+     *
+     * @return InfoInterface
+     */
+    public function getPayment();
+}
+class PaymentDataObject implements \Magento\Payment\Gateway\Data\PaymentDataObjectInterface
+{
+    /**
+     * @param OrderAdapterInterface $order
+     * @param InfoInterface $payment
+     */
+    public function __construct(\Magento\Payment\Gateway\Data\OrderAdapterInterface $order, \Magento\Payment\Model\InfoInterface $payment)
+    {
+    }
+    /**
+     * Returns order
+     *
+     * @return OrderAdapterInterface
+     */
+    public function getOrder()
+    {
+    }
+    /**
+     * Returns payment
+     *
+     * @return InfoInterface
+     */
+    public function getPayment()
+    {
+    }
+}
+namespace Magento\Payment\Gateway\Data\Quote;
+
+/**
+ * Class QuoteAdapter
+ */
+class QuoteAdapter implements \Magento\Payment\Gateway\Data\OrderAdapterInterface
+{
+    /**
+     * @param CartInterface $quote
+     * @param AddressAdapterFactory $addressAdapterFactory
+     */
+    public function __construct(\Magento\Quote\Api\Data\CartInterface $quote, \Magento\Payment\Gateway\Data\Quote\AddressAdapterFactory $addressAdapterFactory)
+    {
+    }
+    /**
+     * Returns currency code
+     *
+     * @return string
+     */
+    public function getCurrencyCode()
+    {
+    }
+    /**
+     * Returns order increment id
+     *
+     * @return string
+     */
+    public function getOrderIncrementId()
+    {
+    }
+    /**
+     * Returns customer ID
+     *
+     * @return int|null
+     */
+    public function getCustomerId()
+    {
+    }
+    /**
+     * Returns billing address
+     *
+     * @return AddressAdapterInterface|null
+     */
+    public function getBillingAddress()
+    {
+    }
+    /**
+     * Returns shipping address
+     *
+     * @return AddressAdapterInterface|null
+     */
+    public function getShippingAddress()
+    {
+    }
+    /**
+     * Returns order store id
+     *
+     * @return int
+     */
+    public function getStoreId()
+    {
+    }
+    /**
+     * Returns order id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+    }
+    /**
+     * Returns order grand total amount
+     *
+     * @return null
+     */
+    public function getGrandTotalAmount()
+    {
+    }
+    /**
+     * Returns list of line items in the cart
+     *
+     * @return \Magento\Quote\Api\Data\CartItemInterface[]|null
+     */
+    public function getItems()
+    {
+    }
+    /**
+     * Gets the remote IP address for the order.
+     *
+     * @return string|null Remote IP address.
+     */
+    public function getRemoteIp()
+    {
+    }
+}
+namespace Magento\Payment\Gateway\Data;
+
+/**
+ * Interface AddressAdapterInterface
+ * @api
+ * @since 100.0.2
+ */
+interface AddressAdapterInterface
+{
+    /**
+     * Get region name
+     *
+     * @return string
+     */
+    public function getRegionCode();
+    /**
+     * Get country id
+     *
+     * @return string
+     */
+    public function getCountryId();
+    /**
+     * Get street line 1
+     *
+     * @return string
+     */
+    public function getStreetLine1();
+    /**
+     * Get street line 2
+     *
+     * @return string
+     */
+    public function getStreetLine2();
+    /**
+     * Get telephone number
+     *
+     * @return string
+     */
+    public function getTelephone();
+    /**
+     * Get postcode
+     *
+     * @return string
+     */
+    public function getPostcode();
+    /**
+     * Get city name
+     *
+     * @return string
+     */
+    public function getCity();
+    /**
+     * Get first name
+     *
+     * @return string
+     */
+    public function getFirstname();
+    /**
+     * Get last name
+     *
+     * @return string
+     */
+    public function getLastname();
+    /**
+     * Get middle name
+     *
+     * @return string|null
+     */
+    public function getMiddlename();
+    /**
+     * Get customer id
+     *
+     * @return int|null
+     */
+    public function getCustomerId();
+    /**
+     * Get billing/shipping email
+     *
+     * @return string
+     */
+    public function getEmail();
+    /**
+     * Returns name prefix
+     *
+     * @return string
+     */
+    public function getPrefix();
+    /**
+     * Returns name suffix
+     *
+     * @return string
+     */
+    public function getSuffix();
+    /**
+     * Get company
+     *
+     * @return string
+     */
+    public function getCompany();
+}
+namespace Magento\Payment\Gateway\Data\Quote;
+
+/**
+ * @inheritdoc
+ */
+class AddressAdapter implements \Magento\Payment\Gateway\Data\AddressAdapterInterface
+{
+    /**
+     * @param AddressInterface $address
+     */
+    public function __construct(\Magento\Quote\Api\Data\AddressInterface $address)
+    {
+    }
+    /**
+     * Get region name
+     *
+     * @return string
+     */
+    public function getRegionCode()
+    {
+    }
+    /**
+     * Get country id
+     *
+     * @return string
+     */
+    public function getCountryId()
+    {
+    }
+    /**
+     * Get street line 1
+     *
+     * @return string
+     */
+    public function getStreetLine1()
+    {
+    }
+    /**
+     * Get street line 2
+     *
+     * @return string
+     */
+    public function getStreetLine2()
+    {
+    }
+    /**
+     * Get telephone number
+     *
+     * @return string
+     */
+    public function getTelephone()
+    {
+    }
+    /**
+     * Get postcode
+     *
+     * @return string
+     */
+    public function getPostcode()
+    {
+    }
+    /**
+     * Get city name
+     *
+     * @return string
+     */
+    public function getCity()
+    {
+    }
+    /**
+     * Get first name
+     *
+     * @return string
+     */
+    public function getFirstname()
+    {
+    }
+    /**
+     * Get last name
+     *
+     * @return string
+     */
+    public function getLastname()
+    {
+    }
+    /**
+     * Get middle name
+     *
+     * @return string|null
+     */
+    public function getMiddlename()
+    {
+    }
+    /**
+     * Get customer id
+     *
+     * @return int|null
+     */
+    public function getCustomerId()
+    {
+    }
+    /**
+     * Get billing/shipping email
+     *
+     * @return string
+     */
+    public function getEmail()
+    {
+    }
+    /**
+     * Returns name prefix
+     *
+     * @return string
+     */
+    public function getPrefix()
+    {
+    }
+    /**
+     * Returns name suffix
+     *
+     * @return string
+     */
+    public function getSuffix()
+    {
+    }
+    /**
+     * Get company
+     *
+     * @return string
+     */
+    public function getCompany()
+    {
+    }
+}
+namespace Magento\Payment\Gateway\Data\Order;
+
+/**
+ * @inheritdoc
+ */
+class AddressAdapter implements \Magento\Payment\Gateway\Data\AddressAdapterInterface
+{
+    /**
+     * @param OrderAddressInterface $address
+     */
+    public function __construct(\Magento\Sales\Api\Data\OrderAddressInterface $address)
+    {
+    }
+    /**
+     * Get region name
+     *
+     * @return string
+     */
+    public function getRegionCode()
+    {
+    }
+    /**
+     * Get country id
+     *
+     * @return string
+     */
+    public function getCountryId()
+    {
+    }
+    /**
+     * Get street line 1
+     *
+     * @return string
+     */
+    public function getStreetLine1()
+    {
+    }
+    /**
+     * Get street line 2
+     *
+     * @return string
+     */
+    public function getStreetLine2()
+    {
+    }
+    /**
+     * Get telephone number
+     *
+     * @return string
+     */
+    public function getTelephone()
+    {
+    }
+    /**
+     * Get postcode
+     *
+     * @return string
+     */
+    public function getPostcode()
+    {
+    }
+    /**
+     * Get city name
+     *
+     * @return string
+     */
+    public function getCity()
+    {
+    }
+    /**
+     * Get first name
+     *
+     * @return string
+     */
+    public function getFirstname()
+    {
+    }
+    /**
+     * Get last name
+     *
+     * @return string
+     */
+    public function getLastname()
+    {
+    }
+    /**
+     * Get middle name
+     *
+     * @return string|null
+     */
+    public function getMiddlename()
+    {
+    }
+    /**
+     * Get customer id
+     *
+     * @return int|null
+     */
+    public function getCustomerId()
+    {
+    }
+    /**
+     * Get billing/shipping email
+     *
+     * @return string
+     */
+    public function getEmail()
+    {
+    }
+    /**
+     * Returns name prefix
+     *
+     * @return string
+     */
+    public function getPrefix()
+    {
+    }
+    /**
+     * Returns name suffix
+     *
+     * @return string
+     */
+    public function getSuffix()
+    {
+    }
+    /**
+     * Get company
+     *
+     * @return string
+     */
+    public function getCompany()
+    {
+    }
+}
+/**
+ * Class OrderAdapter
+ */
+class OrderAdapter implements \Magento\Payment\Gateway\Data\OrderAdapterInterface
+{
+    /**
+     * @param Order $order
+     * @param AddressAdapterFactory $addressAdapterFactory
+     */
+    public function __construct(\Magento\Sales\Model\Order $order, \Magento\Payment\Gateway\Data\Order\AddressAdapterFactory $addressAdapterFactory)
+    {
+    }
+    /**
+     * Returns currency code
+     *
+     * @return string
+     */
+    public function getCurrencyCode()
+    {
+    }
+    /**
+     * Returns order increment id
+     *
+     * @return string
+     */
+    public function getOrderIncrementId()
+    {
+    }
+    /**
+     * Returns customer ID
+     *
+     * @return int|null
+     */
+    public function getCustomerId()
+    {
+    }
+    /**
+     * Returns billing address
+     *
+     * @return AddressAdapterInterface|null
+     */
+    public function getBillingAddress()
+    {
+    }
+    /**
+     * Returns shipping address
+     *
+     * @return AddressAdapterInterface|null
+     */
+    public function getShippingAddress()
+    {
+    }
+    /**
+     * Returns order store id
+     *
+     * @return int
+     */
+    public function getStoreId()
+    {
+    }
+    /**
+     * Returns order id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+    }
+    /**
+     * Returns order grand total amount
+     *
+     * @return float|null
+     */
+    public function getGrandTotalAmount()
+    {
+    }
+    /**
+     * Returns list of line items in the cart
+     *
+     * @return \Magento\Sales\Api\Data\OrderItemInterface[]
+     */
+    public function getItems()
+    {
+    }
+    /**
+     * Gets the remote IP address for the order.
+     *
+     * @return string|null Remote IP address.
+     */
+    public function getRemoteIp()
+    {
+    }
+}
+namespace Magento\Payment\Gateway\Data;
+
+/**
+ * Service for creation transferable payment object from model
+ *
+ * @api
+ * @since 100.0.2
+ */
+interface PaymentDataObjectFactoryInterface
+{
+    /**
+     * Creates Payment Data Object
+     *
+     * @param InfoInterface $paymentInfo
+     * @return PaymentDataObjectInterface
+     */
+    public function create(\Magento\Payment\Model\InfoInterface $paymentInfo);
+}
+class PaymentDataObjectFactory implements \Magento\Payment\Gateway\Data\PaymentDataObjectFactoryInterface
+{
+    /**
+     * Factory constructor
+     *
+     * @param ObjectManagerInterface $objectManager
+     * @param Order\OrderAdapterFactory $orderAdapterFactory
+     * @param Quote\QuoteAdapterFactory $quoteAdapterFactory
+     */
+    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager, \Magento\Payment\Gateway\Data\Order\OrderAdapterFactory $orderAdapterFactory, \Magento\Payment\Gateway\Data\Quote\QuoteAdapterFactory $quoteAdapterFactory)
+    {
+    }
+    /**
+     * Creates Payment Data Object
+     *
+     * @param InfoInterface $paymentInfo
+     * @return PaymentDataObjectInterface
+     */
+    public function create(\Magento\Payment\Model\InfoInterface $paymentInfo)
+    {
+    }
+}
