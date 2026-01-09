@@ -1,0 +1,308 @@
+<?php
+
+namespace Magento\Payment\Gateway\Command;
+
+/**
+ * Class CommandException
+ * @package Magento\Payment\Gateway\Command
+ * @api
+ * @since 100.0.2
+ */
+class CommandException extends \Magento\Framework\Exception\LocalizedException
+{
+}
+/**
+ * Interface CommandPoolInterface
+ * @package Magento\Payment\Gateway\Command
+ * @api
+ * @since 100.0.2
+ */
+interface CommandPoolInterface
+{
+    /**
+     * Retrieves operation
+     *
+     * @param string $commandCode
+     * @return CommandInterface
+     * @throws NotFoundException
+     */
+    public function get($commandCode);
+}
+/**
+ * Class CommandPool
+ * @api
+ * @since 100.0.2
+ */
+class CommandPool implements \Magento\Payment\Gateway\Command\CommandPoolInterface
+{
+    /**
+     * @param TMapFactory $tmapFactory
+     * @param array $commands
+     */
+    public function __construct(\Magento\Framework\ObjectManager\TMapFactory $tmapFactory, array $commands = [])
+    {
+    }
+    /**
+     * Retrieves operation
+     *
+     * @param string $commandCode
+     * @return CommandInterface
+     * @throws NotFoundException
+     */
+    public function get($commandCode)
+    {
+    }
+}
+/**
+ * Class GatewayCommand
+ * @api
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @since 100.0.2
+ */
+class GatewayCommand implements \Magento\Payment\Gateway\CommandInterface
+{
+    /**
+     * @param BuilderInterface $requestBuilder
+     * @param TransferFactoryInterface $transferFactory
+     * @param ClientInterface $client
+     * @param LoggerInterface $logger
+     * @param HandlerInterface $handler
+     * @param ValidatorInterface $validator
+     * @param ErrorMessageMapperInterface|null $errorMessageMapper
+     */
+    public function __construct(\Magento\Payment\Gateway\Request\BuilderInterface $requestBuilder, \Magento\Payment\Gateway\Http\TransferFactoryInterface $transferFactory, \Magento\Payment\Gateway\Http\ClientInterface $client, \Psr\Log\LoggerInterface $logger, \Magento\Payment\Gateway\Response\HandlerInterface $handler = null, \Magento\Payment\Gateway\Validator\ValidatorInterface $validator = null, \Magento\Payment\Gateway\ErrorMapper\ErrorMessageMapperInterface $errorMessageMapper = null)
+    {
+    }
+    /**
+     * Executes command basing on business object
+     *
+     * @param array $commandSubject
+     * @return void
+     * @throws CommandException
+     * @throws ClientException
+     * @throws ConverterException
+     */
+    public function execute(array $commandSubject)
+    {
+    }
+}
+/**
+ * Interface CommandManagerPoolInterface
+ * @package Magento\Payment\Gateway\Command
+ * @api
+ * @since 100.1.0
+ */
+interface CommandManagerPoolInterface
+{
+    /**
+     * Returns Command executor for defined payment provider
+     *
+     * @param string $paymentProviderCode
+     * @return CommandManagerInterface
+     * @throws NotFoundException
+     * @since 100.1.0
+     */
+    public function get($paymentProviderCode);
+}
+/**
+ * Null command. Does nothing.
+ *
+ * Use this class as an implementation of CommandInterface to ignore some action
+ * or in case if command invoked by Magento has no sense for payment method.
+ *
+ * @api
+ * @since 100.0.2
+ */
+class NullCommand implements \Magento\Payment\Gateway\CommandInterface
+{
+    /**
+     * Process command without any side effect.
+     *
+     * @param array $commandSubject
+     *
+     * @return null|Command\ResultInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function execute(array $commandSubject)
+    {
+    }
+}
+/**
+ * Interface ResultInterface
+ * @package Magento\Payment\Gateway\Command
+ * @api
+ * @since 100.0.2
+ */
+interface ResultInterface
+{
+    /**
+     * Returns result interpretation
+     *
+     * @return mixed
+     */
+    public function get();
+}
+/**
+ * Class CommandManagerPool
+ * @package Magento\Payment\Gateway\Command
+ * @api
+ * @since 100.1.0
+ */
+class CommandManagerPool implements \Magento\Payment\Gateway\Command\CommandManagerPoolInterface
+{
+    /**
+     * @param TMapFactory $tmapFactory
+     * @param array $executors
+     */
+    public function __construct(\Magento\Framework\ObjectManager\TMapFactory $tmapFactory, array $executors = [])
+    {
+    }
+    /**
+     * Returns Command executor for defined payment provider
+     *
+     * @param string $paymentProviderCode
+     * @return CommandManagerInterface
+     * @throws NotFoundException
+     * @since 100.1.0
+     */
+    public function get($paymentProviderCode)
+    {
+    }
+}
+/**
+ * Interface CommandManagerInterface
+ * @api
+ * @since 100.1.0
+ */
+interface CommandManagerInterface extends \Magento\Payment\Gateway\Command\CommandPoolInterface
+{
+    /**
+     * Executes command by code
+     *
+     * @param string $commandCode
+     * @param InfoInterface|null $payment
+     * @param array $arguments
+     * @return ResultInterface|null
+     * @throws NotFoundException
+     * @throws CommandException
+     *
+     * @since 100.1.0
+     */
+    public function executeByCode($commandCode, \Magento\Payment\Model\InfoInterface $payment = null, array $arguments = []);
+    /**
+     * Executes command
+     *
+     * @param CommandInterface $command
+     * @param InfoInterface|null $payment
+     * @param array $arguments
+     * @return ResultInterface|null
+     * @throws CommandException
+     * @since 100.1.0
+     */
+    public function execute(\Magento\Payment\Gateway\CommandInterface $command, \Magento\Payment\Model\InfoInterface $payment = null, array $arguments = []);
+}
+/**
+ * Class CommandManager
+ * @package Magento\Payment\Gateway\Command
+ * @api
+ * @since 100.1.0
+ */
+class CommandManager implements \Magento\Payment\Gateway\Command\CommandManagerInterface
+{
+    /**
+     * CommandExecutor constructor.
+     * @param CommandPoolInterface $commandPool
+     * @param PaymentDataObjectFactoryInterface $paymentDataObjectFactory
+     */
+    public function __construct(\Magento\Payment\Gateway\Command\CommandPoolInterface $commandPool, \Magento\Payment\Gateway\Data\PaymentDataObjectFactoryInterface $paymentDataObjectFactory)
+    {
+    }
+    /**
+     * Executes command by code
+     *
+     * @param string $commandCode
+     * @param InfoInterface|null $payment
+     * @param array $arguments
+     * @return ResultInterface|null
+     * @throws NotFoundException
+     * @throws CommandException
+     * @since 100.1.0
+     */
+    public function executeByCode($commandCode, \Magento\Payment\Model\InfoInterface $payment = null, array $arguments = [])
+    {
+    }
+    /**
+     * Executes command
+     *
+     * @param CommandInterface $command
+     * @param InfoInterface|null $payment
+     * @param array $arguments
+     * @return ResultInterface|null
+     * @throws CommandException
+     * @since 100.1.0
+     */
+    public function execute(\Magento\Payment\Gateway\CommandInterface $command, \Magento\Payment\Model\InfoInterface $payment = null, array $arguments = [])
+    {
+    }
+    /**
+     * Retrieves operation
+     *
+     * @param string $commandCode
+     * @return CommandInterface
+     * @throws NotFoundException
+     * @since 100.1.0
+     */
+    public function get($commandCode)
+    {
+    }
+}
+namespace Magento\Payment\Gateway\Command\Result;
+
+/**
+ * Container for array that should be returned as command result.
+ *
+ * @api
+ * @since 100.0.2
+ */
+class ArrayResult implements \Magento\Payment\Gateway\Command\ResultInterface
+{
+    /**
+     * @param array $array
+     */
+    public function __construct(array $array = [])
+    {
+    }
+    /**
+     * Returns result interpretation
+     *
+     * @return array
+     */
+    public function get()
+    {
+    }
+}
+/**
+ * Container for boolean value that should be returned as command result.
+ *
+ * @api
+ * @since 100.0.2
+ */
+class BoolResult implements \Magento\Payment\Gateway\Command\ResultInterface
+{
+    /**
+     * Constructor
+     *
+     * @param bool $result
+     */
+    public function __construct($result = true)
+    {
+    }
+    /**
+     * Returns result interpretation
+     *
+     * @return mixed
+     */
+    public function get()
+    {
+    }
+}

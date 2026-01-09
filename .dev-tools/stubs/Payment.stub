@@ -1,0 +1,4573 @@
+<?php
+
+namespace Magento\Quote\Model\Quote;
+
+class QuantityCollector
+{
+    /**
+     * Collect items qty
+     *
+     * @param Quote $quote
+     * @return Quote
+     */
+    public function collectItemsQtys(\Magento\Quote\Model\Quote $quote)
+    {
+    }
+}
+/**
+ * Composite object for collecting total.
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
+class TotalsCollector
+{
+    /**
+     * Total models collector
+     *
+     * @var \Magento\Quote\Model\Quote\Address\Total\Collector
+     */
+    protected $totalCollector;
+    /**
+     * @var \Magento\Quote\Model\Quote\Address\Total\CollectorFactory
+     */
+    protected $totalCollectorFactory;
+    /**
+     * Application Event Dispatcher
+     *
+     * @var \Magento\Framework\Event\ManagerInterface
+     */
+    protected $eventManager;
+    /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
+    protected $storeManager;
+    /**
+     * @var \Magento\Quote\Model\Quote\Address\TotalFactory
+     */
+    protected $totalFactory;
+    /**
+     * @var \Magento\Quote\Model\Quote\TotalsCollectorList
+     */
+    protected $collectorList;
+    /**
+     * @var \Magento\Quote\Model\QuoteValidator
+     */
+    protected $quoteValidator;
+    /**
+     * @var \Magento\Quote\Model\ShippingFactory
+     */
+    protected $shippingFactory;
+    /**
+     * @var \Magento\Quote\Model\ShippingAssignmentFactory
+     */
+    protected $shippingAssignmentFactory;
+    /**
+     * @param Collector $totalCollector
+     * @param CollectorFactory $totalCollectorFactory
+     * @param \Magento\Framework\Event\ManagerInterface $eventManager
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param Address\TotalFactory $totalFactory
+     * @param TotalsCollectorList $collectorList
+     * @param \Magento\Quote\Model\ShippingFactory $shippingFactory
+     * @param \Magento\Quote\Model\ShippingAssignmentFactory $shippingAssignmentFactory
+     * @param \Magento\Quote\Model\QuoteValidator $quoteValidator
+     * @param QuantityCollector $quantityCollector
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     */
+    public function __construct(\Magento\Quote\Model\Quote\Address\Total\Collector $totalCollector, \Magento\Quote\Model\Quote\Address\Total\CollectorFactory $totalCollectorFactory, \Magento\Framework\Event\ManagerInterface $eventManager, \Magento\Store\Model\StoreManagerInterface $storeManager, \Magento\Quote\Model\Quote\Address\TotalFactory $totalFactory, \Magento\Quote\Model\Quote\TotalsCollectorList $collectorList, \Magento\Quote\Model\ShippingFactory $shippingFactory, \Magento\Quote\Model\ShippingAssignmentFactory $shippingAssignmentFactory, \Magento\Quote\Model\QuoteValidator $quoteValidator, \Magento\Quote\Model\Quote\QuantityCollector $quantityCollector = null)
+    {
+    }
+    /**
+     * Collect quote totals.
+     *
+     * @param \Magento\Quote\Model\Quote $quote
+     * @return Address\Total
+     */
+    public function collectQuoteTotals(\Magento\Quote\Model\Quote $quote)
+    {
+    }
+    /**
+     * Collect quote.
+     *
+     * @param \Magento\Quote\Model\Quote $quote
+     * @return \Magento\Quote\Model\Quote\Address\Total
+     */
+    public function collect(\Magento\Quote\Model\Quote $quote)
+    {
+    }
+    /**
+     * Validate coupon code.
+     *
+     * @param \Magento\Quote\Model\Quote $quote
+     * @return $this
+     */
+    protected function _validateCouponCode(\Magento\Quote\Model\Quote $quote)
+    {
+    }
+    /**
+     * Collect items qty
+     *
+     * @param \Magento\Quote\Model\Quote $quote
+     * @return $this
+     * @deprecated
+     * @see \Magento\Quote\Model\Quote\QuantityCollector
+     */
+    protected function _collectItemsQtys(\Magento\Quote\Model\Quote $quote)
+    {
+    }
+    /**
+     * Collect address total.
+     *
+     * @param \Magento\Quote\Model\Quote $quote
+     * @param Address $address
+     * @return Address\Total
+     */
+    public function collectAddressTotals(\Magento\Quote\Model\Quote $quote, \Magento\Quote\Model\Quote\Address $address)
+    {
+    }
+}
+namespace Magento\Quote\Model\Quote\Validator\MinimumOrderAmount;
+
+class ValidationMessage
+{
+    /**
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Magento\Framework\Locale\CurrencyInterface $currency
+     * @param \Magento\Framework\Pricing\Helper\Data $priceHelper
+     */
+    public function __construct(\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig, \Magento\Store\Model\StoreManagerInterface $storeManager, \Magento\Framework\Locale\CurrencyInterface $currency, \Magento\Framework\Pricing\Helper\Data $priceHelper = null)
+    {
+    }
+    /**
+     * Get validation message.
+     *
+     * @return \Magento\Framework\Phrase
+     */
+    public function getMessage()
+    {
+    }
+}
+namespace Magento\Quote\Model\Quote;
+
+/**
+ * Product option entity
+ */
+class ProductOption extends \Magento\Framework\Model\AbstractExtensibleModel implements \Magento\Quote\Api\Data\ProductOptionInterface
+{
+    /**
+     * Retrieve existing extension attributes object or create a new one.
+     *
+     * @return \Magento\Quote\Api\Data\ProductOptionExtensionInterface|null
+     */
+    public function getExtensionAttributes()
+    {
+    }
+    /**
+     * Set an extension attributes object.
+     *
+     * @param \Magento\Quote\Api\Data\ProductOptionExtensionInterface $extensionAttributes
+     * @return $this
+     */
+    public function setExtensionAttributes(\Magento\Quote\Api\Data\ProductOptionExtensionInterface $extensionAttributes)
+    {
+    }
+}
+/**
+ * Quote payment information
+ *
+ * @api
+ * @method int getQuoteId()
+ * @method \Magento\Quote\Model\Quote\Payment setQuoteId(int $value)
+ * @method string getCreatedAt()
+ * @method \Magento\Quote\Model\Quote\Payment setCreatedAt(string $value)
+ * @method string getUpdatedAt()
+ * @method \Magento\Quote\Model\Quote\Payment setUpdatedAt(string $value)
+ * @method string getCcNumberEnc()
+ * @method \Magento\Quote\Model\Quote\Payment setCcNumberEnc(string $value)
+ * @method string getCcLast4()
+ * @method \Magento\Quote\Model\Quote\Payment setCcLast4(string $value)
+ * @method string getCcCidEnc()
+ * @method \Magento\Quote\Model\Quote\Payment setCcCidEnc(string $value)
+ * @method string getCcSsOwner()
+ * @method \Magento\Quote\Model\Quote\Payment setCcSsOwner(string $value)
+ * @method int getCcSsStartMonth()
+ * @method \Magento\Quote\Model\Quote\Payment setCcSsStartMonth(int $value)
+ * @method int getCcSsStartYear()
+ * @method \Magento\Quote\Model\Quote\Payment setCcSsStartYear(int $value)
+ * @method string getCcSsIssue()
+ * @method \Magento\Quote\Model\Quote\Payment setCcSsIssue(string $value)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @since 100.0.2
+ */
+class Payment extends \Magento\Payment\Model\Info implements \Magento\Quote\Api\Data\PaymentInterface
+{
+    /**
+     * @var string
+     */
+    protected $_eventPrefix = 'sales_quote_payment';
+    /**
+     * @var string
+     */
+    protected $_eventObject = 'payment';
+    /**
+     * Quote model object
+     *
+     * @var \Magento\Quote\Model\Quote
+     */
+    protected $_quote;
+    /**
+     * @var \Magento\Payment\Model\Checks\SpecificationFactory
+     */
+    protected $methodSpecificationFactory;
+    /**
+     * @param \Magento\Framework\Model\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory
+     * @param \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory
+     * @param \Magento\Payment\Helper\Data $paymentData
+     * @param \Magento\Framework\Encryption\EncryptorInterface $encryptor
+     * @param \Magento\Payment\Model\Checks\SpecificationFactory $methodSpecificationFactory
+     * @param \Magento\Framework\Model\ResourceModel\AbstractResource $resource
+     * @param \Magento\Framework\Data\Collection\AbstractDb $resourceCollection
+     * @param array $data
+     * @param array $additionalChecks
+     * @param \Magento\Framework\Serialize\Serializer\Json|null $serializer
+     * @param \Magento\Framework\Serialize\JsonValidator|null $jsonValidator
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     */
+    public function __construct(\Magento\Framework\Model\Context $context, \Magento\Framework\Registry $registry, \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory, \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory, \Magento\Payment\Helper\Data $paymentData, \Magento\Framework\Encryption\EncryptorInterface $encryptor, \Magento\Payment\Model\Checks\SpecificationFactory $methodSpecificationFactory, \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null, \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null, array $data = [], array $additionalChecks = [], \Magento\Framework\Serialize\Serializer\Json $serializer = null, \Magento\Framework\Serialize\JsonValidator $jsonValidator = null)
+    {
+    }
+    /**
+     * Initialize resource model
+     *
+     * @return void
+     */
+    protected function _construct()
+    {
+    }
+    /**
+     * Declare quote model instance
+     *
+     * @param \Magento\Quote\Model\Quote $quote
+     * @return $this
+     */
+    public function setQuote(\Magento\Quote\Model\Quote $quote)
+    {
+    }
+    /**
+     * Retrieve quote model instance
+     *
+     * @codeCoverageIgnore
+     *
+     * @return \Magento\Quote\Model\Quote
+     */
+    public function getQuote()
+    {
+    }
+    /**
+     * Import data array to payment method object,
+     * Method calls quote totals collect because payment method availability
+     * can be related to quote totals
+     *
+     * @param array $data
+     * @return $this
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function importData(array $data)
+    {
+    }
+    /**
+     * Prepare object for save
+     *
+     * @return $this
+     */
+    public function beforeSave()
+    {
+    }
+    /**
+     * Checkout redirect URL getter
+     *
+     * @return string
+     */
+    public function getCheckoutRedirectUrl()
+    {
+    }
+    /**
+     * Checkout order place redirect URL getter
+     *
+     * @return string
+     */
+    public function getOrderPlaceRedirectUrl()
+    {
+    }
+    /**
+     * Retrieve payment method model object
+     *
+     * @return \Magento\Payment\Model\MethodInterface
+     */
+    public function getMethodInstance()
+    {
+    }
+    /**
+     * @codeCoverageIgnoreStart
+     */
+    /**
+     * Get purchase order number
+     *
+     * @return string|null
+     */
+    public function getPoNumber()
+    {
+    }
+    /**
+     * Set purchase order number
+     *
+     * @param string $poNumber
+     * @return $this
+     */
+    public function setPoNumber($poNumber)
+    {
+    }
+    /**
+     * Get payment method code
+     *
+     * @return string
+     */
+    public function getMethod()
+    {
+    }
+    /**
+     * Set payment method code
+     *
+     * @param string $method
+     * @return $this
+     */
+    public function setMethod($method)
+    {
+    }
+    /**
+     * Get payment additional details
+     *
+     * @return string[]|null
+     */
+    public function getAdditionalData()
+    {
+    }
+    /**
+     * Set payment additional details
+     *
+     * @param string $additionalData
+     * @return $this
+     */
+    public function setAdditionalData($additionalData)
+    {
+    }
+    //@codeCoverageIgnoreEnd
+    /**
+     * {@inheritdoc}
+     *
+     * @return \Magento\Quote\Api\Data\PaymentExtensionInterface|null
+     */
+    public function getExtensionAttributes()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     *
+     * @param \Magento\Quote\Api\Data\PaymentExtensionInterface $extensionAttributes
+     * @return $this
+     */
+    public function setExtensionAttributes(\Magento\Quote\Api\Data\PaymentExtensionInterface $extensionAttributes)
+    {
+    }
+}
+class TotalsReader
+{
+    /**
+     * @var \Magento\Quote\Model\Quote\Address\TotalFactory
+     */
+    protected $totalFactory;
+    /**
+     * @var \Magento\Quote\Model\Quote\TotalsCollectorList
+     */
+    protected $collectorList;
+    /**
+     * @param Address\TotalFactory $totalFactory
+     * @param TotalsCollectorList $collectorList
+     */
+    public function __construct(\Magento\Quote\Model\Quote\Address\TotalFactory $totalFactory, \Magento\Quote\Model\Quote\TotalsCollectorList $collectorList)
+    {
+    }
+    /**
+     * @param \Magento\Quote\Model\Quote $quote
+     * @param array $total
+     * @return Total[]
+     */
+    public function fetch(\Magento\Quote\Model\Quote $quote, array $total)
+    {
+    }
+    /**
+     * @param array $total
+     * @return Total|Total[]
+     */
+    protected function convert($total)
+    {
+    }
+    /**
+     * @param Total $totalInstance
+     * @param Total[] $output
+     * @return Total[]
+     */
+    protected function merge(\Magento\Quote\Model\Quote\Address\Total $totalInstance, $output)
+    {
+    }
+}
+namespace Magento\Quote\Model\Quote\Plugin;
+
+/**
+ * Updates quote store id.
+ */
+class UpdateQuoteStoreId
+{
+    /**
+     * @param StoreManagerInterface $storeManager
+     * @param Request $request
+     */
+    public function __construct(\Magento\Store\Model\StoreManagerInterface $storeManager, \Magento\Framework\App\Request\Http $request)
+    {
+    }
+    /**
+     * Update store id in requested quote by store id from guest's request.
+     *
+     * @param Quote $subject
+     * @param Quote $result
+     * @return Quote
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function afterLoadByIdWithoutStore(\Magento\Quote\Model\Quote $subject, \Magento\Quote\Model\Quote $result) : \Magento\Quote\Model\Quote
+    {
+    }
+    /**
+     * Update store id in requested quote by store id from registered customer's request.
+     *
+     * @param Quote $subject
+     * @param Quote $result
+     * @return Quote
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function afterLoadByCustomer(\Magento\Quote\Model\Quote $subject, \Magento\Quote\Model\Quote $result) : \Magento\Quote\Model\Quote
+    {
+    }
+}
+namespace Magento\Quote\Model\Quote;
+
+class TotalsCollectorList
+{
+    /**
+     * Total models collector
+     *
+     * @var \Magento\Quote\Model\Quote\Address\Total\Collector
+     */
+    protected $totalCollector;
+    /**
+     * @var \Magento\Quote\Model\Quote\Address\Total\CollectorFactory
+     */
+    protected $totalCollectorFactory;
+    /**
+     * Prefix of model events
+     *
+     * @var string
+     */
+    protected $_eventPrefix = 'sales_quote_address';
+    /**
+     * Name of event object
+     *
+     * @var string
+     */
+    protected $_eventObject = 'quote_address';
+    /**
+     * Application Event Dispatcher
+     *
+     * @var \Magento\Framework\Event\ManagerInterface
+     */
+    protected $eventManager;
+    /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
+    protected $storeManager;
+    /**
+     * @var \Magento\Quote\Model\Quote\Address\TotalFactory
+     */
+    protected $totalFactory;
+    /**
+     * @param Collector $totalCollector
+     * @param CollectorFactory $totalCollectorFactory
+     * @param \Magento\Framework\Event\ManagerInterface $eventManager
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param Address\TotalFactory $totalFactory
+     */
+    public function __construct(\Magento\Quote\Model\Quote\Address\Total\Collector $totalCollector, \Magento\Quote\Model\Quote\Address\Total\CollectorFactory $totalCollectorFactory, \Magento\Framework\Event\ManagerInterface $eventManager, \Magento\Store\Model\StoreManagerInterface $storeManager, \Magento\Quote\Model\Quote\Address\TotalFactory $totalFactory)
+    {
+    }
+    /**
+     * @param int $storeId
+     * @return \Magento\Quote\Model\Quote\Address\Total\AbstractTotal[]
+     */
+    public function getCollectors($storeId)
+    {
+    }
+}
+/**
+ * Sales Quote address model
+ *
+ * @api
+ * @method int getQuoteId()
+ * @method Address setQuoteId(int $value)
+ * @method string getCreatedAt()
+ * @method Address setCreatedAt(string $value)
+ * @method string getUpdatedAt()
+ * @method Address setUpdatedAt(string $value)
+ * @method AddressInterface getCustomerAddress()
+ * @method Address setCustomerAddressData(AddressInterface $value)
+ * @method string getAddressType()
+ * @method Address setAddressType(string $value)
+ * @method int getFreeShipping()
+ * @method Address setFreeShipping(int $value)
+ * @method bool getCollectShippingRates()
+ * @method Address setCollectShippingRates(bool $value)
+ * @method Address setShippingMethod(string $value)
+ * @method string getShippingDescription()
+ * @method Address setShippingDescription(string $value)
+ * @method float getWeight()
+ * @method Address setWeight(float $value)
+ * @method float getSubtotal()
+ * @method Address setSubtotal(float $value)
+ * @method float getBaseSubtotal()
+ * @method Address setBaseSubtotal(float $value)
+ * @method Address setSubtotalWithDiscount(float $value)
+ * @method Address setBaseSubtotalWithDiscount(float $value)
+ * @method float getTaxAmount()
+ * @method Address setTaxAmount(float $value)
+ * @method float getBaseTaxAmount()
+ * @method Address setBaseTaxAmount(float $value)
+ * @method float getShippingAmount()
+ * @method float getBaseShippingAmount()
+ * @method float getShippingTaxAmount()
+ * @method Address setShippingTaxAmount(float $value)
+ * @method float getBaseShippingTaxAmount()
+ * @method Address setBaseShippingTaxAmount(float $value)
+ * @method float getDiscountAmount()
+ * @method Address setDiscountAmount(float $value)
+ * @method float getBaseDiscountAmount()
+ * @method float getGrandTotal()
+ * @method Address setGrandTotal(float $value)
+ * @method float getBaseGrandTotal()
+ * @method Address setBaseGrandTotal(float $value)
+ * @method string getCustomerNotes()
+ * @method Address setCustomerNotes(string $value)
+ * @method string getDiscountDescription()
+ * @method Address setDiscountDescription(string $value)
+ * @method null|array getDiscountDescriptionArray()
+ * @method Address setDiscountDescriptionArray(array $value)
+ * @method float getShippingDiscountAmount()
+ * @method Address setShippingDiscountAmount(float $value)
+ * @method float getBaseShippingDiscountAmount()
+ * @method Address setBaseShippingDiscountAmount(float $value)
+ * @method float getSubtotalInclTax()
+ * @method Address setSubtotalInclTax(float $value)
+ * @method float getBaseSubtotalTotalInclTax()
+ * @method Address setBaseSubtotalTotalInclTax(float $value)
+ * @method int getGiftMessageId()
+ * @method Address setGiftMessageId(int $value)
+ * @method float getDiscountTaxCompensationAmount()
+ * @method Address setDiscountTaxCompensationAmount(float $value)
+ * @method float getBaseDiscountTaxCompensationAmount()
+ * @method Address setBaseDiscountTaxCompensationAmount(float $value)
+ * @method float getShippingDiscountTaxCompensationAmount()
+ * @method Address setShippingDiscountTaxCompensationAmount(float $value)
+ * @method float getBaseShippingDiscountTaxCompensationAmnt()
+ * @method Address setBaseShippingDiscountTaxCompensationAmnt(float $value)
+ * @method float getShippingInclTax()
+ * @method Address setShippingInclTax(float $value)
+ * @method float getBaseShippingInclTax()
+ * @method \Magento\SalesRule\Model\Rule[] getCartFixedRules()
+ * @method int[] getAppliedRuleIds()
+ * @method Address setBaseShippingInclTax(float $value)
+ *
+ * @property $objectCopyService \Magento\Framework\DataObject\Copy
+ * @SuppressWarnings(PHPMD.ExcessivePublicCount)
+ * @SuppressWarnings(PHPMD.TooManyFields)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @since 100.0.2
+ */
+class Address extends \Magento\Customer\Model\Address\AbstractAddress implements \Magento\Quote\Api\Data\AddressInterface
+{
+    public const RATES_FETCH = 1;
+    public const RATES_RECALCULATE = 2;
+    public const ADDRESS_TYPE_BILLING = 'billing';
+    public const ADDRESS_TYPE_SHIPPING = 'shipping';
+    /**
+     * Prefix of model events
+     *
+     * @var string
+     */
+    protected $_eventPrefix = 'sales_quote_address';
+    /**
+     * Name of event object
+     *
+     * @var string
+     */
+    protected $_eventObject = 'quote_address';
+    /**
+     * Quote object
+     *
+     * @var Quote
+     */
+    protected $_items;
+    /**
+     * Quote object
+     *
+     * @var Quote
+     */
+    protected $_quote;
+    /**
+     * Sales Quote address rates
+     *
+     * @var Rate
+     */
+    protected $_rates;
+    /**
+     * Total models collector
+     *
+     * @var Collector
+     */
+    protected $_totalCollector;
+    /**
+     * Total data as array
+     *
+     * @var array
+     */
+    protected $_totals = [];
+    /**
+     * @var array
+     */
+    protected $_totalAmounts = [];
+    /**
+     * @var array
+     */
+    protected $_baseTotalAmounts = [];
+    /**
+     * Core store config
+     *
+     * @var ScopeConfigInterface
+     */
+    protected $_scopeConfig;
+    /**
+     * @var \Magento\Quote\Model\Quote\Address\ItemFactory
+     */
+    protected $_addressItemFactory;
+    /**
+     * @var \Magento\Quote\Model\ResourceModel\Quote\Address\Item\CollectionFactory
+     */
+    protected $_itemCollectionFactory;
+    /**
+     * @var RateCollectorInterfaceFactory
+     */
+    protected $_rateCollector;
+    /**
+     * @var CollectionFactory
+     */
+    protected $_rateCollectionFactory;
+    /**
+     * @var CollectorFactory
+     */
+    protected $_totalCollectorFactory;
+    /**
+     * @var TotalFactory
+     */
+    protected $_addressTotalFactory;
+    /**
+     * @var RateFactory
+     * @since 101.0.0
+     */
+    protected $_addressRateFactory;
+    /**
+     * @var AddressInterfaceFactory
+     */
+    protected $addressDataFactory;
+    /**
+     * @var Address\Validator
+     */
+    protected $validator;
+    /**
+     * @var Mapper
+     */
+    protected $addressMapper;
+    /**
+     * @var Address\RateRequestFactory
+     */
+    protected $_rateRequestFactory;
+    /**
+     * @var Address\CustomAttributeListInterface
+     */
+    protected $attributeList;
+    /**
+     * @var TotalsCollector
+     */
+    protected $totalsCollector;
+    /**
+     * @var TotalsReader
+     */
+    protected $totalsReader;
+    /**
+     * @param Context $context
+     * @param Registry $registry
+     * @param ExtensionAttributesFactory $extensionFactory
+     * @param AttributeValueFactory $customAttributeFactory
+     * @param Data $directoryData
+     * @param \Magento\Eav\Model\Config $eavConfig
+     * @param \Magento\Customer\Model\Address\Config $addressConfig
+     * @param RegionFactory $regionFactory
+     * @param CountryFactory $countryFactory
+     * @param AddressMetadataInterface $metadataService
+     * @param AddressInterfaceFactory $addressDataFactory
+     * @param RegionInterfaceFactory $regionDataFactory
+     * @param DataObjectHelper $dataObjectHelper
+     * @param ScopeConfigInterface $scopeConfig
+     * @param Address\ItemFactory $addressItemFactory
+     * @param \Magento\Quote\Model\ResourceModel\Quote\Address\Item\CollectionFactory $itemCollectionFactory
+     * @param RateFactory $addressRateFactory
+     * @param Address\RateCollectorInterfaceFactory $rateCollector
+     * @param CollectionFactory $rateCollectionFactory
+     * @param Address\RateRequestFactory $rateRequestFactory
+     * @param Address\Total\CollectorFactory $totalCollectorFactory
+     * @param Address\TotalFactory $addressTotalFactory
+     * @param Copy $objectCopyService
+     * @param CarrierFactoryInterface $carrierFactory
+     * @param Address\Validator $validator
+     * @param Mapper $addressMapper
+     * @param Address\CustomAttributeListInterface $attributeList
+     * @param TotalsCollector $totalsCollector
+     * @param TotalsReader $totalsReader
+     * @param AbstractResource|null $resource
+     * @param AbstractDb|null $resourceCollection
+     * @param array $data
+     * @param Json $serializer
+     * @param StoreManagerInterface $storeManager
+     * @param CompositeValidator|null $compositeValidator
+     * @param CountryModelsCache|null $countryModelsCache
+     * @param RegionModelsCache|null $regionModelsCache
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     */
+    public function __construct(\Magento\Framework\Model\Context $context, \Magento\Framework\Registry $registry, \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory, \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory, \Magento\Directory\Helper\Data $directoryData, \Magento\Eav\Model\Config $eavConfig, \Magento\Customer\Model\Address\Config $addressConfig, \Magento\Directory\Model\RegionFactory $regionFactory, \Magento\Directory\Model\CountryFactory $countryFactory, \Magento\Customer\Api\AddressMetadataInterface $metadataService, \Magento\Customer\Api\Data\AddressInterfaceFactory $addressDataFactory, \Magento\Customer\Api\Data\RegionInterfaceFactory $regionDataFactory, \Magento\Framework\Api\DataObjectHelper $dataObjectHelper, \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig, \Magento\Quote\Model\Quote\Address\ItemFactory $addressItemFactory, \Magento\Quote\Model\ResourceModel\Quote\Address\Item\CollectionFactory $itemCollectionFactory, \Magento\Quote\Model\Quote\Address\RateFactory $addressRateFactory, \Magento\Quote\Model\Quote\Address\RateCollectorInterfaceFactory $rateCollector, \Magento\Quote\Model\ResourceModel\Quote\Address\Rate\CollectionFactory $rateCollectionFactory, \Magento\Quote\Model\Quote\Address\RateRequestFactory $rateRequestFactory, \Magento\Quote\Model\Quote\Address\Total\CollectorFactory $totalCollectorFactory, \Magento\Quote\Model\Quote\Address\TotalFactory $addressTotalFactory, \Magento\Framework\DataObject\Copy $objectCopyService, \Magento\Shipping\Model\CarrierFactoryInterface $carrierFactory, \Magento\Quote\Model\Quote\Address\Validator $validator, \Magento\Customer\Model\Address\Mapper $addressMapper, \Magento\Quote\Model\Quote\Address\CustomAttributeListInterface $attributeList, \Magento\Quote\Model\Quote\TotalsCollector $totalsCollector, \Magento\Quote\Model\Quote\TotalsReader $totalsReader, \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null, \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null, array $data = [], \Magento\Framework\Serialize\Serializer\Json $serializer = null, \Magento\Store\Model\StoreManagerInterface $storeManager = null, ?\Magento\Customer\Model\Address\CompositeValidator $compositeValidator = null, ?\Magento\Customer\Model\Address\AbstractAddress\CountryModelsCache $countryModelsCache = null, ?\Magento\Customer\Model\Address\AbstractAddress\RegionModelsCache $regionModelsCache = null)
+    {
+    }
+    /**
+     * Initialize resource
+     *
+     * @return void
+     */
+    protected function _construct()
+    {
+    }
+    /**
+     * Initialize quote identifier before save
+     *
+     * @return $this
+     */
+    public function beforeSave()
+    {
+    }
+    /**
+     * Set the required fields
+     *
+     * @return void
+     */
+    protected function _populateBeforeSaveData()
+    {
+    }
+    /**
+     * Returns true if shipping address is same as billing
+     *
+     * @return bool
+     */
+    protected function _isSameAsBilling()
+    {
+    }
+    /**
+     * Checks if the user is a registered customer
+     *
+     * @return bool
+     */
+    protected function _isNotRegisteredCustomer()
+    {
+    }
+    /**
+     * Returns true if shipping address is same as billing or it is undefined
+     *
+     * @return bool
+     */
+    protected function _isDefaultShippingNullOrSameAsBillingAddress()
+    {
+    }
+    /**
+     * Declare address quote model object
+     *
+     * @param Quote $quote
+     * @return $this
+     */
+    public function setQuote(\Magento\Quote\Model\Quote $quote)
+    {
+    }
+    /**
+     * Retrieve quote object
+     *
+     * @return Quote
+     */
+    public function getQuote()
+    {
+    }
+    /**
+     * Import quote address data from customer address Data Object.
+     *
+     * @param AddressInterface $address
+     * @return $this
+     */
+    public function importCustomerAddressData(\Magento\Customer\Api\Data\AddressInterface $address)
+    {
+    }
+    /**
+     * Export data to customer address Data Object.
+     *
+     * @return AddressInterface
+     */
+    public function exportCustomerAddress()
+    {
+    }
+    /**
+     * Convert object to array
+     *
+     * @param   array $arrAttributes
+     * @return  array
+     */
+    public function toArray(array $arrAttributes = [])
+    {
+    }
+    /**
+     * Retrieve address items collection
+     *
+     * @return AbstractCollection
+     */
+    public function getItemsCollection()
+    {
+    }
+    /**
+     * Get all available address items
+     *
+     * @return \Magento\Quote\Model\Quote\Address\Item[]
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     */
+    public function getAllItems()
+    {
+    }
+    /**
+     * Retrieve all visible items
+     *
+     * @return array
+     */
+    public function getAllVisibleItems()
+    {
+    }
+    /**
+     * Retrieve item quantity by id
+     *
+     * @param int $itemId
+     * @return float|int
+     */
+    public function getItemQty($itemId = 0)
+    {
+    }
+    /**
+     * Check Quote address has Items
+     *
+     * @return bool
+     */
+    public function hasItems()
+    {
+    }
+    /**
+     * Get address item object by id without
+     *
+     * @param int $itemId
+     * @return \Magento\Quote\Model\Quote\Address\Item|false
+     */
+    public function getItemById($itemId)
+    {
+    }
+    /**
+     * Get prepared not deleted item
+     *
+     * @param int $itemId
+     * @return \Magento\Quote\Model\Quote\Address\Item|false
+     */
+    public function getValidItemById($itemId)
+    {
+    }
+    /**
+     * Retrieve item object by quote item Id
+     *
+     * @param int $itemId
+     * @return \Magento\Quote\Model\Quote\Address\Item|false
+     */
+    public function getItemByQuoteItemId($itemId)
+    {
+    }
+    /**
+     * Remove item from collection
+     *
+     * @param int $itemId
+     * @return $this
+     */
+    public function removeItem($itemId)
+    {
+    }
+    /**
+     * Add item to address
+     *
+     * @param AbstractItem $item
+     * @param int $qty
+     * @return $this
+     */
+    public function addItem(\Magento\Quote\Model\Quote\Item\AbstractItem $item, $qty = null)
+    {
+    }
+    /**
+     * Retrieve collection of quote shipping rates
+     *
+     * @return AbstractCollection
+     */
+    public function getShippingRatesCollection()
+    {
+    }
+    /**
+     * Retrieve all address shipping rates
+     *
+     * @return array
+     */
+    public function getAllShippingRates()
+    {
+    }
+    /**
+     * Retrieve all grouped shipping rates
+     *
+     * @return array
+     */
+    public function getGroupedAllShippingRates()
+    {
+    }
+    /**
+     * Sort rates recursive callback
+     *
+     * @param array $firstItem
+     * @param array $secondItem
+     * @return int
+     */
+    protected function _sortRates($firstItem, $secondItem)
+    {
+    }
+    /**
+     * Retrieve shipping rate by identifier
+     *
+     * @param   int $rateId
+     * @return  Rate|false
+     */
+    public function getShippingRateById($rateId)
+    {
+    }
+    /**
+     * Retrieve shipping rate by code
+     *
+     * @param   string $code
+     * @return  Rate|false
+     */
+    public function getShippingRateByCode($code)
+    {
+    }
+    /**
+     * Mark all shipping rates as deleted
+     *
+     * @return $this
+     */
+    public function removeAllShippingRates()
+    {
+    }
+    /**
+     * Add shipping rate
+     *
+     * @param Rate $rate
+     * @return $this
+     */
+    public function addShippingRate(\Magento\Quote\Model\Quote\Address\Rate $rate)
+    {
+    }
+    /**
+     * Collecting shipping rates by address
+     *
+     * @return $this
+     */
+    public function collectShippingRates()
+    {
+    }
+    /**
+     * Request shipping rates for entire address or specified address item
+     *
+     * Returns true if current selected shipping method code corresponds to one of the found rates
+     *
+     * @param AbstractItem $item
+     * @return bool
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     */
+    public function requestShippingRates(\Magento\Quote\Model\Quote\Item\AbstractItem $item = null)
+    {
+    }
+    /******************************* Total Collector Interface *******************************************/
+    /**
+     * Get address totals as array
+     *
+     * @return array
+     */
+    public function getTotals()
+    {
+    }
+    /**
+     * Add total data or model
+     *
+     * @param Total|array $total
+     * @return $this
+     */
+    public function addTotal($total)
+    {
+    }
+    /******************************* End Total Collector Interface *******************************************/
+    /**
+     * Rewrite clone method
+     *
+     * @return Address
+     */
+    public function __clone()
+    {
+    }
+    /**
+     * Checks if it was set
+     *
+     * @return bool
+     */
+    public function itemsCollectionWasSet()
+    {
+    }
+    /**
+     * Checks if it was set
+     *
+     * @return bool
+     */
+    public function shippingRatesCollectionWasSet()
+    {
+    }
+    /**
+     * Validate minimum amount
+     *
+     * @return bool
+     */
+    public function validateMinimumAmount()
+    {
+    }
+    /**
+     * Retrieve applied taxes
+     *
+     * @return array
+     */
+    public function getAppliedTaxes()
+    {
+    }
+    /**
+     * Set applied taxes
+     *
+     * @param array $data
+     * @return $this
+     */
+    public function setAppliedTaxes($data)
+    {
+    }
+    /******************************* Start Total Collector Interface *******************************************/
+    /**
+     * Set shipping amount
+     *
+     * @param float $value
+     * @param bool $alreadyExclTax
+     * @return $this
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function setShippingAmount($value, $alreadyExclTax = false)
+    {
+    }
+    /**
+     * Set base shipping amount
+     *
+     * @param float $value
+     * @param bool $alreadyExclTax
+     * @return $this
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function setBaseShippingAmount($value, $alreadyExclTax = false)
+    {
+    }
+    /**
+     * Set total amount value
+     *
+     * @param string $code
+     * @param float $amount
+     * @return $this
+     */
+    public function setTotalAmount($code, $amount)
+    {
+    }
+    /**
+     * Set total amount value in base store currency
+     *
+     * @param string $code
+     * @param float $amount
+     * @return $this
+     */
+    public function setBaseTotalAmount($code, $amount)
+    {
+    }
+    /**
+     * Add amount total amount value
+     *
+     * @param string $code
+     * @param float $amount
+     * @return $this
+     */
+    public function addTotalAmount($code, $amount)
+    {
+    }
+    /**
+     * Add amount total amount value in base store currency
+     *
+     * @param string $code
+     * @param float $amount
+     * @return $this
+     */
+    public function addBaseTotalAmount($code, $amount)
+    {
+    }
+    /**
+     * Get total amount value by code
+     *
+     * @param   string $code
+     * @return  float|int
+     */
+    public function getTotalAmount($code)
+    {
+    }
+    /**
+     * Get total amount value by code in base store currency
+     *
+     * @param   string $code
+     * @return  float|int
+     */
+    public function getBaseTotalAmount($code)
+    {
+    }
+    /**
+     * Get subtotal amount with applied discount in base currency
+     *
+     * @return float
+     */
+    public function getBaseSubtotalWithDiscount()
+    {
+    }
+    /**
+     * Get subtotal amount with applied discount
+     *
+     * @return float
+     */
+    public function getSubtotalWithDiscount()
+    {
+    }
+    //@codeCoverageIgnoreStart
+    /**
+     * Get all total amount values
+     *
+     * @return array
+     */
+    public function getAllTotalAmounts()
+    {
+    }
+    /**
+     * Get all total amount values in base currency
+     *
+     * @return array
+     */
+    public function getAllBaseTotalAmounts()
+    {
+    }
+    /******************************* End Total Collector Interface *******************************************/
+    /**
+     * @inheritdoc
+     */
+    protected function _getValidationRulesBeforeSave()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getCountryId()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setCountryId($countryId)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getStreet()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setStreet($street)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getCompany()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setCompany($company)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getTelephone()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setTelephone($telephone)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getFax()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setFax($fax)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getPostcode()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setPostcode($postcode)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getCity()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setCity($city)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getFirstname()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setFirstname($firstname)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getLastname()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setLastname($lastname)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getMiddlename()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setMiddlename($middlename)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getPrefix()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setPrefix($prefix)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getSuffix()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setSuffix($suffix)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getVatId()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setVatId($vatId)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getCustomerId()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setCustomerId($customerId)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getEmail()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setEmail($email)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setRegion($region)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setRegionId($regionId)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setRegionCode($regionCode)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getSameAsBilling()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setSameAsBilling($sameAsBilling)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getCustomerAddressId()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setCustomerAddressId($customerAddressId)
+    {
+    }
+    /**
+     * Get save in address book flag
+     *
+     * @return int|null
+     */
+    public function getSaveInAddressBook()
+    {
+    }
+    /**
+     * Set save in address book flag
+     *
+     * @param int|null $saveInAddressBook
+     * @return $this
+     */
+    public function setSaveInAddressBook($saveInAddressBook)
+    {
+    }
+    //@codeCoverageIgnoreEnd
+    /**
+     * @inheritdoc
+     *
+     * @return AddressExtensionInterface|null
+     */
+    public function getExtensionAttributes()
+    {
+    }
+    /**
+     * @inheritdoc
+     *
+     * @param AddressExtensionInterface $extensionAttributes
+     * @return $this
+     */
+    public function setExtensionAttributes(\Magento\Quote\Api\Data\AddressExtensionInterface $extensionAttributes)
+    {
+    }
+    /**
+     * Shipping method
+     *
+     * @return string
+     */
+    public function getShippingMethod()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    protected function getCustomAttributesCodes()
+    {
+    }
+    /**
+     * Realization of the actual set method to boost performance
+     *
+     * @param float $value
+     * @return $this
+     */
+    public function setBaseDiscountAmount(float $value)
+    {
+    }
+}
+namespace Magento\Quote\Model\Quote\Item;
+
+/**
+ * Quote item abstract model
+ *
+ * Price attributes:
+ *  - price - initial item price, declared during product association
+ *  - original_price - product price before any calculations
+ *  - calculation_price - prices for item totals calculation
+ *  - custom_price - new price that can be declared by user and recalculated during calculation process
+ *  - original_custom_price - original defined value of custom price without any conversion
+ *
+ * @api
+ * @method float getDiscountAmount()
+ * @method \Magento\Quote\Model\Quote\Item\AbstractItem setDiscountAmount(float $amount)
+ * @method float getBaseDiscountAmount()
+ * @method \Magento\Quote\Model\Quote\Item\AbstractItem setBaseDiscountAmount(float $amount)
+ * @method float getDiscountPercent()
+ * @method \Magento\Quote\Model\Quote\Item\AbstractItem setDiscountPercent()
+ * @method float getOriginalDiscountAmount()
+ * @method \Magento\Quote\Model\Quote\Item\AbstractItem setOriginalDiscountAmount()
+ * @method float getBaseOriginalDiscountAmount()
+ * @method \Magento\Quote\Model\Quote\Item\AbstractItem setBaseOriginalDiscountAmount()
+ * @method float getDiscountCalculationPrice()
+ * @method \Magento\Quote\Model\Quote\Item\AbstractItem setDiscountCalculationPrice()
+ * @method float getBaseDiscountCalculationPrice()
+ * @method \Magento\Quote\Model\Quote\Item\AbstractItem setBaseDiscountCalculationPrice($price)
+ * @method int[] getAppliedRuleIds()
+ * @method \Magento\Quote\Model\Quote\Item\AbstractItem setAppliedRuleIds(array $ruleIds)
+ * @method float getBaseTaxAmount()
+ * @method float getBaseDiscountTaxCompensation()
+ * @method float getBaseRowTotal()
+ * @method float getQtyOrdered()
+ * @method float getRowTotalInclTax()
+ * @method float getTaxAmount()
+ * @method float getDiscountTaxCompensation()
+ * @method float getRowTotal()
+ * @method float getPriceInclTax()
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @since 100.0.2
+ */
+abstract class AbstractItem extends \Magento\Framework\Model\AbstractExtensibleModel implements \Magento\Catalog\Model\Product\Configuration\Item\ItemInterface
+{
+    /**
+     * @var Item|null
+     */
+    protected $_parentItem = null;
+    /**
+     * @var \Magento\Quote\Model\Quote\Item\AbstractItem[]
+     */
+    protected $_children = [];
+    /**
+     * @var array
+     */
+    protected $_messages = [];
+    /**
+     * List of custom options
+     *
+     * @var array
+     */
+    protected $_optionsByCode;
+    /**
+     * @var \Magento\Catalog\Api\ProductRepositoryInterface
+     */
+    protected $productRepository;
+    /**
+     * @var \Magento\Framework\Pricing\PriceCurrencyInterface
+     */
+    protected $priceCurrency;
+    /**
+     * @param \Magento\Framework\Model\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory
+     * @param AttributeValueFactory $customAttributeFactory
+     * @param \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
+     * @param \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency
+     * @param \Magento\Framework\Model\ResourceModel\AbstractResource $resource
+     * @param \Magento\Framework\Data\Collection\AbstractDb $resourceCollection
+     * @param array $data
+     */
+    public function __construct(\Magento\Framework\Model\Context $context, \Magento\Framework\Registry $registry, \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory, \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory, \Magento\Catalog\Api\ProductRepositoryInterface $productRepository, \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency, \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null, \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null, array $data = [])
+    {
+    }
+    /**
+     * Retrieve Quote instance
+     *
+     * @return \Magento\Quote\Model\Quote
+     */
+    public abstract function getQuote();
+    /**
+     * Retrieve address model
+     *
+     * @return \Magento\Quote\Model\Quote\Address
+     */
+    public abstract function getAddress();
+    /**
+     * Retrieve product model object associated with item
+     *
+     * @return \Magento\Catalog\Model\Product
+     */
+    public function getProduct()
+    {
+    }
+    /**
+     * Returns special download params (if needed) for custom option with type = 'file'
+     * Needed to implement \Magento\Catalog\Model\Product\Configuration\Item\Interface.
+     * Return null, as quote item needs no additional configuration.
+     *
+     * @return null|\Magento\Framework\DataObject
+     */
+    public function getFileDownloadParams()
+    {
+    }
+    /**
+     * Specify parent item id before saving data
+     *
+     * @return $this
+     */
+    public function beforeSave()
+    {
+    }
+    /**
+     * Set parent item
+     *
+     * @param  Item $parentItem
+     * @return $this
+     */
+    public function setParentItem($parentItem)
+    {
+    }
+    /**
+     * Get parent item
+     *
+     * @return Item
+     */
+    public function getParentItem()
+    {
+    }
+    /**
+     * Get child items
+     *
+     * @return \Magento\Quote\Model\Quote\Item\AbstractItem[]
+     */
+    public function getChildren()
+    {
+    }
+    /**
+     * Add child item
+     *
+     * @param  \Magento\Quote\Model\Quote\Item\AbstractItem $child
+     * @return $this
+     */
+    public function addChild($child)
+    {
+    }
+    /**
+     * Adds message(s) for quote item. Duplicated messages are not added.
+     *
+     * @param  mixed $messages
+     * @return $this
+     */
+    public function setMessage($messages)
+    {
+    }
+    /**
+     * Add message of quote item to array of messages
+     *
+     * @param   string $message
+     * @return $this
+     */
+    public function addMessage($message)
+    {
+    }
+    /**
+     * Get messages array of quote item
+     *
+     * @param   bool $string flag for converting messages to string
+     * @return  array|string
+     */
+    public function getMessage($string = true)
+    {
+    }
+    /**
+     * Removes message by text
+     *
+     * @param string $text
+     * @return $this
+     */
+    public function removeMessageByText($text)
+    {
+    }
+    /**
+     * Clears all messages
+     *
+     * @return $this
+     */
+    public function clearMessage()
+    {
+    }
+    /**
+     * Retrieve store model object
+     *
+     * @return \Magento\Store\Model\Store
+     */
+    public function getStore()
+    {
+    }
+    /**
+     * Checking item data
+     *
+     * @return $this
+     */
+    public function checkData()
+    {
+    }
+    /**
+     * Get original (not related with parent item) item quantity
+     *
+     * @return  int|float
+     */
+    public function getQty()
+    {
+    }
+    /**
+     * Get total item quantity (include parent item relation)
+     *
+     * @return  int|float
+     */
+    public function getTotalQty()
+    {
+    }
+    /**
+     * Calculate item row total price
+     *
+     * @return $this
+     */
+    public function calcRowTotal()
+    {
+    }
+    /**
+     * Get item price used for quote calculation process.
+     *
+     * This method get custom price (if it is defined) or original product final price
+     *
+     * @return float
+     */
+    public function getCalculationPrice()
+    {
+    }
+    /**
+     * Get item price used for quote calculation process.
+     *
+     * This method get original custom price applied before tax calculation
+     *
+     * @return float
+     */
+    public function getCalculationPriceOriginal()
+    {
+    }
+    /**
+     * Get calculation price used for quote calculation in base currency.
+     *
+     * @return float
+     */
+    public function getBaseCalculationPrice()
+    {
+    }
+    /**
+     * Get original calculation price used for quote calculation in base currency.
+     *
+     * @return float
+     */
+    public function getBaseCalculationPriceOriginal()
+    {
+    }
+    /**
+     * Get original price (retrieved from product) for item.
+     *
+     * Original price value is in quote selected currency
+     *
+     * @return float
+     */
+    public function getOriginalPrice()
+    {
+    }
+    /**
+     * Set original price to item (calculation price will be refreshed too)
+     *
+     * @param float $price
+     * @return \Magento\Quote\Model\Quote\Item\AbstractItem
+     */
+    public function setOriginalPrice($price)
+    {
+    }
+    /**
+     * Get Original item price (got from product) in base website currency
+     *
+     * @return float
+     */
+    public function getBaseOriginalPrice()
+    {
+    }
+    /**
+     * Specify custom item price (used in case when we have apply not product price to item)
+     *
+     * @param float $value
+     * @return \Magento\Quote\Model\Quote\Item\AbstractItem
+     */
+    public function setCustomPrice($value)
+    {
+    }
+    /**
+     * Get item price. Item price currency is website base currency.
+     *
+     * @return float
+     */
+    public function getPrice()
+    {
+    }
+    /**
+     * Specify item price (base calculation price and converted price will be refreshed too)
+     *
+     * @param float $value
+     * @return $this
+     */
+    public function setPrice($value)
+    {
+    }
+    /**
+     * Get item price converted to quote currency
+     *
+     * @return float
+     */
+    public function getConvertedPrice()
+    {
+    }
+    /**
+     * Set new value for converted price
+     *
+     * @param float $value
+     * @return $this
+     */
+    public function setConvertedPrice($value)
+    {
+    }
+    /**
+     * Clone quote item
+     *
+     * @return $this
+     */
+    public function __clone()
+    {
+    }
+    /**
+     * Checking if there children calculated or parent item when we have parent quote item and its children
+     *
+     * @return bool
+     */
+    public function isChildrenCalculated()
+    {
+    }
+    /**
+     * Checking can we ship product separately
+     *
+     * Checking can we ship product separately (each child separately)
+     * or each parent product item can be shipped only like one item
+     *
+     * @return bool
+     */
+    public function isShipSeparately()
+    {
+    }
+    /**
+     * Returns the total discount amounts of all the child items.
+     *
+     * If there are no children, returns the discount amount of this item.
+     *
+     * @return float
+     */
+    public function getTotalDiscountAmount()
+    {
+    }
+}
+namespace Magento\Quote\Model\Quote;
+
+/**
+ * Sales Quote Item Model
+ *
+ * @api
+ * @method string getCreatedAt()
+ * @method \Magento\Quote\Model\Quote\Item setCreatedAt(string $value)
+ * @method string getUpdatedAt()
+ * @method \Magento\Quote\Model\Quote\Item setUpdatedAt(string $value)
+ * @method int getStoreId()
+ * @method \Magento\Quote\Model\Quote\Item setStoreId(int $value)
+ * @method int getParentItemId()
+ * @method \Magento\Quote\Model\Quote\Item setParentItemId(int $value)
+ * @method int getIsVirtual()
+ * @method \Magento\Quote\Model\Quote\Item setIsVirtual(int $value)
+ * @method string getDescription()
+ * @method \Magento\Quote\Model\Quote\Item setDescription(string $value)
+ * @method string getAdditionalData()
+ * @method \Magento\Quote\Model\Quote\Item setAdditionalData(string $value)
+ * @method int getFreeShipping()
+ * @method \Magento\Quote\Model\Quote\Item setFreeShipping(int $value)
+ * @method int getIsQtyDecimal()
+ * @method \Magento\Quote\Model\Quote\Item setIsQtyDecimal(int $value)
+ * @method int getNoDiscount()
+ * @method \Magento\Quote\Model\Quote\Item setNoDiscount(int $value)
+ * @method float getWeight()
+ * @method \Magento\Quote\Model\Quote\Item setWeight(float $value)
+ * @method float getBasePrice()
+ * @method \Magento\Quote\Model\Quote\Item setBasePrice(float $value)
+ * @method float getCustomPrice()
+ * @method float getTaxPercent()
+ * @method \Magento\Quote\Model\Quote\Item setTaxPercent(float $value)
+ * @method \Magento\Quote\Model\Quote\Item setTaxAmount(float $value)
+ * @method \Magento\Quote\Model\Quote\Item setBaseTaxAmount(float $value)
+ * @method \Magento\Quote\Model\Quote\Item setRowTotal(float $value)
+ * @method \Magento\Quote\Model\Quote\Item setBaseRowTotal(float $value)
+ * @method float getRowTotalWithDiscount()
+ * @method \Magento\Quote\Model\Quote\Item setRowTotalWithDiscount(float $value)
+ * @method float getRowWeight()
+ * @method \Magento\Quote\Model\Quote\Item setRowWeight(float $value)
+ * @method float getBaseTaxBeforeDiscount()
+ * @method \Magento\Quote\Model\Quote\Item setBaseTaxBeforeDiscount(float $value)
+ * @method float getTaxBeforeDiscount()
+ * @method \Magento\Quote\Model\Quote\Item setTaxBeforeDiscount(float $value)
+ * @method float getOriginalCustomPrice()
+ * @method \Magento\Quote\Model\Quote\Item setOriginalCustomPrice(float $value)
+ * @method string getRedirectUrl()
+ * @method \Magento\Quote\Model\Quote\Item setRedirectUrl(string $value)
+ * @method float getBaseCost()
+ * @method \Magento\Quote\Model\Quote\Item setBaseCost(float $value)
+ * @method \Magento\Quote\Model\Quote\Item setPriceInclTax(float $value)
+ * @method float getBasePriceInclTax()
+ * @method \Magento\Quote\Model\Quote\Item setBasePriceInclTax(float $value)
+ * @method \Magento\Quote\Model\Quote\Item setRowTotalInclTax(float $value)
+ * @method float getBaseRowTotalInclTax()
+ * @method \Magento\Quote\Model\Quote\Item setBaseRowTotalInclTax(float $value)
+ * @method int getGiftMessageId()
+ * @method \Magento\Quote\Model\Quote\Item setGiftMessageId(int $value)
+ * @method string getWeeeTaxApplied()
+ * @method \Magento\Quote\Model\Quote\Item setWeeeTaxApplied(string $value)
+ * @method float getWeeeTaxAppliedAmount()
+ * @method \Magento\Quote\Model\Quote\Item setWeeeTaxAppliedAmount(float $value)
+ * @method float getWeeeTaxAppliedRowAmount()
+ * @method \Magento\Quote\Model\Quote\Item setWeeeTaxAppliedRowAmount(float $value)
+ * @method float getBaseWeeeTaxAppliedAmount()
+ * @method \Magento\Quote\Model\Quote\Item setBaseWeeeTaxAppliedAmount(float $value)
+ * @method float getBaseWeeeTaxAppliedRowAmnt()
+ * @method \Magento\Quote\Model\Quote\Item setBaseWeeeTaxAppliedRowAmnt(float $value)
+ * @method float getWeeeTaxDisposition()
+ * @method \Magento\Quote\Model\Quote\Item setWeeeTaxDisposition(float $value)
+ * @method float getWeeeTaxRowDisposition()
+ * @method \Magento\Quote\Model\Quote\Item setWeeeTaxRowDisposition(float $value)
+ * @method float getBaseWeeeTaxDisposition()
+ * @method \Magento\Quote\Model\Quote\Item setBaseWeeeTaxDisposition(float $value)
+ * @method float getBaseWeeeTaxRowDisposition()
+ * @method \Magento\Quote\Model\Quote\Item setBaseWeeeTaxRowDisposition(float $value)
+ * @method float getDiscountTaxCompensationAmount()
+ * @method \Magento\Quote\Model\Quote\Item setDiscountTaxCompensationAmount(float $value)
+ * @method float getBaseDiscountTaxCompensationAmount()
+ * @method \Magento\Quote\Model\Quote\Item setBaseDiscountTaxCompensationAmount(float $value)
+ * @method null|bool getHasConfigurationUnavailableError()
+ * @method \Magento\Quote\Model\Quote\Item setHasConfigurationUnavailableError(bool $value)
+ * @method \Magento\Quote\Model\Quote\Item unsHasConfigurationUnavailableError()
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessivePublicCount)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @since 100.0.2
+ */
+class Item extends \Magento\Quote\Model\Quote\Item\AbstractItem implements \Magento\Quote\Api\Data\CartItemInterface
+{
+    /**
+     * Prefix of model events names
+     *
+     * @var string
+     */
+    protected $_eventPrefix = 'sales_quote_item';
+    /**
+     * Parameter name in event
+     *
+     * In observe method you can use $observer->getEvent()->getObject() in this case
+     *
+     * @var string
+     */
+    protected $_eventObject = 'item';
+    /**
+     * Quote model object
+     *
+     * @var \Magento\Quote\Model\Quote
+     */
+    protected $_quote;
+    /**
+     * Item options array
+     *
+     * @var array
+     */
+    protected $_options = [];
+    /**
+     * Item options by code cache
+     *
+     * @var array
+     */
+    protected $_optionsByCode = [];
+    /**
+     * Not Represent option
+     *
+     * @var array
+     */
+    protected $_notRepresentOptions = ['info_buyRequest'];
+    /**
+     * Flag stating that options were successfully saved
+     *
+     * @var bool
+     */
+    protected $_flagOptionsSaved;
+    /**
+     * Array of errors associated with this quote item
+     *
+     * @var \Magento\Sales\Model\Status\ListStatus
+     */
+    protected $_errorInfos;
+    /**
+     * @var \Magento\Framework\Locale\FormatInterface
+     */
+    protected $_localeFormat;
+    /**
+     * @var \Magento\Quote\Model\Quote\Item\OptionFactory
+     */
+    protected $_itemOptionFactory;
+    /**
+     * @var \Magento\Quote\Model\Quote\Item\Compare
+     */
+    protected $quoteItemCompare;
+    /**
+     * @var \Magento\CatalogInventory\Api\StockRegistryInterface
+     * @deprecated 101.0.0
+     * @see nothing
+     */
+    protected $stockRegistry;
+    /**
+     * @param \Magento\Framework\Model\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param ExtensionAttributesFactory $extensionFactory
+     * @param AttributeValueFactory $customAttributeFactory
+     * @param \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
+     * @param \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency
+     * @param \Magento\Sales\Model\Status\ListFactory $statusListFactory
+     * @param \Magento\Framework\Locale\FormatInterface $localeFormat
+     * @param Item\OptionFactory $itemOptionFactory
+     * @param Item\Compare $quoteItemCompare
+     * @param \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry
+     * @param \Magento\Framework\Model\ResourceModel\AbstractResource|null $resource
+     * @param \Magento\Framework\Data\Collection\AbstractDb|null $resourceCollection
+     * @param array $data
+     *
+     * @param \Magento\Framework\Serialize\Serializer\Json|null $serializer
+     * @param ComparatorInterface|null $itemOptionComparator
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     */
+    public function __construct(\Magento\Framework\Model\Context $context, \Magento\Framework\Registry $registry, \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory, \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory, \Magento\Catalog\Api\ProductRepositoryInterface $productRepository, \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency, \Magento\Sales\Model\Status\ListFactory $statusListFactory, \Magento\Framework\Locale\FormatInterface $localeFormat, \Magento\Quote\Model\Quote\Item\OptionFactory $itemOptionFactory, \Magento\Quote\Model\Quote\Item\Compare $quoteItemCompare, \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry, \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null, \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null, array $data = [], \Magento\Framework\Serialize\Serializer\Json $serializer = null, ?\Magento\Quote\Model\Quote\Item\Option\ComparatorInterface $itemOptionComparator = null)
+    {
+    }
+    /**
+     * Initialize resource model
+     *
+     * @return void
+     */
+    protected function _construct()
+    {
+    }
+    /**
+     * Quote Item Before Save prepare data process
+     *
+     * @return $this
+     */
+    public function beforeSave()
+    {
+    }
+    /**
+     * Retrieve address model
+     *
+     * @return \Magento\Quote\Model\Quote\Address
+     */
+    public function getAddress()
+    {
+    }
+    /**
+     * Declare quote model object
+     *
+     * @param  \Magento\Quote\Model\Quote $quote
+     * @return $this
+     */
+    public function setQuote(\Magento\Quote\Model\Quote $quote)
+    {
+    }
+    /**
+     * Retrieve quote model object
+     *
+     * @codeCoverageIgnore
+     *
+     * @return \Magento\Quote\Model\Quote
+     */
+    public function getQuote()
+    {
+    }
+    /**
+     * Prepare quantity
+     *
+     * @param float|int $qty
+     * @return int|float
+     */
+    protected function _prepareQty($qty)
+    {
+    }
+    /**
+     * Adding quantity to quote item
+     *
+     * @param float $qty
+     * @return $this
+     */
+    public function addQty($qty)
+    {
+    }
+    /**
+     * Declare quote item quantity
+     *
+     * @param float $qty
+     * @return $this
+     */
+    public function setQty($qty)
+    {
+    }
+    /**
+     * Retrieve option product with Qty
+     *
+     * Return array
+     * 'qty'        => the qty
+     * 'product'    => the product model
+     *
+     * @return array
+     */
+    public function getQtyOptions()
+    {
+    }
+    /**
+     * Set option product with Qty
+     *
+     * @codeCoverageIgnore
+     *
+     * @param array $qtyOptions
+     * @return $this
+     */
+    public function setQtyOptions($qtyOptions)
+    {
+    }
+    /**
+     * Setup product for quote item
+     *
+     * @param \Magento\Catalog\Model\Product $product
+     * @return $this
+     */
+    public function setProduct($product)
+    {
+    }
+    /**
+     * Check product representation in item
+     *
+     * @param   \Magento\Catalog\Model\Product $product
+     * @return  bool
+     */
+    public function representProduct($product)
+    {
+    }
+    /**
+     * Check if two options array are identical
+     * First options array is prerogative
+     * Second options array checked against first one
+     *
+     * @param array $options1
+     * @param array $options2
+     * @return bool
+     */
+    public function compareOptions($options1, $options2)
+    {
+    }
+    /**
+     * Compare items
+     *
+     * @param   \Magento\Quote\Model\Quote\Item $item
+     * @return  bool
+     */
+    public function compare($item)
+    {
+    }
+    /**
+     * Get item product type
+     *
+     * @return string
+     */
+    public function getProductType()
+    {
+    }
+    /**
+     * Return real product type of item
+     *
+     * @codeCoverageIgnore
+     *
+     * @return string
+     */
+    public function getRealProductType()
+    {
+    }
+    /**
+     * Convert Quote Item to array
+     *
+     * @param array $arrAttributes
+     * @return array
+     */
+    public function toArray(array $arrAttributes = [])
+    {
+    }
+    /**
+     * Initialize quote item options
+     *
+     * @param array $options
+     * @return $this
+     */
+    public function setOptions($options)
+    {
+    }
+    /**
+     * Get all item options
+     *
+     * @codeCoverageIgnore
+     *
+     * @return \Magento\Quote\Model\Quote\Item\Option[]
+     */
+    public function getOptions()
+    {
+    }
+    /**
+     * Get all item options as array with codes in array key
+     *
+     * @codeCoverageIgnore
+     *
+     * @return array
+     */
+    public function getOptionsByCode()
+    {
+    }
+    /**
+     * Add option to item
+     *
+     * @param \Magento\Quote\Model\Quote\Item\Option|\Magento\Framework\DataObject|array $option
+     * @return $this
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function addOption($option)
+    {
+    }
+    /**
+     * Can specify specific actions for ability to change given quote options values
+     * Example: cataloginventory decimal qty validation may change qty to int,
+     * so need to change quote item qty option value.
+     *
+     * @param \Magento\Framework\DataObject $option
+     * @param int|float|null $value
+     * @return $this
+     */
+    public function updateQtyOption(\Magento\Framework\DataObject $option, $value)
+    {
+    }
+    /**
+     * Remove option from item options
+     *
+     * @param string $code
+     * @return $this
+     */
+    public function removeOption($code)
+    {
+    }
+    /**
+     * Register option code
+     *
+     * @param \Magento\Quote\Model\Quote\Item\Option $option
+     * @return $this
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    protected function _addOptionCode($option)
+    {
+    }
+    /**
+     * Get item option by code
+     *
+     * @param   string $code
+     * @return  \Magento\Quote\Model\Quote\Item\Option || null
+     */
+    public function getOptionByCode($code)
+    {
+    }
+    /**
+     * Checks that item model has data changes.
+     *
+     * Call save item options if model isn't need to save in DB
+     *
+     * @return boolean
+     */
+    protected function _hasModelChanged()
+    {
+    }
+    /**
+     * Save item options
+     *
+     * @return $this
+     */
+    public function saveItemOptions()
+    {
+    }
+    /**
+     * Mar option save requirement
+     *
+     * @codeCoverageIgnore
+     *
+     * @param bool $flag
+     * @return void
+     */
+    public function setIsOptionsSaved($flag)
+    {
+    }
+    /**
+     * Were options saved
+     *
+     * @codeCoverageIgnore
+     *
+     * @return bool
+     */
+    public function isOptionsSaved()
+    {
+    }
+    /**
+     * Save item options after item saved
+     *
+     * @return \Magento\Quote\Model\Quote\Item
+     */
+    public function afterSave()
+    {
+    }
+    /**
+     * Clone quote item
+     *
+     * @return $this
+     */
+    public function __clone()
+    {
+    }
+    /**
+     * Get formatted buy request.
+     *
+     * Returns object, holding request received from product view page with keys and options for configured product.
+     *
+     * @return \Magento\Framework\DataObject
+     */
+    public function getBuyRequest()
+    {
+    }
+    /**
+     * Sets flag, whether this quote item has some error associated with it.
+     *
+     * @param bool $flag
+     * @return \Magento\Quote\Model\Quote\Item
+     */
+    protected function _setHasError($flag)
+    {
+    }
+    /**
+     * Sets flag, whether this quote item has some error associated with it.
+     * When TRUE - also adds 'unknown' error information to list of quote item errors.
+     * When FALSE - clears whole list of quote item errors.
+     * It's recommended to use addErrorInfo() instead - to be able to remove error statuses later.
+     *
+     * @param bool $flag
+     * @return $this
+     * @see addErrorInfo()
+     */
+    public function setHasError($flag)
+    {
+    }
+    /**
+     * Clears list of errors, associated with this quote item.
+     *
+     * Also automatically removes error-flag from oneself.
+     *
+     * @return $this
+     */
+    protected function _clearErrorInfo()
+    {
+    }
+    /**
+     * Adds error information to the quote item.
+     *
+     * Automatically sets error flag.
+     *
+     * @param string|null $origin Usually a name of module, that embeds error
+     * @param int|null $code Error code, unique for origin, that sets it
+     * @param string|null $message Error message
+     * @param \Magento\Framework\DataObject|null $additionalData Any additional data, that caller would like to store
+     * @return $this
+     */
+    public function addErrorInfo($origin = null, $code = null, $message = null, $additionalData = null)
+    {
+    }
+    /**
+     * Retrieves all error infos, associated with this item
+     *
+     * @return array
+     */
+    public function getErrorInfos()
+    {
+    }
+    /**
+     * Removes error infos, that have parameters equal to passed in $params.
+     * $params can have following keys (if not set - then any item is good for this key):
+     *   'origin', 'code', 'message'
+     *
+     * @param array $params
+     * @return $this
+     */
+    public function removeErrorInfosByParams($params)
+    {
+    }
+    /**
+     * @inheritdoc
+     * @codeCoverageIgnoreStart
+     */
+    public function getItemId()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setItemId($itemID)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getSku()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setSku($sku)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getQty()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getName()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setName($name)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getPrice()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setPrice($price)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setProductType($productType)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getQuoteId()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setQuoteId($quoteId)
+    {
+    }
+    /**
+     * Returns product option
+     *
+     * @return \Magento\Quote\Api\Data\ProductOptionInterface|null
+     */
+    public function getProductOption()
+    {
+    }
+    /**
+     * Sets product option
+     *
+     * @param \Magento\Quote\Api\Data\ProductOptionInterface $productOption
+     * @return $this
+     */
+    public function setProductOption(\Magento\Quote\Api\Data\ProductOptionInterface $productOption)
+    {
+    }
+    //@codeCoverageIgnoreEnd
+    /**
+     * @inheritdoc
+     *
+     * @return \Magento\Quote\Api\Data\CartItemExtensionInterface|null
+     */
+    public function getExtensionAttributes()
+    {
+    }
+    /**
+     * @inheritdoc
+     *
+     * @param \Magento\Quote\Api\Data\CartItemExtensionInterface $extensionAttributes
+     * @return $this
+     */
+    public function setExtensionAttributes(\Magento\Quote\Api\Data\CartItemExtensionInterface $extensionAttributes)
+    {
+    }
+}
+class Relation implements \Magento\Framework\Model\ResourceModel\Db\VersionControl\RelationInterface
+{
+    /**
+     * Process object relations
+     *
+     * @param \Magento\Framework\Model\AbstractModel $object
+     * @return void
+     */
+    public function processRelation(\Magento\Framework\Model\AbstractModel $object)
+    {
+    }
+}
+namespace Magento\Quote\Model\Quote\Item;
+
+/**
+ * Quote item updater
+ */
+class Updater
+{
+    /**
+     * @var ProductFactory
+     */
+    protected $productFactory;
+    /**
+     * @var FormatInterface
+     */
+    protected $localeFormat;
+    /**
+     * @var ObjectFactory
+     */
+    protected $objectFactory;
+    /**
+     * @param ProductFactory $productFactory
+     * @param FormatInterface $localeFormat
+     * @param ObjectFactory $objectFactory
+     * @param \Magento\Framework\Serialize\Serializer\Json|null $serializer
+     */
+    public function __construct(\Magento\Catalog\Model\ProductFactory $productFactory, \Magento\Framework\Locale\FormatInterface $localeFormat, \Magento\Framework\DataObject\Factory $objectFactory, \Magento\Framework\Serialize\Serializer\Json $serializer = null)
+    {
+    }
+    /**
+     * Update quote item qty.
+     *
+     * Custom price is updated in case 'custom_price' value exists
+     *
+     * @param Item $item
+     * @param array $info
+     * @throws InvalidArgumentException
+     * @return Updater
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     */
+    public function update(\Magento\Quote\Model\Quote\Item $item, array $info)
+    {
+    }
+    /**
+     * Prepares custom price and sets into a BuyRequest object as option of quote item
+     *
+     * @param array $info
+     * @param Item $item
+     * @return void
+     */
+    protected function setCustomPrice(array $info, \Magento\Quote\Model\Quote\Item $item)
+    {
+    }
+    /**
+     * Unset custom_price data for quote item
+     *
+     * @param Item $item
+     * @return void
+     */
+    protected function unsetCustomPrice(\Magento\Quote\Model\Quote\Item $item)
+    {
+    }
+    /**
+     * Return formatted price
+     *
+     * @param float|int $price
+     * @return float|int
+     */
+    protected function parseCustomPrice($price)
+    {
+    }
+}
+/**
+ * Class ToOrderItem
+ */
+class ToOrderItem
+{
+    /**
+     * @var Copy
+     */
+    protected $objectCopyService;
+    /**
+     * @var OrderItemFactory
+     */
+    protected $orderItemFactory;
+    /**
+     * @var \Magento\Framework\Api\DataObjectHelper
+     */
+    protected $dataObjectHelper;
+    /**
+     * @param OrderItemFactory $orderItemFactory
+     * @param Copy $objectCopyService
+     * @param \Magento\Framework\Api\DataObjectHelper $dataObjectHelper
+     */
+    public function __construct(\Magento\Sales\Api\Data\OrderItemInterfaceFactory $orderItemFactory, \Magento\Framework\DataObject\Copy $objectCopyService, \Magento\Framework\Api\DataObjectHelper $dataObjectHelper)
+    {
+    }
+    /**
+     * Convert quote item(quote address item) into order item.
+     *
+     * @param Item|AddressItem $item
+     * @param array $data
+     * @return OrderItemInterface
+     */
+    public function convert($item, $data = [])
+    {
+    }
+}
+/**
+ * Compare quote items
+ */
+class Compare
+{
+    /**
+     * Constructor
+     *
+     * @param Json|null $serializer
+     * @param JsonValidator|null $jsonValidator
+     */
+    public function __construct(\Magento\Framework\Serialize\Serializer\Json $serializer = null, \Magento\Framework\Serialize\JsonValidator $jsonValidator = null)
+    {
+    }
+    /**
+     * Returns option values adopted to compare
+     *
+     * @param mixed $value
+     * @return mixed
+     */
+    protected function getOptionValues($value)
+    {
+    }
+    /**
+     * Compare two quote items
+     *
+     * @param Item $target
+     * @param Item $compared
+     * @return bool
+     */
+    public function compare(\Magento\Quote\Model\Quote\Item $target, \Magento\Quote\Model\Quote\Item $compared)
+    {
+    }
+    /**
+     * Returns options adopted to compare
+     *
+     * @param Item $item
+     * @return array
+     */
+    public function getOptions(\Magento\Quote\Model\Quote\Item $item)
+    {
+    }
+}
+/**
+ * Interface CartItemProcessorInterface
+ *
+ * @api
+ */
+interface CartItemProcessorInterface
+{
+    /**
+     * Convert cart item to buy request object
+     *
+     * @param CartItemInterface $cartItem
+     * @return \Magento\Framework\DataObject|null
+     */
+    public function convertToBuyRequest(\Magento\Quote\Api\Data\CartItemInterface $cartItem);
+    /**
+     * Process cart item product/custom options
+     *
+     * @param CartItemInterface $cartItem
+     * @return CartItemInterface
+     */
+    public function processOptions(\Magento\Quote\Api\Data\CartItemInterface $cartItem);
+}
+class RelatedProducts
+{
+    /**
+     * List of related product types
+     *
+     * @var array
+     */
+    protected $_relatedProductTypes;
+    /**
+     * @param array $relatedProductTypes
+     */
+    public function __construct($relatedProductTypes = [])
+    {
+    }
+    /**
+     * Retrieve Array of product ids which have special relation with products in Cart
+     *
+     * @param \Magento\Quote\Model\Quote\Item[] $quoteItems
+     * @return int[]
+     */
+    public function getRelatedProductIds(array $quoteItems)
+    {
+    }
+}
+/**
+ * Cart item save handler
+ */
+class CartItemPersister
+{
+    /**
+     * @param ProductRepositoryInterface $productRepository
+     * @param CartItemOptionsProcessor $cartItemOptionProcessor
+     */
+    public function __construct(\Magento\Catalog\Api\ProductRepositoryInterface $productRepository, \Magento\Quote\Model\Quote\Item\CartItemOptionsProcessor $cartItemOptionProcessor)
+    {
+    }
+    /**
+     * Save cart item into cart
+     *
+     * @param CartInterface $quote
+     * @param CartItemInterface $item
+     * @return CartItemInterface
+     * @throws CouldNotSaveException
+     * @throws InputException
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    public function save(\Magento\Quote\Api\Data\CartInterface $quote, \Magento\Quote\Api\Data\CartItemInterface $item)
+    {
+    }
+}
+/**
+ * @deprecated 100.1.0
+ * @see Nothing
+ */
+class CartItemProcessorsPool implements \Magento\Framework\ObjectManager\ResetAfterRequestInterface
+{
+    /**
+     * @param ConfigInterface $objectManagerConfig
+     * @deprecated 100.1.0
+     * @see Nothing
+     */
+    public function __construct(\Magento\Framework\ObjectManager\ConfigInterface $objectManagerConfig)
+    {
+    }
+    /**
+     * Get cart item processors.
+     *
+     * @return CartItemProcessorInterface[]
+     * @deprecated 100.1.0
+     * @see Nothing
+     */
+    public function getCartItemProcessors()
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function _resetState() : void
+    {
+    }
+}
+/**
+ * Item option model
+ *
+ * @method int getItemId()
+ * @method \Magento\Quote\Model\Quote\Item\Option setItemId(int $value)
+ * @method int getProductId()
+ * @method \Magento\Quote\Model\Quote\Item\Option setProductId(int $value)
+ * @method string getCode()
+ * @method \Magento\Quote\Model\Quote\Item\Option setCode(string $value)
+ * @method \Magento\Quote\Model\Quote\Item\Option setValue(string $value)
+ *
+ * @api
+ */
+class Option extends \Magento\Framework\Model\AbstractModel implements \Magento\Catalog\Model\Product\Configuration\Item\Option\OptionInterface
+{
+    /**
+     * @var \Magento\Quote\Model\Quote\Item
+     */
+    protected $_item;
+    /**
+     * @var \Magento\Catalog\Model\Product
+     */
+    protected $_product;
+    /**
+     * Initialize resource model
+     *
+     * @return void
+     */
+    protected function _construct()
+    {
+    }
+    /**
+     * Checks that item option model has data changes
+     *
+     * @return boolean
+     */
+    protected function _hasModelChanged()
+    {
+    }
+    /**
+     * Set quote item
+     *
+     * @param   \Magento\Quote\Model\Quote\Item $item
+     * @return $this
+     */
+    public function setItem($item)
+    {
+    }
+    /**
+     * Get option item
+     *
+     * @return \Magento\Quote\Model\Quote\Item
+     */
+    public function getItem()
+    {
+    }
+    /**
+     * Set option product
+     *
+     * @param \Magento\Catalog\Model\Product $product
+     * @return $this
+     */
+    public function setProduct($product)
+    {
+    }
+    /**
+     * Get option product
+     *
+     * @return \Magento\Catalog\Model\Product
+     */
+    public function getProduct()
+    {
+    }
+    /**
+     * Get option value
+     *
+     * @return mixed
+     */
+    public function getValue()
+    {
+    }
+    /**
+     * Initialize item identifier before save data
+     *
+     * @return $this
+     */
+    public function beforeSave()
+    {
+    }
+    /**
+     * Clone option object
+     *
+     * @return $this
+     */
+    public function __clone()
+    {
+    }
+}
+/**
+ * Class Processor
+ *  - initializes quote item with store_id and qty data
+ *  - updates quote item qty and custom price data
+ */
+class Processor
+{
+    /**
+     * @var \Magento\Quote\Model\Quote\ItemFactory
+     */
+    protected $quoteItemFactory;
+    /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
+    protected $storeManager;
+    /**
+     * @var \Magento\Framework\App\State
+     */
+    protected $appState;
+    /**
+     * @param ItemFactory $quoteItemFactory
+     * @param StoreManagerInterface $storeManager
+     * @param State $appState
+     */
+    public function __construct(\Magento\Quote\Model\Quote\ItemFactory $quoteItemFactory, \Magento\Store\Model\StoreManagerInterface $storeManager, \Magento\Framework\App\State $appState)
+    {
+    }
+    /**
+     * Initialize quote item object
+     *
+     * @param Product $product
+     * @param DataObject $request
+     *
+     * @return Item
+     */
+    public function init(\Magento\Catalog\Model\Product $product, \Magento\Framework\DataObject $request) : \Magento\Quote\Model\Quote\Item
+    {
+    }
+    /**
+     * Set qty and custom price for quote item
+     *
+     * @param Item $item
+     * @param DataObject $request
+     * @param Product $candidate
+     * @return void
+     */
+    public function prepare(\Magento\Quote\Model\Quote\Item $item, \Magento\Framework\DataObject $request, \Magento\Catalog\Model\Product $candidate) : void
+    {
+    }
+    /**
+     * Merge two quote items.
+     *
+     * @param Item $source
+     * @param Item $target
+     * @return Item
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function merge(\Magento\Quote\Model\Quote\Item $source, \Magento\Quote\Model\Quote\Item $target) : \Magento\Quote\Model\Quote\Item
+    {
+    }
+    /**
+     * Set store_id value to quote item
+     *
+     * @param Item $item
+     * @return void
+     */
+    protected function setItemStoreId(\Magento\Quote\Model\Quote\Item $item) : void
+    {
+    }
+}
+namespace Magento\Quote\Model\Quote\Item\Option;
+
+/**
+ * Quote item options comparator
+ */
+interface ComparatorInterface
+{
+    /**
+     * Compare two quote item options
+     *
+     * @param DataObject $option1
+     * @param DataObject $option2
+     * @return bool
+     */
+    public function compare(\Magento\Framework\DataObject $option1, \Magento\Framework\DataObject $option2) : bool;
+}
+/**
+ * Quote item options comparator
+ */
+class Comparator implements \Magento\Quote\Model\Quote\Item\Option\ComparatorInterface
+{
+    /**
+     * @param ComparatorInterface[] $customComparators
+     */
+    public function __construct(array $customComparators = [])
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function compare(\Magento\Framework\DataObject $option1, \Magento\Framework\DataObject $option2) : bool
+    {
+    }
+}
+namespace Magento\Quote\Model\Quote\Item;
+
+/**
+ * Repository for quote item.
+ */
+class Repository implements \Magento\Quote\Api\CartItemRepositoryInterface
+{
+    /**
+     * Quote repository.
+     *
+     * @var CartRepositoryInterface
+     */
+    protected $quoteRepository;
+    /**
+     * Product repository.
+     *
+     * @var ProductRepositoryInterface
+     */
+    protected $productRepository;
+    /**
+     * @var CartItemInterfaceFactory
+     */
+    protected $itemDataFactory;
+    /**
+     * @var CartItemProcessorInterface[]
+     */
+    protected $cartItemProcessors;
+    /**
+     * @param CartRepositoryInterface $quoteRepository
+     * @param ProductRepositoryInterface $productRepository
+     * @param CartItemInterfaceFactory $itemDataFactory
+     * @param CartItemOptionsProcessor $cartItemOptionsProcessor
+     * @param CartItemProcessorInterface[] $cartItemProcessors
+     */
+    public function __construct(\Magento\Quote\Api\CartRepositoryInterface $quoteRepository, \Magento\Catalog\Api\ProductRepositoryInterface $productRepository, \Magento\Quote\Api\Data\CartItemInterfaceFactory $itemDataFactory, \Magento\Quote\Model\Quote\Item\CartItemOptionsProcessor $cartItemOptionsProcessor, array $cartItemProcessors = [])
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getList($cartId)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function save(\Magento\Quote\Api\Data\CartItemInterface $cartItem)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function deleteById($cartId, $itemId)
+    {
+    }
+}
+/**
+ * Cart item options processor
+ *
+ * @api
+ */
+class CartItemOptionsProcessor
+{
+    /**
+     * @param CartItemProcessorsPool $cartItemProcessorsPool
+     */
+    public function __construct(\Magento\Quote\Model\Quote\Item\CartItemProcessorsPool $cartItemProcessorsPool)
+    {
+    }
+    /**
+     * @param string $productType
+     * @param CartItemInterface $cartItem
+     * @return DataObject|float
+     */
+    public function getBuyRequest($productType, \Magento\Quote\Api\Data\CartItemInterface $cartItem)
+    {
+    }
+    /**
+     * @param CartItemInterface $cartItem
+     * @return CartItemInterface
+     */
+    public function applyCustomOptions(\Magento\Quote\Api\Data\CartItemInterface $cartItem)
+    {
+    }
+    /**
+     * @param string $productType
+     * @param CartItemInterface $cartItem
+     * @return CartItemInterface
+     */
+    public function addProductOptions($productType, \Magento\Quote\Api\Data\CartItemInterface $cartItem)
+    {
+    }
+}
+namespace Magento\Quote\Model\Quote\ShippingAssignment;
+
+class ShippingProcessor
+{
+    /**
+     * @param ShippingFactory $shippingFactory
+     * @param ShippingAddressManagement $shippingAddressManagement
+     * @param ShippingMethodManagement $shippingMethodManagement
+     */
+    public function __construct(\Magento\Quote\Model\ShippingFactory $shippingFactory, \Magento\Quote\Model\ShippingAddressManagement $shippingAddressManagement, \Magento\Quote\Model\ShippingMethodManagement $shippingMethodManagement)
+    {
+    }
+    /**
+     * @param \Magento\Quote\Api\Data\AddressInterface $shippingAddress
+     * @return \Magento\Quote\Api\Data\ShippingInterface
+     */
+    public function create(\Magento\Quote\Api\Data\AddressInterface $shippingAddress)
+    {
+    }
+    /**
+     * @param ShippingInterface $shipping
+     * @param CartInterface $quote
+     * @return void
+     */
+    public function save(\Magento\Quote\Api\Data\ShippingInterface $shipping, \Magento\Quote\Api\Data\CartInterface $quote)
+    {
+    }
+}
+class ShippingAssignmentProcessor
+{
+    /**
+     * @var ShippingProcessor
+     */
+    protected $shippingProcessor;
+    /**
+     * @var CartItemPersister
+     */
+    protected $cartItemPersister;
+    /**
+     * @param ShippingAssignmentFactory $shippingAssignmentFactory
+     * @param ShippingProcessor $shippingProcessor
+     * @param CartItemPersister $cartItemPersister
+     * @param AddressRepositoryInterface $addressRepository
+     */
+    public function __construct(\Magento\Quote\Model\ShippingAssignmentFactory $shippingAssignmentFactory, \Magento\Quote\Model\Quote\ShippingAssignment\ShippingProcessor $shippingProcessor, \Magento\Quote\Model\Quote\Item\CartItemPersister $cartItemPersister, \Magento\Customer\Api\AddressRepositoryInterface $addressRepository = null)
+    {
+    }
+    /**
+     * Create shipping assignment
+     *
+     * @param CartInterface $quote
+     * @return \Magento\Quote\Api\Data\ShippingAssignmentInterface
+     */
+    public function create(\Magento\Quote\Api\Data\CartInterface $quote)
+    {
+    }
+    /**
+     * Save shipping assignment
+     *
+     * @param ShippingAssignmentInterface $shippingAssignment
+     * @param CartInterface $quote
+     * @return void
+     * @throws InputException|LocalizedException
+     */
+    public function save(\Magento\Quote\Api\Data\CartInterface $quote, \Magento\Quote\Api\Data\ShippingAssignmentInterface $shippingAssignment)
+    {
+    }
+}
+class ShippingAssignmentPersister
+{
+    /**
+     * @param ShippingAssignmentProcessor $shippingAssignmentProcessor
+     */
+    public function __construct(\Magento\Quote\Model\Quote\ShippingAssignment\ShippingAssignmentProcessor $shippingAssignmentProcessor)
+    {
+    }
+    /**
+     * @param CartInterface $quote
+     * @param ShippingAssignmentInterface $shippingAssignment
+     * @return void
+     */
+    public function save(\Magento\Quote\Api\Data\CartInterface $quote, \Magento\Quote\Api\Data\ShippingAssignmentInterface $shippingAssignment)
+    {
+    }
+}
+namespace Magento\Quote\Model\Quote\Address;
+
+class Validator extends \Magento\Framework\Validator\AbstractValidator
+{
+    /**
+     * @var CountryFactory
+     */
+    protected $countryFactory;
+    /**
+     * @param CountryFactory $countryFactory
+     */
+    public function __construct(\Magento\Directory\Model\CountryFactory $countryFactory)
+    {
+    }
+    /**
+     * Returns true if and only if $value meets the validation requirements
+     *
+     * If $value fails validation, then this method returns false, and
+     * getMessages() will return an array of messages that explain why the
+     * validation failed.
+     *
+     * @param  Address $value
+     * @return boolean
+     * @throws ValidateException If validation of $value is impossible
+     */
+    public function isValid($value)
+    {
+    }
+}
+/**
+ * Saves billing address for quotes.
+ */
+class BillingAddressPersister
+{
+    /**
+     * @param QuoteAddressValidator $addressValidator
+     * @param AddressRepositoryInterface $addressRepository
+     */
+    public function __construct(\Magento\Quote\Model\QuoteAddressValidator $addressValidator, \Magento\Customer\Api\AddressRepositoryInterface $addressRepository)
+    {
+    }
+    /**
+     * Save address for billing.
+     *
+     * @param CartInterface $quote
+     * @param AddressInterface $address
+     * @param bool $useForShipping
+     * @return void
+     * @throws NoSuchEntityException
+     * @throws InputException|LocalizedException
+     */
+    public function save(\Magento\Quote\Api\Data\CartInterface $quote, \Magento\Quote\Api\Data\AddressInterface $address, $useForShipping = false)
+    {
+    }
+}
+/**
+ * Factory class for \Magento\Quote\Model\Quote\Address\RateCollectorInterface
+ *
+ * @api
+ */
+class RateCollectorInterfaceFactory
+{
+    /**
+     * Object Manager instance
+     *
+     * @var \Magento\Framework\ObjectManagerInterface
+     */
+    protected $_objectManager = null;
+    /**
+     * Instance name to create
+     *
+     * @var string
+     */
+    protected $_instanceName = null;
+    /**
+     * Factory constructor
+     *
+     * @param \Magento\Framework\ObjectManagerInterface $objectManager
+     * @param string $instanceName
+     */
+    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager, $instanceName = \Magento\Quote\Model\Quote\Address\RateCollectorInterface::class)
+    {
+    }
+    /**
+     * Create class instance with specified parameters
+     *
+     * @param array $data
+     * @return \Magento\Quote\Model\Quote\Address\RateCollectorInterface
+     */
+    public function create(array $data = [])
+    {
+    }
+}
+class TotalFactory
+{
+    /**
+     * Object Manager instance
+     *
+     * @var \Magento\Framework\ObjectManagerInterface
+     */
+    protected $_objectManager = null;
+    /**
+     * Quote address factory constructor
+     *
+     * @param \Magento\Framework\ObjectManagerInterface $objManager
+     */
+    public function __construct(\Magento\Framework\ObjectManagerInterface $objManager)
+    {
+    }
+    /**
+     * Create class instance with specified parameters
+     *
+     * @param string $instanceName
+     * @param array $data
+     * @return Total\AbstractTotal|Total
+     */
+    public function create($instanceName = \Magento\Quote\Model\Quote\Address\Total::class, array $data = [])
+    {
+    }
+}
+/**
+ * Class ToOrderAddress
+ */
+class ToOrderAddress
+{
+    /**
+     * @var Copy
+     */
+    protected $objectCopyService;
+    /**
+     * @var OrderAddressRepository
+     */
+    protected $orderAddressRepository;
+    /**
+     * @var \Magento\Framework\Api\DataObjectHelper
+     */
+    protected $dataObjectHelper;
+    /**
+     * @param OrderAddressRepository $orderAddressRepository
+     * @param Copy $objectCopyService
+     * @param \Magento\Framework\Api\DataObjectHelper $dataObjectHelper
+     */
+    public function __construct(\Magento\Sales\Model\Order\AddressRepository $orderAddressRepository, \Magento\Framework\DataObject\Copy $objectCopyService, \Magento\Framework\Api\DataObjectHelper $dataObjectHelper)
+    {
+    }
+    /**
+     * @param Address $object
+     * @param array $data
+     * @return OrderAddressInterface
+     */
+    public function convert(\Magento\Quote\Model\Quote\Address $object, $data = [])
+    {
+    }
+}
+namespace Magento\Quote\Model\Quote\Address\Total;
+
+/**
+ * Interface \Magento\Quote\Model\Quote\Address\Total\CollectorInterface
+ *
+ * @api
+ */
+interface CollectorInterface
+{
+    /**
+     * @param \Magento\Quote\Model\Quote $quote
+     * @param \Magento\Quote\Api\Data\ShippingAssignmentInterface $shippingAssignment
+     * @param \Magento\Quote\Model\Quote\Address\Total $total
+     * @return CollectorInterface
+     */
+    public function collect(\Magento\Quote\Model\Quote $quote, \Magento\Quote\Api\Data\ShippingAssignmentInterface $shippingAssignment, \Magento\Quote\Model\Quote\Address\Total $total);
+}
+/**
+ * Interface \Magento\Quote\Model\Quote\Address\Total\ReaderInterface
+ *
+ * @api
+ */
+interface ReaderInterface
+{
+    /**
+     * @param \Magento\Quote\Model\Quote $quote
+     * @param \Magento\Quote\Model\Quote\Address\Total $total
+     * @return  []
+     */
+    public function fetch(\Magento\Quote\Model\Quote $quote, \Magento\Quote\Model\Quote\Address\Total $total);
+}
+/**
+ * Sales Quote Address Total  abstract model
+ *
+ * phpcs:disable Magento2.Classes.AbstractApi
+ * @api
+ * @SuppressWarnings(PHPMD.NumberOfChildren)
+ * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+ * @since 100.0.2
+ */
+abstract class AbstractTotal implements \Magento\Quote\Model\Quote\Address\Total\CollectorInterface, \Magento\Quote\Model\Quote\Address\Total\ReaderInterface, \Magento\Framework\ObjectManager\ResetAfterRequestInterface
+{
+    /**
+     * Total Code name
+     *
+     * @var string
+     */
+    protected $_code;
+    /**
+     * @var string
+     */
+    protected $_address = null;
+    /**
+     * Various abstract abilities
+     *
+     * @var bool
+     */
+    protected $_canAddAmountToAddress = true;
+    /**
+     * Various abstract abilities
+     *
+     * @var bool
+     */
+    protected $_canSetAddressAmount = true;
+    /**
+     * Key for item row total getting
+     *
+     * @var string
+     */
+    protected $_itemRowTotalKey = null;
+    /**
+     * @var \Magento\Quote\Model\Quote\Address\Total
+     */
+    protected $total;
+    /**
+     * @inheritDoc
+     */
+    public function _resetState() : void
+    {
+    }
+    /**
+     * Set total code code name
+     *
+     * @param string $code
+     * @return $this
+     */
+    public function setCode($code)
+    {
+    }
+    /**
+     * Retrieve total code name
+     *
+     * @return string
+     */
+    public function getCode()
+    {
+    }
+    /**
+     * Label getter
+     *
+     * @return string
+     */
+    public function getLabel()
+    {
+    }
+    /**
+     * Collect totals process.
+     *
+     * @param \Magento\Quote\Model\Quote $quote
+     * @param \Magento\Quote\Api\Data\ShippingAssignmentInterface $shippingAssignment
+     * @param \Magento\Quote\Model\Quote\Address\Total $total
+     * @return $this
+     */
+    public function collect(\Magento\Quote\Model\Quote $quote, \Magento\Quote\Api\Data\ShippingAssignmentInterface $shippingAssignment, \Magento\Quote\Model\Quote\Address\Total $total)
+    {
+    }
+    /**
+     * Fetch (Retrieve data as array)
+     *
+     * @param \Magento\Quote\Model\Quote $quote
+     * @param \Magento\Quote\Model\Quote\Address\Total $total
+     * @return array
+     * @internal param \Magento\Quote\Model\Quote\Address $address
+     */
+    public function fetch(\Magento\Quote\Model\Quote $quote, \Magento\Quote\Model\Quote\Address\Total $total)
+    {
+    }
+    /**
+     * Set address which can be used inside totals calculation
+     *
+     * @param \Magento\Quote\Model\Quote\Address $address
+     * @return $this
+     */
+    protected function _setAddress(\Magento\Quote\Model\Quote\Address $address)
+    {
+    }
+    /**
+     * Get quote address object
+     *
+     * @return \Magento\Quote\Model\Quote\Address
+     * @throws \Magento\Framework\Exception\LocalizedException if address not declared
+     */
+    protected function _getAddress()
+    {
+    }
+    /**
+     * Sets the total
+     *
+     * @param \Magento\Quote\Model\Quote\Address\Total $total
+     * @return $this
+     */
+    public function _setTotal(\Magento\Quote\Model\Quote\Address\Total $total)
+    {
+    }
+    /**
+     * Gets the total
+     *
+     * @return \Magento\Quote\Model\Quote\Address\Total
+     */
+    protected function _getTotal()
+    {
+    }
+    /**
+     * Set total model amount value to address
+     *
+     * @param float $amount
+     * @return $this
+     */
+    protected function _setAmount($amount)
+    {
+    }
+    /**
+     * Set total model base amount value to address
+     *
+     * @param float $baseAmount
+     * @internal param float $amount
+     * @return $this
+     */
+    protected function _setBaseAmount($baseAmount)
+    {
+    }
+    /**
+     * Add total model amount value to address
+     *
+     * @param float $amount
+     * @return $this
+     */
+    protected function _addAmount($amount)
+    {
+    }
+    /**
+     * Add total model base amount value to address
+     *
+     * @param float $baseAmount
+     * @return $this
+     */
+    protected function _addBaseAmount($baseAmount)
+    {
+    }
+    /**
+     * Get all items
+     *
+     * @param \Magento\Quote\Model\Quote\Address $address
+     * @return array
+     */
+    protected function _getAddressItems(\Magento\Quote\Model\Quote\Address $address)
+    {
+    }
+    /**
+     * Getter for row default total
+     *
+     * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
+     * @return float|int
+     */
+    public function getItemRowTotal(\Magento\Quote\Model\Quote\Item\AbstractItem $item)
+    {
+    }
+    /**
+     * Getter for row default base total
+     *
+     * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
+     * @return float|int
+     */
+    public function getItemBaseRowTotal(\Magento\Quote\Model\Quote\Item\AbstractItem $item)
+    {
+    }
+    /**
+     * Whether the item row total may be compounded with others
+     *
+     * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
+     * @return bool
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
+     */
+    public function getIsItemRowTotalCompoundable(\Magento\Quote\Model\Quote\Item\AbstractItem $item)
+    {
+    }
+    /**
+     * Process model configuration array.
+     *
+     * This method can be used for changing models apply sort order
+     *
+     * @param   array $config
+     * @param   store $store
+     * @return  array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function processConfigArray($config, $store)
+    {
+    }
+}
+/**
+ * Collect totals for shipping.
+ */
+class Shipping extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
+{
+    /**
+     * @var PriceCurrencyInterface
+     */
+    protected $priceCurrency;
+    /**
+     * @var FreeShippingInterface
+     */
+    protected $freeShipping;
+    /**
+     * @param PriceCurrencyInterface $priceCurrency
+     * @param FreeShippingInterface $freeShipping
+     */
+    public function __construct(\Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency, \Magento\Quote\Model\Quote\Address\FreeShippingInterface $freeShipping)
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function _resetState() : void
+    {
+    }
+    /**
+     * Collect totals information about shipping
+     *
+     * @param \Magento\Quote\Model\Quote $quote
+     * @param \Magento\Quote\Api\Data\ShippingAssignmentInterface $shippingAssignment
+     * @param \Magento\Quote\Model\Quote\Address\Total $total
+     * @return $this
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
+    public function collect(\Magento\Quote\Model\Quote $quote, \Magento\Quote\Api\Data\ShippingAssignmentInterface $shippingAssignment, \Magento\Quote\Model\Quote\Address\Total $total)
+    {
+    }
+    /**
+     * Add shipping totals information to address object
+     *
+     * @param \Magento\Quote\Model\Quote $quote
+     * @param \Magento\Quote\Model\Quote\Address\Total $total
+     * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function fetch(\Magento\Quote\Model\Quote $quote, \Magento\Quote\Model\Quote\Address\Total $total)
+    {
+    }
+    /**
+     * Get Shipping label
+     *
+     * @return \Magento\Framework\Phrase
+     */
+    public function getLabel()
+    {
+    }
+}
+/**
+ * Address total collector model
+ */
+class Subtotal extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
+{
+    /**
+     * Sales data
+     *
+     * @var \Magento\Quote\Model\QuoteValidator
+     */
+    protected $quoteValidator = null;
+    /**
+     * @param \Magento\Quote\Model\QuoteValidator $quoteValidator
+     */
+    public function __construct(\Magento\Quote\Model\QuoteValidator $quoteValidator)
+    {
+    }
+    /**
+     * Collect address subtotal
+     *
+     * @param \Magento\Quote\Model\Quote $quote
+     * @param \Magento\Quote\Api\Data\ShippingAssignmentInterface $shippingAssignment
+     * @param Address\Total $total
+     * @return $this
+     */
+    public function collect(\Magento\Quote\Model\Quote $quote, \Magento\Quote\Api\Data\ShippingAssignmentInterface $shippingAssignment, \Magento\Quote\Model\Quote\Address\Total $total)
+    {
+    }
+    /**
+     * Address item initialization
+     *
+     * @param Address $address
+     * @param AddressItem|Item $item
+     * @return bool
+     */
+    protected function _initItem($address, $item)
+    {
+    }
+    /**
+     * Processing calculation of row price for address item
+     *
+     * @param AddressItem|Item $item
+     * @param int $finalPrice
+     * @param int $originalPrice
+     * @return $this
+     */
+    protected function _calculateRowTotal($item, $finalPrice, $originalPrice)
+    {
+    }
+    /**
+     * Remove item
+     *
+     * @param Address $address
+     * @param AddressItem|Item $item
+     * @return $this
+     */
+    protected function _removeItem($address, $item)
+    {
+    }
+    /**
+     * Assign subtotal amount and label to address object
+     *
+     * @param \Magento\Quote\Model\Quote $quote
+     * @param Address\Total $total
+     * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function fetch(\Magento\Quote\Model\Quote $quote, \Magento\Quote\Model\Quote\Address\Total $total)
+    {
+    }
+    /**
+     * Get Subtotal label
+     *
+     * @return \Magento\Framework\Phrase
+     */
+    public function getLabel()
+    {
+    }
+}
+/**
+ * Collect grand totals.
+ */
+class Grand extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
+{
+    /**
+     * @param PriceRounder|null $priceRounder
+     */
+    public function __construct(?\Magento\Framework\Pricing\PriceCurrencyInterface $priceRounder)
+    {
+    }
+    /**
+     * Collect grand total address amount
+     *
+     * @param Quote $quote
+     * @param ShippingAssignment $shippingAssignment
+     * @param Total $total
+     * @return Grand
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function collect(\Magento\Quote\Model\Quote $quote, \Magento\Quote\Api\Data\ShippingAssignmentInterface $shippingAssignment, \Magento\Quote\Model\Quote\Address\Total $total) : \Magento\Quote\Model\Quote\Address\Total\Grand
+    {
+    }
+    /**
+     * Add grand total information to address
+     *
+     * @param Quote $quote
+     * @param Total $total
+     * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function fetch(\Magento\Quote\Model\Quote $quote, \Magento\Quote\Model\Quote\Address\Total $total) : array
+    {
+    }
+}
+/**
+ * Address Total Collector model
+ */
+class Collector extends \Magento\Sales\Model\Config\Ordered
+{
+    /**
+     * Path to sort order values of checkout totals
+     */
+    const XML_PATH_SALES_TOTALS_SORT = 'sales/totals_sort';
+    /**
+     * Total models array ordered for right display sequence
+     *
+     * @var array
+     */
+    protected $_retrievers = [];
+    /**
+     * Corresponding store object
+     *
+     * @var \Magento\Store\Model\Store
+     */
+    protected $_store;
+    /**
+     * Config group for totals declaration
+     *
+     * @var string
+     */
+    protected $_configGroup = 'totals';
+    /**
+     * @var string
+     */
+    protected $_configSection = 'quote';
+    /**
+     * Cache key for collectors
+     *
+     * @var string
+     */
+    protected $_collectorsCacheKey = 'sorted_quote_collectors';
+    /**
+     * Core store config
+     *
+     * @var \Magento\Framework\App\Config\ScopeConfigInterface
+     */
+    protected $_scopeConfig;
+    /**
+     * @var \Magento\Quote\Model\Quote\Address\TotalFactory
+     */
+    protected $_totalFactory;
+    /**
+     * @param \Magento\Framework\App\Cache\Type\Config $configCacheType
+     * @param \Psr\Log\LoggerInterface $logger
+     * @param \Magento\Sales\Model\Config $salesConfig
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Magento\Quote\Model\Quote\Address\TotalFactory $totalFactory
+     * @param \Magento\Framework\Simplexml\Element|mixed $sourceData
+     * @param mixed $store
+     * @param SerializerInterface $serializer
+     */
+    public function __construct(\Magento\Framework\App\Cache\Type\Config $configCacheType, \Psr\Log\LoggerInterface $logger, \Magento\Sales\Model\Config $salesConfig, \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig, \Magento\Store\Model\StoreManagerInterface $storeManager, \Magento\Quote\Model\Quote\Address\TotalFactory $totalFactory, $sourceData = null, $store = null, \Magento\Framework\Serialize\SerializerInterface $serializer = null)
+    {
+    }
+    /**
+     * Get total models array ordered for right calculation logic
+     *
+     * @return array
+     */
+    public function getCollectors()
+    {
+    }
+    /**
+     * Get total models array ordered for right display sequence
+     *
+     * @return \Magento\Quote\Model\Quote\Address\Total\AbstractTotal[]
+     */
+    public function getRetrievers()
+    {
+    }
+    /**
+     * Init model class by configuration
+     *
+     * @param string $class
+     * @param string $totalCode
+     * @param array $totalConfig
+     * @return \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    protected function _initModelInstance($class, $totalCode, $totalConfig)
+    {
+    }
+}
+namespace Magento\Quote\Model\Quote\Address;
+
+/**
+ * @api
+ * @since 100.0.2
+ */
+interface RateCollectorInterface
+{
+    /**
+     * @param RateRequest $request
+     * @return $this
+     */
+    public function collectRates(\Magento\Quote\Model\Quote\Address\RateRequest $request);
+}
+class ShippingAddressPersister
+{
+    /**
+     * @param QuoteAddressValidator $addressValidator
+     * @param AddressRepositoryInterface $addressRepository
+     */
+    public function __construct(\Magento\Quote\Model\QuoteAddressValidator $addressValidator, \Magento\Customer\Api\AddressRepositoryInterface $addressRepository)
+    {
+    }
+    /**
+     * Save address for shipping.
+     *
+     * @param CartInterface $quote
+     * @param AddressInterface $address
+     * @return void
+     * @throws InputException
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
+     */
+    public function save(\Magento\Quote\Api\Data\CartInterface $quote, \Magento\Quote\Api\Data\AddressInterface $address) : void
+    {
+    }
+}
+/**
+ * @api
+ * @since 100.0.2
+ */
+interface FreeShippingInterface
+{
+    /**
+     * @param \Magento\Quote\Model\Quote $quote
+     * @param \Magento\Quote\Api\Data\CartItemInterface[] $items
+     * @return bool
+     */
+    public function isFreeShipping(\Magento\Quote\Model\Quote $quote, $items);
+}
+/**
+ * Quote item model.
+ *
+ * @api
+ * @method int getParentItemId()
+ * @method \Magento\Quote\Model\Quote\Address\Item setParentItemId(int $value)
+ * @method int getQuoteAddressId()
+ * @method \Magento\Quote\Model\Quote\Address\Item setQuoteAddressId(int $value)
+ * @method int getQuoteItemId()
+ * @method \Magento\Quote\Model\Quote\Address\Item setQuoteItemId(int $value)
+ * @method string getCreatedAt()
+ * @method \Magento\Quote\Model\Quote\Address\Item setCreatedAt(string $value)
+ * @method string getUpdatedAt()
+ * @method \Magento\Quote\Model\Quote\Address\Item setUpdatedAt(string $value)
+ * @method string getAppliedRuleIds()
+ * @method \Magento\Quote\Model\Quote\Address\Item setAppliedRuleIds(string $value)
+ * @method string getAdditionalData()
+ * @method \Magento\Quote\Model\Quote\Address\Item setAdditionalData(string $value)
+ * @method float getWeight()
+ * @method \Magento\Quote\Model\Quote\Address\Item setWeight(float $value)
+ * @method \Magento\Quote\Model\Quote\Address\Item setQty(float $value)
+ * @method float getDiscountAmount()
+ * @method \Magento\Quote\Model\Quote\Address\Item setDiscountAmount(float $value)
+ * @method \Magento\Quote\Model\Quote\Address\Item setTaxAmount(float $value)
+ * @method float getRowTotal()
+ * @method \Magento\Quote\Model\Quote\Address\Item setRowTotal(float $value)
+ * @method float getBaseRowTotal()
+ * @method \Magento\Quote\Model\Quote\Address\Item setBaseRowTotal(float $value)
+ * @method float getRowTotalWithDiscount()
+ * @method \Magento\Quote\Model\Quote\Address\Item setRowTotalWithDiscount(float $value)
+ * @method float getBaseDiscountAmount()
+ * @method \Magento\Quote\Model\Quote\Address\Item setBaseDiscountAmount(float $value)
+ * @method \Magento\Quote\Model\Quote\Address\Item setBaseTaxAmount(float $value)
+ * @method float getRowWeight()
+ * @method \Magento\Quote\Model\Quote\Address\Item setRowWeight(float $value)
+ * @method int getProductId()
+ * @method \Magento\Quote\Model\Quote\Address\Item setProductId(int $value)
+ * @method int getSuperProductId()
+ * @method \Magento\Quote\Model\Quote\Address\Item setSuperProductId(int $value)
+ * @method int getParentProductId()
+ * @method \Magento\Quote\Model\Quote\Address\Item setParentProductId(int $value)
+ * @method int getStoreId()
+ * @method \Magento\Quote\Model\Quote\Address\Item setStoreId(int $value)
+ * @method string getSku()
+ * @method \Magento\Quote\Model\Quote\Address\Item setSku(string $value)
+ * @method string getImage()
+ * @method \Magento\Quote\Model\Quote\Address\Item setImage(string $value)
+ * @method string getName()
+ * @method \Magento\Quote\Model\Quote\Address\Item setName(string $value)
+ * @method string getDescription()
+ * @method \Magento\Quote\Model\Quote\Address\Item setDescription(string $value)
+ * @method int getFreeShipping()
+ * @method \Magento\Quote\Model\Quote\Address\Item setFreeShipping(int $value)
+ * @method int getIsQtyDecimal()
+ * @method \Magento\Quote\Model\Quote\Address\Item setIsQtyDecimal(int $value)
+ * @method float getDiscountPercent()
+ * @method \Magento\Quote\Model\Quote\Address\Item setDiscountPercent(float $value)
+ * @method int getNoDiscount()
+ * @method \Magento\Quote\Model\Quote\Address\Item setNoDiscount(int $value)
+ * @method float getTaxPercent()
+ * @method \Magento\Quote\Model\Quote\Address\Item setTaxPercent(float $value)
+ * @method float getBasePrice()
+ * @method \Magento\Quote\Model\Quote\Address\Item setBasePrice(float $value)
+ * @method float getBaseCost()
+ * @method \Magento\Quote\Model\Quote\Address\Item setBaseCost(float $value)
+ * @method float getPriceInclTax()
+ * @method \Magento\Quote\Model\Quote\Address\Item setPriceInclTax(float $value)
+ * @method float getBasePriceInclTax()
+ * @method \Magento\Quote\Model\Quote\Address\Item setBasePriceInclTax(float $value)
+ * @method float getRowTotalInclTax()
+ * @method \Magento\Quote\Model\Quote\Address\Item setRowTotalInclTax(float $value)
+ * @method float getBaseRowTotalInclTax()
+ * @method \Magento\Quote\Model\Quote\Address\Item setBaseRowTotalInclTax(float $value)
+ * @method int getGiftMessageId()
+ * @method \Magento\Quote\Model\Quote\Address\Item setGiftMessageId(int $value)
+ * @method float getDiscountTaxCompensationAmount()
+ * @method \Magento\Quote\Model\Quote\Address\Item setDiscountTaxCompensationAmount(float $value)
+ * @method float getBaseDiscountTaxCompensationAmount()
+ * @method \Magento\Quote\Model\Quote\Address\Item setBaseDiscountTaxCompensationAmount(float $value)
+ *
+ * @author      Magento Core Team <core@magentocommerce.com>
+ * @since 100.0.2
+ */
+class Item extends \Magento\Quote\Model\Quote\Item\AbstractItem
+{
+    /**
+     * Quote address model object
+     *
+     * @var \Magento\Quote\Model\Quote\Address
+     */
+    protected $_address;
+    /**
+     * @var Quote
+     */
+    protected $_quote;
+    /**
+     * @inheritdoc
+     */
+    protected function _construct()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function beforeSave()
+    {
+    }
+    /**
+     * Declare address model
+     *
+     * @param \Magento\Quote\Model\Quote\Address $address
+     * @return $this
+     */
+    public function setAddress(\Magento\Quote\Model\Quote\Address $address)
+    {
+    }
+    /**
+     * Retrieve address model
+     *
+     * @return \Magento\Quote\Model\Quote\Address
+     */
+    public function getAddress()
+    {
+    }
+    /**
+     * Retrieve quote model instance
+     *
+     * @return Quote
+     */
+    public function getQuote()
+    {
+    }
+    /**
+     * Import quote item.
+     *
+     * @param \Magento\Quote\Model\Quote\Item $quoteItem
+     * @return $this
+     */
+    public function importQuoteItem(\Magento\Quote\Model\Quote\Item $quoteItem)
+    {
+    }
+    /**
+     * @inheritdoc
+     * @since 101.1.1
+     */
+    public function getOptionByCode($code)
+    {
+    }
+}
+/**
+ * Interface \Magento\Quote\Model\Quote\Address\CustomAttributeListInterface
+ *
+ * @api
+ */
+interface CustomAttributeListInterface
+{
+    /**
+     * Retrieve list of quote address custom attributes
+     *
+     * @return array
+     */
+    public function getAttributes();
+}
+class CustomAttributeList implements \Magento\Quote\Model\Quote\Address\CustomAttributeListInterface
+{
+    /**
+     * Retrieve list of quote address custom attributes
+     *
+     * @return array
+     */
+    public function getAttributes()
+    {
+    }
+}
+class Relation implements \Magento\Framework\Model\ResourceModel\Db\VersionControl\RelationInterface
+{
+    /**
+     * Process object relations
+     *
+     * @param \Magento\Framework\Model\AbstractModel $object
+     * @return void
+     */
+    public function processRelation(\Magento\Framework\Model\AbstractModel $object)
+    {
+    }
+}
+/**
+ * @api
+ * @method int getAddressId()
+ * @method \Magento\Quote\Model\Quote\Address\Rate setAddressId(int $value)
+ * @method string getCreatedAt()
+ * @method \Magento\Quote\Model\Quote\Address\Rate setCreatedAt(string $value)
+ * @method string getUpdatedAt()
+ * @method \Magento\Quote\Model\Quote\Address\Rate setUpdatedAt(string $value)
+ * @method string getCarrier()
+ * @method \Magento\Quote\Model\Quote\Address\Rate setCarrier(string $value)
+ * @method string getCarrierTitle()
+ * @method \Magento\Quote\Model\Quote\Address\Rate setCarrierTitle(string $value)
+ * @method string getCode()
+ * @method \Magento\Quote\Model\Quote\Address\Rate setCode(string $value)
+ * @method string getMethod()
+ * @method \Magento\Quote\Model\Quote\Address\Rate setMethod(string $value)
+ * @method string getMethodDescription()
+ * @method \Magento\Quote\Model\Quote\Address\Rate setMethodDescription(string $value)
+ * @method float getPrice()
+ * @method \Magento\Quote\Model\Quote\Address\Rate setPrice(float $value)
+ * @method string getErrorMessage()
+ * @method \Magento\Quote\Model\Quote\Address\Rate setErrorMessage(string $value)
+ * @method string getMethodTitle()
+ * @method \Magento\Quote\Model\Quote\Address\Rate setMethodTitle(string $value)
+ *
+ * @author      Magento Core Team <core@magentocommerce.com>
+ * @since 100.0.2
+ */
+class Rate extends \Magento\Framework\Model\AbstractModel
+{
+    /**
+     * @var \Magento\Quote\Model\Quote\Address
+     */
+    protected $_address;
+    /**
+     * @var carrier_sort_order
+     */
+    public $carrier_sort_order;
+    /**
+     * Check the Quote rate
+     *
+     * @return void
+     */
+    protected function _construct()
+    {
+    }
+    /**
+     * Set Address id with address before save
+     *
+     * @return $this
+     */
+    public function beforeSave()
+    {
+    }
+    /**
+     * Set address
+     *
+     * @param \Magento\Quote\Model\Quote\Address $address
+     * @return $this
+     */
+    public function setAddress(\Magento\Quote\Model\Quote\Address $address)
+    {
+    }
+    /**
+     * Get Method for address
+     *
+     * @return \Magento\Quote\Model\Quote\Address
+     */
+    public function getAddress()
+    {
+    }
+    /**
+     * Import shipping rate
+     *
+     * @param \Magento\Quote\Model\Quote\Address\RateResult\AbstractResult $rate
+     * @return $this
+     */
+    public function importShippingRate(\Magento\Quote\Model\Quote\Address\RateResult\AbstractResult $rate)
+    {
+    }
+}
+/**
+ * Class ToOrder converter
+ */
+class ToOrder
+{
+    /**
+     * @var Copy
+     */
+    protected $objectCopyService;
+    /**
+     * @var OrderFactory
+     */
+    protected $orderFactory;
+    /**
+     * @var \Magento\Framework\Event\ManagerInterface
+     */
+    protected $eventManager;
+    /**
+     * @var \Magento\Framework\Api\DataObjectHelper
+     */
+    protected $dataObjectHelper;
+    /**
+     * @param OrderFactory $orderFactory
+     * @param Copy $objectCopyService
+     * @param ManagerInterface $eventManager
+     * @param \Magento\Framework\Api\DataObjectHelper $dataObjectHelper
+     */
+    public function __construct(\Magento\Sales\Api\Data\OrderInterfaceFactory $orderFactory, \Magento\Framework\DataObject\Copy $objectCopyService, \Magento\Framework\Event\ManagerInterface $eventManager, \Magento\Framework\Api\DataObjectHelper $dataObjectHelper)
+    {
+    }
+    /**
+     * @param Address $object
+     * @param array $data
+     * @return OrderInterface
+     */
+    public function convert(\Magento\Quote\Model\Quote\Address $object, $data = [])
+    {
+    }
+}
+namespace Magento\Quote\Model\Quote\Address\RateResult;
+
+/**
+ * @api
+ * @since 100.0.2
+ */
+class AbstractResult extends \Magento\Framework\DataObject
+{
+}
+/**
+ * Fields:
+ * - carrier: carrier code
+ * - carrierTitle: carrier title
+ * - method: carrier method
+ * - methodTitle: method title
+ * - price: cost+handling
+ * - cost: cost
+ *
+ * @api
+ * @since 100.0.2
+ */
+class Method extends \Magento\Quote\Model\Quote\Address\RateResult\AbstractResult
+{
+    /**
+     * @var \Magento\Framework\Pricing\PriceCurrencyInterface
+     */
+    protected $priceCurrency;
+    /**
+     * @param \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency
+     * @param array $data
+     */
+    public function __construct(\Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency, array $data = [])
+    {
+    }
+    /**
+     * Round shipping carrier's method price
+     *
+     * @param string|float|int $price
+     * @return $this
+     */
+    public function setPrice($price)
+    {
+    }
+}
+class Error extends \Magento\Quote\Model\Quote\Address\RateResult\AbstractResult
+{
+    /**
+     * @return mixed
+     */
+    public function getErrorMessage()
+    {
+    }
+}
+namespace Magento\Quote\Model\Quote\Address;
+
+/**
+ * Class Total
+ *
+ * @method string getCode()
+ *
+ * @api
+ * @since 100.0.2
+ */
+class Total extends \Magento\Framework\DataObject
+{
+    /**
+     * @var array
+     */
+    protected $totalAmounts = [];
+    /**
+     * @var array
+     */
+    protected $baseTotalAmounts = [];
+    /**
+     * Constructor
+     *
+     * @param array $data
+     * @param \Magento\Framework\Serialize\Serializer\Json|null $serializer
+     */
+    public function __construct(array $data = [], \Magento\Framework\Serialize\Serializer\Json $serializer = null)
+    {
+    }
+    /**
+     * Set total amount value
+     *
+     * @param string $code
+     * @param float $amount
+     * @return $this
+     */
+    public function setTotalAmount($code, $amount)
+    {
+    }
+    /**
+     * Set total amount value in base store currency
+     *
+     * @param string $code
+     * @param float $amount
+     * @return $this
+     */
+    public function setBaseTotalAmount($code, $amount)
+    {
+    }
+    /**
+     * Add amount total amount value
+     *
+     * @param string $code
+     * @param float $amount
+     * @return $this
+     */
+    public function addTotalAmount($code, $amount)
+    {
+    }
+    /**
+     * Add amount total amount value in base store currency
+     *
+     * @param string $code
+     * @param float $amount
+     * @return $this
+     */
+    public function addBaseTotalAmount($code, $amount)
+    {
+    }
+    /**
+     * Get total amount value by code
+     *
+     * @param   string $code
+     * @return  float|int
+     */
+    public function getTotalAmount($code)
+    {
+    }
+    /**
+     * Get total amount value by code in base store currency
+     *
+     * @param   string $code
+     * @return  float|int
+     */
+    public function getBaseTotalAmount($code)
+    {
+    }
+    //@codeCoverageIgnoreStart
+    /**
+     * Get all total amount values
+     *
+     * @return array
+     */
+    public function getAllTotalAmounts()
+    {
+    }
+    /**
+     * Get all total amount values in base currency
+     *
+     * @return array
+     */
+    public function getAllBaseTotalAmounts()
+    {
+    }
+    //@codeCoverageIgnoreEnd
+    /**
+     * Set the full info, which is used to capture tax related information.
+     *
+     * If a string is used, it is assumed to be serialized.
+     *
+     * @param array|string $info
+     * @return $this
+     * @since 100.1.0
+     */
+    public function setFullInfo($info)
+    {
+    }
+    /**
+     * Returns the full info, which is used to capture tax related information.
+     *
+     * @return array
+     * @since 100.1.0
+     */
+    public function getFullInfo()
+    {
+    }
+}
+/**
+ * Fields:
+ * - orig:
+ *   - country_id: UK
+ *   - region_id: 1
+ *   - postcode: 90034
+ * - dest:
+ *   - country_id: UK
+ *   - region_id: 2
+ *   - postcode: 01005
+ * - package:
+ *   - value: $100
+ *   - weight: 1.5 lb
+ *   - height: 10"
+ *   - width: 10"
+ *   - depth: 10"
+ * - order:
+ *   - total_qty: 10
+ *   - subtotal: $100
+ * - option
+ *   - insurance: true
+ *   - handling: $1
+ * - table (shiptable)
+ *   - condition_name: package_weight
+ * - limit
+ *   - carrier: carrier code
+ *   - method: carrier method
+ * - shipping carrier
+ *   - specific carrier fields
+ *
+ * @method int getStoreId()
+ * @method \Magento\Quote\Model\Quote\Address\RateRequest setStoreId(int $value)
+ * @method int getWebsiteId()
+ * @method \Magento\Quote\Model\Quote\Address\RateRequest setWebsiteId(int $value)
+ * @method string getBaseCurrency()
+ * @method \Magento\Quote\Model\Quote\Address\RateRequest setBaseCurrency(string $value)
+ *
+ * @method \Magento\Quote\Model\Quote\Address\RateRequest setAllItems(array $items)
+ * @method array getAllItems()
+ *
+ * @method \Magento\Quote\Model\Quote\Address\RateRequest setOrigCountryId(string $value)
+ * @method string getOrigCountryId()
+ * @method \Magento\Quote\Model\Quote\Address\RateRequest setOrigRegionId(int $value)
+ * @method int getOrigRegionId()
+ * @method \Magento\Quote\Model\Quote\Address\RateRequest setOrigPostcode(string $value)
+ * @method string getOrigPostcode()
+ * @method \Magento\Quote\Model\Quote\Address\RateRequest setOrigCity(string $value)
+ * @method string getOrigCity()
+ *
+ * @method \Magento\Quote\Model\Quote\Address\RateRequest setDestCountryId(string $value)
+ * @method string getDestCountryId()
+ * @method \Magento\Quote\Model\Quote\Address\RateRequest setDestRegionId(int $value)
+ * @method int getDestRegionId()
+ * @method \Magento\Quote\Model\Quote\Address\RateRequest setDestRegionCode(string $value)
+ * @method string getDestRegionCode()
+ * @method \Magento\Quote\Model\Quote\Address\RateRequest setDestPostcode(string $value)
+ * @method string getDestPostcode()
+ * @method \Magento\Quote\Model\Quote\Address\RateRequest setDestCity(string $value)
+ * @method string getDestCity()
+ * @method \Magento\Quote\Model\Quote\Address\RateRequest setDestStreet(string $value)
+ * @method string getDestStreet()
+ *
+ * @method \Magento\Quote\Model\Quote\Address\RateRequest setPackageValue(float $value)
+ * @method float getPackageValue()
+ * @method \Magento\Quote\Model\Quote\Address\RateRequest setPackageValueWithDiscount(float $value)
+ * @method float getPackageValueWithDiscount()
+ * @method \Magento\Quote\Model\Quote\Address\RateRequest setPackagePhysicalValue(float $value)
+ * @method float getPackagePhysicalValue()
+ * @method \Magento\Quote\Model\Quote\Address\RateRequest setPackageQty(float $value)
+ * @method float getPackageQty()
+ * @method \Magento\Quote\Model\Quote\Address\RateRequest setPackageWeight(float $value)
+ * @method float getPackageWeight()
+ * @method \Magento\Quote\Model\Quote\Address\RateRequest setPackageHeight(int $value)
+ * @method int getPackageHeight()
+ * @method \Magento\Quote\Model\Quote\Address\RateRequest setPackageWidth(int $value)
+ * @method int getPackageWidth()
+ * @method \Magento\Quote\Model\Quote\Address\RateRequest setPackageDepth(int $value)
+ * @method int getPackageDepth()
+ * @method \Magento\Quote\Model\Quote\Address\RateRequest setPackageCurrency(string $value)
+ * @method string getPackageCurrency()
+ *
+ * @method \Magento\Quote\Model\Quote\Address\RateRequest setOrderTotalQty(float $value)
+ * @method float getOrderTotalQty()
+ * @method \Magento\Quote\Model\Quote\Address\RateRequest setOrderSubtotal(float $value)
+ * @method float getOrderSubtotal()
+ *
+ * @method boolean getFreeShipping()
+ * @method \Magento\Quote\Model\Quote\Address\RateRequest setFreeShipping(boolean $flag)
+ * @method float getFreeMethodWeight()
+ * @method \Magento\Quote\Model\Quote\Address\RateRequest setFreeMethodWeight(float $value)
+ *
+ * @method \Magento\Quote\Model\Quote\Address\RateRequest setOptionInsurance(boolean $value)
+ * @method boolean getOptionInsurance()
+ * @method \Magento\Quote\Model\Quote\Address\RateRequest setOptionHandling(float $flag)
+ * @method float getOptionHandling()
+ *
+ * @method \Magento\Quote\Model\Quote\Address\RateRequest setConditionName(array|string $value)
+ * @method array|string getConditionName()
+ *
+ * @method \Magento\Quote\Model\Quote\Address\RateRequest setLimitCarrier(string $value)
+ * @method string getLimitCarrier()
+ * @method \Magento\Quote\Model\Quote\Address\RateRequest setLimitMethod(string $value)
+ * @method string getLimitMethod()
+ *
+ * @api
+ * @since 100.0.2
+ */
+class RateRequest extends \Magento\Framework\DataObject
+{
+}
+class FreeShipping implements \Magento\Quote\Model\Quote\Address\FreeShippingInterface
+{
+    /**
+     * {@inheritDoc}
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function isFreeShipping(\Magento\Quote\Model\Quote $quote, $items)
+    {
+    }
+}
+namespace Magento\Quote\Model\Quote\Payment;
+
+/**
+ * Class ToOrderPayment
+ */
+class ToOrderPayment
+{
+    /**
+     * @var Copy
+     */
+    protected $objectCopyService;
+    /**
+     * @var OrderPaymentRepository
+     */
+    protected $orderPaymentRepository;
+    /**
+     * @var \Magento\Framework\Api\DataObjectHelper
+     */
+    protected $dataObjectHelper;
+    /**
+     * @param OrderPaymentRepository $orderPaymentRepository
+     * @param Copy $objectCopyService
+     * @param \Magento\Framework\Api\DataObjectHelper $dataObjectHelper
+     */
+    public function __construct(\Magento\Sales\Api\OrderPaymentRepositoryInterface $orderPaymentRepository, \Magento\Framework\DataObject\Copy $objectCopyService, \Magento\Framework\Api\DataObjectHelper $dataObjectHelper)
+    {
+    }
+    /**
+     * @param Payment $object
+     * @param array $data
+     * @return OrderPaymentInterface
+     */
+    public function convert(\Magento\Quote\Model\Quote\Payment $object, $data = [])
+    {
+    }
+}
+namespace Magento\Quote\Model\Quote;
+
+class Config
+{
+    /**
+     * @param \Magento\Catalog\Model\Attribute\Config $attributeConfig
+     */
+    public function __construct(\Magento\Catalog\Model\Attribute\Config $attributeConfig)
+    {
+    }
+    /**
+     * @return array
+     */
+    public function getProductAttributes() : array
+    {
+    }
+}

@@ -1,0 +1,227 @@
+<?php
+
+namespace Magento\Framework\App\ResourceConnection;
+
+/**
+ * Connection adapter interface
+ *
+ * @api
+ */
+interface ConnectionAdapterInterface
+{
+    /**
+     * Get connection
+     *
+     * @param LoggerInterface|null $logger
+     * @param SelectFactory|null $selectFactory
+     * @return AdapterInterface
+     * @throws \InvalidArgumentException
+     */
+    public function getConnection(\Magento\Framework\DB\LoggerInterface $logger = null, \Magento\Framework\DB\SelectFactory $selectFactory = null);
+}
+/**
+ * Connection adapter factory
+ */
+class ConnectionFactory extends \Magento\Framework\Model\ResourceModel\Type\Db\ConnectionFactory
+{
+    /**
+     * Create connection adapter instance
+     *
+     * @param array $connectionConfig
+     * @return \Magento\Framework\DB\Adapter\AdapterInterface
+     * @throws \InvalidArgumentException
+     */
+    public function create(array $connectionConfig)
+    {
+    }
+}
+/**
+ * @api
+ * @since 100.0.2
+ */
+interface SourceProviderInterface extends \Traversable
+{
+    /**
+     * Returns main table name - extracted from "module/table" style and
+     * validated by db adapter
+     *
+     * @return string
+     */
+    public function getMainTable();
+    /**
+     * Get primary key field name
+     *
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @return string
+     */
+    public function getIdFieldName();
+    /**
+     * @param string $fieldName
+     * @param null|string $alias
+     * @return $this
+     */
+    public function addFieldToSelect($fieldName, $alias = null);
+    /**
+     * Get \Magento\Framework\DB\Select instance and applies fields to select if needed
+     *
+     * @return \Magento\Framework\DB\Select
+     */
+    public function getSelect();
+    /**
+     * Wrapper for compatibility with \Magento\Framework\Data\Collection\AbstractDb
+     *
+     * @param mixed $attribute
+     * @param mixed $condition
+     * @return $this|\Magento\Framework\Data\Collection\AbstractDb
+     */
+    public function addFieldToFilter($attribute, $condition = null);
+}
+/**
+ * Interface \Magento\Framework\App\ResourceConnection\ConfigInterface
+ *
+ * @api
+ */
+interface ConfigInterface
+{
+    /**
+     * Retrieve resource connection instance name
+     *
+     * @param string $resourceName
+     * @return string
+     */
+    public function getConnectionName($resourceName);
+}
+class SourceFactory
+{
+    /**
+     * @var \Magento\Framework\ObjectManagerInterface
+     */
+    protected $objectManager;
+    /**
+     * @param \Magento\Framework\ObjectManagerInterface $objectManager
+     */
+    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager)
+    {
+    }
+    /**
+     * Get source class instance by class name
+     *
+     * @param string $className
+     * @throws \InvalidArgumentException
+     * @return SourceProviderInterface
+     */
+    public function create($className)
+    {
+    }
+}
+namespace Magento\Framework\App\ResourceConnection\Config;
+
+class SchemaLocator implements \Magento\Framework\Config\SchemaLocatorInterface
+{
+    /**
+     * @var \Magento\Framework\Config\Dom\UrnResolver
+     */
+    protected $urnResolver;
+    /**
+     */
+    public function __construct(\Magento\Framework\Config\Dom\UrnResolver $urnResolver)
+    {
+    }
+    /**
+     * Get path to per file validation schema
+     *
+     * @return string|null
+     */
+    public function getPerFileSchema()
+    {
+    }
+    /**
+     * Get path to merged config schema
+     *
+     * @return string|null
+     */
+    public function getSchema()
+    {
+    }
+}
+class Reader extends \Magento\Framework\Config\Reader\Filesystem
+{
+    /**
+     * List of id attributes for merge
+     *
+     * @var array
+     */
+    protected $_idAttributes = ['/config/resource' => 'name'];
+    /**
+     * @param \Magento\Framework\Config\FileResolverInterface $fileResolver
+     * @param Converter $converter
+     * @param SchemaLocator $schemaLocator
+     * @param \Magento\Framework\Config\ValidationStateInterface $validationState
+     * @param string $fileName
+     * @param array $idAttributes
+     * @param string $domDocumentClass
+     * @param string $defaultScope
+     */
+    public function __construct(\Magento\Framework\Config\FileResolverInterface $fileResolver, \Magento\Framework\App\ResourceConnection\Config\Converter $converter, \Magento\Framework\App\ResourceConnection\Config\SchemaLocator $schemaLocator, \Magento\Framework\Config\ValidationStateInterface $validationState, $fileName = 'resources.xml', $idAttributes = [], $domDocumentClass = \Magento\Framework\Config\Dom::class, $defaultScope = 'global')
+    {
+    }
+    /**
+     * Read resource configuration
+     *
+     * @param string $scope
+     * @return array
+     */
+    public function read($scope = null)
+    {
+    }
+}
+class Converter implements \Magento\Framework\Config\ConverterInterface
+{
+    /**
+     * Convert dom node tree to array
+     *
+     * @param \DOMDocument $source
+     * @return array
+     * @throws \InvalidArgumentException
+     */
+    public function convert($source)
+    {
+    }
+}
+namespace Magento\Framework\App\ResourceConnection;
+
+/**
+ * Resource configuration, uses application configuration to retrieve resource connection information
+ */
+class Config extends \Magento\Framework\Config\Data\Scoped implements \Magento\Framework\App\ResourceConnection\ConfigInterface
+{
+    /**
+     * List of connection names per resource
+     *
+     * @var array
+     */
+    protected $_connectionNames = [];
+    /**
+     * Constructor
+     *
+     * @param Config\Reader $reader
+     * @param \Magento\Framework\Config\ScopeInterface $configScope
+     * @param \Magento\Framework\Config\CacheInterface $cache
+     * @param \Magento\Framework\App\DeploymentConfig $deploymentConfig
+     * @param string|null $cacheId
+     * @param SerializerInterface|null $serializer
+     * @throws \InvalidArgumentException
+     */
+    public function __construct(\Magento\Framework\App\ResourceConnection\Config\Reader $reader, \Magento\Framework\Config\ScopeInterface $configScope, \Magento\Framework\Config\CacheInterface $cache, \Magento\Framework\App\DeploymentConfig $deploymentConfig, $cacheId = 'resourcesCache', \Magento\Framework\Serialize\SerializerInterface $serializer = null)
+    {
+    }
+    /**
+     * Retrieve resource connection instance name
+     *
+     * @param string $resourceName
+     * @return string
+     */
+    public function getConnectionName($resourceName)
+    {
+    }
+}

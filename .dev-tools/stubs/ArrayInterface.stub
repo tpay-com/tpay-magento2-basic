@@ -1,0 +1,39 @@
+<?php
+
+namespace Magento\Framework\Option;
+
+/**
+ * Array optioned object factory
+ */
+class ArrayPool
+{
+    /**
+     * @var \Magento\Framework\ObjectManagerInterface
+     */
+    protected $_objectManager;
+    /**
+     * @param \Magento\Framework\ObjectManagerInterface $objectManager
+     */
+    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager)
+    {
+    }
+    /**
+     * Get array optioned object
+     *
+     * @param string $model
+     * @throws \InvalidArgumentException
+     * @return \Magento\Framework\Data\OptionSourceInterface
+     */
+    public function get($model)
+    {
+    }
+}
+/**
+ * Array marker interface
+ *
+ * @deprecated 102.0.1 please use \Magento\Framework\Data\OptionSourceInterface instead.
+ * @see \Magento\Framework\Data\OptionSourceInterface
+ */
+interface ArrayInterface extends \Magento\Framework\Data\OptionSourceInterface
+{
+}
