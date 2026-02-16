@@ -15,11 +15,14 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v3
 
-      - name: Check .version
-        run: if [ $(grep ${{ github.event.inputs.version }} .version -c) != 1 ]; then exit 1; fi
-
-      - name: Check Changelog
-        run: if [ $(grep ${{ github.event.inputs.version }} CHANGELOG.md -c) != 1 ]; then exit 1; fi
+      - name: Check version
+        run: |
+          for FILE in .version CHANGELOG.MD; do
+            if [ $(grep ${{ github.event.inputs.version }} "$FILE" -c) != 1 ]; then
+              echo "Version ${{ github.event.inputs.version }} not found in $FILE"
+              exit 1
+            fi
+          done
 
       - run: git archive --output=tpay-magento2-basic.zip HEAD
 
