@@ -6,11 +6,11 @@ use DateInterval;
 use DateTime;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Sales\Model\Order;
+use Magento\Sales\Model\OrderRepository;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory;
 use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
 use Tpay\Magento2\Api\TpayInterface;
-use Tpay\Magento2\Model\Sales\OrderRepository;
 
 class CancelOverdue
 {

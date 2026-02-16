@@ -24,11 +24,12 @@ use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Model\Method\Adapter;
 use Magento\Quote\Api\Data\CartInterface;
 use Magento\Quote\Api\Data\PaymentInterface;
+use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Store\Model\StoreManager;
 use Psr\Log\LoggerInterface;
-use Tpay\Magento2\Api\Sales\OrderRepositoryInterface;
 use Tpay\Magento2\Api\TpayInterface;
+use Tpay\Magento2\Helper\OrderResolver;
 use Tpay\Magento2\Model\ApiFacade\Refund\RefundApiFacade;
 use Tpay\Magento2\Provider\ConfigurationProvider;
 use Tpay\OriginApi\Validators\FieldsValidator;
@@ -58,9 +59,6 @@ class TpayPayment extends Adapter implements TpayInterface
     /** @var CustomerSession */
     protected $customerSession;
 
-    /** @var OrderRepositoryInterface */
-    protected $orderRepository;
-
     /** @var Escaper */
     protected $escaper;
 
@@ -81,6 +79,9 @@ class TpayPayment extends Adapter implements TpayInterface
 
     /** @var CacheInterface */
     protected $cache;
+
+    /** @var OrderResolver */
+    private $orderResolver;
 
     private $supportedVendors = [
         'visa',
@@ -104,7 +105,7 @@ class TpayPayment extends Adapter implements TpayInterface
         UrlInterface $urlBuilder,
         Session $checkoutSession,
         CustomerSession $customerSession,
-        OrderRepositoryInterface $orderRepository,
+        OrderResolver $orderResolver,
         Escaper $escaper,
         StoreManager $storeManager,
         ConfigurationProvider $configurationProvider,
@@ -129,7 +130,7 @@ class TpayPayment extends Adapter implements TpayInterface
         $this->escaper = $escaper;
         $this->checkoutSession = $checkoutSession;
         $this->customerSession = $customerSession;
-        $this->orderRepository = $orderRepository;
+        $this->orderResolver = $orderResolver;
         $this->storeManager = $storeManager;
         $this->configurationProvider = $configurationProvider;
         $this->infoInstance = $infoInstance;
@@ -305,8 +306,7 @@ class TpayPayment extends Adapter implements TpayInterface
         $amount = (float) $this->getCheckout()->getQuote()->getBaseGrandTotal();
 
         if (!$amount && $this->getCheckout()->getLastRealOrderId()) {
-            $orderId = $this->getCheckout()->getLastRealOrderId();
-            $order = $this->orderRepository->getByIncrementId($orderId);
+            $order = $this->getCheckout()->getLastRealOrder();
             $amount = $order->getBaseGrandTotal();
         }
 
@@ -378,12 +378,12 @@ class TpayPayment extends Adapter implements TpayInterface
         return $this->checkoutSession;
     }
 
-    protected function getOrder(?string $orderId = null): \Magento\Sales\Api\Data\OrderInterface
+    protected function getOrder(?string $orderId = null): OrderInterface
     {
         if (null === $orderId) {
-            $orderId = $this->getCheckout()->getLastRealOrderId();
+            return $this->getCheckout()->getLastRealOrder();
         }
 
-        return $this->orderRepository->getByIncrementId($orderId);
+        return $this->orderResolver->getOrderByIncrementId($orderId);
     }
 }
