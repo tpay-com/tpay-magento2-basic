@@ -73,6 +73,7 @@ class Create implements ActionInterface
         if ($orderId) {
             $payment = $this->tpayService->getPayment($orderId);
             $paymentData = $payment->getData();
+
             $additionalPaymentInformation = $paymentData['additional_information'];
 
             if (!$additionalPaymentInformation[TpayInterface::TERMS_ACCEPT]) {

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Tpay\Magento2\Api;
 
-/** @api */
+/**
+ * @api
+ */
 interface TpayInterface
 {
     public const CODE = 'Tpay_Magento2';

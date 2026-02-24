@@ -13,7 +13,6 @@
     <preference for="Tpay\Magento2\Api\AliasRepositoryInterface" type="Tpay\Magento2\Model\AliasRepository" />
     <preference for="Tpay\Magento2\Api\Data\TokensInterface" type="Tpay\Magento2\Model\Token"/>
     <preference for="Tpay\Magento2\Api\Notification\Strategy\NotificationProcessorFactoryInterface" type="Tpay\Magento2\Notification\Strategy\Factory\NotificationProcessorFactory" />
-    <preference for="Tpay\Magento2\Api\Sales\OrderRepositoryInterface" type="Tpay\Magento2\Model\Sales\OrderRepository" />
     <preference for="Tpay\Magento2\Api\TokenRepositoryInterface" type="Tpay\Magento2\Model\TokenRepository"/>
     <preference for="Tpay\Magento2\Api\TpayConfigInterface" type="Tpay\Magento2\Provider\ConfigurationProvider" />
     <preference for="Tpay\Magento2\Api\TpayInterface" type="Tpay\Magento2\Model\TpayPayment" />

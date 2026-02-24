@@ -7,10 +7,11 @@ namespace Tpay\Magento2\Service;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderPaymentInterface;
 use Magento\Sales\Api\OrderPaymentRepositoryInterface;
+use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Sales\Model\Service\InvoiceService;
-use Tpay\Magento2\Api\Sales\OrderRepositoryInterface;
+use Tpay\Magento2\Helper\OrderResolver;
 
 class TpayService
 {
@@ -23,19 +24,24 @@ class TpayService
     /** @var InvoiceService */
     protected $invoiceService;
 
+    /** @var OrderResolver */
+    private $orderResolver;
+
     public function __construct(
         OrderRepositoryInterface $orderRepository,
         OrderPaymentRepositoryInterface $orderPaymentRepository,
-        InvoiceService $invoiceService
+        InvoiceService $invoiceService,
+        OrderResolver $orderResolver
     ) {
         $this->orderRepository = $orderRepository;
         $this->orderPaymentRepository = $orderPaymentRepository;
         $this->invoiceService = $invoiceService;
+        $this->orderResolver = $orderResolver;
     }
 
     public function setOrderStatePendingPayment(string $orderId, bool $sendEmail): OrderInterface
     {
-        $order = $this->orderRepository->getByIncrementId($orderId);
+        $order = $this->orderResolver->getOrderByIncrementId($orderId);
         $order
             ->setTotalDue($order->getBaseGrandTotal())
             ->setTotalPaid(0.00)
@@ -53,7 +59,7 @@ class TpayService
     public function addCommentToHistory($orderId, $comment)
     {
         /** @var Order $order */
-        $order = $this->orderRepository->getByIncrementId($orderId);
+        $order = $this->orderResolver->getOrderByIncrementId($orderId);
         $order->addStatusToHistory($order->getState(), $comment);
         $this->orderRepository->save($order);
     }
@@ -61,14 +67,14 @@ class TpayService
     public function getPayment(string $orderId): OrderPaymentInterface
     {
         /** @var Order $order */
-        $order = $this->orderRepository->getByIncrementId($orderId);
+        $order = $this->orderResolver->getOrderByIncrementId($orderId);
 
         return $order->getPayment();
     }
 
     public function getOrderById(string $orderId): OrderInterface
     {
-        return $this->orderRepository->getByIncrementId($orderId);
+        return $this->orderResolver->getOrderByIncrementId($orderId);
     }
 
     public function saveOrderPayment(OrderPaymentInterface $payment): OrderPaymentInterface

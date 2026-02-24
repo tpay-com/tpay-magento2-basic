@@ -52,7 +52,9 @@ class Redirect implements ActionInterface
             return $this->redirectFactory->redirectCheckoutCart();
         }
 
-        $additionalPaymentInfo = $this->tpayService->getPayment($orderId)->getData()['additional_information'];
+        $order = $this->checkoutSession->getLastRealOrder();
+
+        $additionalPaymentInfo = $order->getPayment()->getData()['additional_information'];
 
         if ($this->additionalPaymentInfoValidator->validateCardData($additionalPaymentInfo)) {
             return $this->redirectFactory->redirectCardPayment();
