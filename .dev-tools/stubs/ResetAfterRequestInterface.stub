@@ -1,0 +1,3545 @@
+<?php
+
+namespace Magento\Framework\ObjectManager {
+    /**
+     * Interface \Magento\Framework\ObjectManager\FactoryInterface
+     *
+     * @api
+     */
+    interface FactoryInterface
+    {
+        /**
+         * Create instance with call time arguments
+         *
+         * @param string $requestedType
+         * @param array $arguments
+         * @return object
+         * @throws \LogicException
+         * @throws \BadMethodCallException
+         */
+        public function create($requestedType, array $arguments = []);
+        /**
+         * Set object manager
+         *
+         * @param ObjectManagerInterface $objectManager
+         *
+         * @return void
+         */
+        public function setObjectManager(\Magento\Framework\ObjectManagerInterface $objectManager);
+    }
+}
+namespace Magento\Framework\ObjectManager\Factory {
+    /**
+     * Class AbstractFactory
+     */
+    abstract class AbstractFactory implements \Magento\Framework\ObjectManager\FactoryInterface
+    {
+        /**
+         * Object manager
+         *
+         * @var ObjectManagerInterface
+         */
+        protected $objectManager;
+        /**
+         * Object manager config
+         *
+         * @var \Magento\Framework\ObjectManager\ConfigInterface
+         */
+        protected $config;
+        /**
+         * Definition list
+         *
+         * @var \Magento\Framework\ObjectManager\DefinitionInterface
+         */
+        protected $definitions;
+        /**
+         * Global arguments
+         *
+         * @var array
+         */
+        protected $globalArguments;
+        /**
+         * Object creation stack
+         *
+         * @var array
+         */
+        protected $creationStack = [];
+        /**
+         * @param \Magento\Framework\ObjectManager\ConfigInterface     $config
+         * @param ObjectManagerInterface                               $objectManager
+         * @param \Magento\Framework\ObjectManager\DefinitionInterface $definitions
+         * @param array                                                $globalArguments
+         */
+        public function __construct(\Magento\Framework\ObjectManager\ConfigInterface $config, \Magento\Framework\ObjectManagerInterface $objectManager = null, \Magento\Framework\ObjectManager\DefinitionInterface $definitions = null, $globalArguments = [])
+        {
+        }
+        /**
+         * Set object manager
+         *
+         * @param ObjectManagerInterface $objectManager
+         *
+         * @return void
+         */
+        public function setObjectManager(\Magento\Framework\ObjectManagerInterface $objectManager)
+        {
+        }
+        /**
+         * Set global arguments
+         *
+         * @param array $arguments
+         *
+         * @return void
+         */
+        public function setArguments($arguments)
+        {
+        }
+        /**
+         * Get definitions
+         *
+         * @return \Magento\Framework\ObjectManager\DefinitionInterface
+         */
+        public function getDefinitions()
+        {
+        }
+        /**
+         * Create object
+         *
+         * @param string $type
+         * @param array  $args
+         *
+         * @return object
+         * @throws RuntimeException
+         */
+        protected function createObject($type, $args)
+        {
+        }
+        /**
+         * Resolve an argument
+         *
+         * @param array  $argument
+         * @param string $paramType
+         * @param mixed  $paramDefault
+         * @param string $paramName
+         * @param string $requestedType
+         *
+         * @return void
+         *
+         * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+         */
+        protected function resolveArgument(&$argument, $paramType, $paramDefault, $paramName, $requestedType)
+        {
+        }
+        /**
+         * Parse array argument
+         *
+         * @param array $array
+         *
+         * @return void
+         */
+        protected function parseArray(&$array)
+        {
+        }
+        /**
+         * Resolve constructor arguments
+         *
+         * @param string $requestedType
+         * @param array  $parameters
+         * @param array  $arguments
+         *
+         * @return array
+         *
+         * @throws \UnexpectedValueException
+         * @throws \BadMethodCallException
+         */
+        protected function resolveArgumentsInRuntime($requestedType, array $parameters, array $arguments = [])
+        {
+        }
+    }
+}
+namespace Magento\Framework\ObjectManager\Factory\Dynamic {
+    class Developer extends \Magento\Framework\ObjectManager\Factory\AbstractFactory
+    {
+        /**
+         * Resolve constructor arguments
+         *
+         * @param string $requestedType
+         * @param array $parameters
+         * @param array $arguments
+         *
+         * @return array
+         *
+         * @throws \UnexpectedValueException
+         * @throws \BadMethodCallException
+         */
+        protected function _resolveArguments($requestedType, array $parameters, array $arguments = [])
+        {
+        }
+        /**
+         * Create instance with call time arguments
+         *
+         * @param string $requestedType
+         * @param array $arguments
+         * @return object
+         * @throws \Exception
+         */
+        public function create($requestedType, array $arguments = [])
+        {
+        }
+    }
+    class Production extends \Magento\Framework\ObjectManager\Factory\AbstractFactory
+    {
+        /**
+         * Resolve constructor arguments
+         *
+         * @param string $requestedType
+         * @param array $parameters
+         * @param array $arguments
+         *
+         * @return array
+         *
+         * @throws \UnexpectedValueException
+         * @throws \BadMethodCallException
+         */
+        protected function _resolveArguments($requestedType, array $parameters, array $arguments = [])
+        {
+        }
+        /**
+         * Create instance with call time arguments
+         *
+         * @param string $requestedType
+         * @param array $arguments
+         *
+         * @return object
+         *
+         * @throws \Exception
+         */
+        public function create($requestedType, array $arguments = [])
+        {
+        }
+    }
+}
+namespace Magento\Framework\ObjectManager\Factory {
+    class Compiled extends \Magento\Framework\ObjectManager\Factory\AbstractFactory
+    {
+        /**
+         * Object manager config
+         *
+         * @var \Magento\Framework\ObjectManager\ConfigInterface
+         */
+        protected $config;
+        /**
+         * Global arguments
+         *
+         * @var array
+         */
+        protected $globalArguments;
+        /**
+         * @param \Magento\Framework\ObjectManager\ConfigInterface $config
+         * @param array $sharedInstances
+         * @param array $globalArguments
+         */
+        public function __construct(\Magento\Framework\ObjectManager\ConfigInterface $config, &$sharedInstances = [], $globalArguments = [])
+        {
+        }
+        /**
+         * Create instance with call time arguments
+         *
+         * @param string $requestedType
+         * @param array $arguments
+         * @return object
+         * @throws \Exception
+         * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+         */
+        public function create($requestedType, array $arguments = [])
+        {
+        }
+        /**
+         * Parse array argument
+         *
+         * @param array $array
+         *
+         * @return void
+         *
+         * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+         */
+        protected function parseArray(&$array)
+        {
+        }
+        /**
+         * Retrieve cached object instance
+         *
+         * @param string $type
+         * @return mixed
+         */
+        protected function get($type)
+        {
+        }
+    }
+}
+namespace Magento\Framework\ObjectManager {
+    /**
+     * Interface \Magento\Framework\ObjectManager\RelationsInterface
+     *
+     * @api
+     */
+    interface RelationsInterface
+    {
+        /**
+         * Check whether requested type is available for read
+         *
+         * @param string $type
+         * @return bool
+         */
+        public function has($type);
+        /**
+         * Retrieve list of parents
+         *
+         * @param string $type
+         * @return array
+         */
+        public function getParents($type);
+    }
+    /**
+     * Interface \Magento\Framework\ObjectManager\DefinitionInterface
+     *
+     * @api
+     */
+    interface DefinitionInterface
+    {
+        /**
+         * Get list of method parameters
+         *
+         * Retrieve an ordered list of constructor parameters.
+         * Each value is an array with following entries:
+         *
+         * array(
+         *     0, // string: Parameter name
+         *     1, // string|null: Parameter type
+         *     2, // bool: whether this param is required
+         *     3, // mixed: default value
+         * );
+         *
+         * @param string $className
+         * @return array|null
+         */
+        public function getParameters($className);
+        /**
+         * Retrieve list of all classes covered with definitions
+         *
+         * @return array
+         */
+        public function getClasses();
+    }
+}
+namespace Magento\Framework\ObjectManager\Definition {
+    /**
+     * Runtime class definitions. \Reflection is used to parse constructor signatures. Should be used only in dev mode.
+     */
+    class Runtime implements \Magento\Framework\ObjectManager\DefinitionInterface
+    {
+        /**
+         * @var array
+         */
+        protected $_definitions = [];
+        /**
+         * @param \Magento\Framework\Code\Reader\ClassReaderInterface $reader
+         */
+        public function __construct(\Magento\Framework\Code\Reader\ClassReaderInterface $reader = null)
+        {
+        }
+        /**
+         * Get list of method parameters
+         *
+         * Retrieve an ordered list of constructor parameters.
+         * Each value is an array with following entries:
+         *
+         * array(
+         *     0, // string: Parameter name
+         *     1, // string|null: Parameter type
+         *     2, // bool: whether this param is required
+         *     3, // mixed: default value
+         * );
+         *
+         * @param string $className
+         * @return array|null
+         */
+        public function getParameters($className)
+        {
+        }
+        /**
+         * Retrieve list of all classes covered with definitions
+         *
+         * @return array
+         */
+        public function getClasses()
+        {
+        }
+        /**
+         * Disable show internals with var_dump
+         *
+         * @see https://www.php.net/manual/en/language.oop5.magic.php#object.debuginfo
+         * @return array
+         */
+        public function __debugInfo()
+        {
+        }
+    }
+}
+namespace Magento\Framework\ObjectManager\Profiler {
+    class Log
+    {
+        /**
+         * @var self
+         */
+        protected static $instance;
+        /**
+         * @var Item
+         */
+        protected $currentItem = null;
+        /**
+         * @var array
+         */
+        protected $data = [];
+        /**
+         * @var array
+         */
+        protected $roots = [];
+        /**
+         * @var array
+         */
+        protected $used = [];
+        /**
+         * @var array
+         */
+        protected $stats = ['total' => 0, 'used' => 0, 'unused' => 0];
+        /**
+         * Destructor
+         */
+        public function __destruct()
+        {
+        }
+        /**
+         * Retrieve instance
+         *
+         * @return Log
+         */
+        public static function getInstance()
+        {
+        }
+        /**
+         * Log object instantiation
+         *
+         * @param string $class
+         * @return void
+         */
+        public function startCreating($class)
+        {
+        }
+        /**
+         * Log object instantiation
+         *
+         * @param mixed $object
+         * @return void
+         */
+        public function stopCreating($object)
+        {
+        }
+        /**
+         * Monitor object
+         *
+         * @param mixed $object
+         * @return void
+         */
+        public function add($object)
+        {
+        }
+        /**
+         * Object was invoked
+         *
+         * @param mixed $object
+         * @return void
+         */
+        public function invoked($object)
+        {
+        }
+        /**
+         * Display results
+         *
+         * @return void
+         */
+        public function display()
+        {
+        }
+        /**
+         * Display item
+         *
+         * @param Item $item
+         * @param int $level
+         * @return void
+         */
+        protected function displayItem(\Magento\Framework\ObjectManager\Profiler\Tree\Item $item, $level = 0)
+        {
+        }
+    }
+    class FactoryDecorator implements \Magento\Framework\ObjectManager\FactoryInterface
+    {
+        /**
+         * Name of the class that generates logging wrappers
+         */
+        const GENERATOR_NAME = \Magento\Framework\ObjectManager\Profiler\Code\Generator\Logger::class;
+        /**
+         * @var \Magento\Framework\ObjectManager\FactoryInterface
+         */
+        protected $subject;
+        /**
+         * @var Log
+         */
+        protected $log;
+        /**
+         * @param \Magento\Framework\ObjectManager\FactoryInterface $subject
+         * @param Log $log
+         */
+        public function __construct(\Magento\Framework\ObjectManager\FactoryInterface $subject, \Magento\Framework\ObjectManager\Profiler\Log $log)
+        {
+        }
+        /**
+         * @param \Magento\Framework\ObjectManagerInterface $objectManager
+         *
+         * @return void
+         */
+        public function setObjectManager(\Magento\Framework\ObjectManagerInterface $objectManager)
+        {
+        }
+        /**
+         * {@inheritdoc}
+         */
+        public function create($requestedType, array $arguments = [])
+        {
+        }
+    }
+}
+namespace Magento\Framework\ObjectManager\Profiler\Code\Generator {
+    class Logger extends \Magento\Framework\Code\Generator\EntityAbstract
+    {
+        /**
+         * Entity type
+         */
+        const ENTITY_TYPE = 'logger';
+        /**
+         * @param string $modelClassName
+         * @return string
+         */
+        protected function _getDefaultResultClassName($modelClassName)
+        {
+        }
+        /**
+         * Returns list of properties for class generator
+         *
+         * @return array
+         */
+        protected function _getClassProperties()
+        {
+        }
+        /**
+         * Get default constructor definition for generated class
+         *
+         * @return array
+         */
+        protected function _getDefaultConstructorDefinition()
+        {
+        }
+        /**
+         * Returns list of methods for class generator
+         *
+         * @return mixed
+         */
+        protected function _getClassMethods()
+        {
+        }
+        /**
+         * Retrieve body of the _invoke method
+         *
+         * @return string
+         */
+        protected function _getInvokeMethodBody()
+        {
+        }
+        /**
+         * Retrieve method info
+         *
+         * @param \ReflectionMethod $method
+         * @return array
+         */
+        protected function _getMethodInfo(\ReflectionMethod $method)
+        {
+        }
+        /**
+         * Generate resulting class source code
+         *
+         * @return string
+         */
+        protected function _generateCode()
+        {
+        }
+        /**
+         * {@inheritdoc}
+         */
+        protected function _validateData()
+        {
+        }
+    }
+}
+namespace Magento\Framework\ObjectManager\Profiler\Tree {
+    class Item
+    {
+        /**
+         * @var string
+         */
+        protected $class;
+        /**
+         * @var Item|null
+         */
+        protected $parent = null;
+        /**
+         * @var string
+         */
+        protected $hash = null;
+        /**
+         * @var array
+         */
+        protected $children = [];
+        /**
+         * @param string $class
+         * @param Item $parent
+         */
+        public function __construct($class, \Magento\Framework\ObjectManager\Profiler\Tree\Item $parent = null)
+        {
+        }
+        /**
+         * Retrieve class
+         *
+         * @return string
+         */
+        public function getClass()
+        {
+        }
+        /**
+         * Add child
+         *
+         * @param Item $item
+         * @return void
+         */
+        public function addChild(\Magento\Framework\ObjectManager\Profiler\Tree\Item $item)
+        {
+        }
+        /**
+         * Retrieve list of children
+         *
+         * @return array[Item]
+         */
+        public function getChildren()
+        {
+        }
+        /**
+         * Retrieve parent
+         *
+         * @return Item|null
+         */
+        public function getParent()
+        {
+        }
+        /**
+         * Set hash
+         *
+         * @param string $hash
+         * @return void
+         */
+        public function setHash($hash)
+        {
+        }
+        /**
+         * Retrieve hash
+         *
+         * @return string
+         */
+        public function getHash()
+        {
+        }
+    }
+}
+namespace Magento\Framework\ObjectManager {
+    /**
+     * Class TMapFactory
+     */
+    class TMapFactory
+    {
+        /**
+         * TMapFactory constructor.
+         * @param ObjectManagerInterface $objectManager
+         */
+        public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager)
+        {
+        }
+        /**
+         * @param array $args
+         * @return TMap
+         */
+        public function create(array $args)
+        {
+        }
+        /**
+         * @param array $args
+         * @return TMap
+         */
+        public function createSharedObjectsMap(array $args)
+        {
+        }
+    }
+    class InterceptableValidator
+    {
+        /**
+         * @param string $className
+         * @return bool
+         */
+        public function validate($className)
+        {
+        }
+    }
+    /**
+     * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+     */
+    class DefinitionFactory
+    {
+        /**
+         * Class generation dir
+         *
+         * @var string
+         */
+        protected $_generationDir;
+        /**
+         * Filesystem Driver
+         *
+         * @var DriverInterface
+         */
+        protected $_filesystemDriver;
+        /**
+         * @var \Magento\Framework\Code\Generator
+         */
+        protected $codeGenerator;
+        /**
+         * @param DriverInterface $filesystemDriver
+         * @param string $generationDir
+         */
+        public function __construct(\Magento\Framework\Filesystem\DriverInterface $filesystemDriver, $generationDir)
+        {
+        }
+        /**
+         * Create class definitions
+         *
+         * @return DefinitionInterface
+         */
+        public function createClassDefinition()
+        {
+        }
+        /**
+         * Create plugin definitions
+         *
+         * @return \Magento\Framework\Interception\DefinitionInterface
+         */
+        public function createPluginDefinition()
+        {
+        }
+        /**
+         * Create relations
+         *
+         * @return RelationsInterface
+         */
+        public function createRelations()
+        {
+        }
+        /**
+         * Get existing code generator. Instantiate a new one if it does not exist yet.
+         *
+         * @return \Magento\Framework\Code\Generator
+         */
+        public function getCodeGenerator()
+        {
+        }
+    }
+    /**
+     * Interface \Magento\Framework\ObjectManager\ConfigLoaderInterface
+     *
+     * @api
+     */
+    interface ConfigLoaderInterface
+    {
+        /**
+         * Load modules DI configuration
+         *
+         * @param string $area
+         * @return array
+         */
+        public function load($area);
+    }
+}
+namespace Magento\Framework\ObjectManager\Test\Unit {
+    class DefinitionFactoryTest extends \PHPUnit\Framework\TestCase
+    {
+        protected function setUp() : void
+        {
+        }
+        public function testCreateClassDefinition()
+        {
+        }
+        public function testCreatePluginDefinition()
+        {
+        }
+        public function testCreateRelations()
+        {
+        }
+    }
+}
+namespace Magento\Framework\ObjectManager\Test\Unit\Factory {
+    class FactoryTest extends \PHPUnit\Framework\TestCase
+    {
+        /**
+         * Setup tests
+         */
+        protected function setUp() : void
+        {
+        }
+        /**
+         * Test create without args
+         */
+        public function testCreateNoArgs()
+        {
+        }
+        public function testResolveArgumentsException()
+        {
+        }
+        /**
+         * Test create with one arg
+         */
+        public function testCreateOneArg()
+        {
+        }
+        /**
+         * Test create with injectable
+         */
+        public function testCreateWithInjectable()
+        {
+        }
+        /**
+         * @param        string $startingClass
+         * @param        string $terminationClass
+         * @dataProvider circularDataProvider
+         */
+        public function testCircular($startingClass, $terminationClass)
+        {
+        }
+        /**
+         * @return array
+         */
+        public function circularDataProvider()
+        {
+        }
+        /**
+         * Test create using reflection
+         */
+        public function testCreateUsingReflection()
+        {
+        }
+        /**
+         * Test create objects with variadic argument in constructor
+         *
+         * @param        $createArgs
+         * @param        $expectedArg0
+         * @param        $expectedArg1
+         * @dataProvider testCreateUsingVariadicDataProvider
+         */
+        public function testCreateUsingVariadic($createArgs, $expectedArg0, $expectedArg1)
+        {
+        }
+        /**
+         * @return array
+         */
+        public function testCreateUsingVariadicDataProvider()
+        {
+        }
+        /**
+         * Test data can be injected into variadic arguments from di config
+         */
+        public function testCreateVariadicFromDiConfig()
+        {
+        }
+        /**
+         * Test create objects with non variadic and variadic argument in constructor
+         *
+         * @param        $createArgs
+         * @param        $expectedFooValue
+         * @param        $expectedArg0
+         * @param        $expectedArg1
+         * @dataProvider testCreateUsingSemiVariadicDataProvider
+         */
+        public function testCreateUsingSemiVariadic($createArgs, $expectedFooValue, $expectedArg0, $expectedArg1)
+        {
+        }
+        /**
+         * @return array
+         */
+        public function testCreateUsingSemiVariadicDataProvider()
+        {
+        }
+    }
+    /**
+     * Test for \Magento\Framework\ObjectManager\Factory\Compiled.
+     *
+     * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+     */
+    class CompiledTest extends \PHPUnit\Framework\TestCase
+    {
+        /** @var ObjectManagerInterface|MockObject */
+        protected $objectManagerMock;
+        /** @var ConfigInterface|MockObject */
+        protected $config;
+        /** @var Compiled */
+        protected $factory;
+        /**
+         * Setup tests
+         */
+        protected function setUp() : void
+        {
+        }
+        /**
+         * Test create simple
+         */
+        public function testCreateSimple()
+        {
+        }
+        /**
+         * Create class with exception
+         *
+         * @return void
+         */
+        public function testCreateSimpleWithException() : void
+        {
+        }
+        /**
+         * Test create simple configured arguments
+         */
+        public function testCreateSimpleConfiguredArguments()
+        {
+        }
+        /**
+         * Test create get arguments in runtime
+         */
+        public function testCreateGetArgumentsInRuntime()
+        {
+        }
+    }
+}
+namespace Magento\Framework\ObjectManager\Test\Unit\Factory\Fixture {
+    /**
+     * Part of the chain for circular dependency test
+     */
+    class CircularOne
+    {
+        /**
+         * @param CircularTwo $two
+         * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+         */
+        public function __construct(\Magento\Framework\ObjectManager\Test\Unit\Factory\Fixture\CircularTwo $two)
+        {
+        }
+    }
+    /**
+     * Part of the chain for circular dependency test
+     */
+    class CircularThree
+    {
+        /**
+         * @param CircularOne $one
+         * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+         */
+        public function __construct(\Magento\Framework\ObjectManager\Test\Unit\Factory\Fixture\CircularOne $one)
+        {
+        }
+    }
+    /**
+     * Constructor with non variadic and variadic argument in constructor
+     */
+    class SemiVariadic
+    {
+        const DEFAULT_FOO_VALUE = 'bar';
+        /**
+         * SemiVariadic constructor.
+         *
+         * @param string      $foo
+         * @param OneScalar[] ...$oneScalars
+         */
+        public function __construct(string $foo = self::DEFAULT_FOO_VALUE, \Magento\Framework\ObjectManager\Test\Unit\Factory\Fixture\OneScalar ...$oneScalars)
+        {
+        }
+        /**
+         * @param  mixed $key
+         * @return mixed
+         */
+        public function getOneScalarByKey($key)
+        {
+        }
+        /**
+         * @return string
+         */
+        public function getFoo() : string
+        {
+        }
+    }
+    /**
+     * A "value object" style constructor that requires one non-injectable argument
+     */
+    class OneScalar
+    {
+        /**
+         * @param string $foo
+         */
+        public function __construct($foo)
+        {
+        }
+        /**
+         * @return string
+         */
+        public function getFoo()
+        {
+        }
+    }
+    /**
+     * Part of the chain for circular dependency test
+     */
+    class CircularTwo
+    {
+        /**
+         * @param CircularThree $three
+         * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+         */
+        public function __construct(\Magento\Framework\ObjectManager\Test\Unit\Factory\Fixture\CircularThree $three)
+        {
+        }
+    }
+    /**
+     * A constructor with 2 dependencies: one injectable, another scalar
+     */
+    class Two
+    {
+        /**
+         * @param OneScalar $one
+         * @param string $baz
+         */
+        public function __construct(\Magento\Framework\ObjectManager\Test\Unit\Factory\Fixture\OneScalar $one, $baz = 'optional')
+        {
+        }
+        /**
+         * @return OneScalar
+         */
+        public function getOne()
+        {
+        }
+        /**
+         * @return string
+         */
+        public function getBaz()
+        {
+        }
+    }
+    /**
+     * Constructor with variadic argument in constructor
+     */
+    class Variadic
+    {
+        /**
+         * Variadic constructor.
+         * @param OneScalar[] ...$oneScalars
+         */
+        public function __construct(\Magento\Framework\ObjectManager\Test\Unit\Factory\Fixture\OneScalar ...$oneScalars)
+        {
+        }
+        /**
+         * @param string $key
+         * @return mixed
+         */
+        public function getOneScalarByKey($key)
+        {
+        }
+    }
+}
+namespace Magento\Framework\ObjectManager\Test\Unit\Factory\Fixture\Compiled {
+    class DependencySharedTesting
+    {
+    }
+    class DependencyTesting
+    {
+    }
+    class SimpleClassTesting
+    {
+        /**
+         * @param DependencyTesting $nonSharedDependency
+         * @param DependencySharedTesting $sharedDependency
+         * @param string $value
+         * @param array $valueArray
+         * @param string $globalValue
+         * @param null $nullValue
+         */
+        public function __construct(\Magento\Framework\ObjectManager\Test\Unit\Factory\Fixture\Compiled\DependencyTesting $nonSharedDependency, \Magento\Framework\ObjectManager\Test\Unit\Factory\Fixture\Compiled\DependencySharedTesting $sharedDependency, $value = 'value', array $valueArray = ['default_value1', 'default_value2'], $globalValue = '', $nullValue = null)
+        {
+        }
+        /**
+         * @return mixed
+         */
+        public function getNullValue()
+        {
+        }
+        /**
+         * @return string
+         */
+        public function getGlobalValue()
+        {
+        }
+        /**
+         * @return DependencyTesting
+         */
+        public function getNonSharedDependency()
+        {
+        }
+        /**
+         * @return DependencySharedTesting
+         */
+        public function getSharedDependency()
+        {
+        }
+        /**
+         * @return string
+         */
+        public function getValue()
+        {
+        }
+        /**
+         * @return array
+         */
+        public function getValueArray()
+        {
+        }
+    }
+}
+namespace Magento\Framework\ObjectManager\Test\Unit\Factory\Fixture {
+    /**
+     * Constructor with undefined number of arguments
+     */
+    class Polymorphous
+    {
+        public function __construct()
+        {
+        }
+        /**
+         * @param string $key
+         * @return mixed
+         */
+        public function getArg($key)
+        {
+        }
+    }
+}
+namespace Magento\Framework\ObjectManager\Test\Unit {
+    /**
+     * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+     */
+    class ObjectManagerTest extends \PHPUnit\Framework\TestCase
+    {
+        /**
+         * @var ObjectManager
+         */
+        protected $_object;
+        protected function setUp() : void
+        {
+        }
+        public function testCreateCreatesNewInstanceEveryTime()
+        {
+        }
+        public function testGetCreatesNewInstanceOnlyOnce()
+        {
+        }
+        public function testCreateCreatesPreferredImplementation()
+        {
+        }
+        public function testGetCreatesPreferredImplementation()
+        {
+        }
+        public function testCreateThrowsExceptionIfRequiredConstructorParameterIsNotProvided()
+        {
+        }
+        public function testCreateResolvesScalarParametersAutomatically()
+        {
+        }
+        public function testGetCreatesSharedInstancesEveryTime()
+        {
+        }
+        public function testGetDetectsCircularDependency()
+        {
+        }
+        public function testCreateIgnoresOptionalArguments()
+        {
+        }
+        public function testCreateCreatesPreconfiguredInstance()
+        {
+        }
+        public function testParameterShareabilityConfigurationIsApplied()
+        {
+        }
+        public function testTypeShareabilityConfigurationIsApplied()
+        {
+        }
+        public function testParameterShareabilityConfigurationOverridesTypeShareability()
+        {
+        }
+        public function testGlobalArgumentsCanBeConfigured()
+        {
+        }
+        public function testConfiguredArgumentsAreInherited()
+        {
+        }
+        public function testConfiguredArgumentsOverrideInheritedArguments()
+        {
+        }
+        public function testGetIgnoresFirstSlash()
+        {
+        }
+    }
+}
+namespace Magento\Framework\ObjectManager\Test\Unit\Profiler {
+    class FactoryDecoratorTest extends \PHPUnit\Framework\TestCase
+    {
+        /**
+         * Name of the base class to wrap in logger
+         */
+        const CLASS_NAME = \Magento\Test\Di\WrappedClass::class;
+        /**
+         * Name of the wrapper class that does logging
+         */
+        const LOGGER_NAME = \Magento\Test\Di\WrappedClass\Logger::class;
+        /**
+         * Name of the class that generates wrappers - should not be wrapped by logger
+         */
+        const GENERATOR_NAME = \Magento\Framework\ObjectManager\Profiler\Code\Generator\Logger::class;
+        protected function setUp() : void
+        {
+        }
+        public function testCreate()
+        {
+        }
+        public function testCreateNeglectGenerator()
+        {
+        }
+    }
+}
+namespace Magento\Framework\ObjectManager\Test\Unit\Helper {
+    class CompositeTest extends \PHPUnit\Framework\TestCase
+    {
+        /**
+         * @var CompositeHelper
+         */
+        protected $compositeHelper;
+        /**
+         * @var ObjectManager
+         */
+        protected $objectManager;
+        protected function setUp() : void
+        {
+        }
+        public function testFilterAndSortDeclaredComponents()
+        {
+        }
+    }
+    class SortItemsTest extends \PHPUnit\Framework\TestCase
+    {
+        /**
+         * @var SortItemsHelper
+         */
+        protected \Magento\Framework\ObjectManager\Helper\SortItems $_model;
+        protected function setUp() : void
+        {
+        }
+        /**
+         * @param array $input
+         * @param array $expected
+         *
+         * @dataProvider evaluateDataProvider
+         */
+        public function testSortItems(array $input, array $expected) : void
+        {
+        }
+        /**
+         * @return array
+         */
+        public function evaluateDataProvider() : array
+        {
+        }
+    }
+}
+namespace Magento\Framework\ObjectManager\Test\Unit {
+    class TMapTest extends \PHPUnit\Framework\TestCase
+    {
+        protected function setUp() : void
+        {
+        }
+        public function testConstructor()
+        {
+        }
+        public function testRead()
+        {
+        }
+        /**
+         * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+         */
+        public function testRemove()
+        {
+        }
+        /**
+         * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+         */
+        public function testEdit()
+        {
+        }
+    }
+}
+namespace Magento\Framework\ObjectManager\Test\Unit\Config {
+    class XsdTest extends \PHPUnit\Framework\TestCase
+    {
+        /**
+         * @var SchemaLocator
+         */
+        protected $_schemaLocator;
+        /**
+         * Path to xsd schema file
+         * @var string
+         */
+        protected $_xsdSchema;
+        /**
+         * @var XsdValidator
+         */
+        protected $_xsdValidator;
+        protected function setUp() : void
+        {
+        }
+        /**
+         * @param string $xmlString
+         * @param array $expectedError
+         * @dataProvider schemaCorrectlyIdentifiesInvalidXmlDataProvider
+         */
+        public function testSchemaCorrectlyIdentifiesInvalidXml($xmlString, $expectedError)
+        {
+        }
+        /**
+         * Get array of invalid xml strings
+         *
+         * @return array
+         */
+        public function schemaCorrectlyIdentifiesInvalidXmlDataProvider()
+        {
+        }
+        public function testSchemaCorrectlyIdentifiesValidXml()
+        {
+        }
+    }
+    class CompiledTest extends \PHPUnit\Framework\TestCase
+    {
+        protected function setUp() : void
+        {
+        }
+        /**
+         * Test is it possible extend/overwrite arguments for the DI.
+         *
+         */
+        public function testExtendArguments()
+        {
+        }
+        /**
+         * Test getting virtual types from the DI.
+         */
+        public function testVirtualTypes()
+        {
+        }
+        /**
+         * Test getting preferences from the DI.
+         */
+        public function testPreferences()
+        {
+        }
+        /**
+         * Arguments defined in array, have not previously been unserialized
+         */
+        public function testGetArgumentsSerialized()
+        {
+        }
+        /**
+         * Arguments defined in array, have not previously been unserialized
+         */
+        public function testGetArgumentsSerializedEmpty()
+        {
+        }
+        /**
+         * Arguments defined in array, have previously been unserialized
+         */
+        public function testGetArgumentsUnserialized()
+        {
+        }
+        /**
+         * Arguments are defined but empty
+         */
+        public function testGetArgumentsUnserializedEmpty()
+        {
+        }
+        /**
+         * Arguments not defined in array
+         */
+        public function testGetArgumentsNotDefined()
+        {
+        }
+        /**
+         * Test that $arguments, $virtualTypes and $preferences initializing in construct must be array.
+         *
+         * @param $data
+         * @param array $expectedResult
+         *
+         * @dataProvider constructorFieldsValidation
+         */
+        public function testConstructorFieldsValidation($data, $expectedResult)
+        {
+        }
+        /**
+         * Data provider for testConstructorFieldsValidation.
+         *
+         * @return array
+         */
+        public function constructorFieldsValidation()
+        {
+        }
+        /**
+         * Test that $arguments, $virtualTypes and $preferences initializing in extend must be array.
+         *
+         * @param $data
+         * @param array $expectedResult
+         *
+         * @dataProvider extendFieldsValidation
+         */
+        public function testExtendFieldsValidation($data, $expectedResult)
+        {
+        }
+        /**
+         * Data provider for testExtendFieldsValidation.
+         *
+         * @return array
+         */
+        public function extendFieldsValidation()
+        {
+        }
+    }
+    class SchemaLocatorTest extends \PHPUnit\Framework\TestCase
+    {
+        /**
+         * @var \Magento\Framework\App\ResourceConnection\Config\SchemaLocator
+         */
+        protected $model;
+        /** @var UrnResolver */
+        protected $urnResolver;
+        /** @var UrnResolver */
+        protected $urnResolverMock;
+        protected function setUp() : void
+        {
+        }
+        public function testGetSchema()
+        {
+        }
+        public function testGetPerFileSchema()
+        {
+        }
+    }
+}
+namespace Magento\Framework\ObjectManager\Test\Unit\Config\Reader {
+    class DomFactoryTest extends \PHPUnit\Framework\TestCase
+    {
+        /**
+         * @var DomFactory
+         */
+        protected $_factory;
+        /**
+         * @var MockObject
+         */
+        protected $_object;
+        /**
+         * @var ObjectManager|MockObject
+         */
+        protected $_objectManager;
+        protected function setUp() : void
+        {
+        }
+        public function testCreate()
+        {
+        }
+    }
+    class DomTest extends \PHPUnit\Framework\TestCase
+    {
+        /**
+         * @var MockObject
+         */
+        protected $fileResolverMock;
+        /**
+         * @var MockObject
+         */
+        protected $converterMock;
+        /**
+         * @var MockObject
+         */
+        protected $schemaLocatorMock;
+        /**
+         * @var MockObject
+         */
+        protected $validationStateMock;
+        /**
+         * @var Dom
+         */
+        protected $model;
+        protected function setUp() : void
+        {
+        }
+        /**
+         * @covers \Magento\Framework\ObjectManager\Config\Reader\Dom::_createConfigMerger()
+         */
+        public function testRead()
+        {
+        }
+    }
+}
+namespace {
+    /**
+     * Copyright © Magento, Inc. All rights reserved.
+     * See COPYING.txt for license details.
+     */
+    /**
+     * @codingStandardsIgnoreStart
+     */
+    class ConfigDomMock extends \PHPUnit\Framework\TestCase
+    {
+        /**
+         * @param null|string $initialContents
+         * @param array $idAttributes
+         * @param string $typeAttribute
+         * @param $perFileSchema
+         * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+         */
+        public function __construct($initialContents, $validationState, $idAttributes, $typeAttribute, $perFileSchema)
+        {
+        }
+        /**
+         * @param $schemaFile
+         * @param $errors
+         * @return bool
+         * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+         */
+        public function validate($schemaFile, $errors)
+        {
+        }
+        /**
+         * @return string
+         */
+        public function getDom()
+        {
+        }
+    }
+}
+namespace Magento\Framework\ObjectManager\Test\Unit\Config\Mapper {
+    class DomTest extends \PHPUnit\Framework\TestCase
+    {
+        /**
+         * @var Dom
+         */
+        protected $_mapper;
+        /**
+         * @var MockObject
+         */
+        protected $argumentInterpreter;
+        protected function setUp() : void
+        {
+        }
+        public function testConvert()
+        {
+        }
+        /**
+         * Callback for mocking parse() method of the argument parser
+         *
+         * @param \DOMElement $argument
+         * @return string
+         */
+        public function parserMockCallback(\DOMElement $argument)
+        {
+        }
+        /**
+         * @param string $xmlData
+         * @dataProvider wrongXmlDataProvider
+         */
+        public function testMapThrowsExceptionWhenXmlHasWrongFormat($xmlData)
+        {
+        }
+        /**
+         * @return array
+         */
+        public function wrongXmlDataProvider()
+        {
+        }
+    }
+    class ArgumentParserTest extends \PHPUnit\Framework\TestCase
+    {
+        public function testParse()
+        {
+        }
+    }
+}
+namespace Magento\Framework\ObjectManager\Test\Unit\Config {
+    class ConfigTest extends \PHPUnit\Framework\TestCase
+    {
+        protected function setUp() : void
+        {
+        }
+        public function testGetArgumentsEmpty()
+        {
+        }
+        public function testExtendMergeConfiguration()
+        {
+        }
+        public function testExtendWithCacheMock()
+        {
+        }
+        public function testGetPreferenceTrimsFirstSlash()
+        {
+        }
+        public function testExtendIgnoresFirstSlashesOnPreferences()
+        {
+        }
+        public function testExtendIgnoresFirstShashesOnVirtualTypes()
+        {
+        }
+        public function testExtendIgnoresFirstShashes()
+        {
+        }
+        public function testExtendIgnoresFirstShashesForSharing()
+        {
+        }
+    }
+}
+namespace Magento\Framework\ObjectManager\Test\Unit\Code\Generator {
+    class GenerateRepositoryTest extends \PHPUnit\Framework\TestCase
+    {
+        /**
+         * @inheritdoc
+         */
+        protected function setUp() : void
+        {
+        }
+        /**
+         * Checks a case when repository generator uses interface.
+         *
+         * @param string $className
+         * @param string $sourceClassName
+         * @param string $fileName
+         * @dataProvider interfaceListDataProvider
+         */
+        public function testGenerate($className, $sourceClassName, $fileName)
+        {
+        }
+        /**
+         * Get list of different repository interfaces.
+         * Some of them use PHP 7.0 syntax features.
+         *
+         * @return array
+         */
+        public function interfaceListDataProvider()
+        {
+        }
+        /**
+         * test protected _validateData()
+         */
+        public function testValidateData()
+        {
+        }
+    }
+    class FactoryTest extends \PHPUnit\Framework\TestCase
+    {
+        /**
+         * @inheritdoc
+         */
+        protected function setUp() : void
+        {
+        }
+        /**
+         * Checks a test case when factory generator creates auto-generated factories.
+         */
+        public function testGenerate()
+        {
+        }
+    }
+    class ConverterTest extends \PHPUnit\Framework\TestCase
+    {
+        /**
+         * @var Io|MockObject
+         */
+        protected $ioObjectMock;
+        /**
+         * @var EntityAbstract
+         */
+        protected $generator;
+        /**
+         * @var ClassGenerator|MockObject
+         */
+        protected $classGenerator;
+        /**
+         * @inheritdoc
+         */
+        protected function setUp() : void
+        {
+        }
+        /**
+         * @return void
+         */
+        public function testGenerate() : void
+        {
+        }
+    }
+    class ProxyTest extends \PHPUnit\Framework\TestCase
+    {
+        /**
+         * @var MockObject
+         */
+        protected $ioObjectMock;
+        protected function setUp() : void
+        {
+        }
+        public function testGenerate()
+        {
+        }
+        public function testGenerateMixedType()
+        {
+        }
+    }
+    class RepositoryTest extends \Magento\Framework\Api\Test\Unit\Code\Generator\EntityChildTestAbstract
+    {
+        /**
+         * @return string
+         */
+        protected function getSourceClassName()
+        {
+        }
+        /**
+         * @return string
+         */
+        protected function getResultClassName()
+        {
+        }
+        /**
+         * @return string
+         */
+        protected function getGeneratorClassName()
+        {
+        }
+        /**
+         * @return string
+         */
+        protected function getOutputFileName()
+        {
+        }
+        protected function mockDefinedClassesCall()
+        {
+        }
+    }
+}
+namespace Magento\Framework\ObjectManager\Code\Generator {
+    /**
+     * Class Sample for Proxy and Factory generation
+     */
+    class Sample
+    {
+        /**
+         * @var array
+         */
+        protected $messages = [];
+        /**
+         * @param array $messages
+         */
+        public function setMessages(array $messages)
+        {
+        }
+        /**
+         * @return array
+         */
+        public function getMessages()
+        {
+        }
+        /**
+         * @param array $config
+         */
+        public function setConfig(array $config)
+        {
+        }
+        /**
+         * @return array
+         */
+        public function getConfig() : array
+        {
+        }
+        /**
+         * @param int|string $attribute
+         */
+        public function setAttribute(int|string $attribute)
+        {
+        }
+        /**
+         * @return int|string
+         */
+        public function getAttribute() : int|string
+        {
+        }
+    }
+    /**
+     * Class SampleMixed for Proxy and Factory generation with mixed type
+     */
+    class SampleMixed
+    {
+        /**
+         * @var mixed
+         */
+        protected mixed $mixed = null;
+        /**
+         * @param mixed $mixed
+         * @return void
+         */
+        public function setMixed(mixed $mixed = null) : void
+        {
+        }
+        /**
+         * @return mixed
+         */
+        public function getMixed() : mixed
+        {
+        }
+    }
+    interface TSampleInterface
+    {
+    }
+    interface TSampleRepositoryInterface
+    {
+        /**
+         * @param int $id
+         * @return TSampleInterface
+         */
+        public function get(int $id) : \Magento\Framework\ObjectManager\Code\Generator\TSampleInterface;
+        /**
+         * @param TSampleInterface $entity
+         * @return bool
+         */
+        public function delete(\Magento\Framework\ObjectManager\Code\Generator\TSampleInterface $entity) : bool;
+        /**
+         * @param TSampleInterface $entity
+         * @return TSampleInterface
+         */
+        public function save(\Magento\Framework\ObjectManager\Code\Generator\TSampleInterface $entity) : \Magento\Framework\ObjectManager\Code\Generator\TSampleInterface;
+    }
+    interface SampleRepositoryInterface
+    {
+        /**
+         * @param SampleInterface $entity
+         * @return mixed
+         */
+        public function save(\Magento\Framework\ObjectManager\Code\Generator\SampleInterface $entity);
+        /**
+         * @param $id
+         * @return mixed
+         */
+        public function get($id);
+        /**
+         * @param $id
+         * @return mixed
+         */
+        public function deleteById($id);
+        /**
+         * @param SampleInterface $entity
+         * @return mixed
+         */
+        public function delete(\Magento\Framework\ObjectManager\Code\Generator\SampleInterface $entity);
+    }
+}
+namespace Magento\Framework\ObjectManager\Test\Unit\Relations {
+    class RuntimeTest extends \PHPUnit\Framework\TestCase
+    {
+        protected function setUp() : void
+        {
+        }
+        /**
+         * @param $type
+         * @param $parents
+         * @dataProvider getParentsDataProvider
+         */
+        public function testGetParents($type, $parents)
+        {
+        }
+        /**
+         * @return array
+         */
+        public function getParentsDataProvider()
+        {
+        }
+        /**
+         * @param $entity
+         */
+        public function testHasIfNonExists()
+        {
+        }
+    }
+}
+namespace Magento\Test\Di {
+    interface DiInterface
+    {
+        /**
+         * @param string $param
+         * @return mixed
+         */
+        public function wrap($param);
+    }
+    interface ChildInterface
+    {
+    }
+}
+namespace Magento\Framework\ObjectManager {
+    /**
+     * Marker interface, used to identify proxies for which we don't need to generate interceptors
+     *
+     * @api
+     */
+    interface NoninterceptableInterface
+    {
+    }
+}
+namespace Magento\Test\Di {
+    class Proxy implements \Magento\Framework\ObjectManager\NoninterceptableInterface
+    {
+    }
+    /**
+     * Test classes used for \Magento\Framework\ObjectManager\Test\Unit\Profiler\FactoryDecoratorTest
+     */
+    class WrappedClass
+    {
+    }
+}
+namespace Magento\Test\Di\WrappedClass {
+    class Logger
+    {
+    }
+}
+namespace Magento\Test\Di {
+    class DiParent implements \Magento\Test\Di\DiInterface
+    {
+        /**
+         * @var string
+         */
+        protected $_wrapperSymbol;
+        /**
+         * @param string $wrapperSymbol
+         */
+        public function __construct($wrapperSymbol = '|')
+        {
+        }
+        /**
+         * @param string $param
+         * @return mixed
+         */
+        public function wrap($param)
+        {
+        }
+    }
+    class Child extends \Magento\Test\Di\DiParent implements \Magento\Test\Di\ChildInterface
+    {
+    }
+}
+namespace Magento\Test\Di\Aggregate {
+    class WithOptional
+    {
+        public $parent;
+        public $child;
+        /**
+         * WithOptional constructor.
+         * @param DiParent|null $parent
+         * @param Child|null $child
+         */
+        public function __construct(\Magento\Test\Di\DiParent $parent = null, \Magento\Test\Di\Child $child = null)
+        {
+        }
+    }
+    interface AggregateInterface
+    {
+        const PARAM_ONE = 'one';
+        const PARAM_TWO = 'two';
+    }
+    class AggregateParent implements \Magento\Test\Di\Aggregate\AggregateInterface
+    {
+        public $interface;
+        public $parent;
+        public $child;
+        public $scalar;
+        public $optionalScalar;
+        /**
+         * AggregateParent constructor.
+         * @param DiInterface $interface
+         * @param DiParent $parent
+         * @param Child $child
+         * @param $scalar
+         * @param int $optionalScalar
+         */
+        public function __construct(\Magento\Test\Di\DiInterface $interface, \Magento\Test\Di\DiParent $parent, \Magento\Test\Di\Child $child, $scalar, $optionalScalar = 1)
+        {
+        }
+    }
+    class Child extends \Magento\Test\Di\Aggregate\AggregateParent
+    {
+        public $secondScalar;
+        public $secondOptionalScalar;
+        /**
+         * Child constructor.
+         * @param DiInterface $interface
+         * @param DiParent $parent
+         * @param \Magento\Test\Di\Child $child
+         * @param $scalar
+         * @param $secondScalar
+         * @param int $optionalScalar
+         * @param string $secondOptionalScalar
+         */
+        public function __construct(\Magento\Test\Di\DiInterface $interface, \Magento\Test\Di\DiParent $parent, \Magento\Test\Di\Child $child, $scalar, $secondScalar, $optionalScalar = 1, $secondOptionalScalar = '')
+        {
+        }
+    }
+}
+namespace {
+    interface TInterface
+    {
+    }
+    class TClass implements \TInterface
+    {
+    }
+}
+namespace Magento\Test\Di\Child\Interceptor {
+    class A
+    {
+        /**
+         * @var string
+         */
+        protected $_wrapperSym;
+        /**
+         * @param string $wrapperSym
+         */
+        public function __construct($wrapperSym = 'A')
+        {
+        }
+        /**
+         * @param string $param
+         * @return string
+         */
+        public function wrapBefore($param)
+        {
+        }
+        /**
+         * @param string $returnValue
+         * @return string
+         */
+        public function wrapAfter($returnValue)
+        {
+        }
+    }
+    class B
+    {
+        /**
+         * @param string $param
+         * @return string
+         */
+        public function wrapBefore($param)
+        {
+        }
+        /**
+         * @param string $returnValue
+         * @return string
+         */
+        public function wrapAfter($returnValue)
+        {
+        }
+    }
+}
+namespace Magento\Test\Di\Child {
+    class Circular extends \Magento\Test\Di\Child
+    {
+        /**
+         * @param AggregateParent $aggregateParent
+         * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+         */
+        public function __construct(\Magento\Test\Di\Aggregate\AggregateParent $aggregateParent)
+        {
+        }
+    }
+    class A extends \Magento\Test\Di\Child
+    {
+    }
+    class Interceptor extends \Magento\Test\Di\Child
+    {
+        /**
+         * @var \Magento\Framework\ObjectManager\ConfigInterface
+         */
+        protected $_config;
+        /**
+         * @var \Magento\Framework\ObjectManagerInterface
+         */
+        protected $_factory;
+        /**
+         * @var array
+         */
+        protected $_plugins = [];
+        /**
+         * @var \Magento\Framework\ObjectManager\ObjectManager
+         */
+        protected $_objectManager;
+        /**
+         * @var array
+         */
+        protected $_pluginList = [];
+        /**
+         * @var string
+         */
+        protected $_subjectType;
+        /**
+         * @var array
+         */
+        protected $_arguments;
+        /**
+         * @param \Magento\Framework\ObjectManager\FactoryInterface $factory
+         * @param \Magento\Framework\ObjectManager\ObjectManager $objectManager
+         * @param string $subjectType
+         * @param array $pluginList
+         * @param array $arguments
+         */
+        public function __construct(\Magento\Framework\ObjectManager\FactoryInterface $factory, \Magento\Framework\ObjectManager\ObjectManager $objectManager, $subjectType, array $pluginList, array $arguments)
+        {
+        }
+        /**
+         * @return object
+         */
+        protected function _getSubject()
+        {
+        }
+        /**
+         * @param string $param
+         * @return mixed
+         */
+        public function wrap($param)
+        {
+        }
+    }
+}
+namespace Magento\Framework\ObjectManager\Test\Unit {
+    class InterceptableValidatorTest extends \PHPUnit\Framework\TestCase
+    {
+        public function testValidate()
+        {
+        }
+    }
+}
+namespace Magento\Framework\ObjectManager {
+    /**
+     * Interface \Magento\Framework\ObjectManager\ConfigCacheInterface
+     *
+     * @api
+     */
+    interface ConfigCacheInterface
+    {
+        /**
+         * Retrieve configuration from cache
+         *
+         * @param string $key
+         * @return array
+         */
+        public function get($key);
+        /**
+         * Save config to cache
+         *
+         * @param array $config
+         * @param string $key
+         * @return void
+         */
+        public function save(array $config, $key);
+    }
+    /**
+     * Magento object manager. Responsible for instantiating objects taking into account:
+     * - constructor arguments (using configured, and provided parameters)
+     * - class instances life style (singleton, transient)
+     * - interface preferences
+     *
+     * Intentionally contains multiple concerns for best performance
+     *
+     */
+    class ObjectManager implements \Magento\Framework\ObjectManagerInterface
+    {
+        /**
+         * @var \Magento\Framework\ObjectManager\FactoryInterface
+         */
+        protected $_factory;
+        /**
+         * List of shared instances
+         *
+         * @var array
+         */
+        protected $_sharedInstances = [];
+        /**
+         * @var ConfigInterface
+         */
+        protected $_config;
+        /**
+         * phpcs:disable Magento2.Annotation.MethodArguments.VisualAlignment
+         * @param FactoryInterface $factory
+         * @param ConfigInterface $config
+         * @param array &$sharedInstances
+         */
+        public function __construct(\Magento\Framework\ObjectManager\FactoryInterface $factory, \Magento\Framework\ObjectManager\ConfigInterface $config, &$sharedInstances = [])
+        {
+        }
+        /**
+         * Create new object instance
+         *
+         * @param string $type
+         * @param array $arguments
+         * @return mixed
+         */
+        public function create($type, array $arguments = [])
+        {
+        }
+        /**
+         * Retrieve cached object instance
+         *
+         * @param string $type
+         * @return mixed
+         */
+        public function get($type)
+        {
+        }
+        /**
+         * Configure di instance
+         *
+         * Note: All arguments should be pre-processed (sort order, translations, etc) before passing to method configure.
+         *
+         * @param array $configuration
+         * @return void
+         */
+        public function configure(array $configuration)
+        {
+        }
+        /**
+         * Disable show ObjectManager internals with var_dump
+         *
+         * @see https://www.php.net/manual/en/language.oop5.magic.php#object.debuginfo
+         * @return array
+         */
+        public function __debugInfo()
+        {
+        }
+    }
+    /**
+     * Interface \Magento\Framework\ObjectManager\DynamicConfigInterface
+     *
+     * @api
+     */
+    interface DynamicConfigInterface
+    {
+        /**
+         * Map application initialization params to Object Manager configuration format
+         *
+         * @return array
+         */
+        public function getConfiguration();
+    }
+}
+namespace Magento\Framework\ObjectManager\Helper {
+    /**
+     * Helper for classes which implement Sort Logic for array Items.
+     */
+    class SortItems
+    {
+        /**
+         * Sort items by sort order attribute.
+         *
+         * @param array $items
+         * @return array
+         */
+        public function sortItems(array $items) : array
+        {
+        }
+    }
+    /**
+     * Helper for classes which implement Composite pattern.
+     */
+    class Composite
+    {
+        /**
+         * @param array $declaredComponents Array of the components which should be registered in the following format:
+         * <pre>
+         * [
+         *      ['type' => $firstComponentObject, 'sortOrder' => 15],
+         *      ['type' => $secondComponentObject, 'sortOrder' => 10],
+         *      ...
+         * ]
+         * </pre>
+         * @return array Array of components declarations. Items are sorted and misconfigured ones are removed.
+         */
+        public function filterAndSortDeclaredComponents($declaredComponents)
+        {
+        }
+    }
+}
+namespace Magento\Framework\ObjectManager {
+    /**
+     * @internal
+     */
+    class TMap implements \IteratorAggregate, \Countable, \ArrayAccess
+    {
+        /**
+         * @param string $type
+         * @param ObjectManagerInterface $objectManager
+         * @param ConfigInterface $configInterface
+         * @param array $array
+         * @param \Closure $objectCreationStrategy
+         */
+        public function __construct($type, \Magento\Framework\ObjectManagerInterface $objectManager, \Magento\Framework\ObjectManager\ConfigInterface $configInterface, array $array = [], \Closure $objectCreationStrategy = null)
+        {
+        }
+        /**
+         * @inheritdoc
+         */
+        #[\ReturnTypeWillChange]
+        public function getIterator()
+        {
+        }
+        /**
+         * @inheritdoc
+         */
+        #[\ReturnTypeWillChange]
+        public function offsetExists($offset)
+        {
+        }
+        /**
+         * @inheritdoc
+         */
+        #[\ReturnTypeWillChange]
+        public function offsetGet($offset)
+        {
+        }
+        /**
+         * @inheritdoc
+         */
+        #[\ReturnTypeWillChange]
+        public function offsetSet($offset, $value)
+        {
+        }
+        /**
+         * @inheritdoc
+         */
+        #[\ReturnTypeWillChange]
+        public function offsetUnset($offset)
+        {
+        }
+        /**
+         * @inheritdoc
+         */
+        #[\ReturnTypeWillChange]
+        public function count()
+        {
+        }
+    }
+    /**
+     * Interface \Magento\Framework\ObjectManager\ConfigInterface
+     *
+     * @api
+     */
+    interface ConfigInterface
+    {
+        /**
+         * Set class relations
+         *
+         * @param RelationsInterface $relations
+         *
+         * @return void
+         */
+        public function setRelations(\Magento\Framework\ObjectManager\RelationsInterface $relations);
+        /**
+         * Set configuration cache instance
+         *
+         * @param ConfigCacheInterface $cache
+         *
+         * @return void
+         */
+        public function setCache(\Magento\Framework\ObjectManager\ConfigCacheInterface $cache);
+        /**
+         * Retrieve list of arguments per type
+         *
+         * @param string $type
+         * @return array|null
+         */
+        public function getArguments($type);
+        /**
+         * Check whether type is shared
+         *
+         * @param string $type
+         * @return bool
+         */
+        public function isShared($type);
+        /**
+         * Retrieve instance type
+         *
+         * @param string $instanceName
+         * @return mixed
+         */
+        public function getInstanceType($instanceName);
+        /**
+         * Retrieve preference for type
+         *
+         * @param string $type
+         * @return string
+         * @throws \LogicException
+         */
+        public function getPreference($type);
+        /**
+         * Returns list of virtual types
+         *
+         * @return array
+         */
+        public function getVirtualTypes();
+        /**
+         * Extend configuration
+         *
+         * @param array $configuration
+         * @return void
+         */
+        public function extend(array $configuration);
+        /**
+         * Returns list on preferences
+         *
+         * @return array
+         */
+        public function getPreferences();
+    }
+    /**
+     * This interface is used to reset service's mutable state, and similar problems, after request has been sent in
+     * Stateful application server and can be used in other long running processes where mutable state in services can
+     * cause issues.
+     */
+    interface ResetAfterRequestInterface
+    {
+        /**
+         * Resets mutable state and/or resources in objects that need to be cleaned after a response has been sent.
+         *
+         * @return void
+         */
+        public function _resetState() : void;
+    }
+}
+namespace Magento\Framework\ObjectManager\Config {
+    class SchemaLocator implements \Magento\Framework\Config\SchemaLocatorInterface
+    {
+        /**
+         * @var \Magento\Framework\Config\Dom\UrnResolver
+         */
+        protected $urnResolver;
+        /**
+         */
+        public function __construct()
+        {
+        }
+        /**
+         * Get path to merged config schema
+         *
+         * @return string
+         */
+        public function getSchema()
+        {
+        }
+        /**
+         * Get path to pre file validation schema
+         *
+         * @return null
+         */
+        public function getPerFileSchema()
+        {
+        }
+    }
+}
+namespace Magento\Framework\ObjectManager\Config\Reader {
+    /**
+     * Factory class for \Magento\Framework\ObjectManager\Config\Reader\Dom
+     */
+    class DomFactory
+    {
+        /**
+         * Object Manager instance
+         *
+         * @var \Magento\Framework\ObjectManagerInterface
+         */
+        protected $_objectManager = null;
+        /**
+         * Instance name to create
+         *
+         * @var string
+         */
+        protected $_instanceName = null;
+        /**
+         * Factory constructor
+         *
+         * @param \Magento\Framework\ObjectManagerInterface $objectManager
+         * @param string $instanceName
+         */
+        public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager, $instanceName = \Magento\Framework\ObjectManager\Config\Reader\Dom::class)
+        {
+        }
+        /**
+         * Create class instance with specified parameters
+         *
+         * @param array $data
+         * @return \Magento\Framework\ObjectManager\Config\Reader\Dom
+         */
+        public function create(array $data = [])
+        {
+        }
+    }
+    class Dom extends \Magento\Framework\Config\Reader\Filesystem
+    {
+        /**
+         * Name of an attribute that stands for data type of node values
+         */
+        const TYPE_ATTRIBUTE = 'xsi:type';
+        /**
+         * @var array
+         */
+        protected $_idAttributes = ['/config/preference' => 'for', '/config/(type|virtualType)' => 'name', '/config/(type|virtualType)/plugin' => 'name', '/config/(type|virtualType)/arguments/argument' => 'name', '/config/(type|virtualType)/arguments/argument(/item)+' => 'name'];
+        /**
+         * @param \Magento\Framework\Config\FileResolverInterface $fileResolver
+         * @param \Magento\Framework\ObjectManager\Config\Mapper\Dom $converter
+         * @param \Magento\Framework\ObjectManager\Config\SchemaLocator $schemaLocator
+         * @param \Magento\Framework\Config\ValidationStateInterface $validationState
+         * @param string $fileName
+         * @param array $idAttributes
+         * @param string $domDocumentClass
+         * @param string $defaultScope
+         */
+        public function __construct(\Magento\Framework\Config\FileResolverInterface $fileResolver, \Magento\Framework\ObjectManager\Config\Mapper\Dom $converter, \Magento\Framework\ObjectManager\Config\SchemaLocator $schemaLocator, \Magento\Framework\Config\ValidationStateInterface $validationState, $fileName = 'di.xml', $idAttributes = [], $domDocumentClass = \Magento\Framework\Config\Dom::class, $defaultScope = 'global')
+        {
+        }
+        /**
+         * Create and return a config merger instance that takes into account types of arguments
+         *
+         * {@inheritdoc}
+         */
+        protected function _createConfigMerger($mergerClass, $initialContents)
+        {
+        }
+    }
+}
+namespace Magento\Framework\ObjectManager\Config\Mapper {
+    class Dom implements \Magento\Framework\Config\ConverterInterface
+    {
+        /**
+         * @param BooleanUtils $booleanUtils
+         * @param ArgumentParser $argumentParser
+         * @param InterpreterInterface $argumentInterpreter
+         */
+        public function __construct(\Magento\Framework\Data\Argument\InterpreterInterface $argumentInterpreter, \Magento\Framework\Stdlib\BooleanUtils $booleanUtils = null, \Magento\Framework\ObjectManager\Config\Mapper\ArgumentParser $argumentParser = null)
+        {
+        }
+        /**
+         * Convert configuration in DOM format to assoc array that can be used by object manager
+         *
+         * @param \DOMDocument $config
+         * @return array
+         * @throws \Exception
+         * @todo this method has high cyclomatic complexity in order to avoid performance issues
+         * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+         * @SuppressWarnings(PHPMD.NPathComplexity)
+         * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+         */
+        public function convert($config)
+        {
+        }
+    }
+    /**
+     * Parser of a DI argument node that returns its array representation with no data loss
+     */
+    class ArgumentParser
+    {
+        /**
+         * Build and return array representation of DI argument node
+         *
+         * @param \DOMNode $argumentNode
+         * @return array|string
+         */
+        public function parse(\DOMNode $argumentNode)
+        {
+        }
+        /**
+         * Retrieve instance of XML converter, suitable for DI argument nodes
+         *
+         * @return FlatConverter
+         */
+        protected function getConverter()
+        {
+        }
+    }
+}
+namespace Magento\Framework\ObjectManager\Config {
+    /**
+     * Provides object manager configuration when in compiled mode
+     */
+    class Compiled implements \Magento\Framework\ObjectManager\ConfigInterface
+    {
+        /**
+         * @param array $data
+         */
+        public function __construct($data)
+        {
+        }
+        /**
+         * Set class relations
+         *
+         * @param RelationsInterface $relations
+         *
+         * @return void
+         *
+         * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+         * phpcs:disable Magento2.CodeAnalysis.EmptyBlock
+         */
+        public function setRelations(\Magento\Framework\ObjectManager\RelationsInterface $relations)
+        {
+        }
+        /**
+         * Set configuration cache instance
+         *
+         * @param ConfigCacheInterface $cache
+         *
+         * @return void
+         *
+         * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+         */
+        public function setCache(\Magento\Framework\ObjectManager\ConfigCacheInterface $cache)
+        {
+        }
+        // phpcs:enable Magento2.CodeAnalysis.EmptyBlock
+        /**
+         * Retrieve list of arguments per type
+         *
+         * @param string $type
+         * @return array
+         */
+        public function getArguments($type)
+        {
+        }
+        /**
+         * Check whether type is shared
+         *
+         * @param string $type
+         * @return bool
+         * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+         */
+        public function isShared($type)
+        {
+        }
+        /**
+         * Retrieve instance type
+         *
+         * @param string $instanceName
+         * @return mixed
+         */
+        public function getInstanceType($instanceName)
+        {
+        }
+        /**
+         * Retrieve preference for type
+         *
+         * @param string $type
+         * @return string
+         * @throws \LogicException
+         */
+        public function getPreference($type)
+        {
+        }
+        /**
+         * Extend configuration
+         *
+         * @param array $configuration
+         * @return void
+         */
+        public function extend(array $configuration)
+        {
+        }
+        /**
+         * Retrieve all virtual types
+         *
+         * @return string
+         */
+        public function getVirtualTypes()
+        {
+        }
+        /**
+         * Returns list on preferences
+         *
+         * @return array
+         */
+        public function getPreferences()
+        {
+        }
+    }
+    class Config implements \Magento\Framework\ObjectManager\ConfigInterface
+    {
+        /**
+         * Config cache
+         *
+         * @var ConfigCacheInterface
+         */
+        protected $_cache;
+        /**
+         * Class definitions
+         *
+         * @var DefinitionInterface
+         */
+        protected $_definitions;
+        /**
+         *
+         * @var string
+         */
+        protected $_currentCacheKey;
+        /**
+         * Interface preferences
+         *
+         * @var array
+         */
+        protected $_preferences = [];
+        /**
+         *
+         * @var array
+         */
+        protected $_virtualTypes = [];
+        /**
+         * Instance arguments
+         *
+         * @var array
+         */
+        protected $_arguments = [];
+        /**
+         * Type shareability
+         *
+         * @var array
+         */
+        protected $_nonShared = [];
+        /**
+         * List of relations
+         *
+         * @var RelationsInterface
+         */
+        protected $_relations;
+        /**
+         * List of merged arguments
+         *
+         * @var array
+         */
+        protected $_mergedArguments;
+        /**
+         * @param RelationsInterface|null $relations
+         * @param DefinitionInterface|null $definitions
+         * @param SortItemsHelper|null $sortItemsHelper
+         */
+        public function __construct(\Magento\Framework\ObjectManager\RelationsInterface $relations = null, \Magento\Framework\ObjectManager\DefinitionInterface $definitions = null, \Magento\Framework\ObjectManager\Helper\SortItems $sortItemsHelper = null)
+        {
+        }
+        /**
+         * Set class relations
+         *
+         * @param RelationsInterface $relations
+         * @return void
+         */
+        public function setRelations(\Magento\Framework\ObjectManager\RelationsInterface $relations)
+        {
+        }
+        /**
+         * Set cache instance
+         *
+         * @param ConfigCacheInterface $cache
+         * @return void
+         */
+        public function setCache(\Magento\Framework\ObjectManager\ConfigCacheInterface $cache)
+        {
+        }
+        /**
+         * Retrieve list of arguments per type
+         *
+         * @param string $type
+         * @return array
+         */
+        public function getArguments($type)
+        {
+        }
+        /**
+         * Check whether type is shared
+         *
+         * @param string $type
+         * @return bool
+         */
+        public function isShared($type)
+        {
+        }
+        /**
+         * Retrieve instance type
+         *
+         * @param string $instanceName
+         * @return mixed
+         */
+        public function getInstanceType($instanceName)
+        {
+        }
+        /**
+         * Retrieve preference for type
+         *
+         * @param string $type
+         * @return string
+         * @throws \LogicException
+         */
+        public function getPreference($type)
+        {
+        }
+        /**
+         * Collect parent types configuration for requested type
+         *
+         * @param string $type
+         * @return array
+         * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+         */
+        protected function _collectConfiguration($type) : array
+        {
+        }
+        /**
+         * Merge configuration
+         *
+         * @param array $configuration
+         * @return void
+         * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+         */
+        protected function _mergeConfiguration(array $configuration)
+        {
+        }
+        /**
+         * Extend configuration
+         *
+         * @param array $configuration
+         * @return void
+         */
+        public function extend(array $configuration)
+        {
+        }
+        /**
+         * Returns list of virtual types
+         *
+         * @return array
+         */
+        public function getVirtualTypes()
+        {
+        }
+        /**
+         * Returns list on preferences
+         *
+         * @return array
+         */
+        public function getPreferences()
+        {
+        }
+        /**
+         * Disable show internals with var_dump
+         *
+         * @see https://www.php.net/manual/en/language.oop5.magic.php#object.debuginfo
+         * @return array
+         */
+        public function __debugInfo()
+        {
+        }
+    }
+}
+namespace Magento\Framework\ObjectManager\Resetter {
+    /**
+     * Data class used for hold reference and sort value
+     */
+    class SortableReferenceObject
+    {
+        /**
+         * @param WeakReference $reference
+         * @param int $sort
+         * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+         * @phpcs:disable Magento2.CodeAnalysis.EmptyBlock.DetectedFunction
+         */
+        public function __construct(readonly \WeakReference $reference, readonly int $sort)
+        {
+        }
+        /**
+         * Gets sorted object
+         *
+         * @return int
+         */
+        public function getSort() : int
+        {
+        }
+        /**
+         * Gets WeakReference
+         *
+         * @return WeakReference
+         */
+        public function getWeakReference() : \WeakReference
+        {
+        }
+    }
+    /**
+     * Interface that keeps track of the instances that need to be reset, and resets them
+     */
+    interface ResetterInterface extends \Magento\Framework\ObjectManager\ResetAfterRequestInterface
+    {
+        /**
+         * Adds instance
+         *
+         * @param object $instance
+         * @return void
+         */
+        public function addInstance(object $instance) : void;
+        /**
+         * Sets object manager
+         *
+         * @param ObjectManagerInterface $objectManager
+         * @return void
+         */
+        public function setObjectManager(\Magento\Framework\ObjectManagerInterface $objectManager) : void;
+    }
+    /**
+     * Class that keeps track of the instances that need to be reset, and resets them
+     */
+    class Resetter implements \Magento\Framework\ObjectManager\Resetter\ResetterInterface
+    {
+        public const RESET_PATH = '/app/etc/reset.php';
+        /**
+         * Constructor
+         *
+         * @return void
+         * @phpcs:disable Magento2.Functions.DiscouragedFunction
+         */
+        public function __construct()
+        {
+        }
+        /**
+         * Add instance to be reset later
+         *
+         * @param object $instance
+         * @return void
+         */
+        public function addInstance(object $instance) : void
+        {
+        }
+        /**
+         * Reset state for all instances that we've created
+         *
+         * @return void
+         * @throws \ReflectionException
+         */
+        public function _resetState() : void
+        {
+        }
+        /**
+         * @inheritDoc
+         */
+        public function setObjectManager(\Magento\Framework\ObjectManagerInterface $objectManager) : void
+        {
+        }
+    }
+    /**
+     * Sorts a WeakMap into an ordered array of WeakReference and reset them in order.
+     */
+    class WeakMapSorter
+    {
+        public const DEFAULT_SORT_VALUE = 5000;
+        public const MAX_SORT_VALUE = 10000;
+        /**
+         * Constructor
+         *
+         * @param array $sortOrder
+         * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+         */
+        public function __construct(private array $sortOrder)
+        {
+        }
+        /**
+         * Sorts the WeakMap into a WeakReference list
+         *
+         * @param WeakMap $weakmap
+         * @return WeakReference[]
+         * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+         */
+        public function sortWeakMapIntoWeakReferenceList(\WeakMap $weakmap) : array
+        {
+        }
+    }
+    /**
+     * Factory that creates Resetter based on environment variable.
+     */
+    class ResetterFactory
+    {
+        /**
+         * Create resseter factory
+         *
+         * @return ResetterInterface
+         * @phpcs:disable Magento2.Functions.StaticFunction
+         */
+        public static function create() : \Magento\Framework\ObjectManager\Resetter\ResetterInterface
+        {
+        }
+        /**
+         * Sets resetter class name
+         *
+         * @param string $resetterClassName
+         * @return void
+         * @phpcs:disable Magento2.Functions.StaticFunction
+         */
+        public static function setResetterClassName($resetterClassName) : void
+        {
+        }
+    }
+}
+namespace Magento\Framework\ObjectManager\Code\Generator {
+    class Factory extends \Magento\Framework\Code\Generator\EntityAbstract
+    {
+        const ENTITY_TYPE = 'factory';
+        /**
+         * Retrieve class properties
+         *
+         * @return array
+         */
+        protected function _getClassProperties()
+        {
+        }
+        /**
+         * Get default constructor definition for generated class
+         *
+         * @return array
+         */
+        protected function _getDefaultConstructorDefinition()
+        {
+        }
+        /**
+         * Returns list of methods for class generator
+         *
+         * @return array
+         */
+        protected function _getClassMethods()
+        {
+        }
+        /**
+         * @inheritdoc
+         */
+        protected function _validateData()
+        {
+        }
+        /**
+         * Suffix for generated class
+         *
+         * @return string
+         */
+        protected function getResultClassSuffix()
+        {
+        }
+    }
+    class Proxy extends \Magento\Framework\Code\Generator\EntityAbstract
+    {
+        use \Magento\Framework\GetReflectionMethodReturnTypeValueTrait;
+        /**
+         * Entity type
+         */
+        public const ENTITY_TYPE = 'proxy';
+        /**
+         * Marker interface
+         */
+        public const NON_INTERCEPTABLE_INTERFACE = \Magento\Framework\ObjectManager\NoninterceptableInterface::class;
+        /**
+         * Returns default result class name
+         *
+         * @param string $modelClassName
+         * @return string
+         */
+        protected function _getDefaultResultClassName($modelClassName)
+        {
+        }
+        /**
+         * Retrieve class properties
+         *
+         * @return array
+         */
+        protected function _getClassProperties()
+        {
+        }
+        /**
+         * Returns list of methods for class generator
+         *
+         * @return array
+         */
+        protected function _getClassMethods()
+        {
+        }
+        /**
+         * Generates code
+         *
+         * @return string
+         */
+        protected function _generateCode()
+        {
+        }
+        /**
+         * Collect method info
+         *
+         * @param \ReflectionMethod $method
+         * @return array
+         */
+        protected function _getMethodInfo(\ReflectionMethod $method)
+        {
+        }
+        /**
+         * Get default constructor definition for generated class
+         *
+         * @return array
+         */
+        protected function _getDefaultConstructorDefinition()
+        {
+        }
+        /**
+         * Build proxy method body
+         *
+         * @param string $name
+         * @param array $parameters
+         * @param bool $withoutReturn
+         * @return string
+         */
+        protected function _getMethodBody($name, array $parameters = [], bool $withoutReturn = false)
+        {
+        }
+        /**
+         * Validates data
+         *
+         * @return bool
+         */
+        protected function _validateData()
+        {
+        }
+    }
+    /**
+     * Class Persistor
+     */
+    class Persistor extends \Magento\Framework\Code\Generator\EntityAbstract
+    {
+        /**
+         * Entity type
+         */
+        const ENTITY_TYPE = 'persistor';
+        /**
+         * Retrieve class properties
+         *
+         * @return array
+         */
+        protected function _getClassProperties()
+        {
+        }
+        /**
+         * Returns source factory property name
+         *
+         * @return string
+         */
+        protected function _getSourceFactoryPropertyName()
+        {
+        }
+        /**
+         * Returns source collection factory property name
+         * @return string
+         */
+        protected function _getSourceResourcePropertyName()
+        {
+        }
+        /**
+         * Returns collection factory class name
+         *
+         * @return string
+         */
+        protected function _getSourceResourceClassName()
+        {
+        }
+        /**
+         * Returns list of methods for class generator
+         *
+         * @return array
+         */
+        protected function _getClassMethods()
+        {
+        }
+        /**
+         * Get default constructor definition for generated class
+         *
+         * @return array
+         */
+        protected function _getDefaultConstructorDefinition()
+        {
+        }
+        /**
+         * @return array
+         */
+        protected function _getGetConnectionMethod()
+        {
+        }
+        /**
+         * Returns register() method
+         *
+         * @return string
+         */
+        protected function _getLoadEntityMethod()
+        {
+        }
+        /**
+         * Returns registerDelete() method
+         *
+         * @return string
+         */
+        protected function _getRegisterDeletedMethod()
+        {
+        }
+        /**
+         * @return array
+         */
+        protected function _getDoPersistMethod()
+        {
+        }
+        /**
+         * Returns registerDelete() method
+         *
+         * @return string
+         */
+        protected function _getDoPersistEntityMethod()
+        {
+        }
+        /**
+         * Returns registerDelete() method
+         *
+         * @return string
+         */
+        protected function _getRegisterFromArrayMethod()
+        {
+        }
+        /**
+         * Returns registerDelete() method
+         *
+         * @return string
+         */
+        protected function _getRegisterNewMethod()
+        {
+        }
+        /**
+         * {@inheritdoc}
+         */
+        protected function _validateData()
+        {
+        }
+    }
+    /**
+     * Class Converter
+     * @package Magento\Framework\ObjectManager\Code\Generator
+     */
+    class Converter extends \Magento\Framework\Code\Generator\EntityAbstract
+    {
+        /**
+         * Entity type
+         */
+        const ENTITY_TYPE = 'converter';
+        /**
+         * Retrieve class properties
+         *
+         * @return array
+         */
+        protected function _getClassProperties()
+        {
+        }
+        /**
+         * Returns factory name
+         *
+         * @return string
+         */
+        protected function _getFactoryPropertyName()
+        {
+        }
+        /**
+         * Returns factory class
+         *
+         * @return string
+         */
+        protected function _getFactoryClass()
+        {
+        }
+        /**
+         * Get default constructor definition for generated class
+         *
+         * @return array
+         */
+        protected function _getDefaultConstructorDefinition()
+        {
+        }
+        /**
+         * Returns list of methods for class generator
+         *
+         * @return array
+         */
+        protected function _getClassMethods()
+        {
+        }
+        /**
+         * {@inheritdoc}
+         */
+        protected function _validateData()
+        {
+        }
+    }
+    /**
+     * Class Repository
+     * @deprecated 101.0.0 As current implementation breaks Repository contract. Not removed from codebase to prevent
+     * possible backward incompatibilities if this functionality being used by 3rd party developers.
+     * @see https://jira.corp.adobe.com/browse/MAGETWO-70985
+     */
+    class Repository extends \Magento\Framework\Code\Generator\EntityAbstract
+    {
+        /**
+         * Entity type repository
+         */
+        public const ENTITY_TYPE = 'repository';
+        /**
+         * Retrieve class properties
+         *
+         * @return array
+         */
+        protected function _getClassProperties()
+        {
+        }
+        /**
+         * Returns source factory property name
+         *
+         * @return string
+         */
+        protected function _getSourcePersistorPropertyName()
+        {
+        }
+        /**
+         * Returns source collection factory property name
+         *
+         * @return string
+         */
+        protected function _getSourceCollectionFactoryPropertyName()
+        {
+        }
+        /**
+         * Returns collection factory class name
+         *
+         * @return string
+         */
+        protected function _getCollectionFactoryClassName()
+        {
+        }
+        /**
+         * Returns source persistor class name
+         *
+         * @return string
+         */
+        protected function _getPersistorClassName()
+        {
+        }
+        /**
+         * Get default constructor definition for generated class
+         *
+         * @return array
+         */
+        protected function _getDefaultConstructorDefinition()
+        {
+        }
+        /**
+         * Returns get() method
+         *
+         * @return array
+         */
+        protected function _getGetMethod()
+        {
+        }
+        /**
+         * Returns register() method
+         *
+         * @return array
+         */
+        protected function _getCreateFromArrayMethod()
+        {
+        }
+        /**
+         * Returns register() method
+         *
+         * @return array
+         */
+        protected function _getCreateMethod()
+        {
+        }
+        /**
+         * Returns register() method
+         *
+         * @return array
+         */
+        protected function _getFlushMethod()
+        {
+        }
+        /**
+         * Returns persist() method
+         *
+         * @return array
+         */
+        protected function _getSaveMethod()
+        {
+        }
+        /**
+         * Return remove() method
+         *
+         * @return array
+         */
+        protected function _getDeleteMethod()
+        {
+        }
+        /**
+         * Return remove() method
+         *
+         * @return array
+         */
+        protected function _getDeleteByIdMethod()
+        {
+        }
+        /**
+         * Return remove() method
+         *
+         * @return array
+         */
+        protected function _getRemoveMethod()
+        {
+        }
+        /**
+         * Returns getList() method
+         *
+         * @return array
+         */
+        protected function _getGetListMethod()
+        {
+        }
+        /**
+         * Returns list of methods for class generator
+         *
+         * @return array
+         */
+        protected function _getClassMethods()
+        {
+        }
+        /**
+         * @inheritDoc
+         */
+        protected function _validateData()
+        {
+        }
+        /**
+         * Generate code
+         *
+         * @return string
+         */
+        protected function _generateCode()
+        {
+        }
+        /**
+         * @inheritdoc
+         */
+        protected function _getClassDocBlock()
+        {
+        }
+        /**
+         * Get source class name
+         *
+         * @return string
+         */
+        public function getSourceClassName()
+        {
+        }
+    }
+}
+namespace Magento\Framework\ObjectManager\Relations {
+    class Runtime implements \Magento\Framework\ObjectManager\RelationsInterface
+    {
+        /**
+         * @var \Magento\Framework\Code\Reader\ClassReaderInterface
+         */
+        protected $_classReader;
+        /**
+         * Default behavior
+         *
+         * @var array
+         */
+        protected $_default = [];
+        /**
+         * @param \Magento\Framework\Code\Reader\ClassReaderInterface $classReader
+         */
+        public function __construct(\Magento\Framework\Code\Reader\ClassReaderInterface $classReader = null)
+        {
+        }
+        /**
+         * Check whether requested type is available for read
+         *
+         * @param string $type
+         * @return bool
+         */
+        public function has($type)
+        {
+        }
+        /**
+         * Retrieve list of parents
+         *
+         * @param string $type
+         * @return array
+         */
+        public function getParents($type)
+        {
+        }
+    }
+}
+namespace Magento\Framework\ObjectManager {
+    /**
+     * Marker interface for constructor modification points.
+     *
+     * All context classes were introduced to allow for backwards compatible constructor modifications
+     * of classes that were supposed to be extended by extension developers.
+     *
+     * Do not call methods of this class directly.
+     *
+     * As Magento moves from inheritance-based APIs all such classes will be deprecated together with
+     * the classes they were introduced for.
+     *
+     * @api
+     * @since 100.0.2
+     */
+    interface ContextInterface
+    {
+    }
+}

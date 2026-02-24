@@ -1,0 +1,5867 @@
+<?php
+
+namespace Magento\Store\Model;
+
+/**
+ * @api
+ * @since 100.0.2
+ */
+class StoreIsInactiveException extends \Magento\Framework\Exception\LocalizedException
+{
+    /**
+     * @param \Magento\Framework\Phrase $phrase
+     * @param \Exception $cause
+     * @param int $code
+     */
+    public function __construct(\Magento\Framework\Phrase $phrase = null, \Exception $cause = null, $code = 0)
+    {
+    }
+}
+/**
+ * Store manager interface
+ *
+ * @api
+ * @since 100.0.2
+ */
+interface StoreManagerInterface
+{
+    /**
+     * Store cache context
+     */
+    const CONTEXT_STORE = 'store';
+    /**
+     * The store GET Param name
+     */
+    const PARAM_NAME = '___store';
+    /**
+     * Allow or disallow single store mode
+     *
+     * @param bool $value
+     * @return void
+     */
+    public function setIsSingleStoreModeAllowed($value);
+    /**
+     * Check if store has only one store view
+     *
+     * @return bool
+     */
+    public function hasSingleStore();
+    /**
+     * Check if system is run in the single store mode
+     *
+     * @return bool
+     */
+    public function isSingleStoreMode();
+    /**
+     * Retrieve application store object
+     *
+     * @param null|string|bool|int|\Magento\Store\Api\Data\StoreInterface $storeId
+     * @return \Magento\Store\Api\Data\StoreInterface
+     * @throws NoSuchEntityException If given store doesn't exist.
+     */
+    public function getStore($storeId = null);
+    /**
+     * Retrieve stores array
+     *
+     * @param bool $withDefault
+     * @param bool $codeKey
+     * @return \Magento\Store\Api\Data\StoreInterface[]
+     */
+    public function getStores($withDefault = false, $codeKey = false);
+    /**
+     * Retrieve application website object
+     *
+     * @param null|bool|int|string|\Magento\Store\Api\Data\WebsiteInterface $websiteId
+     * @return \Magento\Store\Api\Data\WebsiteInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function getWebsite($websiteId = null);
+    /**
+     * Get loaded websites
+     *
+     * @param bool $withDefault
+     * @param bool $codeKey
+     * @return \Magento\Store\Api\Data\WebsiteInterface[]
+     */
+    public function getWebsites($withDefault = false, $codeKey = false);
+    /**
+     * Reinitialize store list
+     *
+     * @return void
+     */
+    public function reinitStores();
+    /**
+     * Retrieve default store for default group and website
+     *
+     * @return \Magento\Store\Api\Data\StoreInterface|null
+     */
+    public function getDefaultStoreView();
+    /**
+     * Retrieve application store group object
+     *
+     * @param null|\Magento\Store\Api\Data\GroupInterface|string $groupId
+     * @return \Magento\Store\Api\Data\GroupInterface
+     */
+    public function getGroup($groupId = null);
+    /**
+     * Prepare array of store groups
+     *
+     * @param bool $withDefault
+     * @return \Magento\Store\Api\Data\GroupInterface[]
+     */
+    public function getGroups($withDefault = false);
+    /**
+     * Set current default store
+     *
+     * @param string|int|\Magento\Store\Api\Data\StoreInterface $store
+     * @return void
+     */
+    public function setCurrentStore($store);
+}
+/**
+ * Service contract, which manage scopes
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
+class StoreManager implements \Magento\Store\Model\StoreManagerInterface, \Magento\Store\Api\StoreWebsiteRelationInterface, \Magento\Framework\ObjectManager\ResetAfterRequestInterface
+{
+    /**
+     * Application run code
+     */
+    public const PARAM_RUN_CODE = 'MAGE_RUN_CODE';
+    /**
+     * Application run type (store|website)
+     */
+    public const PARAM_RUN_TYPE = 'MAGE_RUN_TYPE';
+    /**
+     * Whether single store mode enabled or not
+     */
+    public const XML_PATH_SINGLE_STORE_MODE_ENABLED = 'general/single_store_mode/enabled';
+    /**
+     * @var \Magento\Store\Api\StoreRepositoryInterface
+     */
+    protected $storeRepository;
+    /**
+     * @var \Magento\Store\Api\GroupRepositoryInterface
+     */
+    protected $groupRepository;
+    /**
+     * @var \Magento\Store\Api\WebsiteRepositoryInterface
+     */
+    protected $websiteRepository;
+    /**
+     * @var \Magento\Framework\App\Config\ScopeConfigInterface
+     */
+    protected $scopeConfig;
+    /**
+     * @var StoreResolverInterface
+     */
+    protected $storeResolver;
+    /**
+     * @var \Magento\Framework\Cache\FrontendInterface
+     */
+    protected $cache;
+    /**
+     * Default store code
+     *
+     * @var string|int|\Magento\Store\Api\Data\StoreInterface
+     */
+    protected $currentStoreId = null;
+    /**
+     * Flag that shows that system has only one store view
+     *
+     * @var bool
+     */
+    protected $_hasSingleStore;
+    /**
+     * Flag is single store mode allowed
+     *
+     * @var bool
+     */
+    protected $isSingleStoreAllowed;
+    /**
+     * StoreManager constructor.
+     *
+     * @param \Magento\Store\Api\StoreRepositoryInterface $storeRepository
+     * @param \Magento\Store\Api\GroupRepositoryInterface $groupRepository
+     * @param \Magento\Store\Api\WebsiteRepositoryInterface $websiteRepository
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param StoreResolverInterface $storeResolver
+     * @param \Magento\Framework\Cache\FrontendInterface $cache
+     * @param bool $isSingleStoreAllowed
+     */
+    public function __construct(\Magento\Store\Api\StoreRepositoryInterface $storeRepository, \Magento\Store\Api\GroupRepositoryInterface $groupRepository, \Magento\Store\Api\WebsiteRepositoryInterface $websiteRepository, \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig, \Magento\Store\Api\StoreResolverInterface $storeResolver, \Magento\Framework\Cache\FrontendInterface $cache, $isSingleStoreAllowed = true)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setCurrentStore($store)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setIsSingleStoreModeAllowed($value)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function hasSingleStore()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function isSingleStoreMode()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getStore($storeId = null)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getStores($withDefault = false, $codeKey = false)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getWebsite($websiteId = null)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getWebsites($withDefault = false, $codeKey = false)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function reinitStores()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getDefaultStoreView()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getGroup($groupId = null)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getGroups($withDefault = false)
+    {
+    }
+    /**
+     * Check if Single-Store mode is enabled in configuration
+     *
+     * This flag only shows that admin does not want to show certain UI components at backend (like store switchers etc)
+     * if Magento has only one store view but it does not check the store view collection
+     *
+     * @return bool
+     */
+    protected function isSingleStoreModeEnabled()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getStoreByWebsiteId($websiteId)
+    {
+    }
+    /**
+     * Disable show internals with var_dump
+     *
+     * @see https://www.php.net/manual/en/language.oop5.magic.php#object.debuginfo
+     * @return array
+     */
+    public function __debugInfo()
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function _resetState() : void
+    {
+    }
+}
+class StoresConfig
+{
+    /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
+    protected $_storeManager;
+    /**
+     * @var \Magento\Framework\App\Config\ScopeConfigInterface
+     */
+    protected $_config;
+    /**
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $config
+     */
+    public function __construct(\Magento\Store\Model\StoreManagerInterface $storeManager, \Magento\Framework\App\Config\ScopeConfigInterface $config)
+    {
+    }
+    /**
+     * Retrieve store Ids for $path with checking
+     *
+     * return array($storeId => $pathValue)
+     *
+     * @param string $path
+     * @return array
+     */
+    public function getStoresConfigByPath($path)
+    {
+    }
+}
+/**
+ * Class used to resolve store from url path or get parameters or cookie.
+ */
+class StoreResolver implements \Magento\Store\Api\StoreResolverInterface
+{
+    /**
+     * Cache tag
+     */
+    const CACHE_TAG = 'store_relations';
+    /**
+     * @var \Magento\Store\Api\StoreRepositoryInterface
+     */
+    protected $storeRepository;
+    /**
+     * @var \Magento\Store\Api\StoreCookieManagerInterface
+     */
+    protected $storeCookieManager;
+    /**
+     * @deprecated 101.0.0
+     */
+    protected $cache;
+    /**
+     * @deprecated 101.0.0
+     */
+    protected $readerList;
+    /**
+     * @var string
+     */
+    protected $runMode;
+    /**
+     * @var string
+     */
+    protected $scopeCode;
+    /**
+     * @var \Magento\Framework\App\Request\Http
+     */
+    protected $request;
+    /**
+     * @param \Magento\Store\Api\StoreRepositoryInterface $storeRepository
+     * @param \Magento\Store\Api\StoreCookieManagerInterface $storeCookieManager
+     * @param \Magento\Framework\App\Request\Http $request
+     * @param \Magento\Store\Model\StoresData $storesData
+     * @param \Magento\Store\App\Request\StorePathInfoValidator $storePathInfoValidator
+     * @param string|null $runMode
+     * @param string|null $scopeCode
+     */
+    public function __construct(\Magento\Store\Api\StoreRepositoryInterface $storeRepository, \Magento\Store\Api\StoreCookieManagerInterface $storeCookieManager, \Magento\Framework\App\Request\Http $request, \Magento\Store\Model\StoresData $storesData, \Magento\Store\App\Request\StorePathInfoValidator $storePathInfoValidator, $runMode = \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $scopeCode = null)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getCurrentStoreId()
+    {
+    }
+    /**
+     * Get stores data
+     *
+     * @return array
+     */
+    protected function getStoresData() : array
+    {
+    }
+    /**
+     * Read stores data. First element is allowed store ids, second is default store id
+     *
+     * @return array
+     * @deprecated 101.0.0
+     * @see \Magento\Store\Model\StoreResolver::getStoresData
+     */
+    protected function readStoresData() : array
+    {
+    }
+    /**
+     * Retrieve active store by code
+     *
+     * @param string $storeCode
+     * @return \Magento\Store\Api\Data\StoreInterface
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    protected function getRequestedStoreByCode($storeCode) : \Magento\Store\Api\Data\StoreInterface
+    {
+    }
+    /**
+     * Retrieve active store by code
+     *
+     * @param int $id
+     * @return \Magento\Store\Api\Data\StoreInterface
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    protected function getDefaultStoreById($id) : \Magento\Store\Api\Data\StoreInterface
+    {
+    }
+}
+/**
+ * Provide a list of stores as Dimension
+ */
+class StoreDimensionProvider implements \Magento\Framework\Indexer\DimensionProviderInterface
+{
+    /**
+     * Hold the name of Store dimension. Uses for retrieve dimension value.
+     * Used "scope" name for support current indexer implementation
+     */
+    const DIMENSION_NAME = 'scope';
+    /**
+     * @param StoreManagerInterface $storeManager
+     * @param DimensionFactory $dimensionFactory
+     */
+    public function __construct(\Magento\Store\Model\StoreManagerInterface $storeManager, \Magento\Framework\Indexer\DimensionFactory $dimensionFactory)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getIterator() : \Traversable
+    {
+    }
+}
+/**
+ * Handles store switching procedure and detects url for final redirect after store switching.
+ *
+ * @api
+ */
+interface StoreSwitcherInterface
+{
+    /**
+     * @param StoreInterface $fromStore store where we came from
+     * @param StoreInterface $targetStore store where to go to
+     * @param string $redirectUrl original url requested for redirect after switching
+     * @return string url to be redirected after switching
+     * @throws CannotSwitchStoreException
+     */
+    public function switch(\Magento\Store\Api\Data\StoreInterface $fromStore, \Magento\Store\Api\Data\StoreInterface $targetStore, string $redirectUrl) : string;
+}
+/**
+ * Class StoreScope
+ */
+class DefaultStoreScopeProvider implements \Magento\Framework\Model\Entity\ScopeProviderInterface
+{
+    /**
+     * StoreScopeProvider constructor.
+     *
+     * @param ScopeFactory $scopeFactory
+     */
+    public function __construct(\Magento\Framework\Model\Entity\ScopeFactory $scopeFactory)
+    {
+    }
+    /**
+     * @param string $entityType
+     * @param array $entityData
+     * @return \Magento\Framework\Model\Entity\ScopeInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function getContext($entityType, $entityData = [])
+    {
+    }
+}
+class ScopeValidator implements \Magento\Framework\App\ScopeValidatorInterface
+{
+    /**
+     * @var ScopeResolverPool
+     */
+    protected $scopeResolverPool;
+    /**
+     * @param ScopeResolverPool $scopeResolverPool
+     */
+    public function __construct(\Magento\Framework\App\ScopeResolverPool $scopeResolverPool)
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function isValidScope($scope, $scopeId = null)
+    {
+    }
+}
+/**
+ * @api
+ * @since 100.0.2
+ */
+class WebsiteManagement implements \Magento\Store\Api\WebsiteManagementInterface
+{
+    /**
+     * @var CollectionFactory
+     */
+    protected $websitesFactory;
+    /**
+     * @param CollectionFactory $websitesFactory
+     */
+    public function __construct(\Magento\Store\Model\ResourceModel\Website\CollectionFactory $websitesFactory)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getCount()
+    {
+    }
+}
+/**
+ * Class for building scopes tree.
+ */
+class ScopeTreeProvider implements \Magento\Framework\App\ScopeTreeProviderInterface
+{
+    /**
+     * @param WebsiteRepositoryInterface $websiteRepository
+     * @param GroupRepositoryInterface $groupRepository
+     * @param StoreRepositoryInterface $storeRepository
+     */
+    public function __construct(\Magento\Store\Api\WebsiteRepositoryInterface $websiteRepository, \Magento\Store\Api\GroupRepositoryInterface $groupRepository, \Magento\Store\Api\StoreRepositoryInterface $storeRepository)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function get()
+    {
+    }
+}
+/**
+ * Class StoreScope
+ */
+class StoreScopeProvider implements \Magento\Framework\Model\Entity\ScopeProviderInterface
+{
+    /**
+     * StoreScopeProvider constructor.
+     *
+     * @param StoreManagerInterface $storeManager
+     * @param ScopeFactory $scopeFactory
+     */
+    public function __construct(\Magento\Store\Model\StoreManagerInterface $storeManager, \Magento\Framework\Model\Entity\ScopeFactory $scopeFactory)
+    {
+    }
+    /**
+     * @param string $entityType
+     * @param array $entityData
+     * @return \Magento\Framework\Model\Entity\ScopeInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function getContext($entityType, $entityData = [])
+    {
+    }
+}
+namespace Magento\Store\Model\HeaderProvider;
+
+/**
+ * Adds an Strict-Transport-Security (HSTS) header to HTTP responses.
+ */
+class Hsts extends \Magento\Framework\App\Response\HeaderProvider\AbstractHeaderProvider
+{
+    /**
+     * Strict-Transport-Security (HSTS) Header name
+     *
+     * @var string
+     */
+    protected $headerName = 'Strict-Transport-Security';
+    /**
+     * Strict-Transport-Security (HSTS) header value
+     *
+     * @var string
+     */
+    protected $headerValue = 'max-age=31536000';
+    /**
+     * @var \Magento\Framework\App\Config\ScopeConfigInterface
+     */
+    protected $scopeConfig;
+    /**
+     * Hsts constructor.
+     *
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     */
+    public function __construct(\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function canApply()
+    {
+    }
+}
+/**
+ * Adds an Content-Security-Policy header to HTTP responses.
+ */
+class UpgradeInsecure extends \Magento\Framework\App\Response\HeaderProvider\AbstractHeaderProvider
+{
+    /**
+     * Upgrade Insecure Requests Header name
+     *
+     * @var string
+     */
+    protected $headerName = 'Content-Security-Policy';
+    /**
+     * Upgrade Insecure Requests header value
+     *
+     * @var string
+     */
+    protected $headerValue = 'upgrade-insecure-requests';
+    /**
+     * @var \Magento\Framework\App\Config\ScopeConfigInterface
+     */
+    protected $scopeConfig;
+    /**
+     * UpgradeInsecure constructor.
+     *
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     */
+    public function __construct(\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function canApply()
+    {
+    }
+}
+namespace Magento\Store\Model;
+
+/**
+ * @api
+ * @since 100.0.2
+ */
+interface ScopeInterface
+{
+    /**#@+
+     * Scope types
+     */
+    const SCOPE_STORES = 'stores';
+    const SCOPE_GROUPS = 'groups';
+    const SCOPE_WEBSITES = 'websites';
+    const SCOPE_STORE = 'store';
+    const SCOPE_GROUP = 'group';
+    const SCOPE_WEBSITE = 'website';
+    /**#@-*/
+}
+namespace Magento\Store\Model\Argument\Interpreter;
+
+/**
+ * Interpreter that builds Service URL by input path and optional parameters
+ */
+class ServiceUrl implements \Magento\Framework\Data\Argument\InterpreterInterface
+{
+    /**
+     * @param \Magento\Framework\Url $url
+     * @param StoreManagerInterface $storeManager
+     * @param StoreRepository $storeRepository
+     * @param string $service
+     * @param string $version
+     */
+    public function __construct(\Magento\Framework\Url $url, \Magento\Store\Model\StoreManagerInterface $storeManager, \Magento\Store\Model\StoreRepository $storeRepository, $service = "rest", $version = "V1")
+    {
+    }
+    /**
+     * Compute and return effective value of an argument
+     *
+     * @param array $data
+     * @return string
+     * @throws \InvalidArgumentException
+     */
+    public function evaluate(array $data)
+    {
+    }
+}
+namespace Magento\Store\Model\Data;
+
+/**
+ * Allows to get and set store config values
+ *
+ * @codeCoverageIgnore
+ */
+class StoreConfig extends \Magento\Framework\Api\AbstractExtensibleObject implements \Magento\Store\Api\Data\StoreConfigInterface
+{
+    const KEY_ID = 'id';
+    const KEY_CODE = 'code';
+    const KEY_WEBSITE_ID = 'website_id';
+    const KEY_LOCALE = 'locale';
+    const KEY_BASE_CURRENCY_CODE = 'base_currency_code';
+    const KEY_DEFAULT_DISPLAY_CURRENCY_CODE = 'default_display_currency_code';
+    const KEY_TIMEZONE = 'timezone';
+    const KEY_WEIGHT_UNIT = 'weight_unit';
+    const KEY_BASE_URL = 'base_url';
+    const KEY_BASE_LINK_URL = 'base_link_url';
+    const KEY_BASE_STATIC_URL = 'base_static_url';
+    const KEY_BASE_MEDIA_URL = 'base_media_url';
+    const KEY_SECURE_BASE_URL = 'secure_base_url';
+    const KEY_SECURE_BASE_LINK_URL = 'secure_base_link_url';
+    const KEY_SECURE_BASE_STATIC_URL = 'secure_base_static_url';
+    const KEY_SECURE_BASE_MEDIA_URL = 'secure_base_media_url';
+    /**
+     * Get store id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+    }
+    /**
+     * Set store id
+     *
+     * @param int $id
+     * @return $this
+     */
+    public function setId($id)
+    {
+    }
+    /**
+     * Get store code
+     *
+     * @return string
+     */
+    public function getCode()
+    {
+    }
+    /**
+     * Set store code
+     *
+     * @param string $code
+     * @return $this
+     */
+    public function setCode($code)
+    {
+    }
+    /**
+     * Get website id of the store
+     *
+     * @return int
+     */
+    public function getWebsiteId()
+    {
+    }
+    /**
+     * Set website id
+     *
+     * @param int $websiteId
+     * @return $this
+     */
+    public function setWebsiteId($websiteId)
+    {
+    }
+    /**
+     * Get store locale
+     *
+     * @return string
+     */
+    public function getLocale()
+    {
+    }
+    /**
+     * Set store locale
+     *
+     * @param string $locale
+     * @return $this
+     */
+    public function setLocale($locale)
+    {
+    }
+    /**
+     * Get base currency code
+     *
+     * @return string
+     */
+    public function getBaseCurrencyCode()
+    {
+    }
+    /**
+     * Set base currency code
+     *
+     * @param string $baseCurrencyCode
+     * @return $this
+     */
+    public function setBaseCurrencyCode($baseCurrencyCode)
+    {
+    }
+    /**
+     * Get default display currency code
+     *
+     * @return string
+     */
+    public function getDefaultDisplayCurrencyCode()
+    {
+    }
+    /**
+     * Set default display currency code
+     *
+     * @param string $defaultDisplayCurrencyCode
+     * @return $this
+     */
+    public function setDefaultDisplayCurrencyCode($defaultDisplayCurrencyCode)
+    {
+    }
+    /**
+     * Return the unit of weight
+     *
+     * @return string
+     */
+    public function getWeightUnit()
+    {
+    }
+    /**
+     * Set the unit of weight
+     *
+     * @param string $weightUnit
+     * @return $this
+     */
+    public function setWeightUnit($weightUnit)
+    {
+    }
+    /**
+     * Get base URL for the store
+     *
+     * @return string
+     */
+    public function getBaseUrl()
+    {
+    }
+    /**
+     * Set base URL
+     *
+     * @param string $baseUrl
+     * @return $this
+     */
+    public function setBaseUrl($baseUrl)
+    {
+    }
+    /**
+     * Get base link URL for the store
+     *
+     * @return string
+     */
+    public function getBaseLinkUrl()
+    {
+    }
+    /**
+     * Get base link URL for the store
+     *
+     * @param string $baseLinkUrl
+     * @return $this
+     */
+    public function setBaseLinkUrl($baseLinkUrl)
+    {
+    }
+    /**
+     * Get timezone of the store
+     *
+     * @return string
+     */
+    public function getTimezone()
+    {
+    }
+    /**
+     * Set timezone of the store
+     *
+     * @param string $timezone
+     * @return $this
+     */
+    public function setTimezone($timezone)
+    {
+    }
+    /**
+     * Get base static URL for the store
+     *
+     * @return string
+     */
+    public function getBaseStaticUrl()
+    {
+    }
+    /**
+     * Set base static URL for the store
+     *
+     * @param string $baseStaticUrl
+     * @return $this
+     */
+    public function setBaseStaticUrl($baseStaticUrl)
+    {
+    }
+    /**
+     * Get base media URL for the store
+     *
+     * @return string
+     */
+    public function getBaseMediaUrl()
+    {
+    }
+    /**
+     * Set base media URL for the store
+     *
+     * @param string $baseMediaUrl
+     * @return $this
+     */
+    public function setBaseMediaUrl($baseMediaUrl)
+    {
+    }
+    /**
+     * Get secure base URL for the store
+     *
+     * @return string
+     */
+    public function getSecureBaseUrl()
+    {
+    }
+    /**
+     * Set secure base URL
+     *
+     * @param string $secureBaseUrl
+     * @return $this
+     */
+    public function setSecureBaseUrl($secureBaseUrl)
+    {
+    }
+    /**
+     * Get secure base link URL for the store
+     *
+     * @return string
+     */
+    public function getSecureBaseLinkUrl()
+    {
+    }
+    /**
+     * Set secure base link URL for the store
+     *
+     * @param string $secureBaseLinkUrl
+     * @return $this
+     */
+    public function setSecureBaseLinkUrl($secureBaseLinkUrl)
+    {
+    }
+    /**
+     * Get secure base static URL for the store
+     *
+     * @return string
+     */
+    public function getSecureBaseStaticUrl()
+    {
+    }
+    /**
+     * Set secure base static URL for the store
+     *
+     * @param string $secureBaseStaticUrl
+     * @return $this
+     */
+    public function setSecureBaseStaticUrl($secureBaseStaticUrl)
+    {
+    }
+    /**
+     * Get secure base media URL for the store
+     *
+     * @return string
+     */
+    public function getSecureBaseMediaUrl()
+    {
+    }
+    /**
+     * Set secure base media URL for the store
+     *
+     * @param string $secureBaseMediaUrl
+     * @return $this
+     */
+    public function setSecureBaseMediaUrl($secureBaseMediaUrl)
+    {
+    }
+    /**
+     * @inheritdoc
+     *
+     * @return \Magento\Store\Api\Data\StoreConfigExtensionInterface|null
+     */
+    public function getExtensionAttributes()
+    {
+    }
+    /**
+     * @inheritdoc
+     *
+     * @param \Magento\Store\Api\Data\StoreConfigExtensionInterface $extensionAttributes
+     * @return $this
+     */
+    public function setExtensionAttributes(\Magento\Store\Api\Data\StoreConfigExtensionInterface $extensionAttributes)
+    {
+    }
+}
+namespace Magento\Store\Model\Service;
+
+class StoreConfigManager implements \Magento\Store\Api\StoreConfigManagerInterface
+{
+    /**
+     * @var CollectionFactory
+     */
+    protected $storeCollectionFactory;
+    /**
+     * @var StoreConfigFactory
+     */
+    protected $storeConfigFactory;
+    /**
+     * Core store config
+     *
+     * @var ScopeConfigInterface
+     */
+    protected $scopeConfig;
+    /**
+     * Map the setters to config path
+     *
+     * @var array
+     */
+    protected $configPaths = ['setLocale' => 'general/locale/code', 'setBaseCurrencyCode' => 'currency/options/base', 'setDefaultDisplayCurrencyCode' => 'currency/options/default', 'setTimezone' => 'general/locale/timezone', 'setWeightUnit' => \Magento\Directory\Helper\Data::XML_PATH_WEIGHT_UNIT];
+    /**
+     * @param CollectionFactory $storeCollectionFactory
+     * @param ScopeConfigInterface $scopeConfig
+     * @param StoreConfigFactory $storeConfigFactory
+     */
+    public function __construct(\Magento\Store\Model\ResourceModel\Store\CollectionFactory $storeCollectionFactory, \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig, \Magento\Store\Model\Data\StoreConfigFactory $storeConfigFactory)
+    {
+    }
+    /**
+     * Get store configurations
+     *
+     * @param string[] $storeCodes list of stores by store codes, will return all if storeCodes is not set
+     * @return StoreConfigInterface[]
+     */
+    public function getStoreConfigs(array $storeCodes = null)
+    {
+    }
+    /**
+     * Get store specific configs
+     *
+     * @param Store|StoreInterface $store
+     * @return StoreConfigInterface
+     */
+    protected function getStoreConfig($store)
+    {
+    }
+}
+namespace Magento\Store\Model\Plugin;
+
+/**
+ * Class StoreCookie
+ */
+class StoreCookie
+{
+    /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
+    protected $storeManager;
+    /**
+     * @var StoreCookieManagerInterface
+     */
+    protected $storeCookieManager;
+    /**
+     * @var StoreRepositoryInterface
+     */
+    protected $storeRepository;
+    /**
+     * @param StoreManagerInterface $storeManager
+     * @param StoreCookieManagerInterface $storeCookieManager
+     * @param StoreRepositoryInterface $storeRepository
+     */
+    public function __construct(\Magento\Store\Model\StoreManagerInterface $storeManager, \Magento\Store\Api\StoreCookieManagerInterface $storeCookieManager, \Magento\Store\Api\StoreRepositoryInterface $storeRepository)
+    {
+    }
+    /**
+     * Delete cookie "store" if the store (a value in the cookie) does not exist or is inactive
+     *
+     * @param \Magento\Framework\App\FrontController $subject
+     * @param \Magento\Framework\App\RequestInterface $request
+     * @return void
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function beforeDispatch(\Magento\Framework\App\FrontController $subject, \Magento\Framework\App\RequestInterface $request)
+    {
+    }
+}
+namespace Magento\Store\Model;
+
+/**
+ * Class that computes and stores into cache the active store ids.
+ */
+class StoresData
+{
+    /**
+     * Cache tag
+     */
+    const CACHE_TAG = 'store_relations';
+    /**
+     * @param \Magento\Framework\Cache\FrontendInterface $cache
+     * @param \Magento\Store\Model\StoreResolver\ReaderList $readerList
+     * @param \Magento\Framework\Serialize\SerializerInterface $serializer
+     */
+    public function __construct(\Magento\Framework\Cache\FrontendInterface $cache, \Magento\Store\Model\StoreResolver\ReaderList $readerList, \Magento\Framework\Serialize\SerializerInterface $serializer)
+    {
+    }
+    /**
+     * Get stores data
+     *
+     * @param string $runMode
+     * @param string|null $scopeCode
+     * @return array
+     */
+    public function getStoresData(string $runMode, string $scopeCode = null) : array
+    {
+    }
+}
+namespace Magento\Store\Model\Validation;
+
+/**
+ * Validator for store code.
+ */
+class StoreCodeValidator extends \Magento\Framework\Validator\AbstractValidator
+{
+    /**
+     * @param RegexFactory $regexValidatorFactory
+     */
+    public function __construct(\Magento\Framework\Validator\RegexFactory $regexValidatorFactory)
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function isValid($value)
+    {
+    }
+}
+/**
+ * Store model validator.
+ */
+class StoreValidator extends \Magento\Framework\Validator\AbstractValidator
+{
+    /**
+     * @param DataObjectFactory $dataObjectValidatorFactory
+     * @param ValidatorInterface[] $rules
+     */
+    public function __construct(\Magento\Framework\Validator\DataObjectFactory $dataObjectValidatorFactory, array $rules = [])
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function isValid($value)
+    {
+    }
+}
+/**
+ * Validator for store name.
+ */
+class StoreNameValidator extends \Magento\Framework\Validator\AbstractValidator
+{
+    /**
+     * @param NotEmptyFactory $notEmptyValidatorFactory
+     */
+    public function __construct(\Magento\Framework\Validator\NotEmptyFactory $notEmptyValidatorFactory)
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function isValid($value)
+    {
+    }
+}
+namespace Magento\Store\Model;
+
+/**
+ * Information Expert in store websites handling
+ */
+class WebsiteRepository implements \Magento\Store\Api\WebsiteRepositoryInterface
+{
+    /**
+     * @var WebsiteFactory
+     */
+    protected $factory;
+    /**
+     * @var CollectionFactory
+     */
+    protected $websiteCollectionFactory;
+    /**
+     * @var \Magento\Store\Api\Data\WebsiteInterface[]
+     */
+    protected $entities = [];
+    /**
+     * @var \Magento\Store\Api\Data\WebsiteInterface[]
+     */
+    protected $entitiesById = [];
+    /**
+     * @var bool
+     */
+    protected $allLoaded = false;
+    /**
+     * @var \Magento\Store\Api\Data\WebsiteInterface[]
+     */
+    protected $default;
+    /**
+     * @param WebsiteFactory $factory
+     * @param CollectionFactory $websiteCollectionFactory
+     */
+    public function __construct(\Magento\Store\Model\WebsiteFactory $factory, \Magento\Store\Model\ResourceModel\Website\CollectionFactory $websiteCollectionFactory)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function get($code)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getById($id)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getList()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getDefault()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function clean()
+    {
+    }
+}
+namespace Magento\Store\Model\Indexer;
+
+class WebsiteDimensionProvider implements \Magento\Framework\Indexer\DimensionProviderInterface
+{
+    /**
+     * Name for website dimension for multidimensional indexer
+     * 'ws' - stands for 'website_store'
+     */
+    const DIMENSION_NAME = 'ws';
+    /**
+     * @param WebsiteCollectionFactory $collectionFactory
+     * @param DimensionFactory $dimensionFactory
+     */
+    public function __construct(\Magento\Store\Model\ResourceModel\Website\CollectionFactory $collectionFactory, \Magento\Framework\Indexer\DimensionFactory $dimensionFactory)
+    {
+    }
+    /**
+     * @return Dimension[]|\Traversable
+     */
+    public function getIterator() : \Traversable
+    {
+    }
+}
+namespace Magento\Store\Model\StoreSwitcher;
+
+/**
+ * Store switcher redirect data pre-processor interface
+ *
+ * @api
+ */
+interface RedirectDataPreprocessorInterface
+{
+    /**
+     * Collect data to be redirected to target store
+     *
+     * @param ContextInterface $context
+     * @param array $data
+     * @return array
+     */
+    public function process(\Magento\Store\Model\StoreSwitcher\ContextInterface $context, array $data) : array;
+}
+/**
+ * Store switcher redirect data pre-processors collection
+ */
+class RedirectDataPreprocessorComposite implements \Magento\Store\Model\StoreSwitcher\RedirectDataPreprocessorInterface
+{
+    /**
+     * @param RedirectDataPreprocessorInterface[] $processors
+     */
+    public function __construct(array $processors = [])
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function process(\Magento\Store\Model\StoreSwitcher\ContextInterface $context, array $data) : array
+    {
+    }
+}
+/**
+ * Store switcher redirect data interface
+ *
+ * @api
+ */
+interface RedirectDataInterface
+{
+    /**
+     * Redirect data signature
+     *
+     * @return string
+     */
+    public function getSignature() : string;
+    /**
+     * Data to redirect from store to store
+     *
+     * @return string
+     */
+    public function getData() : string;
+    /**
+     * Expire date of the redirect data
+     *
+     * @return int
+     */
+    public function getTimestamp() : int;
+}
+/**
+ * Store switcher redirect data
+ */
+class RedirectData implements \Magento\Store\Model\StoreSwitcher\RedirectDataInterface
+{
+    /**
+     * @param string $signature
+     * @param string $data
+     * @param int $timestamp
+     */
+    public function __construct(string $signature, string $data, int $timestamp)
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function getSignature() : string
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function getData() : string
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function getTimestamp() : int
+    {
+    }
+}
+/**
+ * Store switcher redirect data collector
+ */
+class RedirectDataGenerator
+{
+    /**
+     * @param Encryptor $encryptor
+     * @param RedirectDataPreprocessorInterface $preprocessor
+     * @param RedirectDataSerializerInterface $dataSerializer
+     * @param RedirectDataInterfaceFactory $dataFactory
+     * @param LoggerInterface $logger
+     */
+    public function __construct(\Magento\Framework\Encryption\Encryptor $encryptor, \Magento\Store\Model\StoreSwitcher\RedirectDataPreprocessorInterface $preprocessor, \Magento\Store\Model\StoreSwitcher\RedirectDataSerializerInterface $dataSerializer, \Magento\Store\Model\StoreSwitcher\RedirectDataInterfaceFactory $dataFactory, \Psr\Log\LoggerInterface $logger)
+    {
+    }
+    /**
+     * Collect data to be redirected to the target store
+     *
+     * @param ContextInterface $context
+     * @return RedirectDataInterface
+     */
+    public function generate(\Magento\Store\Model\StoreSwitcher\ContextInterface $context) : \Magento\Store\Model\StoreSwitcher\RedirectDataInterface
+    {
+    }
+}
+/**
+ * Generate one time token and build redirect url
+ *
+ * @deplacated No longer used
+ * @see RedirectDataGenerator
+ * @see RedirectDataValidator
+ */
+class HashGenerator
+{
+    /**
+     * @param DeploymentConfig $deploymentConfig
+     * @param UrlHelper $urlHelper
+     * @param UserContextInterface $currentUser
+     */
+    public function __construct(\Magento\Framework\App\DeploymentConfig $deploymentConfig, \Magento\Framework\Url\Helper\Data $urlHelper, \Magento\Authorization\Model\UserContextInterface $currentUser)
+    {
+    }
+    /**
+     * Generate hash data for customer
+     *
+     * @param StoreInterface $fromStore
+     * @return array
+     */
+    public function generateHash(\Magento\Store\Api\Data\StoreInterface $fromStore) : array
+    {
+    }
+    /**
+     * Validates one time token
+     *
+     * @param string $signature
+     * @param HashData $hashData
+     * @return bool
+     */
+    public function validateHash(string $signature, \Magento\Store\Model\StoreSwitcher\HashGenerator\HashData $hashData) : bool
+    {
+    }
+}
+/**
+ * Store switcher redirect data validator
+ */
+class RedirectDataValidator
+{
+    /**
+     * @param Encryptor $encryptor
+     */
+    public function __construct(\Magento\Framework\Encryption\Encryptor $encryptor)
+    {
+    }
+    /**
+     * Validate data redirected from origin store
+     *
+     * @param ContextInterface $context
+     * @param RedirectDataInterface $redirectData
+     * @return bool
+     */
+    public function validate(\Magento\Store\Model\StoreSwitcher\ContextInterface $context, \Magento\Store\Model\StoreSwitcher\RedirectDataInterface $redirectData)
+    {
+    }
+}
+/**
+ * Exception thrown if store cannot be switched.
+ */
+class CannotSwitchStoreException extends \Magento\Framework\Exception\RuntimeException
+{
+    /**
+     * @param \Exception|null $cause
+     * @param Phrase|null $phrase
+     * @param int $code
+     */
+    public function __construct(\Exception $cause = null, \Magento\Framework\Phrase $phrase = null, int $code = 0)
+    {
+    }
+}
+/**
+ * Remove SID, from_store, store from target url.
+ *
+ * Used in store-switching process in HTML frontend.
+ */
+class CleanTargetUrl implements \Magento\Store\Model\StoreSwitcherInterface
+{
+    /**
+     * @param UrlHelper $urlHelper
+     */
+    public function __construct(\Magento\Framework\Url\Helper\Data $urlHelper)
+    {
+    }
+    /**
+     * Generate target URL to switch stores through other mechanism then via URL params.
+     *
+     * @param StoreInterface $fromStore store where we came from
+     * @param StoreInterface $targetStore store where to go to
+     * @param string $redirectUrl original url requested for redirect after switching
+     * @return string redirect url
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function switch(\Magento\Store\Api\Data\StoreInterface $fromStore, \Magento\Store\Api\Data\StoreInterface $targetStore, string $redirectUrl) : string
+    {
+    }
+}
+/**
+ * Store switcher redirect data post-processor interface
+ *
+ * @api
+ */
+interface RedirectDataPostprocessorInterface
+{
+    /**
+     * Process data redirected from origin source
+     *
+     * @param ContextInterface $context
+     * @param array $data
+     */
+    public function process(\Magento\Store\Model\StoreSwitcher\ContextInterface $context, array $data) : void;
+}
+/**
+ * Store switcher redirect data serializer interface
+ *
+ * @api
+ */
+interface RedirectDataSerializerInterface
+{
+    /**
+     * Serialize provided data and return the serialized data
+     *
+     * @param array $data
+     * @return string
+     */
+    public function serialize(array $data) : string;
+    /**
+     * Unserialize provided data and return the unserialized data
+     *
+     * @param string $data
+     * @return array
+     */
+    public function unserialize(string $data) : array;
+}
+/**
+ * Store switcher redirect data cache serializer
+ */
+class RedirectDataCacheSerializer implements \Magento\Store\Model\StoreSwitcher\RedirectDataSerializerInterface
+{
+    /**
+     * @param Json $json
+     * @param Random $random
+     * @param CacheInterface $cache
+     * @param LoggerInterface $logger
+     */
+    public function __construct(\Magento\Framework\Serialize\Serializer\Json $json, \Magento\Framework\Math\Random $random, \Magento\Framework\App\CacheInterface $cache, \Psr\Log\LoggerInterface $logger)
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function serialize(array $data) : string
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function unserialize(string $data) : array
+    {
+    }
+}
+namespace Magento\Store\Model\StoreSwitcher\HashGenerator;
+
+/**
+ * HashData object for one time token
+ */
+class HashData extends \Magento\Framework\DataObject
+{
+    /**
+     * Get CustomerId
+     *
+     * @return int
+     */
+    public function getCustomerId() : int
+    {
+    }
+    /**
+     * Get Timestamp
+     *
+     * @return int
+     */
+    public function getTimestamp() : int
+    {
+    }
+    /**
+     * Get Fromstore
+     *
+     * @return string
+     */
+    public function getFromStoreCode() : string
+    {
+    }
+}
+namespace Magento\Store\Model\StoreSwitcher;
+
+/**
+ * Set private content cookie to have actual local storage data on target store after store switching.
+ *
+ * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
+ */
+class ManagePrivateContent implements \Magento\Store\Model\StoreSwitcherInterface
+{
+    /**
+     * @param \Magento\Framework\Stdlib\Cookie\CookieMetadataFactory $cookieMetadataFactory
+     * @param \Magento\Framework\Stdlib\CookieManagerInterface $cookieManager
+     */
+    public function __construct(\Magento\Framework\Stdlib\Cookie\CookieMetadataFactory $cookieMetadataFactory, \Magento\Framework\Stdlib\CookieManagerInterface $cookieManager)
+    {
+    }
+    /**
+     * Update version of private content on each store switch.
+     *
+     * @param StoreInterface $fromStore store where we came from
+     * @param StoreInterface $targetStore store where to go to
+     * @param string $redirectUrl original url requested for redirect after switching
+     *
+     * @return string redirect url
+     * @throws CannotSwitchStoreException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function switch(\Magento\Store\Api\Data\StoreInterface $fromStore, \Magento\Store\Api\Data\StoreInterface $targetStore, string $redirectUrl) : string
+    {
+    }
+}
+/**
+ * Store switcher context interface
+ *
+ * @api
+ */
+interface ContextInterface
+{
+    /**
+     * Store to switch from
+     *
+     * @return StoreInterface
+     */
+    public function getFromStore() : \Magento\Store\Api\Data\StoreInterface;
+    /**
+     * Store to switch to
+     *
+     * @return StoreInterface
+     */
+    public function getTargetStore() : \Magento\Store\Api\Data\StoreInterface;
+    /**
+     * The URL to redirect after switching store
+     *
+     * @return string
+     */
+    public function getRedirectUrl() : string;
+}
+/**
+ * Store switcher context
+ */
+class Context implements \Magento\Store\Model\StoreSwitcher\ContextInterface
+{
+    /**
+     * @param StoreInterface $fromStore
+     * @param StoreInterface $targetStore
+     * @param string $redirectUrl
+     */
+    public function __construct(\Magento\Store\Api\Data\StoreInterface $fromStore, \Magento\Store\Api\Data\StoreInterface $targetStore, string $redirectUrl)
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function getFromStore() : \Magento\Store\Api\Data\StoreInterface
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function getTargetStore() : \Magento\Store\Api\Data\StoreInterface
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function getRedirectUrl() : string
+    {
+    }
+}
+/**
+ * Manage store cookie depending on what store view customer is.
+ */
+class ManageStoreCookie implements \Magento\Store\Model\StoreSwitcherInterface
+{
+    /**
+     * @param StoreCookieManagerInterface $storeCookieManager
+     * @param HttpContext $httpContext
+     * @param StoreManagerInterface $storeManager
+     */
+    public function __construct(\Magento\Store\Api\StoreCookieManagerInterface $storeCookieManager, \Magento\Framework\App\Http\Context $httpContext, \Magento\Store\Model\StoreManagerInterface $storeManager)
+    {
+    }
+    /**
+     * @param StoreInterface $fromStore store where we came from
+     * @param StoreInterface $targetStore store where to go to
+     * @param string $redirectUrl original url requested for redirect after switching
+     * @return string redirect url
+     */
+    public function switch(\Magento\Store\Api\Data\StoreInterface $fromStore, \Magento\Store\Api\Data\StoreInterface $targetStore, string $redirectUrl) : string
+    {
+    }
+}
+/**
+ * Process one time token and build redirect url
+ *
+ * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
+class HashProcessor implements \Magento\Store\Model\StoreSwitcherInterface
+{
+    /**
+     * @param RequestInterface $request
+     * @param RedirectDataPostprocessorInterface $postprocessor
+     * @param RedirectDataSerializerInterface $dataSerializer
+     * @param ManagerInterface $messageManager
+     * @param ContextInterfaceFactory $contextFactory
+     * @param RedirectDataInterfaceFactory $dataFactory
+     * @param RedirectDataValidator $dataValidator
+     * @param LoggerInterface $logger
+     */
+    public function __construct(\Magento\Framework\App\RequestInterface $request, \Magento\Store\Model\StoreSwitcher\RedirectDataPostprocessorInterface $postprocessor, \Magento\Store\Model\StoreSwitcher\RedirectDataSerializerInterface $dataSerializer, \Magento\Framework\Message\ManagerInterface $messageManager, \Magento\Store\Model\StoreSwitcher\ContextInterfaceFactory $contextFactory, \Magento\Store\Model\StoreSwitcher\RedirectDataInterfaceFactory $dataFactory, \Magento\Store\Model\StoreSwitcher\RedirectDataValidator $dataValidator, \Psr\Log\LoggerInterface $logger)
+    {
+    }
+    /**
+     * Builds redirect url with token
+     *
+     * @param StoreInterface $fromStore store where we came from
+     * @param StoreInterface $targetStore store where to go to
+     * @param string $redirectUrl original url requested for redirect after switching
+     * @return string redirect url
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function switch(\Magento\Store\Api\Data\StoreInterface $fromStore, \Magento\Store\Api\Data\StoreInterface $targetStore, string $redirectUrl) : string
+    {
+    }
+}
+/**
+ * Store switcher redirect data post-processors collection
+ */
+class RedirectDataPostprocessorComposite implements \Magento\Store\Model\StoreSwitcher\RedirectDataPostprocessorInterface
+{
+    /**
+     * @param RedirectDataPostprocessorInterface[] $processors
+     */
+    public function __construct(array $processors = [])
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function process(\Magento\Store\Model\StoreSwitcher\ContextInterface $context, array $data) : void
+    {
+    }
+}
+namespace Magento\Store\Model;
+
+/**
+ * Information Expert in store groups handling
+ *
+ * @package Magento\Store\Model
+ */
+class GroupRepository implements \Magento\Store\Api\GroupRepositoryInterface
+{
+    /**
+     * @var GroupFactory
+     */
+    protected $groupFactory;
+    /**
+     * @var \Magento\Store\Api\Data\GroupInterface[]
+     */
+    protected $entities = [];
+    /**
+     * @var bool
+     */
+    protected $allLoaded = false;
+    /**
+     * @var \Magento\Store\Model\ResourceModel\Group\CollectionFactory
+     */
+    protected $groupCollectionFactory;
+    /**
+     * @param GroupFactory $groupFactory
+     * @param \Magento\Store\Model\ResourceModel\Group\CollectionFactory $groupCollectionFactory
+     */
+    public function __construct(\Magento\Store\Model\GroupFactory $groupFactory, \Magento\Store\Model\ResourceModel\Group\CollectionFactory $groupCollectionFactory)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function get($id)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getList()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function clean()
+    {
+    }
+}
+namespace Magento\Store\Model\App;
+
+/**
+ * @api
+ * @since 100.0.2
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
+class Emulation extends \Magento\Framework\DataObject implements \Magento\Framework\ObjectManager\ResetAfterRequestInterface
+{
+    /**
+     * @var StoreManagerInterface
+     */
+    protected $_storeManager;
+    /**
+     * @var TranslateInterface
+     */
+    protected $_translate;
+    /**
+     * Core store config
+     *
+     * @var ScopeConfigInterface
+     */
+    protected $_scopeConfig;
+    /**
+     * @var ResolverInterface
+     */
+    protected $_localeResolver;
+    /**
+     * @var \Magento\Framework\App\DesignInterface
+     */
+    protected $_design;
+    /**
+     * @var ConfigInterface
+     */
+    protected $inlineConfig;
+    /**
+     * @var StateInterface
+     */
+    protected $inlineTranslation;
+    /**
+     * @param StoreManagerInterface $storeManager
+     * @param DesignInterface $viewDesign
+     * @param \Magento\Framework\App\DesignInterface $design
+     * @param TranslateInterface $translate
+     * @param ScopeConfigInterface $scopeConfig
+     * @param ConfigInterface $inlineConfig
+     * @param StateInterface $inlineTranslation
+     * @param ResolverInterface $localeResolver
+     * @param LoggerInterface $logger
+     * @param array $data
+     * @param RendererInterface|null $phraseRenderer
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     */
+    public function __construct(\Magento\Store\Model\StoreManagerInterface $storeManager, \Magento\Framework\View\DesignInterface $viewDesign, \Magento\Framework\App\DesignInterface $design, \Magento\Framework\TranslateInterface $translate, \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig, \Magento\Framework\Translate\Inline\ConfigInterface $inlineConfig, \Magento\Framework\Translate\Inline\StateInterface $inlineTranslation, \Magento\Framework\Locale\ResolverInterface $localeResolver, \Psr\Log\LoggerInterface $logger, array $data = [], ?\Magento\Framework\Phrase\RendererInterface $phraseRenderer = null)
+    {
+    }
+    /**
+     * Start environment emulation of a specified store
+     *
+     * @param integer $storeId
+     * @param string $area
+     * @param bool $force A true value will ensure that environment is always emulated, regardless of current store
+     * @return void
+     */
+    public function startEnvironmentEmulation($storeId, $area = \Magento\Framework\App\Area::AREA_FRONTEND, $force = false)
+    {
+    }
+    /**
+     * Stop environment emulation
+     *
+     * Function restores initial store environment
+     *
+     * @return \Magento\Store\Model\App\Emulation
+     */
+    public function stopEnvironmentEmulation()
+    {
+    }
+    /**
+     * Stores current environment info
+     *
+     * @return void
+     */
+    public function storeCurrentEnvironmentInfo()
+    {
+    }
+    /**
+     * Restore initial inline translation state
+     *
+     * @param bool $initialTranslate
+     * @return $this
+     */
+    protected function _restoreInitialInlineTranslation($initialTranslate)
+    {
+    }
+    /**
+     * Restore design of the initial store
+     *
+     * @param array $initialDesign
+     * @return $this
+     */
+    protected function _restoreInitialDesign(array $initialDesign)
+    {
+    }
+    /**
+     * Restore locale of the initial store
+     *
+     * @param string $initialLocaleCode
+     * @param string $initialArea
+     * @return $this
+     */
+    protected function _restoreInitialLocale($initialLocaleCode, $initialArea = \Magento\Framework\App\Area::AREA_ADMINHTML)
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function _resetState() : void
+    {
+    }
+}
+namespace Magento\Store\Model\System;
+
+/**
+ * Core System Store Model
+ *
+ * @api
+ * @since 100.0.2
+ */
+class Store extends \Magento\Framework\DataObject implements \Magento\Framework\Data\OptionSourceInterface
+{
+    /**
+     * Website collection
+     * websiteId => \Magento\Store\Model\Website
+     *
+     * @var array
+     */
+    protected $_websiteCollection = [];
+    /**
+     * Group collection
+     * groupId => \Magento\Store\Model\Group
+     *
+     * @var array
+     */
+    protected $_groupCollection = [];
+    /**
+     * Store collection
+     * storeId => \Magento\Store\Model\Store
+     *
+     * @var array
+     */
+    protected $_storeCollection;
+    /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
+    protected $_storeManager;
+    /**
+     * Init model
+     * Load Website, Group and Store collections
+     *
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     */
+    public function __construct(\Magento\Store\Model\StoreManagerInterface $storeManager)
+    {
+    }
+    /**
+     * Load/Reload Website collection
+     *
+     * @return $this
+     */
+    protected function _loadWebsiteCollection()
+    {
+    }
+    /**
+     * Load/Reload Group collection
+     *
+     * @return $this
+     */
+    protected function _loadGroupCollection()
+    {
+    }
+    /**
+     * Load/Reload Store collection
+     *
+     * @return $this
+     */
+    protected function _loadStoreCollection()
+    {
+    }
+    /**
+     * Retrieve store values for form
+     *
+     * @param bool $empty
+     * @param bool $all
+     * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     */
+    public function getStoreValuesForForm($empty = false, $all = false)
+    {
+    }
+    /**
+     * Retrieve stores structure
+     *
+     * @param bool $isAll
+     * @param array $storeIds
+     * @param array $groupIds
+     * @param array $websiteIds
+     * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     */
+    public function getStoresStructure($isAll = false, $storeIds = [], $groupIds = [], $websiteIds = [])
+    {
+    }
+    /**
+     * Get store options in tree view
+     *
+     * @param bool $isAll
+     * @param array $storeIds
+     * @param array $groupIds
+     * @param array $websiteIds
+     * @return array Format: array(array('value' => '<value>', 'label' => '<label>'), ...)
+     * @since 101.1.0
+     */
+    public function getStoreOptionsTree($isAll = false, $storeIds = [], $groupIds = [], $websiteIds = []) : array
+    {
+    }
+    /**
+     * Website label/value array getter, compatible with form dropdown options
+     *
+     * @param bool $empty
+     * @param bool $all
+     * @return array
+     */
+    public function getWebsiteValuesForForm($empty = false, $all = false)
+    {
+    }
+    /**
+     * Get websites as id => name associative array
+     *
+     * @param bool $withDefault
+     * @param string $attribute
+     * @return array
+     */
+    public function getWebsiteOptionHash($withDefault = false, $attribute = 'name')
+    {
+    }
+    /**
+     * Get store views as id => name associative array
+     *
+     * @param bool $withDefault
+     * @param string $attribute
+     * @return array
+     */
+    public function getStoreOptionHash($withDefault = false, $attribute = 'name')
+    {
+    }
+    /**
+     * Get store groups as id => name associative array
+     *
+     * @param string $attribute
+     * @return array
+     */
+    public function getStoreGroupOptionHash($attribute = 'name')
+    {
+    }
+    /**
+     * Retrieve Website name by Id
+     *
+     * @param int $websiteId
+     * @return string|null
+     */
+    public function getWebsiteName($websiteId)
+    {
+    }
+    /**
+     * Retrieve Group name by Id
+     *
+     * @param int $groupId
+     * @return string|null
+     */
+    public function getGroupName($groupId)
+    {
+    }
+    /**
+     * Retrieve Store name by Id
+     *
+     * @param int $storeId
+     * @return string|null
+     */
+    public function getStoreName($storeId)
+    {
+    }
+    /**
+     * Retrieve store name with website and website store
+     *
+     * @param  int $storeId
+     * @return \Magento\Store\Model\Store|null
+     */
+    public function getStoreData($storeId)
+    {
+    }
+    /**
+     * Retrieve store name with website and website store
+     *
+     * @param  int $storeId
+     * @return string
+     */
+    public function getStoreNameWithWebsite($storeId)
+    {
+    }
+    /**
+     * Retrieve Website collection as array
+     *
+     * @return array
+     */
+    public function getWebsiteCollection()
+    {
+    }
+    /**
+     * Retrieve Group collection as array
+     *
+     * @return array
+     */
+    public function getGroupCollection()
+    {
+    }
+    /**
+     * Retrieve Store collection as array
+     *
+     * @return array
+     */
+    public function getStoreCollection()
+    {
+    }
+    /**
+     * Load/Reload collection(s) by type
+     *
+     * Allowed types: website, group, store or null for all
+     *
+     * @param string $type
+     * @return $this
+     */
+    public function reload($type = null)
+    {
+    }
+    /**
+     * Retrieve store path with website and website store
+     *
+     * @param  int $storeId
+     * @return string
+     */
+    public function getStoreNamePath($storeId)
+    {
+    }
+    /**
+     * Specify whether to show admin-scope options
+     *
+     * @param bool $value
+     * @return $this
+     */
+    public function setIsAdminScopeAllowed($value)
+    {
+    }
+    /**
+     * Return array of options as value-label pairs
+     *
+     * @return array Format: array(array('value' => '<value>', 'label' => '<label>'), ...)
+     */
+    public function toOptionArray()
+    {
+    }
+}
+namespace Magento\Store\Model;
+
+/**
+ * @api
+ * @since 100.0.2
+ */
+class StoreManagement implements \Magento\Store\Api\StoreManagementInterface
+{
+    /**
+     * @var CollectionFactory
+     */
+    protected $storesFactory;
+    /**
+     * @param CollectionFactory $storesFactory
+     */
+    public function __construct(\Magento\Store\Model\ResourceModel\Store\CollectionFactory $storesFactory)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getCount()
+    {
+    }
+}
+class PathConfig implements \Magento\Framework\App\Router\PathConfigInterface
+{
+    /**
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param \Magento\Framework\Url\SecurityInfoInterface $urlSecurityInfo
+     * @param StoreManagerInterface $storeManager
+     */
+    public function __construct(\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig, \Magento\Framework\Url\SecurityInfoInterface $urlSecurityInfo, \Magento\Store\Model\StoreManagerInterface $storeManager)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     *
+     * @param \Magento\Framework\App\RequestInterface $request
+     * @return string
+     */
+    public function getCurrentSecureUrl(\Magento\Framework\App\RequestInterface $request)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     *
+     * @param string $path
+     * @return bool
+     */
+    public function shouldBeSecure($path)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     */
+    public function getDefaultPath()
+    {
+    }
+}
+/**
+ * Store Group model class used to retrieve and format group information
+ *
+ * @api
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @since 100.0.2
+ */
+class Group extends \Magento\Framework\Model\AbstractExtensibleModel implements \Magento\Framework\DataObject\IdentityInterface, \Magento\Store\Api\Data\GroupInterface, \Magento\Framework\App\ScopeInterface
+{
+    public const ENTITY = 'store_group';
+    public const CACHE_TAG = 'store_group';
+    /**
+     * @var bool
+     */
+    protected $_cacheTag = true;
+    /**
+     * @var string
+     */
+    protected $_eventPrefix = 'store_group';
+    /**
+     * @var string
+     */
+    protected $_eventObject = 'store_group';
+    /**
+     * Group Store collection array
+     *
+     * @var \Magento\Store\Model\ResourceModel\Store\Collection[]
+     */
+    protected $_stores;
+    /**
+     * Group store ids array
+     *
+     * @var int[]
+     */
+    protected $_storeIds = [];
+    /**
+     * Group store codes array
+     *
+     * @var string[]
+     */
+    protected $_storeCodes = [];
+    /**
+     * The number of stores in a group
+     *
+     * @var int
+     */
+    protected $_storesCount = 0;
+    /**
+     * Group default store
+     *
+     * @var \Magento\Store\Model\Store
+     */
+    protected $_defaultStore;
+    /**
+     * @var \Magento\Config\Model\ResourceModel\Config\Data
+     */
+    protected $_configDataResource;
+    /**
+     * @var \Magento\Store\Model\Store
+     */
+    protected $_storeListFactory;
+    /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
+    protected $_storeManager;
+    /**
+     * @param \Magento\Framework\Model\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory
+     * @param \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory
+     * @param \Magento\Config\Model\ResourceModel\Config\Data $configDataResource
+     * @param ResourceModel\Store\CollectionFactory $storeListFactory
+     * @param StoreManagerInterface $storeManager
+     * @param \Magento\Framework\Model\ResourceModel\AbstractResource|null $resource
+     * @param \Magento\Framework\Data\Collection\AbstractDb|null $resourceCollection
+     * @param array $data
+     * @param \Magento\Framework\Event\ManagerInterface|null $eventManager
+     * @param PoisonPillPutInterface|null $pillPut
+     * @param StoreValidator|null $modelValidator
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     */
+    public function __construct(\Magento\Framework\Model\Context $context, \Magento\Framework\Registry $registry, \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory, \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory, \Magento\Config\Model\ResourceModel\Config\Data $configDataResource, \Magento\Store\Model\ResourceModel\Store\CollectionFactory $storeListFactory, \Magento\Store\Model\StoreManagerInterface $storeManager, \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null, \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null, array $data = [], \Magento\Framework\Event\ManagerInterface $eventManager = null, \Magento\Framework\MessageQueue\PoisonPill\PoisonPillPutInterface $pillPut = null, \Magento\Store\Model\Validation\StoreValidator $modelValidator = null)
+    {
+    }
+    /**
+     * Init model
+     *
+     * @return void
+     */
+    protected function _construct()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    protected function _getValidationRulesBeforeSave()
+    {
+    }
+    /**
+     * Load store collection and set internal data
+     *
+     * @return void
+     */
+    protected function _loadStores()
+    {
+    }
+    /**
+     * Set website stores
+     *
+     * @param \Magento\Store\Model\Store[] $stores
+     * @return void
+     */
+    public function setStores($stores)
+    {
+    }
+    /**
+     * Retrieve new (not loaded) Store collection object with group filter
+     *
+     * @return \Magento\Store\Model\ResourceModel\Store\Collection
+     */
+    public function getStoreCollection()
+    {
+    }
+    /**
+     * Retrieve website store objects
+     *
+     * @return \Magento\Store\Model\ResourceModel\Store\Collection[]
+     */
+    public function getStores()
+    {
+    }
+    /**
+     * Retrieve website store ids
+     *
+     * @return int[]
+     */
+    public function getStoreIds()
+    {
+    }
+    /**
+     * Retrieve website store codes
+     *
+     * @return array
+     */
+    public function getStoreCodes()
+    {
+    }
+    /**
+     * Get stores count
+     *
+     * @return int
+     */
+    public function getStoresCount()
+    {
+    }
+    /**
+     * Retrieve default store model
+     *
+     * @return \Magento\Store\Model\Store
+     */
+    public function getDefaultStore()
+    {
+    }
+    /**
+     * Get most suitable store by locale
+     * If no store with given locale is found - default store is returned
+     * If group has no stores - null is returned
+     *
+     * @param string $locale
+     * @return \Magento\Store\Model\Store|null
+     */
+    public function getDefaultStoreByLocale($locale)
+    {
+    }
+    /**
+     * Retrieve list of stores with given locale
+     *
+     * @param string $locale
+     * @return \Magento\Store\Model\Store[]
+     */
+    public function getStoresByLocale($locale)
+    {
+    }
+    /**
+     * Set relation to the website
+     *
+     * @param Website $website
+     * @return void
+     */
+    public function setWebsite(\Magento\Store\Model\Website $website)
+    {
+    }
+    /**
+     * Retrieve website model
+     *
+     * @return Website|bool
+     */
+    public function getWebsite()
+    {
+    }
+    /**
+     * Is can delete group
+     *
+     * @return bool
+     */
+    public function isCanDelete()
+    {
+    }
+    /**
+     * Get default store id
+     *
+     * @return mixed
+     */
+    public function getDefaultStoreId()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setDefaultStoreId($defaultStoreId)
+    {
+    }
+    /**
+     * Get root category id
+     *
+     * @return mixed
+     */
+    public function getRootCategoryId()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setRootCategoryId($rootCategoryId)
+    {
+    }
+    /**
+     * Get website id
+     *
+     * @return mixed
+     */
+    public function getWebsiteId()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setWebsiteId($websiteId)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function beforeDelete()
+    {
+    }
+    /**
+     * @inheritdoc
+     * @since 100.1.0
+     */
+    public function afterDelete()
+    {
+    }
+    /**
+     * @inheritdoc
+     * @since 100.2.5
+     */
+    public function afterSave()
+    {
+    }
+    /**
+     * Get/Set isReadOnly flag
+     *
+     * @param bool $value
+     * @return bool
+     */
+    public function isReadOnly($value = null)
+    {
+    }
+    /**
+     * Get identities
+     *
+     * @return array
+     */
+    public function getIdentities()
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function getCacheTags()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getName()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setName($name)
+    {
+    }
+    /**
+     * @inheritdoc
+     * @since 100.1.0
+     */
+    public function getCode()
+    {
+    }
+    /**
+     * @inheritdoc
+     * @since 100.2.0
+     */
+    public function setCode($code)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getExtensionAttributes()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setExtensionAttributes(\Magento\Store\Api\Data\GroupExtensionInterface $extensionAttributes)
+    {
+    }
+    /**
+     * @inheritdoc
+     * @since 100.1.0
+     */
+    public function getScopeType()
+    {
+    }
+    /**
+     * @inheritdoc
+     * @since 100.1.0
+     */
+    public function getScopeTypeName()
+    {
+    }
+}
+namespace Magento\Store\Model\Config;
+
+/**
+ * Validates that scopes data contain correct values
+ */
+class Validator implements \Magento\Framework\App\DeploymentConfig\ValidatorInterface
+{
+    /**
+     * Checks that scopes data contain at least one not admin website, group and store
+     *
+     * {@inheritdoc}
+     */
+    public function validate(array $data)
+    {
+    }
+}
+namespace Magento\Store\Model\Config\Processor;
+
+/**
+ * Fallback through different scopes and merge them
+ */
+class Fallback implements \Magento\Framework\App\Config\Spi\PostProcessorInterface, \Magento\Framework\ObjectManager\ResetAfterRequestInterface
+{
+    /**
+     * Fallback constructor.
+     *
+     * @param Scopes $scopes
+     * @param ResourceConnection $resourceConnection
+     * @param Store $storeResource
+     * @param Website $websiteResource
+     * @param DeploymentConfig $deploymentConfig
+     */
+    public function __construct(\Magento\Store\App\Config\Type\Scopes $scopes, \Magento\Framework\App\ResourceConnection $resourceConnection, \Magento\Store\Model\ResourceModel\Store $storeResource, \Magento\Store\Model\ResourceModel\Website $websiteResource, \Magento\Framework\App\DeploymentConfig $deploymentConfig)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function process(array $data)
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function _resetState() : void
+    {
+    }
+}
+/**
+ * Placeholder configuration values processor. Replace placeholders in configuration with config values
+ */
+class Placeholder implements \Magento\Framework\App\Config\Spi\PostProcessorInterface
+{
+    /**
+     * Placeholder constructor.
+     * @param ConfigPlaceholder $configPlaceholder
+     */
+    public function __construct(\Magento\Store\Model\Config\Placeholder $configPlaceholder)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function process(array $data)
+    {
+    }
+}
+namespace Magento\Store\Model\Config;
+
+/**
+ * Imports stores, websites and groups from transmitted data.
+ */
+class Importer implements \Magento\Framework\App\DeploymentConfig\ImporterInterface
+{
+    /**
+     * @param DataDifferenceCalculator $dataDifferenceCalculator The factory for data difference calculators
+     * @param ProcessorFactory $processFactory The factory for processes
+     * @param StoreManagerInterface $storeManager The manager for operations with store
+     * @param CacheInterface $cacheManager The application cache manager
+     * @param Website $resource The resource of transaction
+     */
+    public function __construct(\Magento\Store\Model\Config\Importer\DataDifferenceCalculator $dataDifferenceCalculator, \Magento\Store\Model\Config\Importer\Processor\ProcessorFactory $processFactory, \Magento\Store\Model\StoreManagerInterface $storeManager, \Magento\Framework\App\CacheInterface $cacheManager, \Magento\Store\Model\ResourceModel\Website $resource)
+    {
+    }
+    /**
+     * Imports the store data into the application.
+     * After the import it flushes the store caches.
+     *
+     * {@inheritdoc}
+     */
+    public function import(array $data)
+    {
+    }
+    /**
+     * Retrieves all affected entities during the import procedure.
+     *
+     * {@inheritdoc}
+     */
+    public function getWarningMessages(array $data)
+    {
+    }
+}
+namespace Magento\Store\Model\Config\Reader\Source\Dynamic;
+
+/**
+ * Class for retrieving configuration from DB by store scope
+ */
+class Store implements \Magento\Framework\App\Config\Reader\Source\SourceInterface
+{
+    /**
+     * @param ScopedFactory $collectionFactory
+     * @param Converter $converter
+     * @param WebsiteFactory $websiteFactory
+     * @param Website $websiteSource
+     * @param StoreManagerInterface $storeManager
+     */
+    public function __construct(\Magento\Store\Model\ResourceModel\Config\Collection\ScopedFactory $collectionFactory, \Magento\Framework\App\Config\Scope\Converter $converter, \Magento\Store\Model\WebsiteFactory $websiteFactory, \Magento\Store\Model\Config\Reader\Source\Dynamic\Website $websiteSource, \Magento\Store\Model\StoreManagerInterface $storeManager)
+    {
+    }
+    /**
+     * Retrieve config by store scope
+     *
+     * @param string|null $scopeCode
+     * @return array
+     */
+    public function get($scopeCode = null)
+    {
+    }
+}
+/**
+ * Class for retrieving configuration from DB by website scope
+ */
+class Website implements \Magento\Framework\App\Config\Reader\Source\SourceInterface
+{
+    /**
+     * @param ScopedFactory $collectionFactory
+     * @param Converter $converter
+     * @param WebsiteFactory $websiteFactory
+     * @param DefaultScope $defaultScope
+     */
+    public function __construct(\Magento\Store\Model\ResourceModel\Config\Collection\ScopedFactory $collectionFactory, \Magento\Framework\App\Config\Scope\Converter $converter, \Magento\Store\Model\WebsiteFactory $websiteFactory, \Magento\Store\Model\Config\Reader\Source\Dynamic\DefaultScope $defaultScope)
+    {
+    }
+    /**
+     * Retrieve config by website scope
+     *
+     * @param string|null $scopeCode
+     * @return array
+     */
+    public function get($scopeCode = null)
+    {
+    }
+}
+/**
+ * Class for retrieving configuration from DB by default scope
+ */
+class DefaultScope implements \Magento\Framework\App\Config\Reader\Source\SourceInterface
+{
+    /**
+     * @param ScopedFactory $collectionFactory
+     * @param Converter $converter
+     */
+    public function __construct(\Magento\Store\Model\ResourceModel\Config\Collection\ScopedFactory $collectionFactory, \Magento\Framework\App\Config\Scope\Converter $converter)
+    {
+    }
+    /**
+     * Retrieve config by default scope
+     *
+     * @param string|null $scopeCode
+     * @return array
+     */
+    public function get($scopeCode = null)
+    {
+    }
+}
+namespace Magento\Store\Model\Config\Reader\Source\Initial;
+
+/**
+ * Class for retrieving configuration from initial config by store scope
+ */
+class Store implements \Magento\Framework\App\Config\Reader\Source\SourceInterface
+{
+    /**
+     * @param Initial $initialConfig
+     * @param Website $website
+     * @param StoreManagerInterface $storeManager
+     * @param Converter $converter
+     */
+    public function __construct(\Magento\Framework\App\Config\Initial $initialConfig, \Magento\Store\Model\Config\Reader\Source\Initial\Website $website, \Magento\Store\Model\StoreManagerInterface $storeManager, \Magento\Framework\App\Config\Scope\Converter $converter)
+    {
+    }
+    /**
+     * Retrieve config by store scope
+     *
+     * @param string|null $scopeCode
+     * @return array
+     */
+    public function get($scopeCode = null)
+    {
+    }
+}
+/**
+ * Class for retrieving configuration from initial config by website scope
+ */
+class Website implements \Magento\Framework\App\Config\Reader\Source\SourceInterface
+{
+    /**
+     * @param Initial $initialConfig
+     * @param DefaultScope $defaultScope
+     * @param Converter $converter
+     */
+    public function __construct(\Magento\Framework\App\Config\Initial $initialConfig, \Magento\Store\Model\Config\Reader\Source\Initial\DefaultScope $defaultScope, \Magento\Framework\App\Config\Scope\Converter $converter)
+    {
+    }
+    /**
+     * Retrieve config by website scope
+     *
+     * @param string|null $scopeCode
+     * @return array
+     */
+    public function get($scopeCode = null)
+    {
+    }
+}
+/**
+ * Class for retrieving configuration from initial by default scope
+ */
+class DefaultScope implements \Magento\Framework\App\Config\Reader\Source\SourceInterface
+{
+    /**
+     * @param Initial $initialConfig
+     * @param Converter $converter
+     */
+    public function __construct(\Magento\Framework\App\Config\Initial $initialConfig, \Magento\Framework\App\Config\Scope\Converter $converter)
+    {
+    }
+    /**
+     * Retrieve config by default scope
+     *
+     * @param string|null $scopeCode
+     * @return array
+     */
+    public function get($scopeCode = null)
+    {
+    }
+}
+namespace Magento\Store\Model\Config\Importer\Processor;
+
+/**
+ * The processor for store manipulations.
+ *
+ * @api
+ */
+interface ProcessorInterface
+{
+    /**
+     * Runs current process.
+     *
+     * @param array $data The data to be processed
+     * @return void
+     * @throws RuntimeException If processor was unable to finish execution
+     */
+    public function run(array $data);
+}
+/**
+ * The processor for deleting different entities.
+ *
+ * {@inheritdoc}
+ */
+class Delete implements \Magento\Store\Model\Config\Importer\Processor\ProcessorInterface
+{
+    /**
+     * @param Registry $registry The application registry The application registry
+     * @param DataDifferenceCalculator $dataDifferenceCalculator The calculator for data differences
+     * @param ManagerInterface $eventManager The event manager
+     * @param WebsiteRepository $websiteRepository The repository for websites
+     * @param StoreRepository $storeRepository The repository for stores
+     * @param Collection $groupCollection The collection of store groups
+     */
+    public function __construct(\Magento\Framework\Registry $registry, \Magento\Store\Model\Config\Importer\DataDifferenceCalculator $dataDifferenceCalculator, \Magento\Framework\Event\ManagerInterface $eventManager, \Magento\Store\Model\WebsiteRepository $websiteRepository, \Magento\Store\Model\StoreRepository $storeRepository, \Magento\Store\Model\ResourceModel\Group\Collection $groupCollection)
+    {
+    }
+    /**
+     * Deletes entities from application according to the data set.
+     *
+     * {@inheritdoc}
+     */
+    public function run(array $data)
+    {
+    }
+}
+/**
+ * The process for updating of existing entities.
+ *
+ * {@inheritdoc}
+ */
+class Update implements \Magento\Store\Model\Config\Importer\Processor\ProcessorInterface
+{
+    /**
+     * @param DataDifferenceCalculator $dataDifferenceCalculator The calculator for data differences
+     * @param WebsiteFactory $websiteFactory The factory for website entity
+     * @param StoreFactory $storeFactory The factory for store entity
+     * @param GroupFactory $groupFactory The factory for group entity
+     * @param ManagerInterface $eventManager The event manager
+     */
+    public function __construct(\Magento\Store\Model\Config\Importer\DataDifferenceCalculator $dataDifferenceCalculator, \Magento\Store\Model\WebsiteFactory $websiteFactory, \Magento\Store\Model\StoreFactory $storeFactory, \Magento\Store\Model\GroupFactory $groupFactory, \Magento\Framework\Event\ManagerInterface $eventManager)
+    {
+    }
+    /**
+     * Updates entities in application according to the data set.
+     *
+     * {@inheritdoc}
+     */
+    public function run(array $data)
+    {
+    }
+}
+/**
+ * The factory for creating importing processors.
+ *
+ * @see ProcessorInterface
+ */
+class ProcessorFactory
+{
+    /**#@+
+     * Constants for processor types.
+     */
+    const TYPE_CREATE = 'create';
+    const TYPE_DELETE = 'delete';
+    const TYPE_UPDATE = 'update';
+    /**
+     * @param ObjectManagerInterface $objectManager The Object Manager
+     * @param array $processors List of class names that implement processes
+     */
+    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager, array $processors = [])
+    {
+    }
+    /**
+     * Creates an instance of specified processor.
+     *
+     * @param string $processorName The name of processor
+     * @return ProcessorInterface New processor instance
+     * @throws ConfigurationMismatchException If processor type is not exists in processors array
+     * or declared class has wrong implementation
+     */
+    public function create($processorName)
+    {
+    }
+}
+/**
+ * The processor for creating of new entities.
+ */
+class Create implements \Magento\Store\Model\Config\Importer\Processor\ProcessorInterface
+{
+    /**
+     * @param DataDifferenceCalculator $dataDifferenceCalculator The calculator for data differences
+     * @param ManagerInterface $eventManager The event manager
+     * @param WebsiteFactory $websiteFactory The factory for website entity
+     * @param GroupFactory $groupFactory The factory for group entity
+     * @param StoreFactory $storeFactory The factory for store entity
+     */
+    public function __construct(\Magento\Store\Model\Config\Importer\DataDifferenceCalculator $dataDifferenceCalculator, \Magento\Framework\Event\ManagerInterface $eventManager, \Magento\Store\Model\WebsiteFactory $websiteFactory, \Magento\Store\Model\GroupFactory $groupFactory, \Magento\Store\Model\StoreFactory $storeFactory)
+    {
+    }
+    /**
+     * Creates entities in application according to the data set.
+     *
+     * @param array $data The data to be processed
+     * @return void
+     * @throws RuntimeException If processor was unable to finish execution
+     */
+    public function run(array $data)
+    {
+    }
+}
+namespace Magento\Store\Model\Config\Importer;
+
+/**
+ * Calculates difference between current configuration and new one.
+ */
+class DataDifferenceCalculator
+{
+    /**
+     * @param ConfigSourceInterface $runtimeConfigSource The config source to retrieve current config
+     */
+    public function __construct(\Magento\Framework\App\Config\ConfigSourceInterface $runtimeConfigSource)
+    {
+    }
+    /**
+     * Calculates items to delete.
+     *
+     * @param string $scope The data scope
+     * @param array $data The new data
+     * @return array
+     */
+    public function getItemsToDelete($scope, array $data)
+    {
+    }
+    /**
+     * Calculates items to create.
+     *
+     * @param string $scope The data scope
+     * @param array $data The new data
+     * @return array
+     */
+    public function getItemsToCreate($scope, array $data)
+    {
+    }
+    /**
+     * Calculates items to update.
+     *
+     * @param string $scope The data scope
+     * @param array $data The new data
+     * @return array
+     */
+    public function getItemsToUpdate($scope, array $data)
+    {
+    }
+}
+namespace Magento\Store\Model\Config;
+
+/**
+ * Retrieves theme and locale info associated with store-views
+ */
+class StoreView
+{
+    /**
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Magento\Framework\View\Design\Theme\ThemeProviderInterface $themeProvider
+     */
+    public function __construct(\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig, \Magento\Store\Model\StoreManagerInterface $storeManager, \Magento\Framework\View\Design\Theme\ThemeProviderInterface $themeProvider)
+    {
+    }
+    /**
+     * Retrieves a unique list of pairs representing the theme/locale for each store view
+     *
+     * @return array
+     */
+    public function retrieveThemeLocalePairs()
+    {
+    }
+    /**
+     * Retrieves a unique list of locales that are used by store views
+     *
+     * @return array
+     */
+    public function retrieveLocales()
+    {
+    }
+}
+/**
+ * Store module specific reset state part
+ */
+class ReloadDeploymentConfig implements \Magento\Framework\App\State\ReloadProcessorInterface
+{
+    /**
+     * @param StoreRepository $storeRepository
+     * @param WebsiteRepository $websiteRepository
+     * @param GroupRepository $groupRepository
+     * @param Scopes $scopes
+     */
+    public function __construct(private readonly \Magento\Store\Model\StoreRepository $storeRepository, private readonly \Magento\Store\Model\WebsiteRepository $websiteRepository, private readonly \Magento\Store\Model\GroupRepository $groupRepository, private readonly \Magento\Store\App\Config\Type\Scopes $scopes)
+    {
+    }
+    /**
+     * Tells the system state to reload itself.
+     *
+     * @return void
+     */
+    public function reloadState() : void
+    {
+    }
+}
+/**
+ * Placeholder configuration values processor. Replace placeholders in configuration with config values
+ */
+class Placeholder
+{
+    /**
+     * @var \Magento\Framework\App\RequestInterface
+     */
+    protected $request;
+    /**
+     * @var string[]
+     */
+    protected $urlPaths;
+    /**
+     * @var string
+     */
+    protected $urlPlaceholder;
+    /**
+     * @param \Magento\Framework\App\RequestInterface $request
+     * @param string[] $urlPaths
+     * @param string $urlPlaceholder
+     */
+    public function __construct(\Magento\Framework\App\RequestInterface $request, $urlPaths, $urlPlaceholder)
+    {
+    }
+    /**
+     * Replace placeholders with config values
+     *
+     * @param array $data
+     * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function process(array $data = [])
+    {
+    }
+    /**
+     * Process array data recursively
+     *
+     * @deprecated 101.0.4 This method isn't used in process() implementation anymore
+     * @see process()
+     *
+     * @param array &$data
+     * @param string $path
+     * @return void
+     */
+    protected function _processData(&$data, $path)
+    {
+    }
+    /**
+     * Replace placeholders with config values
+     *
+     * @param string $value
+     * @param array $data
+     * @return string
+     */
+    protected function _processPlaceholders($value, $data)
+    {
+    }
+    /**
+     * Get placeholder from value
+     *
+     * @param string $value
+     * @return string|null
+     */
+    protected function _getPlaceholder($value)
+    {
+    }
+    /**
+     * Get array value by path
+     *
+     * @param string $path
+     * @param array $data
+     * @return array|null
+     */
+    protected function _getValue($path, array $data)
+    {
+    }
+    /**
+     * Set array value by path
+     *
+     * @deprecated 101.0.4 This method isn't used in process() implementation anymore
+     * @see process()
+     *
+     * @param array &$container
+     * @param string $path
+     * @param string $value
+     * @return void
+     */
+    protected function _setValue(array &$container, $path, $value)
+    {
+    }
+}
+namespace Magento\Store\Model\Config\Cache\Tag\Strategy;
+
+/**
+ * Store configuration cache tag generator interface
+ */
+interface TagGeneratorInterface
+{
+    /**
+     * Generate cache tags with given store configuration
+     *
+     * @param ValueInterface $config
+     * @return array
+     */
+    public function generateTags(\Magento\Framework\App\Config\ValueInterface $config) : array;
+}
+/**
+ * Composite tag generator that generates cache tags for store configurations.
+ */
+class CompositeTagGenerator implements \Magento\Store\Model\Config\Cache\Tag\Strategy\TagGeneratorInterface
+{
+    /**
+     * @param TagGeneratorInterface[] $tagGenerators
+     */
+    public function __construct(array $tagGenerators = [])
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function generateTags(\Magento\Framework\App\Config\ValueInterface $config) : array
+    {
+    }
+}
+/**
+ * Produce cache tags for store config.
+ */
+class StoreConfig implements \Magento\Framework\App\Cache\Tag\StrategyInterface
+{
+    /**
+     * @param TagGeneratorInterface $tagGenerator
+     */
+    public function __construct(\Magento\Store\Model\Config\Cache\Tag\Strategy\TagGeneratorInterface $tagGenerator)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getTags($object) : array
+    {
+    }
+}
+namespace Magento\Store\Model\Config;
+
+/**
+ * Class Converter.
+ */
+class Converter extends \Magento\Framework\App\Config\Scope\Converter
+{
+    /**
+     * Convert config data
+     *
+     * @param array $source
+     * @param array $initialConfig
+     * @return array
+     */
+    public function convert($source, $initialConfig = [])
+    {
+    }
+}
+namespace Magento\Store\Model\StoreResolver;
+
+/**
+ * Retrieves store ids list array by website ids array
+ */
+class GetStoresListByWebsiteIds
+{
+    /**
+     * @param StoreWebsiteRelationInterface $storeWebsiteRelation
+     */
+    public function __construct(\Magento\Store\Api\StoreWebsiteRelationInterface $storeWebsiteRelation)
+    {
+    }
+    /**
+     * Retrieve list of stores by website ids
+     *
+     * @param array $websiteIds
+     * @return array
+     */
+    public function execute(array $websiteIds) : array
+    {
+    }
+}
+class ReaderList
+{
+    /**
+     * @var \Magento\Framework\ObjectManagerInterface
+     */
+    protected $objectManager;
+    /**
+     * @var array
+     */
+    protected $resolverMap;
+    // @codingStandardsIgnoreStart
+    /**
+     * @param \Magento\Framework\ObjectManagerInterface $objectManager
+     * @param array $resolverMap
+     */
+    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager, $resolverMap = [\Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE => \Magento\Store\Model\StoreResolver\Website::class, \Magento\Store\Model\ScopeInterface::SCOPE_GROUP => \Magento\Store\Model\StoreResolver\Group::class, \Magento\Store\Model\ScopeInterface::SCOPE_STORE => \Magento\Store\Model\StoreResolver\Store::class])
+    {
+    }
+    // @codingStandardsIgnoreEnd
+    /**
+     * Retrieve store relation reader by run mode
+     *
+     * @param string $runMode
+     * @return ReaderInterface
+     */
+    public function getReader($runMode)
+    {
+    }
+}
+/**
+ * Interface \Magento\Store\Model\StoreResolver\ReaderInterface
+ *
+ * @api
+ */
+interface ReaderInterface
+{
+    /**
+     * Retrieve list of stores available for scope
+     *
+     * @param string $scopeCode
+     * @return array
+     */
+    public function getAllowedStoreIds($scopeCode);
+    /**
+     * Retrieve default store id
+     *
+     * @param string $scopeCode
+     * @return int
+     */
+    public function getDefaultStoreId($scopeCode);
+}
+class Group implements \Magento\Store\Model\StoreResolver\ReaderInterface
+{
+    /**
+     * @var \Magento\Store\Api\GroupRepositoryInterface
+     */
+    protected $groupRepository;
+    /**
+     * @var \Magento\Store\Api\StoreRepositoryInterface
+     */
+    protected $storeRepository;
+    /**
+     * @param \Magento\Store\Api\StoreRepositoryInterface $storeRepository
+     * @param \Magento\Store\Api\GroupRepositoryInterface $groupRepository
+     */
+    public function __construct(\Magento\Store\Api\StoreRepositoryInterface $storeRepository, \Magento\Store\Api\GroupRepositoryInterface $groupRepository)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getAllowedStoreIds($scopeCode)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getDefaultStoreId($scopeCode)
+    {
+    }
+}
+class Store implements \Magento\Store\Model\StoreResolver\ReaderInterface
+{
+    /**
+     * @var \Magento\Store\Api\StoreRepositoryInterface
+     */
+    protected $storeRepository;
+    /**
+     * @param \Magento\Store\Api\StoreRepositoryInterface $storeRepository
+     */
+    public function __construct(\Magento\Store\Api\StoreRepositoryInterface $storeRepository)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getAllowedStoreIds($scopeCode)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getDefaultStoreId($scopeCode)
+    {
+    }
+}
+/**
+ * Reader implementation for website.
+ */
+class Website implements \Magento\Store\Model\StoreResolver\ReaderInterface
+{
+    /**
+     * @var \Magento\Store\Api\WebsiteRepositoryInterface
+     */
+    protected $websiteRepository;
+    /**
+     * @var \Magento\Store\Api\GroupRepositoryInterface
+     */
+    protected $groupRepository;
+    /**
+     * @var \Magento\Store\Api\StoreRepositoryInterface
+     */
+    protected $storeRepository;
+    /**
+     * @param \Magento\Store\Api\StoreRepositoryInterface $storeRepository
+     * @param \Magento\Store\Api\WebsiteRepositoryInterface $websiteRepository
+     * @param \Magento\Store\Api\GroupRepositoryInterface $groupRepository
+     */
+    public function __construct(\Magento\Store\Api\StoreRepositoryInterface $storeRepository, \Magento\Store\Api\WebsiteRepositoryInterface $websiteRepository, \Magento\Store\Api\GroupRepositoryInterface $groupRepository)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getAllowedStoreIds($scopeCode)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getDefaultStoreId($scopeCode)
+    {
+    }
+}
+namespace Magento\Store\Model;
+
+/**
+ * Normalizes scope types to the chosen form, plural or singular.
+ */
+class ScopeTypeNormalizer
+{
+    /**
+     * Normalizes scope types.
+     *
+     * We have a few forms of scope types in the plural and singular:
+     * websites, website, groups, group, stores, store
+     *
+     * This method returns scope type in the chosen form (plural or singular).
+     *
+     * For example, the next calls of this method returns 'website':
+     * ```php
+     * $this->normalize('websites', false);
+     * $this->normalize('website', false);
+     * ```
+     *
+     * This calls of this method returns 'websites':
+     * ```php
+     * $this->normalize('website', false);
+     * $this->normalize('websites', false);
+     * $this->normalize('website');
+     * $this->normalize('websites');
+     * ```
+     *
+     * If there is not scope in the list (websites, website, groups, group, stores, store)
+     * then it will be returned without changes.
+     *
+     * The next calls of this method returns 'default':
+     * ```php
+     * $this->normalize('default', false);
+     * $this->normalize('default', true);
+     * $this->normalize('default');
+     * ```
+     *
+     * @param string $scopeType The type of scope
+     * @param bool $plural The flag for choosing returned form of scope, in the plural or not. Used plural by default.
+     * @return string
+     */
+    public function normalize($scopeType, $plural = true)
+    {
+    }
+}
+/**
+ * Store model
+ *
+ * @api
+ * @method Store setGroupId($value)
+ * @method int getSortOrder()
+ * @method int getStoreId()
+ * @method Store setSortOrder($value)
+ *
+ * @SuppressWarnings(PHPMD.TooManyFields)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessivePublicCount)
+ * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
+ * @since 100.0.2
+ */
+class Store extends \Magento\Framework\Model\AbstractExtensibleModel implements \Magento\Framework\App\ScopeInterface, \Magento\Framework\Url\ScopeInterface, \Magento\Framework\DataObject\IdentityInterface, \Magento\Store\Api\Data\StoreInterface, \Magento\Framework\ObjectManager\ResetAfterRequestInterface
+{
+    /**
+     * Store Id key name
+     */
+    public const STORE_ID = 'store_id';
+    /**
+     * Entity name
+     */
+    public const ENTITY = 'store';
+    /**
+     * Parameter used to determine app context.
+     */
+    public const CUSTOM_ENTRY_POINT_PARAM = 'custom_entry_point';
+    /**
+     * Configuration paths
+     */
+    public const XML_PATH_STORE_IN_URL = 'web/url/use_store';
+    public const XML_PATH_USE_REWRITES = 'web/seo/use_rewrites';
+    public const XML_PATH_UNSECURE_BASE_URL = 'web/unsecure/base_url';
+    public const XML_PATH_SECURE_BASE_URL = 'web/secure/base_url';
+    public const XML_PATH_SECURE_IN_FRONTEND = 'web/secure/use_in_frontend';
+    public const XML_PATH_SECURE_IN_ADMINHTML = 'web/secure/use_in_adminhtml';
+    public const XML_PATH_ENABLE_HSTS = 'web/secure/enable_hsts';
+    public const XML_PATH_ENABLE_UPGRADE_INSECURE = 'web/secure/enable_upgrade_insecure';
+    public const XML_PATH_SECURE_BASE_LINK_URL = 'web/secure/base_link_url';
+    public const XML_PATH_UNSECURE_BASE_LINK_URL = 'web/unsecure/base_link_url';
+    public const XML_PATH_SECURE_BASE_STATIC_URL = 'web/secure/base_static_url';
+    public const XML_PATH_UNSECURE_BASE_STATIC_URL = 'web/unsecure/base_static_url';
+    public const XML_PATH_SECURE_BASE_MEDIA_URL = 'web/secure/base_media_url';
+    public const XML_PATH_UNSECURE_BASE_MEDIA_URL = 'web/unsecure/base_media_url';
+    public const XML_PATH_PRICE_SCOPE = 'catalog/price/scope';
+    public const PRICE_SCOPE_GLOBAL = 0;
+    public const PRICE_SCOPE_WEBSITE = 1;
+    public const ADMIN_CODE = 'admin';
+    /**
+     * Tag to use to cache stores.
+     */
+    public const CACHE_TAG = 'store';
+    /**
+     * Script name, which returns all the images
+     */
+    public const MEDIA_REWRITE_SCRIPT = 'get.php/';
+    /**
+     * A placeholder for generating base URL
+     */
+    public const BASE_URL_PLACEHOLDER = '{{base_url}}';
+    /**
+     * Identifier of default store
+     * used for loading data of default scope
+     */
+    public const DEFAULT_STORE_ID = 0;
+    /**
+     * Default store Id (for install)
+     */
+    public const DISTRO_STORE_ID = 1;
+    /**
+     * @var \Magento\Framework\App\Cache\Type\Config
+     */
+    protected $_configCacheType;
+    /**
+     * Cache flag
+     *
+     * @var boolean
+     */
+    protected $_cacheTag = true;
+    /**
+     * Event prefix for model events
+     *
+     * @var string
+     */
+    protected $_eventPrefix = 'store';
+    /**
+     * Event object name
+     *
+     * @var string
+     */
+    protected $_eventObject = 'store';
+    /**
+     * @var \Magento\Directory\Model\Currency\Filter
+     */
+    protected $_priceFilter;
+    /**
+     * Store configuration cache
+     *
+     * @var array|null
+     */
+    protected $_configCache = null;
+    /**
+     * Base nodes of store configuration cache
+     *
+     * @var array
+     */
+    protected $_configCacheBaseNodes = [];
+    /**
+     * Directory cache
+     *
+     * @var array
+     */
+    protected $_dirCache = [];
+    /**
+     * @var array
+     */
+    protected $_urlCache = [];
+    /**
+     * @var array
+     */
+    protected $_baseUrlCache = [];
+    /**
+     * Session entity
+     *
+     * @var \Magento\Framework\Session\SessionManagerInterface
+     */
+    protected $_session;
+    /**
+     * Flag that shows that backend URLs are secure
+     *
+     * @var boolean|null
+     * @deprecated 101.0.0 unused protected property
+     * @see we don't recommend this approach anymore
+     */
+    protected $_isAdminSecure = null;
+    /**
+     * Flag that shows that frontend URLs are secure
+     *
+     * @var boolean|null
+     */
+    protected $_isFrontSecure = null;
+    /**
+     * Store frontend name
+     *
+     * @var string|null
+     */
+    protected $_frontendName = null;
+    /**
+     * Url model for current store
+     *
+     * @var \Magento\Framework\UrlInterface
+     */
+    protected $_url;
+    /**
+     * @var bool
+     */
+    protected $_isCustomEntryPoint = false;
+    /**
+     * @var \Magento\Framework\App\RequestInterface
+     */
+    protected $_request;
+    /**
+     * @var \Magento\Config\Model\ResourceModel\Config\Data
+     */
+    protected $_configDataResource;
+    /**
+     * @var \Magento\MediaStorage\Helper\File\Storage\Database
+     */
+    protected $_coreFileStorageDatabase = null;
+    /**
+     * Filesystem instance
+     *
+     * @var Filesystem
+     */
+    protected $filesystem;
+    /**
+     * Store Config
+     *
+     * @var \Magento\Framework\App\Config\ReinitableConfigInterface
+     */
+    protected $_config;
+    /**
+     * @var \Magento\Framework\Session\SidResolverInterface
+     * @deprecated 101.0.5 Not used anymore.
+     * @see we don't recommend this approach anymore
+     */
+    protected $_sidResolver;
+    /**
+     * @var string
+     */
+    protected $_currencyInstalled;
+    /**
+     * @var \Magento\Framework\App\Http\Context
+     */
+    protected $_httpContext;
+    /**
+     * @var \Magento\Directory\Model\CurrencyFactory
+     */
+    protected $currencyFactory;
+    /**
+     * @var \Magento\Store\Api\GroupRepositoryInterface
+     */
+    protected $groupRepository;
+    /**
+     * @var \Magento\Store\Api\WebsiteRepositoryInterface
+     */
+    protected $websiteRepository;
+    /**
+     * @var \Magento\Store\Model\Information
+     */
+    protected $information;
+    /**
+     * @param \Magento\Framework\Model\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory
+     * @param \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory
+     * @param \Magento\Store\Model\ResourceModel\Store $resource
+     * @param \Magento\MediaStorage\Helper\File\Storage\Database $coreFileStorageDatabase
+     * @param \Magento\Framework\App\Cache\Type\Config $configCacheType
+     * @param \Magento\Framework\UrlInterface $url
+     * @param \Magento\Framework\App\RequestInterface $request
+     * @param \Magento\Config\Model\ResourceModel\Config\Data $configDataResource
+     * @param \Magento\Framework\Filesystem $filesystem
+     * @param \Magento\Framework\App\Config\ReinitableConfigInterface $config
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Magento\Framework\Session\SidResolverInterface $sidResolver
+     * @param \Magento\Framework\App\Http\Context $httpContext
+     * @param \Magento\Framework\Session\SessionManagerInterface $session
+     * @param \Magento\Directory\Model\CurrencyFactory $currencyFactory
+     * @param Information $information
+     * @param string $currencyInstalled
+     * @param \Magento\Store\Api\GroupRepositoryInterface $groupRepository
+     * @param \Magento\Store\Api\WebsiteRepositoryInterface $websiteRepository
+     * @param \Magento\Framework\Data\Collection\AbstractDb|null $resourceCollection
+     * @param bool $isCustomEntryPoint
+     * @param array $data optional generic object data
+     * @param \Magento\Framework\Event\ManagerInterface|null $eventManager
+     * @param \Magento\Framework\MessageQueue\PoisonPill\PoisonPillPutInterface|null $pillPut
+     * @param \Magento\Store\Model\Validation\StoreValidator|null $modelValidator
+     * @param ModifierInterface|null $urlModifier
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     */
+    public function __construct(\Magento\Framework\Model\Context $context, \Magento\Framework\Registry $registry, \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory, \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory, \Magento\Store\Model\ResourceModel\Store $resource, \Magento\MediaStorage\Helper\File\Storage\Database $coreFileStorageDatabase, \Magento\Framework\App\Cache\Type\Config $configCacheType, \Magento\Framework\UrlInterface $url, \Magento\Framework\App\RequestInterface $request, \Magento\Config\Model\ResourceModel\Config\Data $configDataResource, \Magento\Framework\Filesystem $filesystem, \Magento\Framework\App\Config\ReinitableConfigInterface $config, \Magento\Store\Model\StoreManagerInterface $storeManager, \Magento\Framework\Session\SidResolverInterface $sidResolver, \Magento\Framework\App\Http\Context $httpContext, \Magento\Framework\Session\SessionManagerInterface $session, \Magento\Directory\Model\CurrencyFactory $currencyFactory, \Magento\Store\Model\Information $information, $currencyInstalled, \Magento\Store\Api\GroupRepositoryInterface $groupRepository, \Magento\Store\Api\WebsiteRepositoryInterface $websiteRepository, \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null, $isCustomEntryPoint = false, array $data = [], \Magento\Framework\Event\ManagerInterface $eventManager = null, \Magento\Framework\MessageQueue\PoisonPill\PoisonPillPutInterface $pillPut = null, \Magento\Store\Model\Validation\StoreValidator $modelValidator = null, \Magento\Framework\Url\ModifierInterface $urlModifier = null)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function __sleep()
+    {
+    }
+    /**
+     * Init not serializable fields
+     *
+     * @return void
+     */
+    public function __wakeup()
+    {
+    }
+    /**
+     * Initialize object
+     *
+     * @return void
+     */
+    protected function _construct()
+    {
+    }
+    /**
+     * Retrieve store session object
+     *
+     * @return \Magento\Framework\Session\SessionManagerInterface
+     */
+    protected function _getSession()
+    {
+    }
+    /**
+     * Validation rules for store
+     *
+     * @return ValidatorInterface|null
+     */
+    protected function _getValidationRulesBeforeSave()
+    {
+    }
+    /**
+     * Loading store data
+     *
+     * @param mixed $key
+     * @param string $field
+     *
+     * @return $this
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function load($key, $field = null)
+    {
+    }
+    /**
+     * Retrieve Store code
+     *
+     * @return string
+     */
+    public function getCode()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setCode($code)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getName()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setName($name)
+    {
+    }
+    /**
+     * Retrieve store configuration data
+     *
+     * @param   string $path
+     * @return  string|null
+     */
+    public function getConfig($path)
+    {
+    }
+    /**
+     * Set relation to the website
+     *
+     * @param Website $website
+     * @return void
+     */
+    public function setWebsite(\Magento\Store\Model\Website $website)
+    {
+    }
+    /**
+     * Retrieve store website
+     *
+     * @return Website|bool
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function getWebsite()
+    {
+    }
+    /**
+     * Retrieve url using store configuration specific
+     *
+     * @param string $route
+     * @param array $params
+     *
+     * @return string
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function getUrl($route = '', $params = [])
+    {
+    }
+    /**
+     * Retrieve base URL
+     *
+     * @param string $type
+     * @param boolean|null $secure
+     * @return string
+     * @throws \InvalidArgumentException
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     */
+    public function getBaseUrl($type = \Magento\Framework\UrlInterface::URL_TYPE_LINK, $secure = null)
+    {
+    }
+    /**
+     * Retrieve base media directory path
+     *
+     * @return string
+     */
+    public function getBaseMediaDir()
+    {
+    }
+    /**
+     * Retrieve base static directory path
+     *
+     * @return string
+     */
+    public function getBaseStaticDir()
+    {
+    }
+    /**
+     * Append script file name to url in case when server rewrites are disabled
+     *
+     * @param   string $url
+     * @return  string
+     */
+    protected function _updatePathUseRewrites($url)
+    {
+    }
+    /**
+     * Check if used entry point is custom
+     *
+     * @return bool
+     */
+    protected function _isCustomEntryPoint()
+    {
+    }
+    /**
+     * Retrieve URL for media catalog
+     *
+     * If we use Database file storage and server doesn't support rewrites (.htaccess in media folder)
+     * we have to put name of fetching media script exactly into URL
+     *
+     * @param Filesystem $filesystem
+     * @param bool $secure
+     * @return string|bool
+     */
+    protected function _getMediaScriptUrl(\Magento\Framework\Filesystem $filesystem, $secure)
+    {
+    }
+    /**
+     * Add store code to url in case if it is enabled in configuration
+     *
+     * @param   string $url
+     * @return  string
+     */
+    protected function _updatePathUseStoreView($url)
+    {
+    }
+    /**
+     * Returns whether url forming scheme prepends url path with store view code
+     *
+     * @return boolean
+     */
+    public function isUseStoreInUrl()
+    {
+    }
+    /**
+     * Get store identifier
+     *
+     * @return  int
+     */
+    public function getId()
+    {
+    }
+    /**
+     * Check if frontend URLs should be secure
+     *
+     * @return boolean
+     */
+    public function isFrontUrlSecure()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function isUrlSecure()
+    {
+    }
+    /**
+     * Check if request was secure
+     *
+     * @return boolean
+     */
+    public function isCurrentlySecure()
+    {
+    }
+    /*************************************************************************************
+     * Store currency interface
+     */
+    /**
+     * Retrieve store base currency code
+     *
+     * @return string
+     */
+    public function getBaseCurrencyCode()
+    {
+    }
+    /**
+     * Retrieve store base currency
+     *
+     * @return Currency
+     */
+    public function getBaseCurrency()
+    {
+    }
+    /**
+     * Get default store currency code
+     *
+     * @return string
+     */
+    public function getDefaultCurrencyCode()
+    {
+    }
+    /**
+     * Retrieve store default currency
+     *
+     * @return Currency
+     */
+    public function getDefaultCurrency()
+    {
+    }
+    /**
+     * Set current store currency code
+     *
+     * @param string $code
+     *
+     * @return string
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function setCurrentCurrencyCode($code)
+    {
+    }
+    /**
+     * Get current store currency code
+     *
+     * @return string
+     */
+    public function getCurrentCurrencyCode()
+    {
+    }
+    /**
+     * Get allowed store currency codes
+     *
+     * If base currency is not allowed in current website config scope,
+     * then it can be disabled with $skipBaseNotAllowed
+     *
+     * @param bool $skipBaseNotAllowed
+     * @return array
+     */
+    public function getAvailableCurrencyCodes($skipBaseNotAllowed = false)
+    {
+    }
+    /**
+     * Array of installed currencies for the scope
+     *
+     * @return array
+     */
+    public function getAllowedCurrencies()
+    {
+    }
+    /**
+     * Retrieve store current currency
+     *
+     * @return Currency
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function getCurrentCurrency()
+    {
+    }
+    /**
+     * Retrieve current currency rate
+     *
+     * @return float
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function getCurrentCurrencyRate()
+    {
+    }
+    /**
+     * Retrieve root category identifier
+     *
+     * @return int
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function getRootCategoryId()
+    {
+    }
+    /**
+     * Set group model for store
+     *
+     * @param Group $group
+     * @return Store
+     */
+    public function setGroup(\Magento\Store\Model\Group $group)
+    {
+    }
+    /**
+     * Retrieve group model
+     *
+     * @return Group|bool
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function getGroup()
+    {
+    }
+    /**
+     * Retrieve website identifier
+     *
+     * @return string|int|null
+     */
+    public function getWebsiteId()
+    {
+    }
+    /**
+     * Reinit Stores on after save
+     *
+     * @return $this
+     * @throws \Exception
+     * @since 100.1.3
+     * @deprecated 100.1.3
+     * @see we don't recommend this approach anymore
+     */
+    public function afterSave()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setWebsiteId($websiteId)
+    {
+    }
+    /**
+     * Retrieve group identifier
+     *
+     * @return string|int|null
+     */
+    public function getGroupId()
+    {
+    }
+    /**
+     * Retrieve store group identifier
+     *
+     * @return string|int|null
+     */
+    public function getStoreGroupId()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setStoreGroupId($storeGroupId)
+    {
+    }
+    /**
+     * @inheritdoc
+     * @since 101.0.0
+     */
+    public function getIsActive()
+    {
+    }
+    /**
+     * @inheritdoc
+     * @since 101.0.0
+     */
+    public function setIsActive($isActive)
+    {
+    }
+    /**
+     * Retrieve default group identifier
+     *
+     * @return string|int|null
+     */
+    public function getDefaultGroupId()
+    {
+    }
+    /**
+     * Check if store can be deleted
+     *
+     * @return boolean
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function isCanDelete()
+    {
+    }
+    /**
+     * Check if store is default
+     *
+     * @return boolean
+     * @since 100.1.0
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function isDefault()
+    {
+    }
+    /**
+     * Retrieve current url for store
+     *
+     * @param bool $fromStore
+     *
+     * @return string
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function getCurrentUrl($fromStore = true)
+    {
+    }
+    /**
+     * Check if store is active
+     *
+     * @return boolean
+     */
+    public function isActive()
+    {
+    }
+    /**
+     * Protect delete from non admin area
+     *
+     * @return $this
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function beforeDelete()
+    {
+    }
+    /**
+     * Rewrite in order to clear configuration cache
+     *
+     * @return $this
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws \Exception
+     */
+    public function afterDelete()
+    {
+    }
+    /**
+     * Reinit and reset Config Data
+     *
+     * @return $this
+     */
+    public function resetConfig()
+    {
+    }
+    /**
+     * Get/Set isReadOnly flag
+     *
+     * @param bool $value
+     * @return bool
+     */
+    public function isReadOnly($value = null)
+    {
+    }
+    /**
+     * Retrieve store group name
+     *
+     * @return string
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function getFrontendName()
+    {
+    }
+    /**
+     * Retrieve formatted store address from config
+     *
+     * @return string
+     */
+    public function getFormattedAddress()
+    {
+    }
+    /**
+     * Get identities
+     *
+     * @return array
+     */
+    public function getIdentities()
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function getCacheTags()
+    {
+    }
+    /**
+     * Return Store Path
+     *
+     * @return string
+     */
+    public function getStorePath()
+    {
+    }
+    /**
+     * @inheritdoc
+     * @since 100.1.0
+     */
+    public function getScopeType()
+    {
+    }
+    /**
+     * @inheritdoc
+     * @since 100.1.0
+     */
+    public function getScopeTypeName()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getExtensionAttributes()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setExtensionAttributes(\Magento\Store\Api\Data\StoreExtensionInterface $extensionAttributes)
+    {
+    }
+    /**
+     * Disable show internals with var_dump
+     *
+     * @see https://www.php.net/manual/en/language.oop5.magic.php#object.debuginfo
+     * @return array
+     */
+    public function __debugInfo()
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function _resetState() : void
+    {
+    }
+}
+namespace Magento\Store\Model\Message;
+
+/**
+ * System message about not filled required root category for store group
+ */
+class EmptyGroupCategory implements \Magento\Framework\Notification\MessageInterface
+{
+    /**
+     * @param GroupCollection $collection Store group collection
+     * @param UrlInterface $urlBuilder URL builder
+     */
+    public function __construct(\Magento\Store\Model\ResourceModel\Group\Collection $collection, \Magento\Framework\UrlInterface $urlBuilder)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     *
+     * Check whether all store groups has assigned root category.
+     *
+     * @return bool - true if at least one group does not have category
+     */
+    public function isDisplayed()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getIdentity()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getText()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getSeverity()
+    {
+    }
+}
+namespace Magento\Store\Model;
+
+/**
+ * Store information class used to retrieve and format store information as set in store config
+ *
+ * @api
+ * @since 100.0.2
+ */
+class Information
+{
+    /**#@+
+     * Configuration paths
+     */
+    const XML_PATH_STORE_INFO_NAME = 'general/store_information/name';
+    const XML_PATH_STORE_INFO_PHONE = 'general/store_information/phone';
+    const XML_PATH_STORE_INFO_HOURS = 'general/store_information/hours';
+    const XML_PATH_STORE_INFO_STREET_LINE1 = 'general/store_information/street_line1';
+    const XML_PATH_STORE_INFO_STREET_LINE2 = 'general/store_information/street_line2';
+    const XML_PATH_STORE_INFO_CITY = 'general/store_information/city';
+    const XML_PATH_STORE_INFO_POSTCODE = 'general/store_information/postcode';
+    const XML_PATH_STORE_INFO_REGION_CODE = 'general/store_information/region_id';
+    const XML_PATH_STORE_INFO_COUNTRY_CODE = 'general/store_information/country_id';
+    const XML_PATH_STORE_INFO_VAT_NUMBER = 'general/store_information/merchant_vat_number';
+    /**#@-*/
+    /**#@-*/
+    protected $renderer;
+    /**
+     * @var CountryFactory
+     */
+    protected $countryFactory;
+    /**
+     * @var RegionFactory
+     */
+    protected $regionFactory;
+    /**
+     * @param Renderer $renderer
+     * @param RegionFactory $regionFactory
+     * @param CountryFactory $countryFactory
+     */
+    public function __construct(\Magento\Store\Model\Address\Renderer $renderer, \Magento\Directory\Model\RegionFactory $regionFactory, \Magento\Directory\Model\CountryFactory $countryFactory)
+    {
+    }
+    /**
+     * Retrieve generic object with all the misc store information values
+     *
+     * @param Store $store
+     * @return DataObject
+     */
+    public function getStoreInformationObject(\Magento\Store\Model\Store $store)
+    {
+    }
+    /**
+     * Retrieve formatted store address from config
+     *
+     * @param Store $store
+     * @return string
+     */
+    public function getFormattedAddress(\Magento\Store\Model\Store $store)
+    {
+    }
+}
+/**
+ * Core Website model
+ *
+ * @api
+ * @method string getGroupTitle()
+ * @method string getStoreTitle()
+ * @method int getStoreId()
+ * @method int getGroupId()
+ * @method int getWebsiteId()
+ * @method bool hasWebsiteId()
+ * @method int getSortOrder()
+ * @method \Magento\Store\Model\Website setSortOrder($value)
+ * @method int getIsDefault()
+ * @method \Magento\Store\Model\Website setIsDefault($value)
+ * @SuppressWarnings(PHPMD.TooManyFields)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @since 100.0.2
+ */
+class Website extends \Magento\Framework\Model\AbstractExtensibleModel implements \Magento\Framework\DataObject\IdentityInterface, \Magento\Framework\App\ScopeInterface, \Magento\Store\Api\Data\WebsiteInterface
+{
+    public const ENTITY = 'store_website';
+    public const CACHE_TAG = 'website';
+    /**
+     * @var bool
+     */
+    protected $_cacheTag = true;
+    /**
+     * @var string
+     */
+    protected $_eventPrefix = 'website';
+    /**
+     * @var string
+     */
+    protected $_eventObject = 'website';
+    /**
+     * Cache configuration array
+     *
+     * @var array
+     */
+    protected $_configCache = [];
+    /**
+     * Website Group Collection array
+     *
+     * @var \Magento\Store\Model\Store[]
+     */
+    protected $_groups;
+    /**
+     * Website group ids array
+     *
+     * @var array
+     */
+    protected $_groupIds = [];
+    /**
+     * The number of groups in a website
+     *
+     * @var int
+     */
+    protected $_groupsCount;
+    /**
+     * Website Store collection array
+     *
+     * @var array
+     */
+    protected $_stores;
+    /**
+     * Website store ids array
+     *
+     * @var array
+     */
+    protected $_storeIds = [];
+    /**
+     * Website store codes array
+     *
+     * @var array
+     */
+    protected $_storeCodes = [];
+    /**
+     * The number of stores in a website
+     *
+     * @var int
+     */
+    protected $_storesCount = 0;
+    /**
+     * Website default group
+     *
+     * @var \Magento\Store\Model\Store
+     */
+    protected $_defaultGroup;
+    /**
+     * Website default store
+     *
+     * @var Store
+     */
+    protected $_defaultStore;
+    /**
+     * is can delete website
+     *
+     * @var bool
+     */
+    protected $_isCanDelete;
+    /**
+     * @var \Magento\Config\Model\ResourceModel\Config\Data
+     */
+    protected $_configDataResource;
+    /**
+     * @var \Magento\Store\Model\ResourceModel\Store\CollectionFactory
+     */
+    protected $storeListFactory;
+    /**
+     * @var \Magento\Store\Model\GroupFactory
+     */
+    protected $_storeGroupFactory;
+    /**
+     * @var WebsiteFactory
+     */
+    protected $_websiteFactory;
+    /**
+     * @var StoreManagerInterface
+     */
+    protected $_storeManager;
+    /**
+     * @var \Magento\Directory\Model\CurrencyFactory
+     */
+    protected $_currencyFactory;
+    /**
+     * @param Context $context
+     * @param Registry $registry
+     * @param ExtensionAttributesFactory $extensionFactory
+     * @param AttributeValueFactory $customAttributeFactory
+     * @param Data $configDataResource
+     * @param ScopeConfigInterface $coreConfig
+     * @param CollectionFactory $storeListFactory
+     * @param GroupFactory $storeGroupFactory
+     * @param WebsiteFactory $websiteFactory
+     * @param StoreManagerInterface $storeManager
+     * @param CurrencyFactory $currencyFactory
+     * @param AbstractResource|null $resource
+     * @param AbstractDb|null $resourceCollection
+     * @param array $data
+     * @param PoisonPillPutInterface|null $pillPut
+     * @param TypeListInterface|null $typeList
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     */
+    public function __construct(\Magento\Framework\Model\Context $context, \Magento\Framework\Registry $registry, \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory, \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory, \Magento\Config\Model\ResourceModel\Config\Data $configDataResource, \Magento\Framework\App\Config\ScopeConfigInterface $coreConfig, \Magento\Store\Model\ResourceModel\Store\CollectionFactory $storeListFactory, \Magento\Store\Model\GroupFactory $storeGroupFactory, \Magento\Store\Model\WebsiteFactory $websiteFactory, \Magento\Store\Model\StoreManagerInterface $storeManager, \Magento\Directory\Model\CurrencyFactory $currencyFactory, \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null, \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null, array $data = [], \Magento\Framework\MessageQueue\PoisonPill\PoisonPillPutInterface $pillPut = null, \Magento\Framework\App\Cache\TypeListInterface $typeList = null)
+    {
+    }
+    /**
+     * Init model
+     *
+     * @return void
+     */
+    protected function _construct()
+    {
+    }
+    /**
+     * Custom load
+     *
+     * @param int|string $id
+     * @param string $field
+     * @return $this
+     */
+    public function load($id, $field = null)
+    {
+    }
+    /**
+     * Get website config data
+     *
+     * @param string $path
+     * @return mixed
+     */
+    public function getConfig($path)
+    {
+    }
+    /**
+     * Load group collection and set internal data
+     *
+     * @return void
+     */
+    protected function _loadGroups()
+    {
+    }
+    /**
+     * Set website groups
+     *
+     * @param array $groups
+     * @return $this
+     */
+    public function setGroups($groups)
+    {
+    }
+    /**
+     * Retrieve new (not loaded) Group collection object with website filter
+     *
+     * @return \Magento\Store\Model\ResourceModel\Group\Collection
+     */
+    public function getGroupCollection()
+    {
+    }
+    /**
+     * Retrieve website groups
+     *
+     * @return \Magento\Store\Model\Store[]
+     */
+    public function getGroups()
+    {
+    }
+    /**
+     * Retrieve website group ids
+     *
+     * @return array
+     */
+    public function getGroupIds()
+    {
+    }
+    /**
+     * Retrieve number groups in a website
+     *
+     * @return int
+     */
+    public function getGroupsCount()
+    {
+    }
+    /**
+     * Retrieve default group model
+     *
+     * @return \Magento\Store\Model\Store
+     */
+    public function getDefaultGroup()
+    {
+    }
+    /**
+     * Load store collection and set internal data
+     *
+     * @return void
+     */
+    protected function _loadStores()
+    {
+    }
+    /**
+     * Set website stores
+     *
+     * @param array $stores
+     * @return void
+     */
+    public function setStores($stores)
+    {
+    }
+    /**
+     * Retrieve new (not loaded) Store collection object with website filter
+     *
+     * @return \Magento\Store\Model\ResourceModel\Store\Collection
+     */
+    public function getStoreCollection()
+    {
+    }
+    /**
+     * Retrieve website store objects
+     *
+     * @return array
+     */
+    public function getStores()
+    {
+    }
+    /**
+     * Retrieve website store ids
+     *
+     * @return array
+     */
+    public function getStoreIds()
+    {
+    }
+    /**
+     * Retrieve website store codes
+     *
+     * @return array
+     */
+    public function getStoreCodes()
+    {
+    }
+    /**
+     * Retrieve number stores in a website
+     *
+     * @return int
+     */
+    public function getStoresCount()
+    {
+    }
+    /**
+     * Can delete website
+     *
+     * @return bool
+     */
+    public function isCanDelete()
+    {
+    }
+    /**
+     * Retrieve unique website-group-store key for collection with groups and stores
+     *
+     * @return string
+     */
+    public function getWebsiteGroupStore()
+    {
+    }
+    /**
+     * Get default group id
+     *
+     * @return mixed
+     */
+    public function getDefaultGroupId()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setDefaultGroupId($defaultGroupId)
+    {
+    }
+    /**
+     * Get code
+     *
+     * @return mixed
+     */
+    public function getCode()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setCode($code)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getName()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setName($name)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function beforeDelete()
+    {
+    }
+    /**
+     * Rewrite in order to clear configuration cache
+     *
+     * @return $this
+     */
+    public function afterDelete()
+    {
+    }
+    /**
+     * Clear configuration cache after creation website
+     *
+     * @return $this
+     * @since 100.2.0
+     */
+    public function afterSave()
+    {
+    }
+    /**
+     * Retrieve website base currency code
+     *
+     * @return string
+     */
+    public function getBaseCurrencyCode()
+    {
+    }
+    /**
+     * Retrieve website base currency
+     *
+     * @return \Magento\Directory\Model\Currency
+     */
+    public function getBaseCurrency()
+    {
+    }
+    /**
+     * Retrieve Default Website Store or null
+     *
+     * @return Store
+     */
+    public function getDefaultStore()
+    {
+    }
+    /**
+     * Retrieve default stores select object, select fields website_id, store_id
+     *
+     * @param bool $withDefault include/exclude default admin website
+     * @return \Magento\Framework\DB\Select
+     */
+    public function getDefaultStoresSelect($withDefault = false)
+    {
+    }
+    /**
+     * Get/Set isReadOnly flag
+     *
+     * @param bool $value
+     * @return bool
+     */
+    public function isReadOnly($value = null)
+    {
+    }
+    /**
+     * Get identities
+     *
+     * @return array
+     */
+    public function getIdentities()
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function getCacheTags()
+    {
+    }
+    /**
+     * @inheritdoc
+     * @since 100.1.0
+     */
+    public function getScopeType()
+    {
+    }
+    /**
+     * @inheritdoc
+     * @since 100.1.0
+     */
+    public function getScopeTypeName()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getExtensionAttributes()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setExtensionAttributes(\Magento\Store\Api\Data\WebsiteExtensionInterface $extensionAttributes)
+    {
+    }
+}
+namespace Magento\Store\Model\Address;
+
+/**
+ * Class Renderer used for formatting a store address
+ */
+class Renderer
+{
+    const DEFAULT_TEMPLATE = "{{var name}}\n" . "{{var street_line1}}\n" . "{{depend street_line2}}{{var street_line2}}\n{{/depend}}" . "{{depend city}}{{var city}},{{/depend}} {{var region}} {{depend postcode}}{{var postcode}},{{/depend}}\n" . "{{var country}}";
+    /**
+     * @var EventManager
+     */
+    protected $eventManager;
+    /**
+     * @var FilterManager
+     */
+    protected $filterManager;
+    /**
+     * Constructor
+     *
+     * @param EventManager $eventManager
+     * @param FilterManager $filterManager
+     * @param string $template
+     */
+    public function __construct(\Magento\Framework\Event\ManagerInterface $eventManager, \Magento\Framework\Filter\FilterManager $filterManager, $template = self::DEFAULT_TEMPLATE)
+    {
+    }
+    /**
+     * Format address in a specific way
+     *
+     * @param DataObject $storeInfo
+     * @param string $type
+     * @return string
+     */
+    public function format(\Magento\Framework\DataObject $storeInfo, $type = 'html')
+    {
+    }
+}
+namespace Magento\Store\Model\ResourceModel;
+
+/**
+ * Store Website Relation Resource Model
+ */
+class StoreWebsiteRelation
+{
+    /**
+     * StoreWebsiteRelation constructor.
+     * @param ResourceConnection $resource
+     */
+    public function __construct(\Magento\Framework\App\ResourceConnection $resource)
+    {
+    }
+    /**
+     * Get store by website id
+     *
+     * @param int $websiteId
+     * @return array
+     */
+    public function getStoreByWebsiteId($websiteId)
+    {
+    }
+    /**
+     * Get website store data
+     *
+     * @param int $websiteId
+     * @param bool $available
+     * @param int|null $storeGroupId
+     * @param int|null $storeId
+     * @return array
+     */
+    public function getWebsiteStores(int $websiteId, bool $available = false, int $storeGroupId = null, int $storeId = null) : array
+    {
+    }
+}
+namespace Magento\Store\Model\ResourceModel\Store;
+
+/**
+ * Stores collection
+ *
+ * @api
+ * @since 100.0.2
+ */
+class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection
+{
+    /**
+     * Name prefix of events that are dispatched by model
+     *
+     * @var string
+     */
+    protected $_eventPrefix = 'store_collection';
+    /**
+     * Name of event parameter
+     *
+     * @var string
+     */
+    protected $_eventObject = 'store_collection';
+    /**
+     *  Define resource model
+     *
+     * @return void
+     */
+    protected function _construct()
+    {
+    }
+    /**
+     * Set flag for load default (admin) store
+     *
+     * @param bool $loadDefault
+     * @return $this
+     */
+    public function setLoadDefault($loadDefault)
+    {
+    }
+    /**
+     * Is load default (admin) store
+     *
+     * @return bool
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
+     */
+    public function getLoadDefault()
+    {
+    }
+    /**
+     * Add disable default store filter to collection
+     *
+     * @return $this
+     */
+    public function setWithoutDefaultFilter()
+    {
+    }
+    /**
+     * Add filter by group id.
+     * Group id can be passed as one single value or array of values.
+     *
+     * @param int|array $groupId
+     * @return $this
+     */
+    public function addGroupFilter($groupId)
+    {
+    }
+    /**
+     * Add filter by status to collection
+     *
+     * @param int $status
+     * @return $this
+     * @since 100.1.0
+     */
+    public function addStatusFilter($status)
+    {
+    }
+    /**
+     * Add store id(s) filter to collection
+     *
+     * @param int|array $store
+     * @return $this
+     */
+    public function addIdFilter($store)
+    {
+    }
+    /**
+     * Add filter by website to collection
+     *
+     * @param int|array $website
+     * @return $this
+     */
+    public function addWebsiteFilter($website)
+    {
+    }
+    /**
+     * Add root category id filter to store collection
+     *
+     * @param int|array $category
+     * @return $this
+     */
+    public function addCategoryFilter($category)
+    {
+    }
+    /**
+     * Convert items array to array for select options
+     *
+     * @return array
+     */
+    public function toOptionArray()
+    {
+    }
+    /**
+     * Convert items array to hash for select options
+     *
+     * @return array
+     */
+    public function toOptionHash()
+    {
+    }
+    /**
+     * Load collection data
+     *
+     * @param bool $printQuery
+     * @param bool $logQuery
+     * @return $this
+     */
+    public function load($printQuery = false, $logQuery = false)
+    {
+    }
+    /**
+     * Add root category id filter to store collection
+     *
+     * @param array $categories
+     * @return $this
+     */
+    public function loadByCategoryIds(array $categories)
+    {
+    }
+    /**
+     * Add store root category data to collection
+     *
+     * @return $this
+     */
+    public function addRootCategoryIdAttribute()
+    {
+    }
+}
+namespace Magento\Store\Model\ResourceModel\Group;
+
+/**
+ * Store group collection
+ *
+ * @api
+ * @since 100.0.2
+ */
+class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection
+{
+    /**
+     * Define resource model
+     *
+     * @return void
+     */
+    protected function _construct()
+    {
+    }
+    /**
+     * Set flag for load default (admin) store
+     *
+     * @param boolean $loadDefault
+     * @return $this
+     */
+    public function setLoadDefault($loadDefault)
+    {
+    }
+    /**
+     * Is load default (admin) store
+     *
+     * @return boolean
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
+     */
+    public function getLoadDefault()
+    {
+    }
+    /**
+     * Add disable default store group filter to collection
+     *
+     * @return $this
+     */
+    public function setWithoutDefaultFilter()
+    {
+    }
+    /**
+     * Filter to discard stores without views
+     *
+     * @return $this
+     */
+    public function setWithoutStoreViewFilter()
+    {
+    }
+    /**
+     * Filter to discard default group and groups with assigned category
+     *
+     * @return $this
+     * @since 100.2.0
+     */
+    public function setWithoutAssignedCategoryFilter()
+    {
+    }
+    /**
+     * Load collection data
+     *
+     * @return $this
+     */
+    public function _beforeLoad()
+    {
+    }
+    /**
+     * Convert collection items to array for select options
+     *
+     * @return array
+     */
+    public function toOptionArray()
+    {
+    }
+    /**
+     * Add filter by website to collection
+     *
+     * @param int|array $website
+     * @return $this
+     */
+    public function addWebsiteFilter($website)
+    {
+    }
+}
+namespace Magento\Store\Model\ResourceModel\Website;
+
+/**
+ * Websites collection
+ *
+ * @api
+ * @since 100.0.2
+ */
+class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection
+{
+    /**
+     * Map field to alias
+     *
+     * @var array
+     */
+    protected $_map = ['fields' => ['website_id' => 'main_table.website_id']];
+    /**
+     * Define resource model
+     *
+     * @return void
+     */
+    protected function _construct()
+    {
+    }
+    /**
+     * Apply custom filtering
+     *
+     * @return void
+     */
+    protected function _renderFiltersBefore()
+    {
+    }
+    /**
+     * Set flag for load default (admin) website
+     *
+     * @param bool $loadDefault
+     * @return $this
+     */
+    public function setLoadDefault($loadDefault)
+    {
+    }
+    /**
+     * Is load default (admin) website
+     *
+     * @return bool
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
+     */
+    public function getLoadDefault()
+    {
+    }
+    /**
+     * Convert items array to array for select options
+     *
+     * @return array
+     */
+    public function toOptionArray()
+    {
+    }
+    /**
+     * Convert items array to hash for select options
+     *
+     * @return array
+     */
+    public function toOptionHash()
+    {
+    }
+    /**
+     * Add website filter to collection
+     *
+     * @param int $ids|array
+     * @return $this
+     */
+    public function addIdFilter($ids)
+    {
+    }
+    /**
+     * Load collection data
+     *
+     * @param boolean $printQuery
+     * @param boolean $logQuery
+     * @return $this
+     */
+    public function load($printQuery = false, $logQuery = false)
+    {
+    }
+    /**
+     * Join group and store info from appropriate tables.
+     * Defines new _idFiledName as 'website_group_store' bc for
+     * one website can be more then one row in collection.
+     * Sets extra combined ordering by group's name, defined
+     * sort ordering and store's name.
+     *
+     * @return $this
+     */
+    public function joinGroupAndStore()
+    {
+    }
+    /**
+     * Adding filter by group id or array of ids but only if
+     * tables with appropriate information were joined before.
+     *
+     * @param int|array $groupIds
+     * @return $this
+     */
+    public function addFilterByGroupIds($groupIds)
+    {
+    }
+}
+namespace Magento\Store\Model\ResourceModel\Website\Grid;
+
+/**
+ * Grid collection
+ */
+class Collection extends \Magento\Store\Model\ResourceModel\Website\Collection
+{
+    /**
+     * Join website and store names
+     *
+     * @return $this
+     */
+    protected function _initSelect()
+    {
+    }
+}
+namespace Magento\Store\Model\ResourceModel;
+
+/**
+ * Store group resource model
+ *
+ * @api
+ * @since 100.0.2
+ */
+class Group extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
+{
+    /**
+     * Define main table
+     *
+     * @return void
+     */
+    protected function _construct()
+    {
+    }
+    /**
+     * Update default store group for website
+     *
+     * @param \Magento\Framework\Model\AbstractModel $model
+     * @return $this
+     */
+    protected function _afterSave(\Magento\Framework\Model\AbstractModel $model)
+    {
+    }
+    /**
+     * Initialize unique fields
+     *
+     * @return $this
+     * @since 100.2.0
+     */
+    protected function _initUniqueFields()
+    {
+    }
+    /**
+     * Update default store group for website
+     *
+     * @param int $websiteId
+     * @param int $groupId
+     * @return $this
+     */
+    protected function _updateWebsiteDefaultGroup($websiteId, $groupId)
+    {
+    }
+    /**
+     * Change store group website
+     *
+     * @param \Magento\Framework\Model\AbstractModel $model
+     * @return $this
+     */
+    protected function _changeWebsite(\Magento\Framework\Model\AbstractModel $model)
+    {
+    }
+    /**
+     * Update website for stores that assigned to store group
+     *
+     * @param int $groupId
+     * @param int $websiteId
+     * @return $this
+     */
+    protected function _updateStoreWebsite($groupId, $websiteId)
+    {
+    }
+    /**
+     * Save default store for store group
+     *
+     * @param int $groupId
+     * @param int $storeId
+     * @return $this
+     */
+    protected function _saveDefaultStore($groupId, $storeId)
+    {
+    }
+    /**
+     * Count number of all entities in the system
+     *
+     * By default won't count admin store
+     *
+     * @param bool $countAdmin
+     * @return int
+     */
+    public function countAll($countAdmin = false)
+    {
+    }
+}
+namespace Magento\Store\Model\ResourceModel\Config\Collection;
+
+class Scoped extends \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection
+{
+    /**
+     * Scope to filter by
+     *
+     * @var string
+     */
+    protected $_scope;
+    /**
+     * Scope id to filter by
+     *
+     * @var int
+     */
+    protected $_scopeId;
+    /**
+     * @param \Magento\Framework\Data\Collection\EntityFactory $entityFactory
+     * @param \Psr\Log\LoggerInterface $logger
+     * @param \Magento\Framework\Data\Collection\Db\FetchStrategyInterface $fetchStrategy
+     * @param \Magento\Framework\Event\ManagerInterface $eventManager
+     * @param \Magento\Config\Model\ResourceModel\Config\Data $resource
+     * @param string $scope
+     * @param mixed $connection
+     * @param mixed $scopeId
+     */
+    public function __construct(\Magento\Framework\Data\Collection\EntityFactory $entityFactory, \Psr\Log\LoggerInterface $logger, \Magento\Framework\Data\Collection\Db\FetchStrategyInterface $fetchStrategy, \Magento\Framework\Event\ManagerInterface $eventManager, \Magento\Config\Model\ResourceModel\Config\Data $resource, $scope, \Magento\Framework\DB\Adapter\AdapterInterface $connection = null, $scopeId = null)
+    {
+    }
+    /**
+     * Initialize select
+     *
+     * @return $this
+     */
+    protected function _initSelect()
+    {
+    }
+}
+namespace Magento\Store\Model\ResourceModel;
+
+/**
+ * Store Resource Model
+ *
+ * @api
+ * @since 100.0.2
+ */
+class Store extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
+{
+    /**
+     * @var \Magento\Framework\App\Cache\Type\Config
+     */
+    protected $configCache;
+    /**
+     * @param \Magento\Framework\Model\ResourceModel\Db\Context $context
+     * @param \Magento\Framework\App\Cache\Type\Config $configCacheType
+     */
+    public function __construct(\Magento\Framework\Model\ResourceModel\Db\Context $context, \Magento\Framework\App\Cache\Type\Config $configCacheType)
+    {
+    }
+    /**
+     * Define main table and primary key
+     *
+     * @return void
+     */
+    protected function _construct()
+    {
+    }
+    /**
+     * Count number of all entities in the system
+     *
+     * By default won't count admin store
+     *
+     * @param bool $countAdmin
+     * @return int
+     */
+    public function countAll($countAdmin = false)
+    {
+    }
+    /**
+     * Initialize unique fields
+     *
+     * @return $this
+     */
+    protected function _initUniqueFields()
+    {
+    }
+    /**
+     * Update Store Group data after save store
+     *
+     * @param \Magento\Framework\Model\AbstractModel $object
+     * @return $this
+     */
+    protected function _afterSave(\Magento\Framework\Model\AbstractModel $object)
+    {
+    }
+    /**
+     * Remove configuration data after delete store
+     *
+     * @param \Magento\Framework\Model\AbstractModel $model
+     * @return $this
+     */
+    protected function _afterDelete(\Magento\Framework\Model\AbstractModel $model)
+    {
+    }
+    /**
+     * Update Default store for Store Group
+     *
+     * @param int $groupId
+     * @param int $storeId
+     * @return $this
+     */
+    protected function _updateGroupDefaultStore($groupId, $storeId)
+    {
+    }
+    /**
+     * Change store group for store
+     *
+     * @param \Magento\Framework\Model\AbstractModel $model
+     * @return $this
+     */
+    protected function _changeGroup(\Magento\Framework\Model\AbstractModel $model)
+    {
+    }
+    /**
+     * Read information about all stores
+     *
+     * @return array
+     * @since 100.1.3
+     */
+    public function readAllStores()
+    {
+    }
+    /**
+     * Retrieve select object for load object data
+     *
+     * @param string $field
+     * @param mixed $value
+     * @param \Magento\Framework\Model\AbstractModel $object
+     * @return \Magento\Framework\DB\Select
+     */
+    protected function _getLoadSelect($field, $value, $object)
+    {
+    }
+}
+/**
+ * Website Resource Model
+ *
+ * @api
+ * @since 100.0.2
+ */
+class Website extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
+{
+    /**
+     * Define main table
+     *
+     * @return void
+     */
+    protected function _construct()
+    {
+    }
+    /**
+     * Initialize unique fields
+     *
+     * @return $this
+     */
+    protected function _initUniqueFields()
+    {
+    }
+    /**
+     * Read all information about websites.
+     *
+     * Convert information to next format:
+     * [website_code => [website_data (website_id, code, name, etc...)]]
+     *
+     * @return array
+     * @since 100.1.3
+     */
+    public function readAllWebsites()
+    {
+    }
+    /**
+     * Validate website code before object save
+     *
+     * @param \Magento\Framework\Model\AbstractModel $object
+     * @return $this
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    protected function _beforeSave(\Magento\Framework\Model\AbstractModel $object)
+    {
+    }
+    /**
+     * Perform actions after object save
+     *
+     * @param \Magento\Framework\Model\AbstractModel $object
+     * @return $this
+     */
+    protected function _afterSave(\Magento\Framework\Model\AbstractModel $object)
+    {
+    }
+    /**
+     * Remove configuration data after delete website
+     *
+     * @param \Magento\Framework\Model\AbstractModel $model
+     * @return $this
+     */
+    protected function _afterDelete(\Magento\Framework\Model\AbstractModel $model)
+    {
+    }
+    /**
+     * Retrieve default stores select object
+     *
+     * Select fields website_id, store_id
+     *
+     * @param bool $includeDefault include/exclude default admin website
+     * @return \Magento\Framework\DB\Select
+     */
+    public function getDefaultStoresSelect($includeDefault = false)
+    {
+    }
+    /**
+     * Get total number of persistent entities in the system, excluding the admin website by default
+     *
+     * @param bool $includeDefault
+     * @return int
+     */
+    public function countAll($includeDefault = false)
+    {
+    }
+}
+namespace Magento\Store\Model;
+
+/**
+ * Information Expert in stores handling
+ */
+class StoreRepository implements \Magento\Store\Api\StoreRepositoryInterface
+{
+    /**
+     * @var StoreFactory
+     */
+    protected $storeFactory;
+    /**
+     * @var \Magento\Store\Model\ResourceModel\Store\CollectionFactory
+     */
+    protected $storeCollectionFactory;
+    /**
+     * @var \Magento\Store\Api\Data\StoreInterface[]
+     */
+    protected $entities = [];
+    /**
+     * @var \Magento\Store\Api\Data\StoreInterface[]
+     */
+    protected $entitiesById = [];
+    /**
+     * @var bool
+     */
+    protected $allLoaded = false;
+    /**
+     * @param StoreFactory $storeFactory
+     * @param \Magento\Store\Model\ResourceModel\Store\CollectionFactory $storeCollectionFactory
+     */
+    public function __construct(\Magento\Store\Model\StoreFactory $storeFactory, \Magento\Store\Model\ResourceModel\Store\CollectionFactory $storeCollectionFactory)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function get($code)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getActiveStoreByCode($code)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getById($id)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getActiveStoreById($id)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getList()
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function clean()
+    {
+    }
+}
+/**
+ * DTO class to work with cookies.
+ *
+ * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
+ */
+class StoreCookieManager implements \Magento\Store\Api\StoreCookieManagerInterface
+{
+    /**
+     * @var string
+     */
+    const COOKIE_NAME = 'store';
+    /**
+     * @var CookieMetadataFactory
+     */
+    protected $cookieMetadataFactory;
+    /**
+     * @var CookieManagerInterface
+     */
+    protected $cookieManager;
+    /**
+     * @param CookieMetadataFactory $cookieMetadataFactory
+     * @param CookieManagerInterface $cookieManager
+     */
+    public function __construct(\Magento\Framework\Stdlib\Cookie\CookieMetadataFactory $cookieMetadataFactory, \Magento\Framework\Stdlib\CookieManagerInterface $cookieManager)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getStoreCodeFromCookie()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function setStoreCookie(\Magento\Store\Api\Data\StoreInterface $store)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function deleteStoreCookie(\Magento\Store\Api\Data\StoreInterface $store)
+    {
+    }
+}
+namespace Magento\Store\Model\Resolver;
+
+class Group implements \Magento\Framework\App\ScopeResolverInterface
+{
+    /**
+     * @var StoreManagerInterface
+     */
+    protected $storeManager;
+    /**
+     * @param StoreManagerInterface $storeManager
+     */
+    public function __construct(\Magento\Store\Model\StoreManagerInterface $storeManager)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     * @throws InitException
+     */
+    public function getScope($scopeId = null)
+    {
+    }
+    /**
+     * Retrieve a list of available groups
+     *
+     * @return \Magento\Store\Model\Group[]
+     */
+    public function getScopes()
+    {
+    }
+}
+class Store implements \Magento\Framework\App\ScopeResolverInterface
+{
+    /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
+    protected $_storeManager;
+    /**
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     */
+    public function __construct(\Magento\Store\Model\StoreManagerInterface $storeManager)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     * @throws \Magento\Framework\Exception\State\InitException
+     */
+    public function getScope($scopeId = null)
+    {
+    }
+    /**
+     * Retrieve a list of available stores
+     *
+     * @return \Magento\Store\Model\Store[]
+     */
+    public function getScopes()
+    {
+    }
+}
+class Website implements \Magento\Framework\App\ScopeResolverInterface
+{
+    /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
+    protected $_storeManager;
+    /**
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     */
+    public function __construct(\Magento\Store\Model\StoreManagerInterface $storeManager)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     * @throws \Magento\Framework\Exception\State\InitException
+     */
+    public function getScope($scopeId = null)
+    {
+    }
+    /**
+     * Retrieve a list of available websites
+     *
+     * @return \Magento\Store\Model\Website[]
+     */
+    public function getScopes()
+    {
+    }
+}
+namespace Magento\Store\Model;
+
+/**
+ * Handles store switching procedure and detects url for final redirect after store switching.
+ */
+class StoreSwitcher implements \Magento\Store\Model\StoreSwitcherInterface
+{
+    /**
+     * @param StoreSwitcherInterface[] $storeSwitchers
+     * @throws \Exception
+     */
+    public function __construct(array $storeSwitchers)
+    {
+    }
+    /**
+     * @param StoreInterface $fromStore store where we came from
+     * @param StoreInterface $targetStore store where to go to
+     * @param string $redirectUrl original url requested for redirect after switching
+     * @return string url to be redirected after switching
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @throws CannotSwitchStoreException
+     */
+    public function switch(\Magento\Store\Api\Data\StoreInterface $fromStore, \Magento\Store\Api\Data\StoreInterface $targetStore, string $redirectUrl) : string
+    {
+    }
+}
+/**
+ * Verifies that the requested URL matches to base URL of store.
+ */
+class BaseUrlChecker
+{
+    /**
+     * BaseUrlChecker constructor.
+     *
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     */
+    public function __construct(\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig)
+    {
+    }
+    /**
+     * Performs verification.
+     *
+     * @param array $uri
+     * @param \Magento\Framework\App\Request\Http $request
+     * @return bool
+     */
+    public function execute($uri, $request)
+    {
+    }
+    /**
+     * Checks whether base URL verification is enabled or not.
+     *
+     * @return bool
+     */
+    public function isEnabled()
+    {
+    }
+    /**
+     * Checks whether frontend is completely secure or not.
+     *
+     * @return bool
+     */
+    public function isFrontendSecure()
+    {
+    }
+}
+class ScopeFallbackResolver implements \Magento\Framework\App\ScopeFallbackResolverInterface
+{
+    /**
+     * @var StoreManagerInterface
+     */
+    protected $storeManager;
+    /**
+     * @var array
+     */
+    protected $fallback = [];
+    /**
+     * @param StoreManagerInterface $storeManager
+     */
+    public function __construct(\Magento\Store\Model\StoreManagerInterface $storeManager)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getFallbackScope($scope, $scopeId, $forConfig = true)
+    {
+    }
+}
+/**
+ * Class used to check if some scope belongs to other scope
+ */
+class ScopeResolver
+{
+    /**
+     * @param ScopeTreeProviderInterface $scopeTree
+     */
+    public function __construct(\Magento\Framework\App\ScopeTreeProviderInterface $scopeTree)
+    {
+    }
+    /**
+     * Check is some scope belongs to other scope
+     *
+     * @param string $baseScope
+     * @param int $baseScopeId
+     * @param string $requestedScope
+     * @param int $requestedScopeId
+     * @return bool
+     */
+    public function isBelongsToScope(string $baseScope, int $baseScopeId, string $requestedScope, int $requestedScopeId) : bool
+    {
+    }
+}

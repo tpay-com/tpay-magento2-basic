@@ -1,0 +1,46 @@
+<?xml version='1.0'?>
+<psalm errorLevel='7'
+       resolveFromConfigFile='true'
+       xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+       xmlns='https://getpsalm.org/schema/config'
+       xsi:schemaLocation='https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd'
+       findUnusedBaselineEntry='true'
+       findUnusedCode='false'
+>
+    <stubs>
+        <file name=".dev-tools/stubs/OrderRepositoryInterface.stub"/>
+        <file name=".dev-tools/stubs/AbstractCollection.stub"/>
+        <file name=".dev-tools/stubs/AbstractDb.stub"/>
+        <file name=".dev-tools/stubs/Collection.stub"/>
+        <file name=".dev-tools/stubs/ArrayInterface.stub"/>
+        <file name=".dev-tools/stubs/ArgumentInterface.stub"/>
+        <file name=".dev-tools/stubs/ResetAfterRequestInterface.stub"/>
+        <file name=".dev-tools/stubs/SourceProviderInterface.stub"/>
+        <file name=".dev-tools/stubs/ExtensibleDataInterface.stub"/>
+        <file name=".dev-tools/stubs/ResourceAbstractDb.stub"/>
+        <file name=".dev-tools/stubs/AbstractResource.stub"/>
+        <file name=".dev-tools/stubs/AbstractModel.stub"/>
+        <file name=".dev-tools/stubs/DataObject.stub"/>
+        <file name=".dev-tools/stubs/DbSelect.stub"/>
+        <file name=".dev-tools/stubs/Adapter.stub"/>
+        <file name=".dev-tools/stubs/MethodInterface.stub"/>
+        <file name=".dev-tools/stubs/ConfigProviderInterface.stub"/>
+        <file name=".dev-tools/stubs/Collection.stub"/>
+        <file name=".dev-tools/stubs/ArrayInterface.stub"/>
+        <file name=".dev-tools/stubs/SourceProviderInterface.stub"/>
+        <file name=".dev-tools/stubs/AbstractDb.stub"/>
+        <file name=".dev-tools/stubs/OrderRepository.stub"/>
+    </stubs>
+    <projectFiles>
+        <directory name='./' />
+        <ignoreFiles>
+            <directory name='./.dev-tools' />
+            <directory name='vendor' />
+        </ignoreFiles>
+    </projectFiles>
+
+    <issueHandlers>
+        <MethodSignatureMismatch errorLevel='suppress' />
+        <UndefinedClass errorLevel='suppress' />
+    </issueHandlers>
+</psalm>

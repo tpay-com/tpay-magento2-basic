@@ -1,7 +1,6 @@
 name: Static code analysis
 
-on:
-  push:
+on: [push]
 
 jobs:
   analyse:
@@ -17,20 +16,14 @@ jobs:
 
       - run: composer validate --strict
 
-      - working-directory: .dev-tools
-        run: composer install
+      - run: composer install
 
-      - working-directory: .dev-tools
-        run: composer normalize --diff --dry-run --indent-size=4 --indent-style=space ../composer.json
+      - run: composer cs:lint
 
-      - working-directory: .dev-tools
-        run: composer cs:fixer -- --dry-run
+      - run: composer cs:fixer
 
-      - working-directory: .dev-tools
-        run: composer cs:sniffer
+      - run: composer cs:sniffer
 
-      - working-directory: .dev-tools
-        run: composer cs:phpstan
+      - run: composer cs:phpstan
 
-      - working-directory: .dev-tools
-        run: composer cs:psalm -- --no-progress --shepherd
+      - run: composer cs:psalm -- --no-progress --shepherd

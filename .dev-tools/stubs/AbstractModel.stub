@@ -1,0 +1,4240 @@
+<?php
+
+namespace Magento\Framework\Model;
+
+/**
+ * Constructor modification point for Magento\Framework\Model\AbstractModel.
+ *
+ * All context classes were introduced to allow for backwards compatible constructor modifications
+ * of classes that were supposed to be extended by extension developers.
+ *
+ * Do not call methods of this class directly.
+ *
+ * As Magento moves from inheritance-based APIs all such classes will be deprecated together with
+ * the classes they were introduced for.
+ *
+ * @api
+ * @since 100.0.2
+ */
+class Context implements \Magento\Framework\ObjectManager\ContextInterface
+{
+    /**
+     * @var \Magento\Framework\Event\ManagerInterface
+     */
+    protected $_eventDispatcher;
+    /**
+     * @var \Magento\Framework\App\CacheInterface
+     */
+    protected $_cacheManager;
+    /**
+     * @var \Psr\Log\LoggerInterface
+     */
+    protected $_logger;
+    /**
+     * @var \Magento\Framework\App\State
+     */
+    protected $_appState;
+    /**
+     * @var \Magento\Framework\Model\ActionValidator\RemoveAction
+     */
+    protected $_actionValidator;
+    /**
+     * @param \Psr\Log\LoggerInterface $logger
+     * @param \Magento\Framework\Event\ManagerInterface $eventDispatcher
+     * @param \Magento\Framework\App\CacheInterface $cacheManager
+     * @param \Magento\Framework\App\State $appState
+     * @param \Magento\Framework\Model\ActionValidator\RemoveAction $actionValidator
+     */
+    public function __construct(\Psr\Log\LoggerInterface $logger, \Magento\Framework\Event\ManagerInterface $eventDispatcher, \Magento\Framework\App\CacheInterface $cacheManager, \Magento\Framework\App\State $appState, \Magento\Framework\Model\ActionValidator\RemoveAction $actionValidator)
+    {
+    }
+    /**
+     * @return \Magento\Framework\App\CacheInterface
+     */
+    public function getCacheManager()
+    {
+    }
+    /**
+     * @return \Magento\Framework\Event\ManagerInterface
+     */
+    public function getEventDispatcher()
+    {
+    }
+    /**
+     * @return \Psr\Log\LoggerInterface
+     */
+    public function getLogger()
+    {
+    }
+    /**
+     * @return \Magento\Framework\App\State
+     */
+    public function getAppState()
+    {
+    }
+    /**
+     * @return \Magento\Framework\Model\ActionValidator\RemoveAction
+     */
+    public function getActionValidator()
+    {
+    }
+}
+namespace Magento\Framework\Model\ActionValidator;
+
+/**
+ * @api
+ * @since 100.0.2
+ */
+class RemoveAction
+{
+    /**
+     * @var \Magento\Framework\Registry
+     */
+    protected $registry;
+    /**
+     * @var array
+     */
+    protected $protectedModels;
+    /**
+     * @param \Magento\Framework\Registry $registry
+     * @param array $protectedModels
+     */
+    public function __construct(\Magento\Framework\Registry $registry, array $protectedModels = [])
+    {
+    }
+    /**
+     * Safeguard function that checks if item can be removed
+     *
+     * @param \Magento\Framework\Model\AbstractModel $model
+     * @return bool
+     */
+    public function isAllowed(\Magento\Framework\Model\AbstractModel $model)
+    {
+    }
+    /**
+     * Get clean model name without Interceptor and Proxy part and slashes
+     *
+     * @param object $object
+     * @return mixed
+     */
+    protected function getBaseClassName($object)
+    {
+    }
+}
+namespace Magento\Framework\Model\ActionValidator\RemoveAction;
+
+class Allowed extends \Magento\Framework\Model\ActionValidator\RemoveAction
+{
+    /**
+     * Safeguard function that checks if item can be removed
+     *
+     * @param \Magento\Framework\Model\AbstractModel $model
+     * @return bool
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function isAllowed(\Magento\Framework\Model\AbstractModel $model)
+    {
+    }
+}
+namespace Magento\Framework\Model\Test\Unit;
+
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
+class AbstractExtensibleModelTest extends \PHPUnit\Framework\TestCase
+{
+    /**
+     * @var AbstractExtensibleModel
+     */
+    protected $model;
+    /**
+     * @var Context|MockObject
+     */
+    protected $contextMock;
+    /**
+     * @var Registry|MockObject
+     */
+    protected $registryMock;
+    /**
+     * @var AbstractDb|MockObject
+     */
+    protected $resourceMock;
+    /**
+     * @var \Magento\Framework\Data\Collection\AbstractDb|MockObject
+     */
+    protected $resourceCollectionMock;
+    /** @var MetadataServiceInterface|MockObject */
+    protected $metadataServiceMock;
+    /** @var AttributeValueFactory|MockObject */
+    protected $attributeValueFactoryMock;
+    /**
+     * @var MockObject
+     */
+    protected $actionValidatorMock;
+    /**
+     * @var AttributeValue
+     */
+    protected $customAttribute;
+    protected function setUp() : void
+    {
+    }
+    /**
+     * Test implementation of interface for work with custom attributes.
+     */
+    public function testCustomAttributesWithEmptyCustomAttributes()
+    {
+    }
+    public function testCustomAttributesWithNonEmptyCustomAttributes()
+    {
+    }
+    /**
+     * Test if getData works with custom attributes as expected
+     */
+    public function testGetDataWithCustomAttributes()
+    {
+    }
+    public function testRestrictedCustomAttributesGet()
+    {
+    }
+    public function testSetCustomAttributesAsLiterals()
+    {
+    }
+    /**
+     * @param string[] $attributesAsArray
+     * @param AbstractExtensibleModel $model
+     * @return AttributeInterface[]
+     */
+    protected function addCustomAttributesToModel($attributesAsArray, $model)
+    {
+    }
+}
+namespace Magento\Framework\Model\Test\Unit\ActionValidator;
+
+class RemoveActionTest extends \PHPUnit\Framework\TestCase
+{
+    /**
+     * @param MockObject $modelToCheck
+     * @param string $protectedModel
+     * @param bool $secureArea
+     * @param bool $expectedResult
+     *
+     * @dataProvider isAllowedDataProvider
+     * @covers \Magento\Framework\Model\ActionValidator\RemoveAction::isAllowed
+     * @covers \Magento\Framework\Model\ActionValidator\RemoveAction::getBaseClassName
+     */
+    public function testIsAllowed($modelToCheck, $protectedModel, $secureArea, $expectedResult)
+    {
+    }
+    /**
+     * return array
+     */
+    public function isAllowedDataProvider()
+    {
+    }
+}
+namespace Magento\Framework\Model\Test\Unit;
+
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
+class AbstractModelTest extends \PHPUnit\Framework\TestCase
+{
+    /**
+     * @var AbstractModel
+     */
+    protected $model;
+    /**
+     * @var Context|MockObject
+     */
+    protected $contextMock;
+    /**
+     * @var Registry|MockObject
+     */
+    protected $registryMock;
+    /**
+     * @var AbstractDb|MockObject
+     */
+    protected $resourceMock;
+    /**
+     * @var \Magento\Framework\Data\Collection\AbstractDb|MockObject
+     */
+    protected $resourceCollectionMock;
+    /**
+     * @var AdapterInterface|MockObject
+     */
+    protected $connectionMock;
+    /**
+     * @var MockObject
+     */
+    protected $actionValidatorMock;
+    protected function setUp() : void
+    {
+    }
+    public function testDelete()
+    {
+    }
+    public function testUpdateStoredData()
+    {
+    }
+    /**
+     * Tests \Magento\Framework\DataObject->isDeleted()
+     */
+    public function testIsDeleted()
+    {
+    }
+    /**
+     * Tests \Magento\Framework\DataObject->hasDataChanges()
+     */
+    public function testHasDataChanges()
+    {
+    }
+    /**
+     * Tests \Magento\Framework\DataObject->getId()
+     */
+    public function testSetGetId()
+    {
+    }
+    public function testSetGetIdFieldName()
+    {
+    }
+    /**
+     * Tests \Magento\Framework\DataObject->setOrigData()
+     */
+    public function testOrigData()
+    {
+    }
+    /**
+     * Tests \Magento\Framework\DataObject->setDataChanges()
+     */
+    public function testSetDataChanges()
+    {
+    }
+}
+namespace Magento\Framework\Model\Test\Unit\EntitySnapshot;
+
+class AttributeProviderTest extends \PHPUnit\Framework\TestCase
+{
+    /**
+     * @var MockObject
+     */
+    protected $concreteAttributeProviderMock;
+    /**
+     * @var MockObject
+     */
+    protected $metadataPoolMock;
+    /**
+     * @var MockObject
+     */
+    protected $objectManagerMock;
+    /**
+     * @var AttributeProvider
+     */
+    protected $attributeProvider;
+    protected function setUp() : void
+    {
+    }
+    public function testGetAttributes()
+    {
+    }
+}
+namespace Magento\Framework\Model\Test\Unit\ResourceModel\Db;
+
+class UpdateEntityRowTest extends \PHPUnit\Framework\TestCase
+{
+    /**
+     * @var UpdateEntityRow
+     */
+    protected $model;
+    /**
+     * @var MockObject
+     */
+    protected $metadataPoolMock;
+    protected function setUp() : void
+    {
+    }
+    public function testExecute()
+    {
+    }
+}
+/**
+ * Unit test for CreateEntityRow class.
+ */
+class CreateEntityRowTest extends \PHPUnit\Framework\TestCase
+{
+    /**
+     * Subject of testing.
+     *
+     * @var CreateEntityRow
+     */
+    protected $subject;
+    /**
+     * @var AdapterInterface|MockObject
+     */
+    protected $connection;
+    /**
+     * @var MetadataPool|MockObject
+     */
+    protected $metadataPool;
+    protected function setUp() : void
+    {
+    }
+    /**
+     * @param $inputData
+     * @param $tableData
+     * @param $preparedData
+     * @param $finalData
+     * @dataProvider executeDataProvider
+     */
+    public function testExecute($inputData, $tableData, $preparedData, $finalData)
+    {
+    }
+    /**
+     * @return array
+     */
+    public function executeDataProvider()
+    {
+    }
+}
+/**
+ * Unit test for DeleteEntityRow class.
+ */
+class DeleteEntityRowTest extends \PHPUnit\Framework\TestCase
+{
+    /**
+     * Subject of testing.
+     *
+     * @var DeleteEntityRow
+     */
+    protected $subject;
+    /**
+     * @var AdapterInterface|MockObject
+     */
+    protected $connection;
+    /**
+     * @var MetadataPool|MockObject
+     */
+    protected $metadataPool;
+    protected function setUp() : void
+    {
+    }
+    public function testExecute()
+    {
+    }
+}
+namespace Magento\Framework\Model\Test\Unit\ResourceModel\Db\Relation;
+
+class ActionPoolTest extends \PHPUnit\Framework\TestCase
+{
+    /**
+     * @var ActionPool
+     */
+    protected $model;
+    /**
+     * @var MockObject
+     */
+    protected $objectManagerMock;
+    protected function setUp() : void
+    {
+    }
+    public function testGetActionsNoAction()
+    {
+    }
+    public function testGetActions()
+    {
+    }
+}
+namespace Magento\Framework\Model\Test\Unit\ResourceModel\Db\VersionControl;
+
+/** Control MetadataTest
+ */
+class MetadataTest extends \PHPUnit\Framework\TestCase
+{
+    /**
+     * @var Metadata
+     */
+    protected $entityMetadata;
+    /**
+     * @var MockObject|AbstractModel
+     */
+    protected $model;
+    /**
+     * @var MockObject|AbstractDb
+     */
+    protected $resource;
+    /**
+     * @var MockObject|AdapterInterface
+     */
+    protected $connection;
+    /**
+     * Initialization
+     */
+    protected function setUp() : void
+    {
+    }
+    public function testGetFields()
+    {
+    }
+}
+class SnapshotTest extends \PHPUnit\Framework\TestCase
+{
+    /**
+     * @var Snapshot
+     */
+    protected $entitySnapshot;
+    /**
+     * @var MockObject|Metadata
+     */
+    protected $entityMetadata;
+    /**
+     * @var MockObject|AbstractModel
+     */
+    protected $model;
+    /**
+     * Initialization
+     */
+    protected function setUp() : void
+    {
+    }
+    public function testRegisterSnapshot()
+    {
+    }
+    public function testIsModified()
+    {
+    }
+    public function testClear()
+    {
+    }
+}
+class RelationCompositeTest extends \PHPUnit\Framework\TestCase
+{
+    /**
+     * @var RelationComposite
+     */
+    protected $entityRelationComposite;
+    /**
+     * @var AbstractModel|MockObject
+     */
+    protected $modelMock;
+    /**
+     * @var RelationInterface
+     */
+    protected $relationProcessorMock;
+    /**
+     * @var ManagerInterface|MockObject
+     */
+    protected $eventManagerMock;
+    protected function setUp() : void
+    {
+    }
+    public function testProcessRelations()
+    {
+    }
+}
+namespace Magento\Framework\Model\Test\Unit\ResourceModel\Db;
+
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
+class AbstractDbTest extends \PHPUnit\Framework\TestCase
+{
+    /**
+     * @var AbstractDb
+     */
+    protected $_model;
+    /**
+     * @var ResourceConnection
+     */
+    protected $_resourcesMock;
+    /**
+     * @var MockObject
+     */
+    protected $transactionManagerMock;
+    /**
+     * @var MockObject
+     */
+    protected $relationProcessorMock;
+    /**
+     * @inheritdoc
+     */
+    protected function setUp() : void
+    {
+    }
+    /**
+     * @param $fieldNameType
+     * @param $expectedResult
+     *
+     * @return void
+     * @dataProvider addUniqueFieldDataProvider
+     */
+    public function testAddUniqueField($fieldNameType, $expectedResult) : void
+    {
+    }
+    /**
+     * @return array
+     */
+    public function addUniqueFieldDataProvider() : array
+    {
+    }
+    /**
+     * @return void
+     */
+    public function testAddUniqueFieldArray() : void
+    {
+    }
+    /**
+     * @return void
+     */
+    public function testGetIdFieldNameException() : void
+    {
+    }
+    /**
+     * @return void
+     */
+    public function testGetIdFieldname() : void
+    {
+    }
+    /**
+     * @return void
+     */
+    public function testGetMainTableException() : void
+    {
+    }
+    /**
+     * @param $tableName
+     * @param $expectedResult
+     *
+     * @return void
+     * @dataProvider getTableDataProvider
+     */
+    public function testGetMainTable($tableName, $expectedResult) : void
+    {
+    }
+    /**
+     * @return array
+     */
+    public function getTableDataProvider() : array
+    {
+    }
+    /**
+     * @return void
+     */
+    public function testGetTable() : void
+    {
+    }
+    /**
+     * @return void
+     */
+    public function testGetChecksumNegative() : void
+    {
+    }
+    /**
+     * @param $checksum
+     * @param $expected
+     *
+     * @return void
+     * @dataProvider getChecksumProvider
+     */
+    public function testGetChecksum($checksum, $expected) : void
+    {
+    }
+    /**
+     * @return array
+     */
+    public function getChecksumProvider() : array
+    {
+    }
+    /**
+     * @return void
+     */
+    public function testResetUniqueField() : void
+    {
+    }
+    /**
+     * @return void
+     */
+    public function testGetUniqueFields() : void
+    {
+    }
+    /**
+     * @return void
+     */
+    public function testGetValidationRulesBeforeSave() : void
+    {
+    }
+    /**
+     * @return void
+     */
+    public function testLoad() : void
+    {
+    }
+    /**
+     * @return void
+     */
+    public function testDelete() : void
+    {
+    }
+    /**
+     * @return void
+     */
+    public function testHasDataChangedNegative() : void
+    {
+    }
+    /**
+     * @param string $getOriginData
+     * @param bool $expected
+     *
+     * @return void
+     * @dataProvider hasDataChangedDataProvider
+     */
+    public function testGetDataChanged($getOriginData, $expected) : void
+    {
+    }
+    /**
+     * @return array
+     */
+    public function hasDataChangedDataProvider() : array
+    {
+    }
+    /**
+     * @return void
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
+    public function testPrepareDataForUpdate() : void
+    {
+    }
+    /**
+     * Test that we only set/override id on object if PK autoincrement is enabled.
+     *
+     * @param bool $pkIncrement
+     *
+     * @return void
+     * @dataProvider saveNewObjectDataProvider
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     */
+    public function testSaveNewObject($pkIncrement) : void
+    {
+    }
+    /**
+     * @return array
+     */
+    public function saveNewObjectDataProvider() : array
+    {
+    }
+    /**
+     * @return void
+     */
+    public function testDuplicateExceptionProcessingOnSave() : void
+    {
+    }
+}
+/**
+ * Unit test for ReadEntityRow class.
+ */
+class ReadEntityRowTest extends \PHPUnit\Framework\TestCase
+{
+    /**
+     * Subject of testing.
+     *
+     * @var ReadEntityRow
+     */
+    protected $subject;
+    /**
+     * @var Select|MockObject
+     */
+    protected $select;
+    /**
+     * @var AdapterInterface|MockObject
+     */
+    protected $connection;
+    /**
+     * @var MetadataPool|MockObject
+     */
+    protected $metadataPool;
+    /**
+     * @inheritdoc
+     */
+    protected function setUp() : void
+    {
+    }
+    /**
+     * @return void
+     */
+    public function testExecute() : void
+    {
+    }
+}
+namespace Magento\Framework\Model\ResourceModel\Db\Collection;
+
+/**
+ * Abstract Resource Collection
+ *
+ * phpcs:disable Magento2.Classes.AbstractApi
+ * @api
+ * @SuppressWarnings(PHPMD.NumberOfChildren)
+ * @since 100.0.2
+ */
+abstract class AbstractCollection extends \Magento\Framework\Data\Collection\AbstractDb implements \Magento\Framework\App\ResourceConnection\SourceProviderInterface
+{
+    /**
+     * Model name
+     *
+     * @var string
+     */
+    protected $_model;
+    /**
+     * Resource model name
+     *
+     * @var string
+     */
+    protected $_resourceModel;
+    /**
+     * Resource instance
+     *
+     * @var \Magento\Framework\Model\ResourceModel\Db\AbstractDb
+     */
+    protected $_resource;
+    /**
+     * Fields to select in query
+     *
+     * @var array|null
+     */
+    protected $_fieldsToSelect = null;
+    /**
+     * Fields initial fields to select like id_field
+     *
+     * @var array|null
+     */
+    protected $_initialFieldsToSelect = null;
+    /**
+     * Fields to select changed flag
+     *
+     * @var boolean
+     */
+    protected $_fieldsToSelectChanged = false;
+    /**
+     * Store joined tables here
+     *
+     * @var array
+     */
+    protected $_joinedTables = [];
+    /**
+     * Collection main table
+     *
+     * @var string
+     */
+    protected $_mainTable = null;
+    /**
+     * Reset items data changed flag
+     *
+     * @var boolean
+     */
+    protected $_resetItemsDataChanged = false;
+    /**
+     * Name prefix of events that are dispatched by model
+     *
+     * @var string
+     */
+    protected $_eventPrefix = '';
+    /**
+     * Name of event parameter
+     *
+     * @var string
+     */
+    protected $_eventObject = '';
+    /**
+     * Event manager proxy
+     *
+     * @var ManagerInterface
+     */
+    protected $_eventManager = null;
+    /**
+     * @param \Magento\Framework\Data\Collection\EntityFactoryInterface $entityFactory
+     * @param \Psr\Log\LoggerInterface $logger
+     * @param \Magento\Framework\Data\Collection\Db\FetchStrategyInterface $fetchStrategy
+     * @param ManagerInterface $eventManager
+     * @param \Magento\Framework\DB\Adapter\AdapterInterface $connection
+     * @param \Magento\Framework\Model\ResourceModel\Db\AbstractDb $resource
+     */
+    public function __construct(\Magento\Framework\Data\Collection\EntityFactoryInterface $entityFactory, \Psr\Log\LoggerInterface $logger, \Magento\Framework\Data\Collection\Db\FetchStrategyInterface $fetchStrategy, \Magento\Framework\Event\ManagerInterface $eventManager, \Magento\Framework\DB\Adapter\AdapterInterface $connection = null, \Magento\Framework\Model\ResourceModel\Db\AbstractDb $resource = null)
+    {
+    }
+    /**
+     * Initialization here
+     *
+     * @return void
+     */
+    protected function _construct()
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function _resetState() : void
+    {
+    }
+    /**
+     * Retrieve main table
+     *
+     * @return string
+     */
+    public function getMainTable()
+    {
+    }
+    /**
+     * Set main collection table
+     *
+     * @param string $table
+     * @return $this
+     */
+    public function setMainTable($table)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    protected function _initSelect()
+    {
+    }
+    /**
+     * Get \Magento\Framework\DB\Select instance and applies fields to select if needed
+     *
+     * @return \Magento\Framework\DB\Select
+     */
+    public function getSelect()
+    {
+    }
+    /**
+     * Init fields for select
+     *
+     * @return $this
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     */
+    protected function _initSelectFields()
+    {
+    }
+    /**
+     * Retrieve initial fields to select like id field
+     *
+     * @return array
+     */
+    protected function _getInitialFieldsToSelect()
+    {
+    }
+    /**
+     * Initialize initial fields to select like id field
+     *
+     * @return $this
+     */
+    protected function _initInitialFieldsToSelect()
+    {
+    }
+    /**
+     * Add field to select
+     *
+     * @param string|array $field
+     * @param string|null $alias
+     * @return $this
+     */
+    public function addFieldToSelect($field, $alias = null)
+    {
+    }
+    /**
+     * Add attribute expression (SUM, COUNT, etc)
+     * Example: ('sub_total', 'SUM({{attribute}})', 'revenue')
+     * Example: ('sub_total', 'SUM({{revenue}})', 'revenue')
+     * For some functions like SUM use groupByAttribute.
+     *
+     * @param string $alias
+     * @param string $expression
+     * @param array|string $fields
+     * @return $this
+     */
+    public function addExpressionFieldToSelect($alias, $expression, $fields)
+    {
+    }
+    /**
+     * Removes field from select
+     *
+     * @param string|null $field
+     * @param bool $isAlias Alias identifier
+     * @return $this
+     */
+    public function removeFieldFromSelect($field, $isAlias = false)
+    {
+    }
+    /**
+     * Removes all fields from select
+     *
+     * @return $this
+     */
+    public function removeAllFieldsFromSelect()
+    {
+    }
+    /**
+     * Standard resource collection initialization
+     *
+     * @param string $model
+     * @param string $resourceModel
+     * @return $this
+     */
+    protected function _init($model, $resourceModel)
+    {
+    }
+    /**
+     * Set model name for collection items
+     *
+     * @param string $model
+     * @return $this
+     */
+    public function setModel($model)
+    {
+    }
+    /**
+     * Get model instance
+     *
+     * @return string
+     */
+    public function getModelName()
+    {
+    }
+    /**
+     * Set resource model name for collection items
+     *
+     * @param string $model
+     * @return void
+     */
+    public function setResourceModel($model)
+    {
+    }
+    /**
+     *  Retrieve resource model name
+     *
+     * @return string
+     */
+    public function getResourceModelName()
+    {
+    }
+    /**
+     * Get resource instance
+     *
+     * @return \Magento\Framework\Model\ResourceModel\Db\AbstractDb
+     */
+    public function getResource()
+    {
+    }
+    /**
+     * Retrieve table name
+     *
+     * @param string $table
+     * @return string
+     */
+    public function getTable($table)
+    {
+    }
+    /**
+     * Retrieve all ids for collection
+     *
+     * @return array
+     */
+    public function getAllIds()
+    {
+    }
+    /**
+     * Join table to collection select
+     *
+     * @param string|array $table
+     * @param string $cond
+     * @param string|array $cols
+     * @return $this
+     */
+    public function join($table, $cond, $cols = '*')
+    {
+    }
+    /**
+     * Redeclare before load method for adding event
+     *
+     * @return $this
+     */
+    protected function _beforeLoad()
+    {
+    }
+    /**
+     * Set reset items data changed flag
+     *
+     * @param bool $flag
+     * @return $this
+     */
+    public function setResetItemsDataChanged($flag)
+    {
+    }
+    /**
+     * Set flag data has changed to all collection items
+     *
+     * @return $this
+     */
+    public function resetItemsDataChanged()
+    {
+    }
+    /**
+     * Redeclare after load method for specifying collection items original data
+     *
+     * @return $this
+     */
+    protected function _afterLoad()
+    {
+    }
+    /**
+     * Save all the entities in the collection
+     *
+     * @return $this
+     */
+    public function save()
+    {
+    }
+    /**
+     * @inheritdoc
+     * @since 100.0.11
+     */
+    public function __sleep()
+    {
+    }
+    /**
+     * @inheritdoc
+     * @since 100.0.11
+     */
+    public function __wakeup()
+    {
+    }
+}
+namespace Magento\Framework\Model\Test\Unit\ResourceModel\Db\Collection;
+
+/**
+ * Pattern type: Public Morozov
+ */
+class Uut extends \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection
+{
+    /**
+     * @return bool
+     */
+    public function wereFieldsToSelectChanged()
+    {
+    }
+    /**
+     * @return array|null
+     */
+    public function getFieldsToSelect()
+    {
+    }
+    /**
+     * @param array $fields
+     */
+    public function setFieldsToSelect(array $fields)
+    {
+    }
+    /**
+     * @param $resource
+     */
+    public function setResource($resource)
+    {
+    }
+    /**
+     * @return array
+     */
+    public function getJoinedTables()
+    {
+    }
+}
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
+class AbstractCollectionTest extends \PHPUnit\Framework\TestCase
+{
+    const TABLE_NAME = 'some_table';
+    /** @var Uut */
+    protected $uut;
+    /** @var ObjectManagerHelper */
+    protected $objectManagerHelper;
+    /** @var EntityFactoryInterface|MockObject */
+    protected $entityFactoryMock;
+    /** @var LoggerInterface|MockObject */
+    protected $loggerMock;
+    /** @var FetchStrategyInterface|MockObject */
+    protected $fetchStrategyMock;
+    /** @var ManagerInterface|MockObject */
+    protected $managerMock;
+    /** @var AbstractDb|MockObject  */
+    protected $resourceMock;
+    /** @var Mysql|MockObject */
+    protected $connectionMock;
+    /** @var Select|MockObject  */
+    protected $selectMock;
+    /** @var \Magento\Framework\App\ObjectManager|MockObject */
+    protected $objectManagerMock;
+    /**
+     * @var \Magento\Framework\App\ObjectManager
+     */
+    protected $objectManagerBackup;
+    protected function setUp() : void
+    {
+    }
+    protected function tearDown() : void
+    {
+    }
+    /**
+     * @return object
+     */
+    protected function getUut()
+    {
+    }
+    public function testSetMainTableNull()
+    {
+    }
+    public function testSetMainTableFirst()
+    {
+    }
+    public function testSetMainTableNoSelect()
+    {
+    }
+    public function testSetMainTable()
+    {
+    }
+    public function testGetSelectCached()
+    {
+    }
+    /**
+     * @dataProvider getSelectDataProvider
+     */
+    public function testGetSelect($idFieldNameRet, $getPartRet, $expected)
+    {
+    }
+    /**
+     * @return array
+     */
+    public function getSelectDataProvider()
+    {
+    }
+    /**
+     * @dataProvider addFieldToSelectDataProvider
+     */
+    public function testAddFieldToSelect($field, $alias, $expectedFieldsToSelect)
+    {
+    }
+    /**
+     * @return array
+     */
+    public function addFieldToSelectDataProvider()
+    {
+    }
+    /**
+     * @dataProvider addExpressionFieldToSelectDataProvider
+     */
+    public function testAddExpressionFieldToSelect($alias, $expression, $fields, $expected)
+    {
+    }
+    /**
+     * @return array
+     */
+    public function addExpressionFieldToSelectDataProvider()
+    {
+    }
+    /**
+     * @dataProvider removeFieldFromSelectDataProvider
+     */
+    public function testRemoveFieldFromSelect($field, $isAlias, $initialFieldsToSelect, $expectedFieldsToSelect, $expectedWereFieldsToSelectChanged)
+    {
+    }
+    /**
+     * @return array
+     */
+    public function removeFieldFromSelectDataProvider()
+    {
+    }
+    public function testRemoveAllFieldsFromSelect()
+    {
+    }
+    public function testSetModelNotString()
+    {
+    }
+    public function testSetModelInvalidType()
+    {
+    }
+    public function testSetModel()
+    {
+    }
+    public function testGetModelName()
+    {
+    }
+    public function testGetResourceModelName()
+    {
+    }
+    public function testGetResource()
+    {
+    }
+    public function testGetResourceCached()
+    {
+    }
+    public function testGetTable()
+    {
+    }
+    /**
+     * @dataProvider joinDataProvider
+     */
+    public function testJoin($table, $cond, $cols, $expected)
+    {
+    }
+    /**
+     * @return array
+     */
+    public function joinDataProvider()
+    {
+    }
+    public function testResetItemsDataChanged()
+    {
+    }
+    public function testSave()
+    {
+    }
+}
+namespace Magento\Framework\Model\ResourceModel;
+
+/**
+ * Abstract resource model
+ *
+ * phpcs:disable Magento2.Classes.AbstractApi
+ * @api
+ * @since 100.0.2
+ */
+abstract class AbstractResource
+{
+    /**
+     * @var Json|null
+     * @since 101.0.0
+     */
+    protected $serializer;
+    /**
+     * @var \Psr\Log\LoggerInterface
+     * @since 102.0.0
+     */
+    protected $_logger;
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+    }
+    /**
+     * Resource initialization
+     *
+     * @return void
+     */
+    protected abstract function _construct();
+    /**
+     * Get connection
+     *
+     * @return \Magento\Framework\DB\Adapter\AdapterInterface
+     */
+    public abstract function getConnection();
+    /**
+     * Start resource transaction
+     *
+     * @return $this
+     */
+    public function beginTransaction()
+    {
+    }
+    /**
+     * Subscribe some callback to transaction commit
+     *
+     * @param callable|array $callback
+     * @return $this
+     */
+    public function addCommitCallback($callback)
+    {
+    }
+    /**
+     * Commit resource transaction
+     *
+     * @deprecated
+     * @see \Magento\Framework\Model\ExecuteCommitCallbacks::afterCommit
+     * @return $this
+     */
+    public function commit()
+    {
+    }
+    /**
+     * Roll back resource transaction
+     *
+     * @return $this
+     */
+    public function rollBack()
+    {
+    }
+    /**
+     * Serialize specified field in an object
+     *
+     * @param DataObject $object
+     * @param string $field
+     * @param mixed $defaultValue
+     * @param bool $unsetEmpty
+     * @return $this
+     */
+    protected function _serializeField(\Magento\Framework\DataObject $object, $field, $defaultValue = null, $unsetEmpty = false)
+    {
+    }
+    /**
+     * Unserialize \Magento\Framework\DataObject field in an object
+     *
+     * @param \Magento\Framework\Model\AbstractModel $object
+     * @param string $field
+     * @param mixed $defaultValue
+     * @return void
+     */
+    protected function _unserializeField(\Magento\Framework\DataObject $object, $field, $defaultValue = null)
+    {
+    }
+    /**
+     * Prepare data for passed table
+     *
+     * @param DataObject $object
+     * @param string $table
+     * @return array
+     */
+    protected function _prepareDataForTable(\Magento\Framework\DataObject $object, $table)
+    {
+    }
+    /**
+     * Prepare value for save
+     *
+     * @param mixed $value
+     * @param string $type
+     * @return mixed
+     */
+    protected function _prepareTableValueForSave($value, $type)
+    {
+    }
+    /**
+     * Template method to return validate rules to be executed before entity is saved
+     *
+     * @return null
+     */
+    public function getValidationRulesBeforeSave()
+    {
+    }
+    /**
+     * Prepare the list of entity fields that should be selected from DB. Apply filtration based on active fieldset.
+     *
+     * @param \Magento\Framework\Model\AbstractModel $object
+     * @param string $tableName
+     * @return array|string
+     */
+    protected function _getColumnsForEntityLoad(\Magento\Framework\Model\AbstractModel $object, $tableName)
+    {
+    }
+    /**
+     * Get serializer
+     *
+     * @return Json
+     * @since 101.0.0
+     */
+    protected function getSerializer()
+    {
+    }
+}
+namespace Magento\Framework\Model\Test\Unit\ResourceModel;
+
+class AbstractResourceStub extends \Magento\Framework\Model\ResourceModel\AbstractResource
+{
+    /**
+     * Resource initialization
+     *
+     * @return void
+     */
+    protected function _construct()
+    {
+    }
+    /**
+     * Get connection
+     *
+     * @return AdapterInterface
+     */
+    public function getConnection()
+    {
+    }
+    /**
+     * @param AdapterInterface $adapter
+     *
+     * @return void
+     */
+    public function setConnection(\Magento\Framework\DB\Adapter\AdapterInterface $adapter)
+    {
+    }
+    /**
+     * @param DataObject $object
+     * @param string $field
+     * @param null $defaultValue
+     * @param bool $unsetEmpty
+     * @return $this
+     * phpcs:disable Generic.CodeAnalysis.UselessOverridingMethod
+     */
+    public function _serializeField(\Magento\Framework\DataObject $object, $field, $defaultValue = null, $unsetEmpty = false)
+    {
+    }
+    /**
+     * @param DataObject $object
+     * @param string $field
+     * @param null $defaultValue
+     * phpcs:disable Generic.CodeAnalysis.UselessOverridingMethod
+     */
+    public function _unserializeField(\Magento\Framework\DataObject $object, $field, $defaultValue = null)
+    {
+    }
+}
+/**
+ * Test for \Magento\Framework\Model\ResourceModel\AbstractResource.
+ */
+class AbstractResourceTest extends \PHPUnit\Framework\TestCase
+{
+    /**
+     * @inheritdoc
+     */
+    protected function setUp() : void
+    {
+    }
+    /**
+     * Test fields serialize
+     *
+     * @param array $arguments
+     * @param string|null $expected
+     * @param array|string|int $serializeCalledWith
+     * @param int $numSerializeCalled
+     * @return void
+     * @dataProvider serializeFieldsDataProvider
+     */
+    public function testSerializeFields(array $arguments, ?string $expected, $serializeCalledWith, int $numSerializeCalled = 1) : void
+    {
+    }
+    /**
+     * DataProvider for testSerializeFields()
+     *
+     * @return array
+     */
+    public function serializeFieldsDataProvider() : array
+    {
+    }
+    /**
+     * Test fields unserialize
+     *
+     * @param array $arguments
+     * @param array|string|int|boolean $expected
+     * @return void
+     * @dataProvider unserializeFieldsDataProvider
+     */
+    public function testUnserializeFields(array $arguments, $expected) : void
+    {
+    }
+    /**
+     * DataProvider for testUnserializeFields()
+     *
+     * @return array
+     */
+    public function unserializeFieldsDataProvider() : array
+    {
+    }
+    /**
+     * Commit zero level
+     *
+     * @return void
+     */
+    public function testCommitZeroLevel() : void
+    {
+    }
+    /**
+     * Commit zero level callback with exception
+     *
+     * @return void
+     */
+    public function testCommitZeroLevelCallbackException() : void
+    {
+    }
+    /**
+     * Commit of transactions that have not been completed
+     *
+     * @return void
+     */
+    public function testCommitNotCompletedTransaction() : void
+    {
+    }
+    /**
+     * Test commit case when first callback throws an exception but other callbacks will be called
+     *
+     * @return void
+     */
+    public function testCommitFewCallbacksWithException() : void
+    {
+    }
+}
+namespace Magento\Framework\Model\Test\Unit\ResourceModel\Type\Db;
+
+class ConnectionFactoryTest extends \PHPUnit\Framework\TestCase
+{
+    /**
+     * {@inheritDoc}
+     */
+    protected function setUp() : void
+    {
+    }
+    /**
+     * @return void
+     */
+    public function testCreateNoActiveConfig()
+    {
+    }
+}
+namespace Magento\Framework\Model\Test\Unit\ResourceModel\Type\Db\Pdo;
+
+class MysqlTest extends \PHPUnit\Framework\TestCase
+{
+    protected function setUp() : void
+    {
+    }
+    /**
+     * @param array $inputConfig
+     * @param array $expectedConfig
+     * @dataProvider constructorDataProvider
+     */
+    public function testConstructor(array $inputConfig, array $expectedConfig)
+    {
+    }
+    /**
+     * @return array
+     */
+    public function constructorDataProvider()
+    {
+    }
+    public function testConstructorException()
+    {
+    }
+    public function testGetConnectionInactive()
+    {
+    }
+}
+namespace Magento\Framework\Model\EntitySnapshot;
+
+/**
+ * Interface AttributeProviderInterface
+ *
+ * @api
+ */
+interface AttributeProviderInterface
+{
+    /**
+     * Returns array of fields
+     *
+     * @param string $entityType
+     * @return string[]
+     */
+    public function getAttributes($entityType);
+}
+/**
+ * Class EntitySnapshot
+ */
+class AttributeProvider implements \Magento\Framework\Model\EntitySnapshot\AttributeProviderInterface
+{
+    /**
+     * @var AttributeProviderInterface[]
+     */
+    protected $providers;
+    /**
+     * @var MetadataPool
+     */
+    protected $metadataPool;
+    /**
+     * @var ObjectManager
+     */
+    protected $objectManager;
+    /**
+     * @var array
+     */
+    protected $registry;
+    /**
+     * @param MetadataPool $metadataPool
+     * @param ObjectManager $objectManager
+     * @param array $providers
+     */
+    public function __construct(\Magento\Framework\EntityManager\MetadataPool $metadataPool, \Magento\Framework\ObjectManagerInterface $objectManager, $providers = [])
+    {
+    }
+    /**
+     * Returns array of fields
+     *
+     * @param string $entityType
+     * @return string[]
+     * @throws \Exception
+     */
+    public function getAttributes($entityType)
+    {
+    }
+}
+namespace Magento\Framework\Model;
+
+/**
+ * Abstract model class
+ *
+ * phpcs:disable Magento2.Classes.AbstractApi
+ * @api
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.NumberOfChildren)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings(PHPMD.ExcessiveClassLength)
+ * @SuppressWarnings(PHPMD.TooManyFields)
+ * @since 100.0.2
+ */
+abstract class AbstractModel extends \Magento\Framework\DataObject
+{
+    /**
+     * Prefix of model events names
+     *
+     * @var string
+     */
+    protected $_eventPrefix = 'core_abstract';
+    /**
+     * Parameter name in event
+     *
+     * In observe method you can use $observer->getEvent()->getObject() in this case
+     *
+     * @var string
+     */
+    protected $_eventObject = 'object';
+    /**
+     * Name of object id field
+     *
+     * @var string
+     */
+    protected $_idFieldName = 'id';
+    /**
+     * Data changes flag (true after setData|unsetData call)
+     * @var bool
+     */
+    protected $_hasDataChanges = false;
+    /**
+     * Original data that was loaded
+     *
+     * @var array
+     */
+    protected $_origData;
+    /**
+     * Object delete flag
+     *
+     * @var bool
+     */
+    protected $_isDeleted = false;
+    /**
+     * Resource model instance
+     *
+     * @var \Magento\Framework\Model\ResourceModel\Db\AbstractDb
+     */
+    protected $_resource;
+    /**
+     * @var \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection
+     */
+    protected $_resourceCollection;
+    /**
+     * Name of the resource model
+     *
+     * @var string
+     */
+    protected $_resourceName;
+    /**
+     * Name of the resource collection model
+     *
+     * @var string
+     */
+    protected $_collectionName;
+    /**
+     * Model cache tag for clear cache in after save and after delete
+     *
+     * When you use true - all cache will be clean
+     *
+     * @var string|array|bool
+     */
+    protected $_cacheTag = false;
+    /**
+     * Flag which can stop data saving after before save
+     * Can be used for next sequence: we check data in _beforeSave, if data are
+     * not valid - we can set this flag to false value and save process will be stopped
+     *
+     * @var bool
+     */
+    protected $_dataSaveAllowed = true;
+    /**
+     * Flag which allow detect object state: is it new object (without id) or existing one (with id)
+     *
+     * @var bool
+     */
+    protected $_isObjectNew = null;
+    /**
+     * Validator for checking the model state before saving it
+     *
+     * @var ValidatorInterface|bool|null
+     */
+    protected $_validatorBeforeSave = null;
+    /**
+     * Application Event Dispatcher
+     *
+     * @var \Magento\Framework\Event\ManagerInterface
+     */
+    protected $_eventManager;
+    /**
+     * Application Cache Manager
+     *
+     * @var \Magento\Framework\App\CacheInterface
+     */
+    protected $_cacheManager;
+    /**
+     * @var \Magento\Framework\Registry
+     */
+    protected $_registry;
+    /**
+     * @var \Psr\Log\LoggerInterface
+     */
+    protected $_logger;
+    /**
+     * @var \Magento\Framework\App\State
+     */
+    protected $_appState;
+    /**
+     * @var \Magento\Framework\Model\ActionValidator\RemoveAction
+     */
+    protected $_actionValidator;
+    /**
+     * Array to store object's original data
+     *
+     * @var array
+     */
+    protected $storedData = [];
+    /**
+     * @param \Magento\Framework\Model\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\Model\ResourceModel\AbstractResource $resource
+     * @param \Magento\Framework\Data\Collection\AbstractDb $resourceCollection
+     * @param array $data
+     */
+    public function __construct(\Magento\Framework\Model\Context $context, \Magento\Framework\Registry $registry, \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null, \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null, array $data = [])
+    {
+    }
+    /**
+     * Model construct that should be used for object initialization
+     *
+     * @return void
+     */
+    protected function _construct()
+    {
+    }
+    /**
+     * Standard model initialization
+     *
+     * @param string $resourceModel
+     * @return void
+     */
+    protected function _init($resourceModel)
+    {
+    }
+    /**
+     * Remove unneeded properties from serialization
+     *
+     * @return string[]
+     */
+    public function __sleep()
+    {
+    }
+    /**
+     * Init not serializable fields
+     *
+     * @return void
+     */
+    public function __wakeup()
+    {
+    }
+    /**
+     * Id field name setter
+     *
+     * @param  string $name
+     * @return $this
+     */
+    public function setIdFieldName($name)
+    {
+    }
+    /**
+     * Id field name getter
+     *
+     * @return string
+     */
+    public function getIdFieldName()
+    {
+    }
+    /**
+     * Identifier getter
+     *
+     * @return mixed
+     */
+    public function getId()
+    {
+    }
+    /**
+     * Identifier setter
+     *
+     * @param mixed $value
+     * @return $this
+     */
+    public function setId($value)
+    {
+    }
+    /**
+     * Set _isDeleted flag value (if $isDeleted parameter is defined) and return current flag value
+     *
+     * @param boolean $isDeleted
+     * @return bool
+     */
+    public function isDeleted($isDeleted = null)
+    {
+    }
+    /**
+     * Check if initial object data was changed.
+     *
+     * Initial data is coming to object constructor.
+     * Flag value should be set up to true after any external data changes
+     *
+     * @return bool
+     */
+    public function hasDataChanges()
+    {
+    }
+    /**
+     * Overwrite data in the object.
+     *
+     * The $key parameter can be string or array.
+     * If $key is string, the attribute value will be overwritten by $value
+     *
+     * If $key is an array, it will overwrite all the data in the object.
+     *
+     * @param string|array $key
+     * @param mixed $value
+     * @return $this
+     */
+    public function setData($key, $value = null)
+    {
+    }
+    /**
+     * Unset data from the object.
+     *
+     * @param null|string|array $key
+     * @return $this
+     */
+    public function unsetData($key = null)
+    {
+    }
+    /**
+     * Clears data changes status
+     *
+     * @param bool $value
+     * @return $this
+     */
+    public function setDataChanges($value)
+    {
+    }
+    /**
+     * Get object original data
+     *
+     * @param string $key
+     * @return mixed
+     */
+    public function getOrigData($key = null)
+    {
+    }
+    /**
+     * Initialize object original data
+     *
+     * @FIXME changing original data can't be available as public interface
+     *
+     * @param string $key
+     * @param mixed $data
+     * @return $this
+     */
+    public function setOrigData($key = null, $data = null)
+    {
+    }
+    /**
+     * Compare object data with original data
+     *
+     * @param string $field
+     * @return bool
+     */
+    public function dataHasChangedFor($field)
+    {
+    }
+    /**
+     * Set resource names
+     *
+     * If collection name is omitted, resource name will be used with _collection appended
+     *
+     * @param string $resourceName
+     * @param string|null $collectionName
+     * @return void
+     */
+    protected function _setResourceModel($resourceName, $collectionName = null)
+    {
+    }
+    /**
+     * Get resource instance
+     *
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @return \Magento\Framework\Model\ResourceModel\Db\AbstractDb
+     * @deprecated 101.0.0 because resource models should be used directly
+     * @see we don't recommend this approach anymore
+     */
+    protected function _getResource()
+    {
+    }
+    /**
+     * Retrieve model resource name
+     *
+     * @return string
+     */
+    public function getResourceName()
+    {
+    }
+    /**
+     * Get collection instance
+     *
+     * @TODO MAGETWO-23541: Incorrect dependencies between Model\AbstractModel and Data\Collection\Db from Framework
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @return \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection
+     * @deprecated 101.0.0 because collections should be used directly via factory
+     * @see we don't recommend this approach anymore
+     */
+    public function getResourceCollection()
+    {
+    }
+    /**
+     * Retrieve collection instance
+     *
+     * @TODO MAGETWO-23541: Incorrect dependencies between Model\AbstractModel and Data\Collection\Db from Framework
+     * @return \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection
+     * @deprecated 101.0.0 because collections should be used directly via factory
+     * @see we don't recommend this approach anymore
+     */
+    public function getCollection()
+    {
+    }
+    /**
+     * Load object data
+     *
+     * @param integer $modelId
+     * @param null|string $field
+     * @return $this
+     * @deprecated 100.1.0 because entities must not be responsible for their own loading.
+     * Service contracts should persist entities. Use resource model "load" or collections to implement
+     * service contract model loading operations.
+     * @see we don't recommend this approach anymore
+     */
+    public function load($modelId, $field = null)
+    {
+    }
+    /**
+     * Get array of objects transferred to default events processing
+     *
+     * @return array
+     */
+    protected function _getEventData()
+    {
+    }
+    /**
+     * Processing object before load data
+     *
+     * @param int $modelId
+     * @param null|string $field
+     * @return $this
+     */
+    protected function _beforeLoad($modelId, $field = null)
+    {
+    }
+    /**
+     * Processing object after load data
+     *
+     * @return $this
+     */
+    protected function _afterLoad()
+    {
+    }
+    /**
+     * Process operation before object load
+     *
+     * @param string $identifier
+     * @param string|null $field
+     * @return void
+     * @since 101.0.0
+     */
+    public function beforeLoad($identifier, $field = null)
+    {
+    }
+    /**
+     * Object after load processing. Implemented as public interface for supporting objects after load in collections
+     *
+     * @return $this
+     */
+    public function afterLoad()
+    {
+    }
+    /**
+     * Check whether model has changed data.
+     * Can be overloaded in child classes to perform advanced check whether model needs to be saved
+     * e.g. using resourceModel->hasDataChanged() or any other technique
+     *
+     * @return boolean
+     */
+    protected function _hasModelChanged()
+    {
+    }
+    /**
+     * Check if save is allowed
+     *
+     * @return bool
+     */
+    public function isSaveAllowed()
+    {
+    }
+    /**
+     * Set flag property _hasDataChanges
+     *
+     * @param bool $flag
+     * @return void
+     */
+    public function setHasDataChanges($flag)
+    {
+    }
+    /**
+     * Save object data
+     *
+     * @return $this
+     * @throws \Exception
+     *
+     * @deprecated 100.1.0 because entities must not be responsible for their own persistence.
+     * Service contracts should persist entities. Use resource model "save" to implement
+     * service contract persistence operations.
+     * @see we don't recommend this approach anymore
+     */
+    public function save()
+    {
+    }
+    /**
+     * Callback function which called after transaction commit in resource model
+     *
+     * @return $this
+     */
+    public function afterCommitCallback()
+    {
+    }
+    /**
+     * Check object state (true - if it is object without id on object just created)
+     * This method can help detect if object just created in _afterSave method
+     * problem is what in after save object has id and we can't detect what object was
+     * created in this transaction
+     *
+     * @param bool|null $flag
+     * @return bool
+     */
+    public function isObjectNew($flag = null)
+    {
+    }
+    /**
+     * Processing object before save data
+     *
+     * @return $this
+     */
+    public function beforeSave()
+    {
+    }
+    /**
+     * Validate model before saving it
+     *
+     * @return $this
+     * @throws \Magento\Framework\Validator\Exception
+     */
+    public function validateBeforeSave()
+    {
+    }
+    /**
+     * Returns validator, which contains all rules to validate this model.
+     *
+     * Returns FALSE, if no validation rules exist.
+     *
+     * @return ValidatorInterface|false
+     */
+    protected function _getValidatorBeforeSave()
+    {
+    }
+    /**
+     * Creates validator for the model with all validation rules in it.
+     *
+     * Returns FALSE, if no validation rules exist.
+     *
+     * @return ValidatorInterface|bool
+     * @throws LocalizedException
+     */
+    protected function _createValidatorBeforeSave()
+    {
+    }
+    /**
+     * Template method to return validate rules for the entity
+     *
+     * @return ValidatorInterface|null
+     */
+    protected function _getValidationRulesBeforeSave()
+    {
+    }
+    /**
+     * Get list of cache tags applied to model object.
+     *
+     * Return false if cache tags are not supported by model
+     *
+     * @return array|false
+     */
+    public function getCacheTags()
+    {
+    }
+    /**
+     * Remove model object related cache
+     *
+     * @return $this
+     */
+    public function cleanModelCache()
+    {
+    }
+    /**
+     * Processing object after save data
+     *
+     * @return $this
+     */
+    public function afterSave()
+    {
+    }
+    /**
+     * Delete object from database
+     *
+     * @return $this
+     * @throws \Exception
+     * @deprecated 100.1.0 because entities must not be responsible for their own deletion.
+     * Service contracts should delete entities. Use resource model "delete" method to implement
+     * service contract persistence operations.
+     * @see we don't recommend this approach anymore
+     */
+    public function delete()
+    {
+    }
+    /**
+     * Processing object before delete data
+     *
+     * @return $this
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function beforeDelete()
+    {
+    }
+    /**
+     * Processing object after delete data
+     *
+     * @return $this
+     */
+    public function afterDelete()
+    {
+    }
+    /**
+     * Processing manipulation after main transaction commit
+     *
+     * @return $this
+     */
+    public function afterDeleteCommit()
+    {
+    }
+    /**
+     * Retrieve model resource
+     *
+     * @return \Magento\Framework\Model\ResourceModel\Db\AbstractDb
+     * @deprecated 101.0.0 because resource models should be used directly
+     * @see we don't recommend this approach anymore
+     */
+    public function getResource()
+    {
+    }
+    /**
+     * Retrieve entity id
+     *
+     * @return mixed
+     */
+    public function getEntityId()
+    {
+    }
+    /**
+     * Set entity id
+     *
+     * @param int $entityId
+     * @return $this
+     */
+    public function setEntityId($entityId)
+    {
+    }
+    /**
+     * Clearing object for correct deleting by garbage collector
+     *
+     * @return $this
+     */
+    public function clearInstance()
+    {
+    }
+    /**
+     * Clearing cyclic references
+     *
+     * @return $this
+     */
+    protected function _clearReferences()
+    {
+    }
+    /**
+     * Clearing object's data
+     *
+     * @return $this
+     */
+    protected function _clearData()
+    {
+    }
+    /**
+     * Model StoredData getter
+     *
+     * @return array
+     */
+    public function getStoredData()
+    {
+    }
+    /**
+     * Returns _eventPrefix
+     *
+     * @return string
+     */
+    public function getEventPrefix()
+    {
+    }
+}
+/**
+ * Abstract model with custom attributes support.
+ *
+ * This class defines basic data structure of how custom attributes are stored in an ExtensibleModel.
+ * Implementations may choose to process custom attributes as their persistence requires them to.
+ * @SuppressWarnings(PHPMD.NumberOfChildren)
+ * phpcs:disable Magento2.Classes.AbstractApi
+ * @api
+ * @since 100.0.2
+ */
+abstract class AbstractExtensibleModel extends \Magento\Framework\Model\AbstractModel implements \Magento\Framework\Api\CustomAttributesDataInterface
+{
+    /**
+     * @var ExtensionAttributesFactory
+     */
+    protected $extensionAttributesFactory;
+    /**
+     * @var \Magento\Framework\Api\ExtensionAttributesInterface
+     */
+    protected $extensionAttributes;
+    /**
+     * @var AttributeValueFactory
+     */
+    protected $customAttributeFactory;
+    /**
+     * @var string[]
+     */
+    protected $customAttributesCodes = null;
+    /**
+     * @var bool
+     */
+    protected $customAttributesChanged = false;
+    /**
+     * @param \Magento\Framework\Model\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param ExtensionAttributesFactory $extensionFactory
+     * @param AttributeValueFactory $customAttributeFactory
+     * @param \Magento\Framework\Model\ResourceModel\AbstractResource $resource
+     * @param \Magento\Framework\Data\Collection\AbstractDb $resourceCollection
+     * @param array $data
+     */
+    public function __construct(\Magento\Framework\Model\Context $context, \Magento\Framework\Registry $registry, \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory, \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory, \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null, \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null, array $data = [])
+    {
+    }
+    /**
+     * Verify custom attributes set on $data and unset if not a valid custom attribute
+     *
+     * @param array $data
+     * @return array processed data
+     */
+    protected function filterCustomAttributes($data)
+    {
+    }
+    /**
+     * Initialize customAttributes based on existing data
+     */
+    protected function initializeCustomAttributes()
+    {
+    }
+    /**
+     * Retrieve custom attributes values.
+     *
+     * @return \Magento\Framework\Api\AttributeInterface[]|null
+     */
+    public function getCustomAttributes()
+    {
+    }
+    /**
+     * Get an attribute value.
+     *
+     * @param string $attributeCode
+     * @return \Magento\Framework\Api\AttributeInterface|null null if the attribute has not been set
+     */
+    public function getCustomAttribute($attributeCode)
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function setCustomAttributes(array $attributes)
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function setCustomAttribute($attributeCode, $attributeValue)
+    {
+    }
+    /**
+     * {@inheritdoc} Added custom attributes support.
+     *
+     * @param string|array $key
+     * @param mixed $value
+     * @return $this
+     */
+    public function setData($key, $value = null)
+    {
+    }
+    /**
+     * {@inheritdoc} Unset customAttributesChanged flag
+     *
+     * @param null|string|array $key
+     * @return $this
+     */
+    public function unsetData($key = null)
+    {
+    }
+    /**
+     * Convert custom values if necessary
+     *
+     * @param array $customAttributes
+     * @return void
+     */
+    protected function convertCustomAttributeValues(array &$customAttributes)
+    {
+    }
+    /**
+     * Object data getter
+     *
+     * If $key is not defined will return all the data as an array.
+     * Otherwise it will return value of the element specified by $key.
+     * It is possible to use keys like a/b/c for access nested array data
+     *
+     * If $index is specified it will assume that attribute data is an array
+     * and retrieve corresponding member. If data is the string - it will be explode
+     * by new line character and converted to array.
+     *
+     * In addition to parent implementation custom attributes support is added.
+     *
+     * @param string $key
+     * @param string|int $index
+     * @return mixed
+     */
+    public function getData($key = '', $index = null)
+    {
+    }
+    /**
+     * Get a list of custom attribute codes.
+     *
+     * By default, entity can be extended only using extension attributes functionality.
+     *
+     * @return string[]
+     */
+    protected function getCustomAttributesCodes()
+    {
+    }
+    /**
+     * Receive a list of EAV attributes using provided metadata service.
+     *
+     * Can be used in child classes, which represent EAV entities.
+     *
+     * @param \Magento\Framework\Api\MetadataServiceInterface $metadataService
+     * @return string[]
+     */
+    protected function getEavAttributesCodes(\Magento\Framework\Api\MetadataServiceInterface $metadataService)
+    {
+    }
+    /**
+     * Identifier setter
+     *
+     * @param mixed $value
+     * @return $this
+     */
+    public function setId($value)
+    {
+    }
+    /**
+     * Set an extension attributes object.
+     *
+     * @param \Magento\Framework\Api\ExtensionAttributesInterface $extensionAttributes
+     * @return $this
+     */
+    protected function _setExtensionAttributes(\Magento\Framework\Api\ExtensionAttributesInterface $extensionAttributes)
+    {
+    }
+    /**
+     * Retrieve existing extension attributes object or create a new one.
+     *
+     * @return \Magento\Framework\Api\ExtensionAttributesInterface
+     */
+    protected function _getExtensionAttributes()
+    {
+    }
+    /**
+     * @inheritdoc
+     * @since 100.0.11
+     */
+    public function __sleep()
+    {
+    }
+    /**
+     * @inheritdoc
+     * @since 100.0.11
+     */
+    public function __wakeup()
+    {
+    }
+}
+/**
+ * Class EntitySnapshot
+ */
+class EntitySnapshot
+{
+    /**
+     * Array of snapshots of entities data
+     *
+     * @var array
+     */
+    protected $snapshotData = [];
+    /**
+     * @var MetadataPool
+     */
+    protected $metadataPool;
+    /**
+     * @var AttributeProvider
+     */
+    protected $attributeProvider;
+    /**
+     * @param MetadataPool $metadataPool
+     * @param AttributeProvider $attributeProvider
+     */
+    public function __construct(\Magento\Framework\EntityManager\MetadataPool $metadataPool, \Magento\Framework\Model\EntitySnapshot\AttributeProvider $attributeProvider)
+    {
+    }
+    /**
+     * Register snapshot of entity data.
+     *
+     * @param string $entityType
+     * @param object $entity
+     * @return void
+     */
+    public function registerSnapshot($entityType, $entity)
+    {
+    }
+    /**
+     * Check is current entity has changes, by comparing current object state with stored snapshot
+     *
+     * @param string $entityType
+     * @param object $entity
+     * @return bool
+     */
+    public function isModified($entityType, $entity)
+    {
+    }
+}
+/**
+ * Execute added callbacks for transaction commit.
+ */
+class ExecuteCommitCallbacks
+{
+    /**
+     * @param LoggerInterface $logger
+     */
+    public function __construct(\Psr\Log\LoggerInterface $logger)
+    {
+    }
+    /**
+     * Execute callbacks after commit.
+     *
+     * @param AdapterInterface $subject
+     * @param AdapterInterface $result
+     * @return AdapterInterface
+     */
+    public function afterCommit(\Magento\Framework\DB\Adapter\AdapterInterface $subject, \Magento\Framework\DB\Adapter\AdapterInterface $result) : \Magento\Framework\DB\Adapter\AdapterInterface
+    {
+    }
+    /**
+     * Drop callbacks after rollBack.
+     *
+     * @param AdapterInterface $subject
+     * @param AdapterInterface $result
+     * @return AdapterInterface
+     */
+    public function afterRollBack(\Magento\Framework\DB\Adapter\AdapterInterface $subject, \Magento\Framework\DB\Adapter\AdapterInterface $result) : \Magento\Framework\DB\Adapter\AdapterInterface
+    {
+    }
+}
+/**
+ * Class CallbackPool
+ */
+class CallbackPool
+{
+    /**
+     * @param string $hashKey
+     * @param array $callback
+     * @return void
+     */
+    public static function attach($hashKey, $callback)
+    {
+    }
+    /**
+     * @param string $hashKey
+     * @return void
+     */
+    public static function clear($hashKey)
+    {
+    }
+    /**
+     * @param string $hashKey
+     * @return array
+     */
+    public static function get($hashKey)
+    {
+    }
+}
+namespace Magento\Framework\Model\Operation;
+
+/**
+ * Interface ReadInterface
+ */
+interface ReadInterface
+{
+    /**
+     * @param string $entityType
+     * @param object $entity
+     * @param string $identifier
+     * @return object
+     */
+    public function execute($entityType, $entity, $identifier);
+}
+/**
+ * Interface WriteInterface
+ */
+interface WriteInterface
+{
+    /**
+     * @param string $entityType
+     * @param object $entity
+     * @return object|bool
+     */
+    public function execute($entityType, $entity);
+}
+namespace Magento\Framework\Model;
+
+/**
+ * Class EntityRegistry
+ */
+class EntityRegistry
+{
+    /**
+     * @var array
+     */
+    protected $registry = [];
+    /**
+     * Register entity
+     *
+     * @param string $entityType
+     * @param string $identifier
+     * @param object $entity
+     * @return void
+     */
+    public function register($entityType, $identifier, $entity)
+    {
+    }
+    /**
+     * Retrieve entity from storage
+     *
+     * @param string $entityType
+     * @param string $identifier
+     * @return null|object
+     */
+    public function retrieve($entityType, $identifier)
+    {
+    }
+    /**
+     * Remove entity from registry
+     *
+     * @param string $entityType
+     * @param string $identifier
+     * @return bool
+     */
+    public function remove($entityType, $identifier)
+    {
+    }
+}
+namespace Magento\Framework\Model\ResourceModel\Db;
+
+/**
+ * @api
+ * @since 100.0.2
+ */
+interface TransactionManagerInterface
+{
+    /**
+     * Start transaction
+     *
+     * @param Connection $connection
+     * @return Connection
+     */
+    public function start(\Magento\Framework\DB\Adapter\AdapterInterface $connection);
+    /**
+     * Commit transaction
+     *
+     * @return void
+     */
+    public function commit();
+    /**
+     * Rollback transaction
+     *
+     * @return void
+     */
+    public function rollBack();
+}
+class TransactionManager implements \Magento\Framework\Model\ResourceModel\Db\TransactionManagerInterface
+{
+    /**
+     * @var Connection[]
+     */
+    protected $participants = [];
+    /**
+     * @inheritdoc
+     */
+    public function start(\Magento\Framework\DB\Adapter\AdapterInterface $connection)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function commit()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function rollBack()
+    {
+    }
+    /**
+     * Get object key
+     *
+     * @param Connection $connection
+     * @return string
+     */
+    protected function getConnectionKey(\Magento\Framework\DB\Adapter\AdapterInterface $connection)
+    {
+    }
+}
+/**
+ * Delete entity row.
+ */
+class DeleteEntityRow
+{
+    /**
+     * @var MetadataPool
+     */
+    protected $metadataPool;
+    /**
+     * @param MetadataPool $metadataPool
+     */
+    public function __construct(\Magento\Framework\EntityManager\MetadataPool $metadataPool)
+    {
+    }
+    /**
+     * Delete entity row.
+     *
+     * @param string $entityType
+     * @param array $data
+     * @return bool
+     * @throws \Exception
+     */
+    public function execute($entityType, $data)
+    {
+    }
+}
+/**
+ * Magento profiler for requests to database
+ */
+class Profiler extends \Magento\Framework\DB\Profiler
+{
+    /**
+     * Default connection type for timer name creation
+     */
+    public const TIMER_PREFIX = 'DB_QUERY';
+    /**
+     * Default connection type for timer name creation
+     */
+    public const DEFAULT_CONNECTION_TYPE = 'database';
+    /**
+     * @var array Allowed query types
+     */
+    protected $_queryTypes = ['select', 'insert', 'update', 'delete'];
+    /**
+     * Form and return timer name
+     *
+     * @param string $operation
+     * @return string
+     */
+    protected function _getTimerName($operation)
+    {
+    }
+    /**
+     * Parse query type and return
+     *
+     * @param string $queryText
+     * @return string
+     */
+    protected function _parseQueryType($queryText)
+    {
+    }
+    /**
+     * Starts a query. Creates a new query profile object (\Zend_Db_Profiler_Query)
+     *
+     * @param string $queryText SQL statement
+     * @param integer $queryType OPTIONAL Type of query, one of the \Zend_Db_Profiler::* constants
+     * @return integer|null
+     */
+    public function queryStart($queryText, $queryType = null)
+    {
+    }
+    /**
+     * Ends a query. Pass it the handle that was returned by queryStart().
+     *
+     * @param int $queryId
+     * @return string|void
+     */
+    public function queryEnd($queryId)
+    {
+    }
+}
+/**
+ * Constructor modification point for Magento\Framework\Model\ResourceModel\Db\AbstractDb.
+ *
+ * All context classes were introduced to allow for backwards compatible constructor modifications
+ * of classes that were supposed to be extended by extension developers.
+ *
+ * Do not call methods of this class directly.
+ *
+ * As Magento moves from inheritance-based APIs all such classes will be deprecated together with
+ * the classes they were introduced for.
+ *
+ * @codeCoverageIgnore
+ */
+class Context implements \Magento\Framework\ObjectManager\ContextInterface
+{
+    /**
+     * @var \Magento\Framework\App\ResourceConnection
+     */
+    protected $resources;
+    /**
+     * @var TransactionManagerInterface
+     */
+    protected $transactionManager;
+    /**
+     * @var ObjectRelationProcessor
+     */
+    protected $objectRelationProcessor;
+    /**
+     * @param \Magento\Framework\App\ResourceConnection $resource
+     * @param TransactionManagerInterface $transactionManager
+     * @param ObjectRelationProcessor $objectRelationProcessor
+     */
+    public function __construct(\Magento\Framework\App\ResourceConnection $resource, \Magento\Framework\Model\ResourceModel\Db\TransactionManagerInterface $transactionManager, \Magento\Framework\Model\ResourceModel\Db\ObjectRelationProcessor $objectRelationProcessor)
+    {
+    }
+    /**
+     * @return \Magento\Framework\App\ResourceConnection
+     */
+    public function getResources()
+    {
+    }
+    /**
+     * @return TransactionManagerInterface
+     */
+    public function getTransactionManager()
+    {
+    }
+    /**
+     * @return ObjectRelationProcessor
+     */
+    public function getObjectRelationProcessor()
+    {
+    }
+}
+/**
+ * Class ReadEntityRow
+ */
+class ReadEntityRow
+{
+    /**
+     * @var MetadataPool
+     */
+    protected $metadataPool;
+    /**
+     * @param MetadataPool $metadataPool
+     */
+    public function __construct(\Magento\Framework\EntityManager\MetadataPool $metadataPool)
+    {
+    }
+    /**
+     * @param string $entityType
+     * @param string $identifier
+     * @param array $context
+     * @return array
+     * @throws \Exception
+     */
+    public function execute($entityType, $identifier, $context = [])
+    {
+    }
+}
+/**
+ * Class ProcessEntityRelationInterface
+ */
+interface ProcessEntityRelationInterface
+{
+    /**
+     * Process entity relation.
+     *
+     * @param string $entityType
+     * @param object $entity
+     * @return object
+     */
+    public function execute($entityType, $entity);
+}
+/**
+ * Class ReadEntityRow
+ */
+class CreateEntityRow
+{
+    /**
+     * @var MetadataPool
+     */
+    protected $metadataPool;
+    /**
+     * @param MetadataPool $metadataPool
+     */
+    public function __construct(\Magento\Framework\EntityManager\MetadataPool $metadataPool)
+    {
+    }
+    /**
+     * Prepare data.
+     *
+     * @param EntityMetadata $metadata
+     * @param array $data
+     * @return array
+     */
+    protected function prepareData(\Magento\Framework\EntityManager\EntityMetadata $metadata, $data)
+    {
+    }
+    /**
+     * Create entity row.
+     *
+     * @param string $entityType
+     * @param array $data
+     * @return array
+     */
+    public function execute($entityType, $data)
+    {
+    }
+}
+/**
+ * @api
+ * @since 100.0.2
+ */
+class ObjectRelationProcessor
+{
+    /**
+     * Process delete action
+     *
+     * @param TransactionManagerInterface $transactionManager
+     * @param Connection $connection
+     * @param string $table
+     * @param string $condition
+     * @param array $involvedData
+     * @return void
+     * @throws \LogicException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function delete(\Magento\Framework\Model\ResourceModel\Db\TransactionManagerInterface $transactionManager, \Magento\Framework\DB\Adapter\AdapterInterface $connection, $table, $condition, array $involvedData)
+    {
+    }
+    /**
+     * Validate integrity of the given data
+     *
+     * @param string $table
+     * @param array $involvedData
+     * @return void
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function validateDataIntegrity($table, array $involvedData)
+    {
+    }
+}
+namespace Magento\Framework\Model\ResourceModel\Db\Relation;
+
+/**
+ * Class ActionPool
+ */
+class ActionPool
+{
+    /**
+     * @var ObjectManager
+     */
+    protected $objectManager;
+    /**
+     * @var array
+     */
+    protected $relationActions;
+    /**
+     * @param ObjectManager $objectManager
+     * @param array $relationActions
+     */
+    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager, array $relationActions = [])
+    {
+    }
+    /**
+     * @param string $entityType
+     * @param string $actionName
+     * @return object[]
+     * @throws \Exception
+     */
+    public function getActions($entityType, $actionName)
+    {
+    }
+}
+namespace Magento\Framework\Model\ResourceModel\Db;
+
+/**
+ * Class ValidateDataIntegrity
+ */
+class ValidateDataIntegrity
+{
+    /**
+     * ValidateDataIntegrity constructor.
+     *
+     * @param MetadataPool $metadataPool
+     * @param HydratorPool $hydratorPool
+     * @param ObjectRelationProcessor $objectRelationProcessor
+     */
+    public function __construct(\Magento\Framework\EntityManager\MetadataPool $metadataPool, \Magento\Framework\EntityManager\HydratorPool $hydratorPool, \Magento\Framework\Model\ResourceModel\Db\ObjectRelationProcessor $objectRelationProcessor)
+    {
+    }
+    /**
+     * @param string $entityType
+     * @param object $entity
+     * @throws \Exception
+     * @return void
+     */
+    public function execute($entityType, $entity)
+    {
+    }
+}
+/**
+ * Class ReadEntityRow
+ */
+class UpdateEntityRow
+{
+    /**
+     * @var MetadataPool
+     */
+    protected $metadataPool;
+    /**
+     * @param MetadataPool $metadataPool
+     */
+    public function __construct(\Magento\Framework\EntityManager\MetadataPool $metadataPool)
+    {
+    }
+    /**
+     * Prepare data.
+     *
+     * @param EntityMetadata $metadata
+     * @param array $data
+     * @return array
+     */
+    protected function prepareData(\Magento\Framework\EntityManager\EntityMetadata $metadata, $data)
+    {
+    }
+    /**
+     * Read entity row.
+     *
+     * @param string $entityType
+     * @param array $data
+     * @return bool
+     * @throws \Exception
+     */
+    public function execute($entityType, $data)
+    {
+    }
+}
+namespace Magento\Framework\Model\ResourceModel\Db\VersionControl;
+
+/**
+ * Class Snapshot register snapshot of entity data, for tracking changes
+ */
+class Snapshot implements \Magento\Framework\ObjectManager\ResetAfterRequestInterface
+{
+    /**
+     * Array of snapshots of entities data
+     *
+     * @var array
+     */
+    protected $snapshotData = [];
+    /**
+     * @var Metadata
+     */
+    protected $metadata;
+    /**
+     * Initialization
+     *
+     * @param Metadata $metadata
+     */
+    public function __construct(\Magento\Framework\Model\ResourceModel\Db\VersionControl\Metadata $metadata)
+    {
+    }
+    /**
+     * Register snapshot of entity data, for tracking changes
+     *
+     * @param \Magento\Framework\DataObject $entity
+     * @return void
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     */
+    public function registerSnapshot(\Magento\Framework\DataObject $entity)
+    {
+    }
+    /**
+     * Check is current entity has changes, by comparing current object state with stored snapshot
+     *
+     * @param \Magento\Framework\DataObject $entity
+     * @return bool
+     */
+    public function isModified(\Magento\Framework\DataObject $entity)
+    {
+    }
+    /**
+     * Clear snapshot data
+     *
+     * @param \Magento\Framework\DataObject|null $entity
+     */
+    public function clear(\Magento\Framework\DataObject $entity = null)
+    {
+    }
+    /**
+     * @inheritDoc
+     */
+    public function _resetState() : void
+    {
+    }
+}
+/**
+ * Class Collection
+ */
+abstract class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection
+{
+    /**
+     * @var Snapshot
+     */
+    protected $entitySnapshot;
+    /**
+     * @param \Magento\Framework\Data\Collection\EntityFactoryInterface $entityFactory
+     * @param \Psr\Log\LoggerInterface $logger
+     * @param \Magento\Framework\Data\Collection\Db\FetchStrategyInterface $fetchStrategy
+     * @param \Magento\Framework\Event\ManagerInterface $eventManager
+     * @param Snapshot $entitySnapshot
+     * @param \Magento\Framework\DB\Adapter\AdapterInterface $connection
+     * @param \Magento\Framework\Model\ResourceModel\Db\AbstractDb $resource
+     */
+    public function __construct(\Magento\Framework\Data\Collection\EntityFactoryInterface $entityFactory, \Psr\Log\LoggerInterface $logger, \Magento\Framework\Data\Collection\Db\FetchStrategyInterface $fetchStrategy, \Magento\Framework\Event\ManagerInterface $eventManager, \Magento\Framework\Model\ResourceModel\Db\VersionControl\Snapshot $entitySnapshot, \Magento\Framework\DB\Adapter\AdapterInterface $connection = null, \Magento\Framework\Model\ResourceModel\Db\AbstractDb $resource = null)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    public function fetchItem()
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    protected function beforeAddLoadedItem(\Magento\Framework\DataObject $item)
+    {
+    }
+}
+/**
+ * Class Metadata represents a list of entity fields that are applicable for persistence operations
+ */
+class Metadata
+{
+    /**
+     * @var array
+     */
+    protected $metadataInfo = [];
+    /**
+     * Returns list of entity fields that are applicable for persistence operations
+     *
+     * @param \Magento\Framework\DataObject $entity
+     * @return array
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function getFields(\Magento\Framework\DataObject $entity)
+    {
+    }
+}
+/**
+ * Interface RelationInterface
+ *
+ * @api
+ */
+interface RelationInterface
+{
+    /**
+     * Process object relations
+     *
+     * @param \Magento\Framework\Model\AbstractModel $object
+     * @return void
+     */
+    public function processRelation(\Magento\Framework\Model\AbstractModel $object);
+}
+/**
+ * Class RelationComposite
+ */
+class RelationComposite
+{
+    /**
+     * @var array
+     */
+    protected $relationProcessors;
+    /**
+     * @var EventManager
+     */
+    protected $eventManager;
+    /**
+     * @param EventManager $eventManager
+     * @param array $relationProcessors
+     */
+    public function __construct(\Magento\Framework\Event\ManagerInterface $eventManager, array $relationProcessors = [])
+    {
+    }
+    /**
+     * Process model's relations saves
+     *
+     * @param AbstractModel $object
+     * @return void
+     */
+    public function processRelations(\Magento\Framework\Model\AbstractModel $object)
+    {
+    }
+}
+namespace Magento\Framework\Model\ResourceModel\Db;
+
+/**
+ * Abstract resource model
+ *
+ * @SuppressWarnings(PHPMD.NumberOfChildren)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * phpcs:disable Magento2.Classes.AbstractApi
+ * @api
+ * @since 100.0.2
+ */
+abstract class AbstractDb extends \Magento\Framework\Model\ResourceModel\AbstractResource
+{
+    /**
+     * Cached resources singleton
+     *
+     * @var \Magento\Framework\App\ResourceConnection
+     */
+    protected $_resources;
+    /**
+     * @var string
+     */
+    protected $connectionName = \Magento\Framework\App\ResourceConnection::DEFAULT_CONNECTION;
+    /**
+     * @var array
+     */
+    protected $_connections = [];
+    /**
+     * @var string
+     */
+    protected $_resourceModel;
+    /**
+     * @var array
+     */
+    protected $_tables = [];
+    /**
+     * @var string
+     */
+    protected $_mainTable;
+    /**
+     * @var string
+     */
+    protected $_idFieldName;
+    /**
+     * @var bool
+     */
+    protected $_isPkAutoIncrement = true;
+    /**
+     * @var bool
+     */
+    protected $_useIsObjectNew = false;
+    /**
+     * @var array
+     */
+    protected $_mainTableFields;
+    /**
+     * Main table unique keys field names
+     * could array(
+     *   array('field' => 'db_field_name1', 'title' => 'Field 1 should be unique')
+     *   array('field' => 'db_field_name2', 'title' => 'Field 2 should be unique')
+     *   array(
+     *      'field' => array('db_field_name3', 'db_field_name3'),
+     *      'title' => 'Field 3 and Field 4 combination should be unique'
+     *   )
+     * )
+     * or string 'my_field_name' - will be autoconverted to
+     *      array( array( 'field' => 'my_field_name', 'title' => 'my_field_name' ) )
+     *
+     * @var array|null
+     */
+    protected $_uniqueFields = null;
+    /**
+     * Serializable fields declaration
+     * Structure: array(
+     *     <field_name> => array(
+     *         <default_value_for_serialization>,
+     *         <default_for_unserialization>,
+     *         <whether_to_unset_empty_when serializing> // optional parameter
+     *     ),
+     * )
+     *
+     * @var array
+     */
+    protected $_serializableFields = [];
+    /**
+     * @var TransactionManagerInterface
+     */
+    protected $transactionManager;
+    /**
+     * @var ObjectRelationProcessor
+     */
+    protected $objectRelationProcessor;
+    /**
+     * Constructor
+     *
+     * @param \Magento\Framework\Model\ResourceModel\Db\Context $context
+     * @param string $connectionName
+     */
+    public function __construct(\Magento\Framework\Model\ResourceModel\Db\Context $context, $connectionName = null)
+    {
+    }
+    /**
+     * Provide variables to serialize
+     *
+     * @return array
+     */
+    public function __sleep()
+    {
+    }
+    /**
+     * Restore global dependencies
+     *
+     * @return void
+     */
+    public function __wakeup()
+    {
+    }
+    /**
+     * Standard resource model initialization
+     *
+     * @param string $mainTable
+     * @param string $idFieldName
+     * @return void
+     */
+    protected function _init($mainTable, $idFieldName)
+    {
+    }
+    /**
+     * Initialize connections and tables for this resource model
+     * If one or both arguments are string, will be used as prefix
+     * If $tables is null and $connections is string, $tables will be the same
+     *
+     * @param string|array $connections
+     * @param string|array|null $tables
+     * @return $this
+     */
+    protected function _setResource($connections, $tables = null)
+    {
+    }
+    /**
+     * Main table setter.
+     *
+     * Set main entity table name and primary key field name.
+     * If field name is omitted {table_name}_id will be used.
+     *
+     * @param string $mainTable
+     * @param string|null $idFieldName
+     * @return $this
+     */
+    protected function _setMainTable($mainTable, $idFieldName = null)
+    {
+    }
+    /**
+     * Get primary key field name
+     *
+     * @throws LocalizedException
+     * @return string
+     */
+    public function getIdFieldName()
+    {
+    }
+    /**
+     * Main table getter.
+     *
+     * Returns main table name - extracted from "module/table" style and
+     * validated by db adapter.
+     *
+     * @throws LocalizedException
+     * @return string
+     */
+    public function getMainTable()
+    {
+    }
+    /**
+     * Get real table name for db table, validated by db adapter
+     *
+     * @param string $tableName
+     * @return string
+     */
+    public function getTable($tableName)
+    {
+    }
+    /**
+     * Get connection by resource name
+     *
+     * @param string $resourceName
+     * @return \Magento\Framework\DB\Adapter\AdapterInterface|false
+     */
+    protected function _getConnection($resourceName)
+    {
+    }
+    /**
+     * Get connection
+     *
+     * @return \Magento\Framework\DB\Adapter\AdapterInterface|false
+     */
+    public function getConnection()
+    {
+    }
+    /**
+     * Load an object
+     *
+     * @param \Magento\Framework\Model\AbstractModel $object
+     * @param mixed $value
+     * @param string $field field to load by (defaults to model id)
+     * @return $this
+     */
+    public function load(\Magento\Framework\Model\AbstractModel $object, $value, $field = null)
+    {
+    }
+    /**
+     * Retrieve select object for load object data
+     *
+     * @param string $field
+     * @param mixed $value
+     * @param \Magento\Framework\Model\AbstractModel $object
+     * @return \Magento\Framework\DB\Select
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    protected function _getLoadSelect($field, $value, $object)
+    {
+    }
+    /**
+     * Save object object data
+     *
+     * @param \Magento\Framework\Model\AbstractModel $object
+     * @return $this
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @throws \Exception
+     * @throws AlreadyExistsException
+     */
+    public function save(\Magento\Framework\Model\AbstractModel $object)
+    {
+    }
+    /**
+     * Delete the object
+     *
+     * @param \Magento\Framework\Model\AbstractModel $object
+     * @return $this
+     * @throws \Exception
+     */
+    public function delete(\Magento\Framework\Model\AbstractModel $object)
+    {
+    }
+    /**
+     * Add unique field restriction
+     *
+     * @param array|string $field
+     * @return $this
+     */
+    public function addUniqueField($field)
+    {
+    }
+    /**
+     * Reset unique fields restrictions
+     *
+     * @return $this
+     */
+    public function resetUniqueField()
+    {
+    }
+    /**
+     * Unserialize serializeable object fields
+     *
+     * @param \Magento\Framework\Model\AbstractModel $object
+     * @return void
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     */
+    public function unserializeFields(\Magento\Framework\Model\AbstractModel $object)
+    {
+    }
+    /**
+     * Initialize unique fields
+     *
+     * @return $this
+     */
+    protected function _initUniqueFields()
+    {
+    }
+    /**
+     * Get configuration of all unique fields
+     *
+     * @return array
+     */
+    public function getUniqueFields()
+    {
+    }
+    /**
+     * Prepare data for save
+     *
+     * @param \Magento\Framework\Model\AbstractModel $object
+     * @return array
+     * @throws LocalizedException
+     */
+    protected function _prepareDataForSave(\Magento\Framework\Model\AbstractModel $object)
+    {
+    }
+    /**
+     * Check that model data fields that can be saved has really changed comparing with origData.
+     *
+     * @param \Magento\Framework\Model\AbstractModel $object
+     * @return bool
+     * @throws LocalizedException
+     */
+    public function hasDataChanged($object)
+    {
+    }
+    /**
+     * Prepare value for save
+     *
+     * @param mixed $value
+     * @param string $type
+     * @return mixed
+     */
+    protected function _prepareValueForSave($value, $type)
+    {
+    }
+    /**
+     * Check for unique values existence
+     *
+     * @param \Magento\Framework\Model\AbstractModel $object
+     * @return $this
+     * @throws AlreadyExistsException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     */
+    protected function _checkUnique(\Magento\Framework\Model\AbstractModel $object)
+    {
+    }
+    /**
+     * Perform actions after object load
+     *
+     * @param \Magento\Framework\Model\AbstractModel|\Magento\Framework\DataObject $object
+     * @return $this
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    protected function _afterLoad(\Magento\Framework\Model\AbstractModel $object)
+    {
+    }
+    /**
+     * Perform actions before object save
+     *
+     * @param \Magento\Framework\Model\AbstractModel|\Magento\Framework\DataObject $object
+     * @return $this
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    protected function _beforeSave(\Magento\Framework\Model\AbstractModel $object)
+    {
+    }
+    /**
+     * Perform actions after object save
+     *
+     * @param \Magento\Framework\Model\AbstractModel|\Magento\Framework\DataObject $object
+     * @return $this
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    protected function _afterSave(\Magento\Framework\Model\AbstractModel $object)
+    {
+    }
+    /**
+     * Perform actions before object delete
+     *
+     * @param \Magento\Framework\Model\AbstractModel|\Magento\Framework\DataObject $object
+     * @return $this
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    protected function _beforeDelete(\Magento\Framework\Model\AbstractModel $object)
+    {
+    }
+    /**
+     * Perform actions after object delete
+     *
+     * @param \Magento\Framework\Model\AbstractModel|\Magento\Framework\DataObject $object
+     * @return $this
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    protected function _afterDelete(\Magento\Framework\Model\AbstractModel $object)
+    {
+    }
+    /**
+     * Serialize serializable fields of the object
+     *
+     * @param \Magento\Framework\Model\AbstractModel $object
+     * @return void
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     */
+    protected function _serializeFields(\Magento\Framework\Model\AbstractModel $object)
+    {
+    }
+    /**
+     * Retrieve table checksum
+     *
+     * @param string|array $table
+     * @return int|array|false
+     */
+    public function getChecksum($table)
+    {
+    }
+    /**
+     * Get the array of data fields that was changed or added
+     *
+     * @param \Magento\Framework\Model\AbstractModel $object
+     * @return array
+     * @throws LocalizedException
+     */
+    protected function prepareDataForUpdate($object)
+    {
+    }
+    /**
+     * Check if object is new
+     *
+     * @param \Magento\Framework\Model\AbstractModel $object
+     * @return bool
+     */
+    protected function isObjectNotNew(\Magento\Framework\Model\AbstractModel $object)
+    {
+    }
+    /**
+     * Save New Object
+     *
+     * @param \Magento\Framework\Model\AbstractModel $object
+     * @throws LocalizedException
+     * @return void
+     */
+    protected function saveNewObject(\Magento\Framework\Model\AbstractModel $object)
+    {
+    }
+    /**
+     * Update existing object
+     *
+     * @param \Magento\Framework\Model\AbstractModel $object
+     * @throws LocalizedException
+     * @return void
+     */
+    protected function updateObject(\Magento\Framework\Model\AbstractModel $object)
+    {
+    }
+    /**
+     * Sequences of after save call
+     *
+     * @param \Magento\Framework\Model\AbstractModel $object
+     * @return void
+     */
+    protected function processAfterSaves(\Magento\Framework\Model\AbstractModel $object)
+    {
+    }
+    /**
+     * Check if object was modified
+     *
+     * @param \Magento\Framework\Model\AbstractModel $object
+     * @return bool
+     */
+    protected function isModified(\Magento\Framework\Model\AbstractModel $object)
+    {
+    }
+    /**
+     * Process object which was modified
+     *
+     * @param \Magento\Framework\Model\AbstractModel $object
+     * @return $this
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    protected function processNotModifiedSave(\Magento\Framework\Model\AbstractModel $object)
+    {
+    }
+    /**
+     * Perform actions after entity load
+     *
+     * @param \Magento\Framework\DataObject $object
+     * @return void
+     */
+    public function afterLoad(\Magento\Framework\DataObject $object)
+    {
+    }
+    /**
+     * Perform actions before entity save
+     *
+     * @param \Magento\Framework\DataObject $object
+     * @return void
+     * @since 100.1.0
+     */
+    public function beforeSave(\Magento\Framework\DataObject $object)
+    {
+    }
+    /**
+     * Perform actions after entity save
+     *
+     * @param \Magento\Framework\DataObject $object
+     * @return void
+     * @since 100.1.0
+     */
+    public function afterSave(\Magento\Framework\DataObject $object)
+    {
+    }
+    /**
+     * Perform actions before entity delete
+     *
+     * @param \Magento\Framework\DataObject $object
+     * @return void
+     * @since 100.1.0
+     */
+    public function beforeDelete(\Magento\Framework\DataObject $object)
+    {
+    }
+    /**
+     * Perform actions after entity delete
+     *
+     * @param \Magento\Framework\DataObject $object
+     * @return void
+     * @since 100.1.0
+     */
+    public function afterDelete(\Magento\Framework\DataObject $object)
+    {
+    }
+    /**
+     * Serialize serializable fields of the object
+     *
+     * @param \Magento\Framework\Model\AbstractModel $object
+     * @return \Magento\Framework\Model\AbstractModel|void
+     * @since 100.1.0
+     */
+    public function serializeFields(\Magento\Framework\Model\AbstractModel $object)
+    {
+    }
+}
+namespace Magento\Framework\Model\ResourceModel\Db\VersionControl;
+
+/**
+ * Class AbstractDb with snapshot saving and relation save processing
+ */
+abstract class AbstractDb extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
+{
+    /**
+     * @var Snapshot
+     */
+    protected $entitySnapshot;
+    /**
+     * @var RelationComposite
+     */
+    protected $entityRelationComposite;
+    /**
+     * @param Snapshot $entitySnapshot
+     * @param RelationComposite $entityRelationComposite
+     * @param \Magento\Framework\Model\ResourceModel\Db\Context $context
+     * @param string $connectionName
+     */
+    public function __construct(\Magento\Framework\Model\ResourceModel\Db\Context $context, \Magento\Framework\Model\ResourceModel\Db\VersionControl\Snapshot $entitySnapshot, \Magento\Framework\Model\ResourceModel\Db\VersionControl\RelationComposite $entityRelationComposite, $connectionName = null)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    protected function _afterLoad(\Magento\Framework\Model\AbstractModel $object)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    protected function processAfterSaves(\Magento\Framework\Model\AbstractModel $object)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    protected function isModified(\Magento\Framework\Model\AbstractModel $object)
+    {
+    }
+    /**
+     * @inheritdoc
+     */
+    protected function processNotModifiedSave(\Magento\Framework\Model\AbstractModel $object)
+    {
+    }
+}
+namespace Magento\Framework\Model\ResourceModel;
+
+/**
+ * Provides possibility of saving entity with predefined/pre-generated id
+ *
+ * The choice to use trait instead of inheritance was made to prevent the introduction of new layer super type on
+ * the module basis as well as better code reusability, as potentially current trait not coupled to Inventory module
+ * and other modules could re-use this approach.
+ */
+trait PredefinedId
+{
+    /**
+     * Overwrite default \Magento\Framework\Model\ResourceModel\Db\AbstractDb implementation of the isObjectNew
+     * @see \Magento\Framework\Model\ResourceModel\Db\AbstractDb::isObjectNew()
+     *
+     * Adding the possibility to check whether record already exists in DB or not
+     *
+     * @param AbstractModel $object
+     * @return bool
+     */
+    protected function isObjectNotNew(\Magento\Framework\Model\AbstractModel $object)
+    {
+    }
+    /**
+     * Save New Object
+     *
+     * Overwrite default \Magento\Framework\Model\ResourceModel\Db\AbstractDb implementation of the saveNewObject
+     * @see \Magento\Framework\Model\ResourceModel\Db\AbstractDb::saveNewObject()
+     *
+     * @param \Magento\Framework\Model\AbstractModel $object
+     * @throws LocalizedException
+     * @return void
+     */
+    protected function saveNewObject(\Magento\Framework\Model\AbstractModel $object)
+    {
+    }
+}
+namespace Magento\Framework\Model\ResourceModel\Type;
+
+abstract class AbstractType
+{
+    /**
+     * Name
+     *
+     * @var String
+     */
+    protected $_name = '';
+    /**
+     * Entity class
+     *
+     * @var String
+     */
+    protected $_entityClass = \Magento\Framework\Model\ResourceModel\Entity\AbstractEntity::class;
+    /**
+     * Retrieve entity type
+     *
+     * @return String
+     */
+    public function getEntityClass()
+    {
+    }
+    /**
+     * Set name
+     *
+     * @param String $name
+     * @return void
+     */
+    public function setName($name)
+    {
+    }
+    /**
+     * Retrieve name
+     *
+     * @return String
+     */
+    public function getName()
+    {
+    }
+}
+abstract class Db extends \Magento\Framework\Model\ResourceModel\Type\AbstractType
+{
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+    }
+}
+namespace Magento\Framework\Model\ResourceModel\Type\Db;
+
+/**
+ * Interface \Magento\Framework\Model\ResourceModel\Type\Db\ConnectionFactoryInterface
+ *
+ * @api
+ */
+interface ConnectionFactoryInterface
+{
+    /**
+     * Create connection adapter instance
+     *
+     * @param array $connectionConfig
+     * @return \Magento\Framework\DB\Adapter\AdapterInterface
+     * @throws \InvalidArgumentException
+     */
+    public function create(array $connectionConfig);
+}
+/**
+ * Connection adapter factory
+ */
+class ConnectionFactory implements \Magento\Framework\Model\ResourceModel\Type\Db\ConnectionFactoryInterface
+{
+    /**
+     * @var ObjectManagerInterface
+     */
+    protected $objectManager;
+    /**
+     * Constructor
+     *
+     * @param ObjectManagerInterface $objectManager
+     */
+    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function create(array $connectionConfig)
+    {
+    }
+}
+namespace Magento\Framework\Model\ResourceModel\Type\Db\Pdo;
+
+// @codingStandardsIgnoreStart
+class Mysql extends \Magento\Framework\Model\ResourceModel\Type\Db implements \Magento\Framework\App\ResourceConnection\ConnectionAdapterInterface
+{
+    /**
+     * @var array
+     */
+    protected $connectionConfig;
+    /**
+     * Constructor
+     *
+     * @param array $config
+     * @param MysqlFactory|null $mysqlFactory
+     */
+    public function __construct(array $config, \Magento\Framework\DB\Adapter\Pdo\MysqlFactory $mysqlFactory = null)
+    {
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getConnection(\Magento\Framework\DB\LoggerInterface $logger = null, \Magento\Framework\DB\SelectFactory $selectFactory = null)
+    {
+    }
+    /**
+     * Create and return database connection object instance
+     *
+     * @param DB\LoggerInterface|null $logger
+     * @param SelectFactory|null $selectFactory
+     * @return \Magento\Framework\DB\Adapter\Pdo\Mysql
+     */
+    protected function getDbConnectionInstance(\Magento\Framework\DB\LoggerInterface $logger = null, \Magento\Framework\DB\SelectFactory $selectFactory = null)
+    {
+    }
+    /**
+     * Retrieve DB connection class name
+     *
+     * @return string
+     */
+    protected function getDbConnectionClassName()
+    {
+    }
+}
+namespace Magento\Framework\Model\ResourceModel;
+
+class Iterator extends \Magento\Framework\DataObject
+{
+    /**
+     * Walk over records fetched from query one by one using callback function
+     *
+     * @param \Zend_Db_Statement_Interface|\Magento\Framework\DB\Select|string $query
+     * @param array|string $callbacks
+     * @param array $args
+     * @param AdapterInterface $connection
+     * @return \Magento\Framework\Model\ResourceModel\Iterator
+     */
+    public function walk($query, array $callbacks, array $args = [], $connection = null)
+    {
+    }
+    /**
+     * Fetch Zend statement instance
+     *
+     * @param \Zend_Db_Statement_Interface|\Magento\Framework\DB\Select|string $query
+     * @param AdapterInterface $connection
+     * @return \Zend_Db_Statement_Interface
+     * @throws LocalizedException
+     */
+    protected function _getStatement($query, \Magento\Framework\DB\Adapter\AdapterInterface $connection = null)
+    {
+    }
+}
+namespace Magento\Framework\Model\ResourceModel\Entity;
+
+abstract class AbstractEntity
+{
+    /**
+     * @var string
+     */
+    protected $_name = null;
+    /**
+     * Configuration object
+     *
+     * @var \Magento\Framework\Simplexml\Config
+     */
+    protected $_config = [];
+    /**
+     * Set config
+     *
+     * @param \Magento\Framework\Simplexml\Config $config
+     */
+    public function __construct($config)
+    {
+    }
+    /**
+     * Get config by key
+     *
+     * @param string $key
+     * @return \Magento\Framework\Simplexml\Config|string|false
+     */
+    public function getConfig($key = '')
+    {
+    }
+}
+/**
+ * Class describing db table resource entity
+ *
+ */
+class Table extends \Magento\Framework\Model\ResourceModel\Entity\AbstractEntity
+{
+    /**
+     * Get table
+     *
+     * @return String
+     */
+    public function getTable()
+    {
+    }
+}
+namespace Magento\Framework\Model\Entity;
+
+/**
+ * Class RepositoryFactory
+ */
+class RepositoryFactory
+{
+    /**
+     * List of entity types and their repositories
+     *
+     * @var array
+     */
+    protected $entities;
+    /**
+     * Object Manager
+     *
+     * @var ObjectManagerInterface
+     */
+    protected $objectManager;
+    /**
+     * RepositoryFactory constructor.
+     *
+     * @param ObjectManagerInterface $objectManager
+     * @param array $entities
+     */
+    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager, array $entities = [])
+    {
+    }
+    /**
+     * @param string $entityType
+     * @return object
+     * @throws NotFoundException
+     */
+    public function create($entityType)
+    {
+    }
+}
+/**
+ * Class ScopeProviderInterface
+ *
+ * @api
+ */
+interface ScopeProviderInterface
+{
+    /**
+     * @param string $entityType
+     * @param array $entityData
+     * @return mixed
+     */
+    public function getContext($entityType, $entityData = []);
+}
+/**
+ * Interface ScopeInterface
+ *
+ * @api
+ */
+interface ScopeInterface
+{
+    /**
+     * @return string
+     */
+    public function getValue();
+    /**
+     * @return string
+     */
+    public function getIdentifier();
+    /**
+     * @return ScopeInterface|null
+     */
+    public function getFallback();
+}
+/**
+ * Class ScopeFactory
+ */
+class ScopeFactory
+{
+    /**
+     * ScopeFactory constructor.
+     *
+     * @param ObjectManagerInterface $objectManager
+     */
+    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager)
+    {
+    }
+    /**
+     * @param string $identifier
+     * @param string $value
+     * @param ScopeInterface|null $fallback
+     * @return ScopeInterface
+     */
+    public function create($identifier, $value, $fallback = null)
+    {
+    }
+}
+/**
+ * Class Scope
+ */
+class Scope implements \Magento\Framework\Model\Entity\ScopeInterface
+{
+    /**
+     * Scope constructor.
+     *
+     * @param string $identifier
+     * @param string $value
+     * @param ScopeInterface|null $fallback
+     */
+    public function __construct($identifier, $value, \Magento\Framework\Model\Entity\ScopeInterface $fallback = null)
+    {
+    }
+    /**
+     * @return string
+     */
+    public function getValue()
+    {
+    }
+    /**
+     * @return string
+     */
+    public function getIdentifier()
+    {
+    }
+    /**
+     * @return ScopeInterface
+     */
+    public function getFallback()
+    {
+    }
+}
+/**
+ * Class ScopeResolver
+ */
+class ScopeResolver
+{
+    /**
+     * ScopeResolver constructor.
+     * @param ObjectManagerInterface $objectManager
+     * @param MetadataPool $metadataPool
+     */
+    public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager, \Magento\Framework\EntityManager\MetadataPool $metadataPool)
+    {
+    }
+    /**
+     * @param string $entityType
+     * @param array|null $entityData
+     * @return \Magento\Framework\Model\Entity\ScopeInterface[]
+     * @throws ConfigurationMismatchException
+     * @throws \Exception
+     */
+    public function getEntityContext($entityType, $entityData = [])
+    {
+    }
+}
