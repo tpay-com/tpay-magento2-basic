@@ -7,7 +7,6 @@ use Tpay\Magento2\Api\TpayConfigInterface;
 use Tpay\Magento2\Api\TpayInterface;
 use Tpay\Magento2\Service\TpayService;
 use Tpay\Magento2\Service\TpayTokensService;
-use Tpay\OriginApi\Webhook\JWSVerifiedPaymentNotification;
 
 class CardNotificationProcessor implements NotificationProcessorInterface
 {
@@ -27,21 +26,16 @@ class CardNotificationProcessor implements NotificationProcessorInterface
         TpayConfigInterface $tpayConfig,
         TpayService $tpayService,
         TpayTokensService $tokensService,
-        TpayInterface $tpayModel
+        TpayInterface $tpay
     ) {
         $this->tpayConfig = $tpayConfig;
         $this->tpayService = $tpayService;
         $this->tokensService = $tokensService;
-        $this->tpay = $tpayModel;
+        $this->tpay = $tpay;
     }
 
-    public function process(?int $storeId)
+    public function process($notification, ?int $storeId = null)
     {
-        $notification = (new JWSVerifiedPaymentNotification(
-            $this->tpayConfig->getSecurityCode($storeId),
-            !$this->tpayConfig->useSandboxMode($storeId)
-        ))->getNotification();
-
         $orderId = base64_decode($notification['order_id']);
         $order = $this->tpayService->getOrderById($orderId);
 
