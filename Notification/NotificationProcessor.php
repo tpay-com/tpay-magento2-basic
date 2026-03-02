@@ -82,7 +82,7 @@ class NotificationProcessor
         return $order->getStoreId() ? (int) $order->getStoreId() : $defaultStoreId;
     }
 
-    /** @return OriginApiWebhook|OpenApiWebhook */
+    /** @return OpenApiWebhook|OriginApiWebhook */
     private function createWebhook(?int $storeId)
     {
         if (null !== $this->request->getPost('card')) {
