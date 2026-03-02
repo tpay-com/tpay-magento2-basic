@@ -2,6 +2,7 @@
 
 namespace Tpay\Magento2\Notification\Strategy;
 
+use RuntimeException;
 use Tpay\Magento2\Api\Notification\Strategy\NotificationProcessorInterface;
 use Tpay\Magento2\Api\TpayInterface;
 use Tpay\Magento2\Service\TpayService;
@@ -32,7 +33,7 @@ class DefaultNotificationProcessor implements NotificationProcessorInterface
     public function process($notification, ?int $storeId = null)
     {
         if (!$notification instanceof BasicPayment) {
-            throw new \RuntimeException('Invalid payment notification type');
+            throw new RuntimeException('Invalid payment notification type');
         }
 
         $orderId = base64_decode($notification->tr_crc->getValue());

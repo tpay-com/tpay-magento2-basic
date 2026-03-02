@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tpay\Magento2\Notification\Strategy;
 
+use RuntimeException;
 use Tpay\Magento2\Api\Notification\Strategy\NotificationProcessorInterface;
 use Tpay\Magento2\Service\TpayAliasServiceInterface;
 use Tpay\OpenApi\Model\Objects\NotificationBody\BlikAliasRegister;
@@ -26,6 +27,7 @@ class BlikAliasNotificationProcessor implements NotificationProcessorInterface
             $userId = (int) explode('-', $alias)[1];
 
             $this->aliasService->saveCustomerAlias($userId, $alias);
+
             return;
         }
 
@@ -34,9 +36,10 @@ class BlikAliasNotificationProcessor implements NotificationProcessorInterface
             $userId = (int) explode('-', $alias)[1];
 
             $this->aliasService->removeCustomerAlias($userId, $alias);
+
             return;
         }
 
-        throw new \RuntimeException('Unsupported BLIK notification type');
+        throw new RuntimeException('Unsupported BLIK notification type');
     }
 }

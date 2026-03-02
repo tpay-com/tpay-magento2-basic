@@ -15,14 +15,14 @@ use Tpay\OriginApi\Webhook\JWSVerifiedPaymentNotification as OriginApiWebhook;
 
 class NotificationProcessor
 {
-    /** @var RequestInterface */
-    private $request;
-
     /** @var NotificationProcessorFactoryInterface */
     protected $factory;
 
     /** @var TpayService */
     protected $tpayService;
+
+    /** @var RequestInterface */
+    private $request;
 
     /** @var TpayConfigInterface */
     private $config;
@@ -82,9 +82,7 @@ class NotificationProcessor
         return $order->getStoreId() ? (int) $order->getStoreId() : $defaultStoreId;
     }
 
-    /**
-     * @return OriginApiWebhook|OpenApiWebhook
-     */
+    /** @return OriginApiWebhook|OpenApiWebhook */
     private function createWebhook(?int $storeId)
     {
         if (null !== $this->request->getPost('card')) {
@@ -95,6 +93,7 @@ class NotificationProcessor
         }
 
         $certificateProvider = new CacheCertificateProvider(new Cache());
+
         return new OpenApiWebhook(
             $certificateProvider,
             $this->config->getSecurityCode($storeId),
