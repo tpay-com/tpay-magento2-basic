@@ -2,7 +2,6 @@
 
 namespace Tpay\Magento2\Notification;
 
-use _PHPStan_5adafcbb8\Psr\Http\Message\RequestInterface;
 use Magento\Framework\App\RequestInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Tpay\Magento2\Api\Notification\Strategy\NotificationProcessorFactoryInterface;
