@@ -23,7 +23,7 @@ class NotificationProcessorFactory implements NotificationProcessorFactoryInterf
             return $this->strategies['blikAlias'];
         }
 
-        if (is_array($notification) && isset($data['card'])) {
+        if (is_array($notification) && isset($notification['card'])) {
             return $this->strategies['card'];
         }
 
