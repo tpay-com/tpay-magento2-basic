@@ -30,7 +30,7 @@ class DefaultNotificationProcessor implements NotificationProcessorInterface
         $this->tpay = $tpay;
     }
 
-    public function process($notification, ?int $storeId = null)
+    public function process($notification)
     {
         if (!$notification instanceof BasicPayment) {
             throw new RuntimeException('Invalid payment notification type');

@@ -34,7 +34,7 @@ class CardNotificationProcessor implements NotificationProcessorInterface
         $this->tpay = $tpay;
     }
 
-    public function process($notification, ?int $storeId = null)
+    public function process($notification)
     {
         $orderId = base64_decode($notification['order_id']);
         $order = $this->tpayService->getOrderById($orderId);

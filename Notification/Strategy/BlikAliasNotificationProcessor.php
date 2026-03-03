@@ -20,7 +20,7 @@ class BlikAliasNotificationProcessor implements NotificationProcessorInterface
         $this->aliasService = $aliasService;
     }
 
-    public function process($notification, ?int $storeId = null)
+    public function process($notification)
     {
         if ($notification instanceof BlikAliasRegister) {
             $alias = (string) $notification->value->getValue();

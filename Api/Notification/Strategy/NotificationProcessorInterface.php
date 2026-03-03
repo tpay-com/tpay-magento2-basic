@@ -4,5 +4,5 @@ namespace Tpay\Magento2\Api\Notification\Strategy;
 
 interface NotificationProcessorInterface
 {
-    public function process($notification, ?int $storeId = null);
+    public function process($notification);
 }

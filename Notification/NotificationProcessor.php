@@ -7,7 +7,6 @@ use Magento\Store\Model\StoreManagerInterface;
 use Tpay\Magento2\Api\Notification\Strategy\NotificationProcessorFactoryInterface;
 use Tpay\Magento2\Api\TpayConfigInterface;
 use Tpay\Magento2\Service\TpayService;
-use Tpay\OpenApi\Model\Objects\NotificationBody\BasicPayment;
 use Tpay\OpenApi\Utilities\Cache;
 use Tpay\OpenApi\Utilities\CacheCertificateProvider;
 use Tpay\OpenApi\Webhook\JWSVerifiedPaymentNotification as OpenApiWebhook;
@@ -46,40 +45,14 @@ class NotificationProcessor
 
     public function process()
     {
-        $defaultStoreId = $this->storeManager->getDefaultStoreView()->getId();
-        $webhook = $this->createWebhook($defaultStoreId);
+        $storeId = $this->storeManager->getStore()->getId();
+        $webhook = $this->createWebhook($storeId);
 
         $notification = $webhook->getNotification();
-        $storeId = $this->resolveStoreId($notification, $defaultStoreId);
-
-        if ($storeId !== $defaultStoreId) {
-            $webhook = $this->createWebhook($storeId);
-            $notification = $webhook->getNotification();
-        }
 
         $strategy = $this->factory->create($notification);
 
-        $strategy->process($storeId);
-    }
-
-    private function resolveStoreId($notification, int $defaultStoreId): ?int
-    {
-        if ($notification instanceof BasicPayment) {
-            $value = $notification->tr_crc->getValue();
-        } elseif (is_array($notification)) {
-            $value = $notification['order_id'] ?? $notification['tr_crc'] ?? null;
-        } else {
-            return null;
-        }
-
-        if (!$value) {
-            return null;
-        }
-
-        $orderId = base64_decode($value);
-        $order = $this->tpayService->getOrderById($orderId);
-
-        return $order->getStoreId() ? (int) $order->getStoreId() : $defaultStoreId;
+        $strategy->process($notification);
     }
 
     /** @return OpenApiWebhook|OriginApiWebhook */
