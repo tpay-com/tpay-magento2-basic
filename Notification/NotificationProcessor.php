@@ -6,6 +6,7 @@ use Magento\Framework\App\RequestInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Tpay\Magento2\Api\Notification\Strategy\NotificationProcessorFactoryInterface;
 use Tpay\Magento2\Api\TpayConfigInterface;
+use Tpay\Magento2\Cache\CacheAdapter;
 use Tpay\Magento2\Service\TpayService;
 use Tpay\OpenApi\Utilities\Cache;
 use Tpay\OpenApi\Utilities\CacheCertificateProvider;
@@ -29,18 +30,23 @@ class NotificationProcessor
     /** @var StoreManagerInterface */
     private $storeManager;
 
+    /** @var CacheAdapter */
+    private $cacheAdapter;
+
     public function __construct(
         RequestInterface $request,
         NotificationProcessorFactoryInterface $factory,
         TpayService $tpayService,
         TpayConfigInterface $config,
-        StoreManagerInterface $storeManager
+        StoreManagerInterface $storeManager,
+        CacheAdapter $cacheAdapter
     ) {
         $this->request = $request;
         $this->factory = $factory;
         $this->tpayService = $tpayService;
         $this->config = $config;
         $this->storeManager = $storeManager;
+        $this->cacheAdapter = $cacheAdapter;
     }
 
     public function process()
@@ -65,7 +71,9 @@ class NotificationProcessor
             );
         }
 
-        $certificateProvider = new CacheCertificateProvider(new Cache());
+        $certificateProvider = new CacheCertificateProvider(
+            new Cache(null, $this->cacheAdapter)
+        );
 
         return new OpenApiWebhook(
             $certificateProvider,
