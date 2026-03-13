@@ -21,6 +21,7 @@ class CacheProvider extends Cache implements PsrCacheInterface
     public function __construct(CacheInterface $cache)
     {
         $this->cache = $cache;
+        parent::__construct(null, $this);
     }
 
     public function set($key, $value, $ttl = null)
