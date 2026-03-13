@@ -28,6 +28,14 @@ class OpenApi
     /** @var int */
     private $storeId;
 
+    private $lengthRestrictions = [
+        'phone' => 3,
+        'address' => 3,
+        'code' => 3,
+        'city' => 3,
+        'taxId' => 3,
+    ];
+
     public function __construct(TpayConfigInterface $tpay, CacheProvider $cache, StoreManagerInterface $storeManager, TpayApiFactory $apiFactory, ?int $storeId = null)
     {
         $this->storeId = null === $storeId ? $storeManager->getStore()->getId() : $storeId;
@@ -261,6 +269,12 @@ class OpenApi
 
         if (!empty($data['tax_id'])) {
             $paymentData['payer']['taxId'] = $data['tax_id'];
+        }
+
+        foreach ($this->lengthRestrictions as $fieldName => $minLength) {
+            if (isset($paymentData['payer'][$fieldName]) && strlen($paymentData['payer'][$fieldName]) < $minLength) {
+                unset($paymentData['payer'][$fieldName]);
+            }
         }
 
         return $paymentData;
