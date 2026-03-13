@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tpay\Magento2\Cache;
 
+use DateInterval;
 use Magento\Framework\App\CacheInterface;
 use Psr\SimpleCache\CacheInterface as PsrCacheInterface;
 
@@ -47,7 +48,7 @@ class CacheAdapter implements PsrCacheInterface
         return $elements;
     }
 
-    public function setMultiple(iterable $values, \DateInterval|int|null $ttl = null): bool
+    public function setMultiple(iterable $values, null|DateInterval|int $ttl = null): bool
     {
         foreach ($values as $key => $value) {
             if (false === $this->set($key, $value, $ttl)) {
