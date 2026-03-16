@@ -27,7 +27,8 @@ class CacheProvider extends Cache implements PsrCacheInterface
     public function set($key, $value, $ttl = null)
     {
         $serialize = $this->serialize($value);
-        $this->cache->save($serialize, $key, [TpayConfigProvider::CACHE_TAG], $ttl);
+
+        return $this->cache->save($serialize, $key, [TpayConfigProvider::CACHE_TAG], $ttl);
     }
 
     public function get($key, $default = null)
@@ -39,7 +40,7 @@ class CacheProvider extends Cache implements PsrCacheInterface
 
     public function delete($key)
     {
-        $this->cache->remove($key);
+        return $this->cache->remove($key);
     }
 
     public function serialize($value): string
