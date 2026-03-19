@@ -2,6 +2,7 @@
 
 namespace Tpay\Magento2\Notification\Strategy;
 
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Tpay\Magento2\Api\Notification\Strategy\NotificationProcessorInterface;
 use Tpay\Magento2\Api\TpayInterface;
@@ -20,14 +21,19 @@ class DefaultNotificationProcessor implements NotificationProcessorInterface
     /** @var TpayInterface */
     protected $tpay;
 
+    /** @var LoggerInterface */
+    protected $logger;
+
     public function __construct(
         TpayService $tpayService,
         TpayTokensService $tokensService,
-        TpayInterface $tpay
+        TpayInterface $tpay,
+        LoggerInterface $logger
     ) {
         $this->tpayService = $tpayService;
         $this->tokensService = $tokensService;
         $this->tpay = $tpay;
+        $this->logger = $logger;
     }
 
     public function process($notification)
@@ -36,8 +42,25 @@ class DefaultNotificationProcessor implements NotificationProcessorInterface
             throw new RuntimeException('Invalid payment notification type');
         }
 
+        if ($notification->isTestNotification()) {
+            $this->logger->info('Received test notification: ' . print_r($notification->getNotificationAssociative(), true));
+
+            return;
+        }
+
         $orderId = base64_decode($notification->tr_crc->getValue());
         $order = $this->tpayService->getOrderById($orderId);
+
+        if (!$this->validateAmount($order, $notification)) {
+            $this->logger->error(sprintf(
+                'Amount mismatch for order %s: order=%s, notification=%s',
+                $order->getIncrementId(),
+                $order->getGrandTotal(),
+                $notification->tr_amount->getValue()
+            ));
+
+            throw new RuntimeException('Niezgodna kwota zamówienia');
+        }
 
         switch ($notification->tr_status->getValue()) {
             case 'TRUE':
@@ -80,5 +103,13 @@ class DefaultNotificationProcessor implements NotificationProcessorInterface
         if (!empty($token)) {
             $this->tokensService->updateTokenById((int) $token['tokenId'], $notification->card_token->getValue());
         }
+    }
+
+    private function validateAmount($order, BasicPayment $notification): bool
+    {
+        $orderAmount = number_format((float) $order->getGrandTotal(), 2, '.', '');
+        $notificationAmount = number_format((float) $notification->tr_amount->getValue(), 2, '.', '');
+
+        return $orderAmount === $notificationAmount;
     }
 }
