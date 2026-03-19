@@ -2,18 +2,15 @@
 
 namespace Tpay\Magento2\Notification\Strategy;
 
+use RuntimeException;
 use Tpay\Magento2\Api\Notification\Strategy\NotificationProcessorInterface;
-use Tpay\Magento2\Api\TpayConfigInterface;
 use Tpay\Magento2\Api\TpayInterface;
 use Tpay\Magento2\Service\TpayService;
 use Tpay\Magento2\Service\TpayTokensService;
-use Tpay\OpenApi\Webhook\JWSVerifiedPaymentNotificationFactory;
+use Tpay\OpenApi\Model\Objects\NotificationBody\BasicPayment;
 
 class DefaultNotificationProcessor implements NotificationProcessorInterface
 {
-    /** @var TpayConfigInterface */
-    protected $tpayConfig;
-
     /** @var TpayService */
     protected $tpayService;
 
@@ -23,54 +20,65 @@ class DefaultNotificationProcessor implements NotificationProcessorInterface
     /** @var TpayInterface */
     protected $tpay;
 
-    /** @var JWSVerifiedPaymentNotificationFactory */
-    private $notificationFactory;
-
     public function __construct(
-        TpayConfigInterface $tpayConfig,
         TpayService $tpayService,
         TpayTokensService $tokensService,
-        TpayInterface $tpayModel,
-        JWSVerifiedPaymentNotificationFactory $notificationFactory
+        TpayInterface $tpay
     ) {
-        $this->tpayConfig = $tpayConfig;
         $this->tpayService = $tpayService;
         $this->tokensService = $tokensService;
-        $this->tpay = $tpayModel;
-        $this->notificationFactory = $notificationFactory;
+        $this->tpay = $tpay;
     }
 
-    public function process(?int $storeId)
+    public function process($notification)
     {
-        $notification = $this->notificationFactory->create(['merchantSecret' => $this->tpayConfig->getSecurityCode($storeId), 'productionMode' => !$this->tpayConfig->useSandboxMode($storeId)])->getNotification();
+        if (!$notification instanceof BasicPayment) {
+            throw new RuntimeException('Invalid payment notification type');
+        }
 
-        $notification = $notification->getNotificationAssociative();
-        $orderId = base64_decode($notification['tr_crc']);
+        $orderId = base64_decode($notification->tr_crc->getValue());
+        $order = $this->tpayService->getOrderById($orderId);
+
+        switch ($notification->tr_status->getValue()) {
+            case 'TRUE':
+            case 'PAID':
+                $this->tpayService->confirmPayment(
+                    $order,
+                    $notification->tr_amount->getValue(),
+                    $notification->tr_id->getValue(),
+                    []
+                );
+                break;
+            case 'CHARGEBACK':
+                $this->tpayService->addCommentToHistory(
+                    $orderId,
+                    __('Transaction has been refunded via Tpay Transaction Panel')
+                );
+                break;
+        }
+
+        $this->saveCard($notification, $orderId);
+    }
+
+    private function saveCard(BasicPayment $notification, string $orderId)
+    {
+        if (!$notification->card_token) {
+            return;
+        }
+
+        if ($this->tpay->isCustomerGuest($orderId)) {
+            return;
+        }
 
         $order = $this->tpayService->getOrderById($orderId);
 
-        if ('TRUE' === $notification['tr_status']) {
-            $this->tpayService->confirmPayment($order, $notification['tr_amount'], $notification['tr_id'], []);
-            $this->saveCard($notification, $orderId);
-        }
-        if ('CHARGEBACK' === $notification['tr_status']) {
-            $this->tpayService->addCommentToHistory($orderId, __('Transaction has been refunded via Tpay Transaction Panel'));
-        }
-    }
+        $token = $this->tokensService->getWithoutAuthCustomerTokens(
+            (string) $order->getCustomerId(),
+            $notification->tr_crc->getValue()
+        );
 
-    private function saveCard(array $notification, string $orderId)
-    {
-        $order = $this->tpayService->getOrderById($orderId);
-
-        if (isset($notification['card_token']) && !$this->tpay->isCustomerGuest($orderId)) {
-            $token = $this->tokensService->getWithoutAuthCustomerTokens(
-                (string) $order->getCustomerId(),
-                $notification['tr_crc']
-            );
-
-            if (!empty($token)) {
-                $this->tokensService->updateTokenById((int) $token['tokenId'], $notification['card_token']);
-            }
+        if (!empty($token)) {
+            $this->tokensService->updateTokenById((int) $token['tokenId'], $notification->card_token->getValue());
         }
     }
 }

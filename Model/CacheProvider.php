@@ -3,6 +3,7 @@
 namespace Tpay\Magento2\Model;
 
 use Magento\Framework\App\CacheInterface;
+use Psr\SimpleCache\CacheInterface as PsrCacheInterface;
 use Tpay\OpenApi\Model\Fields\ApiCredentials\Scope;
 use Tpay\OpenApi\Model\Fields\Token\AccessToken;
 use Tpay\OpenApi\Model\Fields\Token\ExpiresIn;
@@ -12,7 +13,7 @@ use Tpay\OpenApi\Model\Identifiers\ClientId;
 use Tpay\OpenApi\Model\Objects\Authorization\Token;
 use Tpay\OpenApi\Utilities\Cache;
 
-class CacheProvider extends Cache
+class CacheProvider extends Cache implements PsrCacheInterface
 {
     /** @var CacheInterface */
     private $cache;
@@ -20,15 +21,17 @@ class CacheProvider extends Cache
     public function __construct(CacheInterface $cache)
     {
         $this->cache = $cache;
+        parent::__construct(null, $this);
     }
 
-    public function set($key, $value, $ttl)
+    public function set($key, $value, $ttl = null)
     {
         $serialize = $this->serialize($value);
-        $this->cache->save($serialize, $key, [TpayConfigProvider::CACHE_TAG], $ttl);
+
+        return $this->cache->save($serialize, $key, [TpayConfigProvider::CACHE_TAG], $ttl);
     }
 
-    public function get($key)
+    public function get($key, $default = null)
     {
         $json = $this->cache->load($key);
 
@@ -37,7 +40,7 @@ class CacheProvider extends Cache
 
     public function delete($key)
     {
-        $this->cache->remove($key);
+        return $this->cache->remove($key);
     }
 
     public function serialize($value): string
@@ -73,5 +76,47 @@ class CacheProvider extends Cache
             ],
             ]
         );
+    }
+
+    public function clear(): bool
+    {
+        return $this->cache->clean();
+    }
+
+    public function getMultiple($keys, $default = null)
+    {
+        $elements = [];
+        foreach ($keys as $key) {
+            $elements[] = $this->get($key, $default);
+        }
+
+        return $elements;
+    }
+
+    public function setMultiple($values, $ttl = null)
+    {
+        foreach ($values as $key => $value) {
+            if (false === $this->set($key, $value, $ttl)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public function deleteMultiple($keys)
+    {
+        foreach ($keys as $key) {
+            if (false === $this->delete($key)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public function has($key)
+    {
+        return null !== $this->get($key);
     }
 }

@@ -2,7 +2,10 @@
 
 namespace Tpay\Magento2\Api\Notification\Strategy;
 
+use Tpay\OpenApi\Model\Objects\Objects;
+
 interface NotificationProcessorFactoryInterface
 {
-    public function create(array $data): NotificationProcessorInterface;
+    /** @param array|Objects $notification */
+    public function create($notification): NotificationProcessorInterface;
 }

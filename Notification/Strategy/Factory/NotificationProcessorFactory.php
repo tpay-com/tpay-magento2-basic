@@ -2,32 +2,29 @@
 
 namespace Tpay\Magento2\Notification\Strategy\Factory;
 
-use Magento\Framework\App\RequestInterface;
 use Tpay\Magento2\Api\Notification\Strategy\NotificationProcessorFactoryInterface;
 use Tpay\Magento2\Api\Notification\Strategy\NotificationProcessorInterface;
+use Tpay\OpenApi\Model\Objects\NotificationBody\BlikAliasRegister;
+use Tpay\OpenApi\Model\Objects\NotificationBody\BlikAliasUnregister;
 
 class NotificationProcessorFactory implements NotificationProcessorFactoryInterface
 {
     /** @var list<NotificationProcessorInterface> */
     protected $strategies;
 
-    /** @var RequestInterface */
-    private $request;
-
-    public function __construct(RequestInterface $request, array $strategies = [])
+    public function __construct(array $strategies = [])
     {
         $this->strategies = $strategies;
-        $this->request = $request;
     }
 
-    public function create(array $data): NotificationProcessorInterface
+    public function create($notification): NotificationProcessorInterface
     {
-        if (null !== $this->request->getPost('card')) {
-            return $this->strategies['card'];
+        if ($notification instanceof BlikAliasRegister || $notification instanceof BlikAliasUnregister) {
+            return $this->strategies['blikAlias'];
         }
 
-        if (null !== $this->request->getPost('event')) {
-            return $this->strategies['blikAlias'];
+        if (is_array($notification) && isset($notification['card'])) {
+            return $this->strategies['card'];
         }
 
         return $this->strategies['default'];
