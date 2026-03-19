@@ -59,7 +59,7 @@ class DefaultNotificationProcessor implements NotificationProcessorInterface
                 $notification->tr_amount->getValue()
             ));
 
-            throw new RuntimeException('Niezgodna kwota zamówienia');
+            throw new RuntimeException('Order amount mismatch');
         }
 
         switch ($notification->tr_status->getValue()) {
