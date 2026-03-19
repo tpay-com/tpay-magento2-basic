@@ -43,7 +43,7 @@ class DefaultNotificationProcessor implements NotificationProcessorInterface
         }
 
         if ($notification->isTestNotification()) {
-            $this->logger->info('Received test notification: ' . print_r($notification->getNotificationAssociative(), true));
+            $this->logger->info('Received test notification: '.print_r($notification->getNotificationAssociative(), true));
 
             return;
         }
