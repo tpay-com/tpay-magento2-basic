@@ -96,4 +96,5 @@
 "Read more.","Czytaj więcej."
 "Online payment","Płatność online"
 "Pay with Tpay!","Zapłać za zakupy z Tpay!"
-"Confirm payment in Your banking application.","Potwierdź płatność w aplikacji mobilnej swojego banku.
+"Confirm payment in Your banking application.","Potwierdź płatność w aplikacji mobilnej swojego banku."
+"Private server IP detected (%1). Please verify proxy or server configuration, otherwise card payments may be rejected by anti-fraud mechanisms.","Wykryto prywatny adres IP serwera (%1). Sprawdź konfigurację proxy lub serwera, w przeciwnym razie płatności kartowe mogą być odrzucane przez mechanizmy antyfraudowe."
