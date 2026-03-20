@@ -39,6 +39,7 @@ class Warning extends Field
         return parent::render($element);
     }
 
+    // phpcs:ignore
     protected function _prepareLayout()
     {
         $this->setTemplate('Tpay_Magento2::system/config/warning.phtml');
@@ -46,6 +47,7 @@ class Warning extends Field
         return parent::_prepareLayout();
     }
 
+    // phpcs:ignore
     protected function _getElementHtml(AbstractElement $element): string
     {
         return $this->_toHtml();
