@@ -8,7 +8,7 @@ if ($block->shouldShowWarning()): ?>
     <div class="message message-warning warning">
         <div>
             <?= $block->escapeHtml(__(
-                'Private server IP detected (%1). Please verify proxy or server configuration, otherwise card payments may be rejected by anti-fraud mechanisms.',
+                'A private client IP (%1) was detected. Please verify proxy or reverse proxy configuration, otherwise card payments may be rejected by anti-fraud mechanisms.',
                 $block->getResolvedIp()
             )) ?>
         </div>
