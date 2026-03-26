@@ -6,6 +6,7 @@ use Magento\Framework\Validator\Exception;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Tpay\Magento2\Api\TpayConfigInterface;
+use Tpay\Magento2\Helper\IpValidator;
 use Tpay\Magento2\Model\ApiFacade\Transaction\Dto\Channel;
 use Tpay\Magento2\Model\ApiFacade\Transaction\TransactionApiFacade;
 use Tpay\Magento2\Model\CacheProvider;
@@ -25,6 +26,9 @@ class OpenApi
     /** @var CacheProvider */
     private $cache;
 
+    /** @var IpValidator */
+    private $ipValidator;
+
     /** @var int */
     private $storeId;
 
@@ -36,8 +40,14 @@ class OpenApi
         'taxId' => 3,
     ];
 
-    public function __construct(TpayConfigInterface $tpay, CacheProvider $cache, StoreManagerInterface $storeManager, TpayApiFactory $apiFactory, ?int $storeId = null)
-    {
+    public function __construct(
+        TpayConfigInterface $tpay,
+        CacheProvider $cache,
+        StoreManagerInterface $storeManager,
+        TpayApiFactory $apiFactory,
+        IpValidator $ipValidator,
+        ?int $storeId = null
+    ) {
         $this->storeId = null === $storeId ? $storeManager->getStore()->getId() : $storeId;
         $this->cache = $cache;
         $this->tpayApi = $apiFactory->create([
@@ -46,6 +56,7 @@ class OpenApi
             'productionMode' => !$tpay->useSandboxMode($this->storeId),
             'clientName' => $tpay->buildMagentoInfo(),
         ]);
+        $this->ipValidator = $ipValidator;
         $token = $this->cache->get($this->getAuthTokenCacheKey($tpay, $this->storeId));
 
         if ($token) {
@@ -222,22 +233,27 @@ class OpenApi
 
     private function handleDataStructure(array $data): array
     {
+        $payer = [
+            'email' => $data['email'],
+            'name' => $data['name'],
+            'phone' => $data['phone'],
+            'address' => $data['address'],
+            'code' => $data['zip'],
+            'city' => $data['city'],
+            'country' => $data['country'],
+            'userAgent' => substr($data['userAgent'], 0, 255),
+        ];
+
+        if ($this->ipValidator->isPublic($data['ip'])) {
+            $payer['ip'] = $data['ip'];
+        }
+
         $paymentData = [
             'amount' => $data['amount'],
             'description' => $data['description'],
             'hiddenDescription' => $data['crc'],
             'lang' => strstr($data['language'], '_', true) ?: $data['language'],
-            'payer' => [
-                'email' => $data['email'],
-                'name' => $data['name'],
-                'phone' => $data['phone'],
-                'address' => $data['address'],
-                'code' => $data['zip'],
-                'city' => $data['city'],
-                'country' => $data['country'],
-                'ip' => $data['ip'],
-                'userAgent' => substr($data['userAgent'], 0, 255),
-            ],
+            'payer' => $payer,
             'callbacks' => [
                 'payerUrls' => [
                     'success' => $data['return_url'],
