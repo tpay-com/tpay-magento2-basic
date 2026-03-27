@@ -12,6 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Notification amount validation
 - Test notification detection
 
+## 2.6.3
+
+### Added
+
+- Admin private IP warning
+
 ## 2.6.2
 
 ### Changed

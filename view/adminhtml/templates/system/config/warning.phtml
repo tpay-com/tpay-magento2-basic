@@ -1,0 +1,16 @@
+<?php
+
+use Tpay\Magento2\Block\System\Config\Warning;
+
+/** @var Warning $block */
+
+if ($block->shouldShowWarning()): ?>
+    <div class="message message-warning warning">
+        <div>
+            <?= $block->escapeHtml(__(
+                'A private client IP (%1) was detected. Please verify proxy or reverse proxy configuration, otherwise card payments may be rejected by anti-fraud mechanisms.',
+                $block->getResolvedIp()
+            )) ?>
+        </div>
+    </div>
+<?php endif; ?>

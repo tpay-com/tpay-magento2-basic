@@ -14,6 +14,9 @@
             <group id="tpaycom_magento2basic" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Tpay</label>
                 <frontend_model>Tpay\Magento2\Block\System\Config\TpayPaymentFieldset</frontend_model>
+                <field id="private_ip_warning" translate="label" type="label" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <frontend_model>Tpay\Magento2\Block\System\Config\Warning</frontend_model>
+                </field>
                 <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Active</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
