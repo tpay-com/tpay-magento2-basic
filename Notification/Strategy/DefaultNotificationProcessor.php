@@ -136,8 +136,12 @@ class DefaultNotificationProcessor implements NotificationProcessorInterface
             return true;
         }
 
-        $orderCurrency = strtoupper(trim($order->getOrderCurrencyCode()));
+        $orderCurrency = $order->getBaseCurrencyCode();
 
-        return $orderCurrency === $notificationCurrency;
+        if (null === $orderCurrency) {
+            return true;
+        }
+
+        return strtoupper(trim($orderCurrency)) === $notificationCurrency;
     }
 }
