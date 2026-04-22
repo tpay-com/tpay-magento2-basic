@@ -132,7 +132,7 @@ class DefaultNotificationProcessor implements NotificationProcessorInterface
             $notificationCurrency = strtoupper(trim($notification->tr_currency->getValue()));
         }
 
-        if ($notificationCurrency === null) {
+        if (null === $notificationCurrency) {
             return true;
         }
 
