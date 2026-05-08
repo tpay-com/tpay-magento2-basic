@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- ClientId in userAgent suffix
+
+## 2.7.0
+
+### Added
+
 - Notification amount validation
 - Test notification detection
 
