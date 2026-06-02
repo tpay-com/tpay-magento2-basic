@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+/**
+ *
+ * @category    payment gateway
+ * @package     Tpaycom_Magento2.3
+ * @author      Tpay.com
+ * @copyright   (https://tpay.com)
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
+    <router id="admin">
+        <route id="tpay" frontName="tpay">
+            <module name="Tpay_Magento2" />
+        </route>
+    </router>
+</config>

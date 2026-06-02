@@ -12,6 +12,7 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Sales\Model\Service\InvoiceService;
 use Tpay\Magento2\Helper\OrderResolver;
+use Tpay\Magento2\Model\TpayPayment;
 
 class TpayService
 {
@@ -48,7 +49,7 @@ class TpayService
             ->setBaseTotalPaid(0.00)
             ->setBaseTotalDue($order->getBaseGrandTotal())
             ->setState(Order::STATE_PENDING_PAYMENT)
-            ->addStatusToHistory(true);
+            ->addStatusToHistory(TpayPayment::ORDER_STATUS_PENDING);
 
         $order->setSendEmail($sendEmail);
         $this->orderRepository->save($order);
@@ -60,7 +61,7 @@ class TpayService
     {
         /** @var Order $order */
         $order = $this->orderResolver->getOrderByIncrementId($orderId);
-        $order->addStatusToHistory($order->getState(), $comment);
+        $order->addStatusToHistory($order->getStatus(), $comment);
         $this->orderRepository->save($order);
     }
 

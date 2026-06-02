@@ -31,6 +31,9 @@
                 <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
             </Tpay_Magento2>
             <tpaycom_magento2basic>
+<!--                <sale_settings>-->
+<!--                    <payment_remind_email_template>payment_tpaycom_magento2basic_sale_settings_payment_remind_email_template</payment_remind_email_template>-->
+<!--                </sale_settings>-->
                 <cancel>
                     <days>30</days>
                 </cancel>

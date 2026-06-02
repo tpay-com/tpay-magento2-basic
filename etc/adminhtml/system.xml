@@ -183,6 +183,10 @@
                         <comment>If you use other currencies visible on the website and pay in PLN, turn it on/off</comment>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     </field>
+                    <field id="payment_remind_email_template" translate="label comment" type="select" sortOrder="21" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Template for payment reminder emails</label>
+                        <source_model>\Tpay\Magento2\Model\Config\Source\EmailTemplate</source_model>
+                    </field>
                 </group>
                 <group id="cancel" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Automatic order cancellation</label>
