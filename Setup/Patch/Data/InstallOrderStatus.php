@@ -45,5 +45,7 @@ class InstallOrderStatus implements DataPatchInterface
                 'visible_on_front' => 1,
             ]
         );
+
+        return $this;
     }
 }

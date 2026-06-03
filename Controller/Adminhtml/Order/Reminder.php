@@ -66,6 +66,7 @@ class Reminder extends Action
         return $this->redirectBack();
     }
 
+    // phpcs:ignore
     protected function _isAllowed()
     {
         return $this->_authorization->isAllowed('Tpay_Magento2::send_reminder');
