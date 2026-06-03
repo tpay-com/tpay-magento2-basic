@@ -186,6 +186,7 @@
                     <field id="payment_remind_email_template" translate="label comment" type="select" sortOrder="21" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Template for payment reminder emails</label>
                         <source_model>\Tpay\Magento2\Model\Config\Source\EmailTemplate</source_model>
+                        <comment>Emails can be sent manually from order details view given order staus is Pending Payment Tpay</comment>
                     </field>
                 </group>
                 <group id="cancel" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
