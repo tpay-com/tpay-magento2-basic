@@ -1,0 +1,65 @@
+<?php
+declare(strict_types=1);
+
+namespace Magento\Config\Model\Config\Source\Email;
+
+use Magento\Framework\Data\OptionSourceInterface;
+
+/**
+ * Source model providing lists of transactional email templates for configuration dropdowns.
+ */
+class Template implements OptionSourceInterface
+{
+    /**
+     * @var \Magento\Email\Model\ResourceModel\Template\CollectionFactory
+     */
+    protected $_templatesFactory;
+
+    /**
+     * @var \Magento\Email\Model\Template\Config
+     */
+    protected $_emailConfig;
+
+    /**
+     * @param \Magento\Email\Model\ResourceModel\Template\CollectionFactory $templatesFactory
+     * @param \Magento\Email\Model\Template\Config $emailConfig
+     */
+    public function __construct(
+        \Magento\Email\Model\ResourceModel\Template\CollectionFactory $templatesFactory,
+        \Magento\Email\Model\Template\Config $emailConfig
+    ) {
+        $this->_templatesFactory = $templatesFactory;
+        $this->_emailConfig = $emailConfig;
+    }
+
+/** @return string */
+public function getPath()
+{}
+
+    /**
+     * Return array of options as key-value pairs for dropdown fields.
+     *
+     * @return array
+     */
+    public function toOptionArray()
+    {
+        return [
+            ['value' => 'string_template_id', 'label' => 'Template Label']
+        ];
+    }
+}
+
+namespace Magento\Framework\Data;
+
+/**
+ * Core interface required for any UI component or adminhtml system config source model.
+ */
+interface OptionSourceInterface
+{
+    /**
+     * Return array of options as a multi-dimensional array containing value and label keys.
+     *
+     * @return array
+     */
+    public function toOptionArray();
+}
