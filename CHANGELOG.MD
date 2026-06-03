@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Ability to click "Pay with Tpay" in customer order details view (for orders in status `pending_payment_tpay`)
 - Ability to send payment reminders from adminhtml order details view (for orders in status `pending_payment_tpay`)
 
+## 2.7.1
+
+### Added
+
+- ClientId in userAgent suffix
+
 ## 2.7.0
 
 ### Added
