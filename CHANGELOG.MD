@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2.8.0
+
+### Added
+
+- New order status `pending_payment_tpay` assigned to newly created orders with Tpay payment methods.
+- Ability to click "Pay with Tpay" in customer order details view (for orders in status `pending_payment_tpay`)
+- Ability to send payment reminders from adminhtml order details view (for orders in status `pending_payment_tpay`)
+
 ## 2.7.1
 
 ### Added

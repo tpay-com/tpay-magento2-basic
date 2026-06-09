@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="sales.order.info.buttons">
+            <block name="sales.order.info.buttons.tpay" template="Tpay_Magento2::button.phtml" cacheable="false">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">Tpay\Magento2\ViewModel\Order\Button</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

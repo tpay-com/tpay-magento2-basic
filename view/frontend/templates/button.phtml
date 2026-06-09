@@ -1,0 +1,16 @@
+<?php
+
+declare(strict_types=1);
+
+/** @var $viewModel \Tpay\Magento2\ViewModel\Order\Button */
+/** @var $block \Magento\Framework\View\Element\Template */
+/** @var $escaper \Magento\Framework\Escaper */
+
+$viewModel = $block->getViewModel();
+?>
+
+<?php if ($viewModel->shouldShowButton() && $viewModel->getPaymentUrl()) : ?>
+    <a href="<?= $escaper->escapeHtmlAttr($viewModel->getPaymentUrl()) ?>" class="action">
+        <span><?= $escaper->escapeHtml(__('Pay with Tpay')) ?></span>
+    </a>
+<?php endif; ?>

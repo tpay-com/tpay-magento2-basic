@@ -1,0 +1,18 @@
+<!--@subject Payment reminder @-->
+<!--@vars {
+"var name":"Customer Name",
+"var order":"Order Increment ID",
+"var paymentUrl":"Payment URL"
+} @-->
+{{template config_path="design/email/header_template"}}
+
+<p>{{trans "Hello, %name" name=$name}}</p>
+
+<p>
+    {{trans "Your order %order has not been paid yet." order=$order}}
+    {{trans "Use link below to finalise Your payment"}}
+</p>
+
+<a href="{{var paymentUrl}}">{{trans "Pay with Tpay"}}</a>
+
+{{template config_path="design/email/footer_template"}}
