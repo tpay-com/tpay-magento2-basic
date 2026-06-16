@@ -10,11 +10,21 @@ require(['jquery', 'mage/translate'], function ($, $t) {
         var payButton = $('#tpaycom_magento2basic_submit');
 
         function getBankTile(groupId, groupName, logoSrc) {
-            return '<div class="tpay-group-holder tpay-with-logo" id="bank-' + groupId + '">' +
-                '<div class="tpay-group-name">' + groupName + '</div>' +
-                '<div class="tpay-group-logo-holder">' +
-                '<img src="' + logoSrc + '" class="tpay-group-logo" alt="' + groupName + '">' +
-                '</div></div></div>';
+            return `
+                    <label class="tpay-group-holder tpay-with-logo">
+                        <input
+                            type="radio"
+                            name="bank"
+                            value="${groupId}"
+                            id="bank-${groupId}"
+                            class="tpay-group-radio"
+                        >
+                        <div class="tpay-group-name">${groupName}</div>
+                        <div class="tpay-group-logo-holder">
+                            <img src="${logoSrc}" class="tpay-group-logo" alt="${groupName}">
+                        </div>
+                    </label>
+                `;
         }
 
         function inArray(needle, haystack) {
@@ -92,20 +102,18 @@ require(['jquery', 'mage/translate'], function ($, $t) {
             }
 
             bank_selection_form.innerHTML = str + str2;
-            $('.tpay-group-holder').each(function () {
-                $(this).on('click', function () {
-                    var input = $('#tpay-channel-input'),
-                        active_bank_blocks = document.getElementsByClassName('tpay-active'),
-                        that = $(this);
-                    input.val(that.attr('id').substr(5));
-                    if (active_bank_blocks.length > 0) {
-                        active_bank_blocks[0].className = active_bank_blocks[0].className.replace('tpay-active', '');
-                    }
-                    this.className = this.className + ' tpay-active';
-                    if (input.val() > 0 && $('#blik_code').val().length === 0) {
-                        payButton.removeClass('disabled');
-                    }
-                });
+            $(document).on('change', '.tpay-group-radio', function () {
+                var input = $('#tpay-channel-input'),
+                    selectedBankId = $(this).val();
+
+                input.val(selectedBankId);
+
+                $('.tpay-group-holder').removeClass('tpay-active');
+                $(this).closest('.tpay-group-holder').addClass('tpay-active');
+
+                if (selectedBankId > 0 && $('#blik_code').val().length === 0) {
+                    payButton.removeClass('disabled');
+                }
             });
         }
 

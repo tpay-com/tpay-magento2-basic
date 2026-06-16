@@ -254,10 +254,6 @@ form select.wrong
     width: 97px;
 }
 
-.tpay-groups-wrapper .tpay-group-holder.tpay-active {
-    border-color: #3BD16B;
-}
-
 .tpay-groups-wrapper .tpay-group-holder-content {
     display: block;
     height: 100%;
