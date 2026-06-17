@@ -38,6 +38,8 @@ class TpayPayment extends Adapter implements TpayInterface
 {
     use FieldsValidator;
 
+    public const ORDER_STATUS_PENDING = 'pending_payment_tpay';
+
     protected $code;
     protected $title;
     protected $_isGateway = true;

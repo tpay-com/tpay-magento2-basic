@@ -1,0 +1,169 @@
+<?php
+declare(strict_types=1);
+
+namespace Magento\Sales\Block\Adminhtml\Order;
+
+use Magento\Backend\Block\Widget\Form\Container;
+
+/**
+ * Adminhtml sales order view block
+ */
+class View extends Container
+{
+    /**
+     * Core registry
+     *
+     * @var \Magento\Framework\Registry
+     */
+    protected $_coreRegistry = null;
+
+    /**
+     * @var \Magento\Sales\Helper\Reorder
+     */
+    protected $_reorderHelper = null;
+
+    /**
+     * @param \Magento\Backend\Block\Widget\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Sales\Helper\Reorder $reorderHelper
+     * @param array $data
+     */
+    public function __construct(
+        \Magento\Backend\Block\Widget\Context $context,
+        \Magento\Framework\Registry $registry,
+        \Magento\Sales\Helper\Reorder $reorderHelper,
+        array $data = []
+    ) {
+        $this->_coreRegistry = $registry;
+        $this->_reorderHelper = $reorderHelper;
+        parent::__construct($context, $data);
+    }
+
+    /**
+     * Retrieve order model object
+     *
+     * @return \Magento\Sales\Model\Order
+     */
+    public function getOrder() {}
+
+    /**
+     * Retrieve Order Identifier
+     *
+     * @return int
+     */
+    public function getOrderId() {}
+
+    /**
+     * Get URL for back button
+     *
+     * @return string
+     */
+    public function getBackUrl() {}
+
+    /**
+     * Get URL for edit button
+     *
+     * @return string
+     */
+    public function getEditUrl() {}
+
+    /**
+     * Get URL for email sending
+     *
+     * @return string
+     */
+    public function getEmailUrl() {}
+
+    /**
+     * Get URL for cancellation
+     *
+     * @return string
+     */
+    public function getCancelUrl() {}
+
+    /**
+     * Get URL for hold
+     *
+     * @return string
+     */
+    public function getHoldUrl() {}
+
+    /**
+     * Get URL for unhold
+     *
+     * @return string
+     */
+    public function getUnholdUrl() {}
+
+    /**
+     * Get URL for shipping
+     *
+     * @return string
+     */
+    public function getShipUrl() {}
+
+    /**
+     * Get URL for comment saving
+     *
+     * @return string
+     */
+    public function getReviewPaymentUrl() {}
+}
+
+namespace Magento\Backend\Block\Widget;
+
+/**
+ * Context class passed to Backend Widgets via Dependency Injection.
+ */
+class Context extends \Magento\Framework\View\Element\Template\Context
+{
+    /**
+     * @return \Magento\Framework\AuthorizationInterface
+     */
+    public function getAuthorization() {}
+
+    /**
+     * @return \Magento\Framework\Math\Random
+     */
+    public function MathRandom() {}
+
+    /**
+     * @return \Magento\Backend\Model\Session
+     */
+    public function getBackendSession() {}
+
+    /**
+     * @return \Magento\Backend\Model\UrlInterface
+     */
+    public function getUrlBuilder() {}
+}
+
+namespace Magento\Backend\Block\Widget;
+
+/**
+ * Base container abstract class for Adminhtml form and view containers.
+ */
+abstract class Container extends \Magento\Backend\Block\Widget
+{
+    /**
+     * Internal constructor
+     *
+     * @return void
+     */
+    protected function _construct() {}
+
+    /**
+     * Get back button URL
+     *
+     * @return string
+     */
+    public function getBackUrl() {}
+
+    /**
+     * Check whether button can be displayed
+     *
+     * @param string $id
+     * @return bool
+     */
+    protected function _isAllowedAction($id) {}
+}

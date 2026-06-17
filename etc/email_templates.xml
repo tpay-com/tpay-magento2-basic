@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+    <template id="payment_tpaycom_magento2basic_sale_settings_payment_remind_email_template"
+              label="Tpay payment reminder email"
+              file="payment_reminder_email.html"
+              type="html"
+              module="Tpay_Magento2"
+              area="frontend"/>
+</config>
