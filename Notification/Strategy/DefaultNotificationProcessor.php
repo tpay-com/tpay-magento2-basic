@@ -55,7 +55,7 @@ class DefaultNotificationProcessor implements NotificationProcessorInterface
             $this->logger->error(sprintf(
                 'Currency mismatch for order %s: order=%s, notification=%s',
                 $order->getIncrementId(),
-                $order->getOrderCurrencyCode(),
+                $order->getBaseCurrencyCode(),
                 $notification->tr_currency ? $notification->tr_currency->getValue() : 'null'
             ));
 
@@ -126,19 +126,17 @@ class DefaultNotificationProcessor implements NotificationProcessorInterface
 
     private function validateCurrency($order, BasicPayment $notification): bool
     {
-        $notificationCurrency = null;
+        $value = null;
 
         if (isset($notification->tr_currency) && $notification->tr_currency) {
             $value = $notification->tr_currency->getValue();
-
-            if (is_string($value) && trim($value) !== '') {
-                $notificationCurrency = strtoupper(trim($value));
-            }
         }
 
-        if (null === $notificationCurrency) {
+        if (!is_string($value) || trim($value) === '') {
             return true;
         }
+
+        $notificationCurrency = strtoupper(trim($value));
 
         $orderCurrency = $order->getBaseCurrencyCode();
 
