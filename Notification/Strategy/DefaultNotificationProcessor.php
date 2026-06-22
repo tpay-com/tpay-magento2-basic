@@ -67,6 +67,7 @@ class DefaultNotificationProcessor implements NotificationProcessorInterface
                 $orderId,
                 __('Received test mode payment confirmation notification. No funds have been collected form customer.')
             );
+
             return;
         }
 
