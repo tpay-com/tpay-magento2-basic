@@ -51,6 +51,17 @@ class DefaultNotificationProcessor implements NotificationProcessorInterface
         $orderId = base64_decode($notification->tr_crc->getValue());
         $order = $this->tpayService->getOrderById($orderId);
 
+        if (!$this->validateCurrency($order, $notification)) {
+            $this->logger->error(sprintf(
+                'Currency mismatch for order %s: order=%s, notification=%s',
+                $order->getIncrementId(),
+                $order->getBaseCurrencyCode(),
+                $notification->tr_currency ? $notification->tr_currency->getValue() : 'null'
+            ));
+
+            throw new RuntimeException('Order currency mismatch');
+        }
+
         if (!$this->validateAmount($order, $notification)) {
             $this->logger->error(sprintf(
                 'Amount mismatch for order %s: order=%s, notification=%s',
@@ -111,5 +122,28 @@ class DefaultNotificationProcessor implements NotificationProcessorInterface
         $notificationAmount = number_format((float) $notification->tr_amount->getValue(), 2, '.', '');
 
         return $orderAmount === $notificationAmount;
+    }
+
+    private function validateCurrency($order, BasicPayment $notification): bool
+    {
+        $value = null;
+
+        if (isset($notification->tr_currency) && $notification->tr_currency) {
+            $value = $notification->tr_currency->getValue();
+        }
+
+        if (!is_string($value) || '' === trim($value)) {
+            return true;
+        }
+
+        $notificationCurrency = strtoupper(trim($value));
+
+        $orderCurrency = $order->getBaseCurrencyCode();
+
+        if (null === $orderCurrency) {
+            return true;
+        }
+
+        return strtoupper(trim($orderCurrency)) === $notificationCurrency;
     }
 }

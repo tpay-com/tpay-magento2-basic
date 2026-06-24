@@ -13,7 +13,7 @@
         "php": ">=7.1",
         "ext-json": "*",
         "composer-runtime-api": "^2.0",
-        "tpay-com/tpay-openapi-php": "^2.4.5",
+        "tpay-com/tpay-openapi-php": "^2.4.7",
         "tpay-com/tpay-php": "^2.4.7",
         "psr/simple-cache": "^1"
     },
