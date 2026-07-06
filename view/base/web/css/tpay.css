@@ -572,11 +572,17 @@ form select.wrong
 .tpay-payment-method .payment-method-title .label {
     display: flex;
     align-items: center;
+    span {
+        color: #072653;
+        font-size: 18px;
+        font-weight: 700;
+        min-width: 100%;
+    }
 }
 
 .tpay-payment-method .payment-method-title .label .payment-icon {
-    width: 100%;
-    max-height: 54px;
+    width: auto;
+    max-height: 34px;
 }
 
 #tpay-basic-main-payment p {
