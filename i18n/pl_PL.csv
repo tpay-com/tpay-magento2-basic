@@ -114,3 +114,4 @@
 "Emails can be sent manually from order details view given order staus is Pending Payment Tpay","Powiadomienie może zostać wysłane manualnie z ekranu szczegółów zamówienia dla zamówień w statusie Oczekuje na płatnośc z Tpay"
 "Tpay payment reminder email","Tpay przypomnienie o płatności"
 "Payment reminder sent","Wysłano ponaglenie płatności"
+"Received test mode payment confirmation notification. No funds have been collected form customer.","Odebrano potwierdzenie płatności Tpay w trybie testowym. Środki nie zostały pobrane od klienta."

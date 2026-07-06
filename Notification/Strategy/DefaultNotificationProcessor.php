@@ -73,6 +73,15 @@ class DefaultNotificationProcessor implements NotificationProcessorInterface
             throw new RuntimeException('Order amount mismatch');
         }
 
+        if (1 === $notification->test_mode->getValue()) {
+            $this->tpayService->addCommentToHistory(
+                $orderId,
+                __('Received test mode payment confirmation notification. No funds have been collected form customer.')
+            );
+
+            return;
+        }
+
         switch ($notification->tr_status->getValue()) {
             case 'TRUE':
             case 'PAID':
