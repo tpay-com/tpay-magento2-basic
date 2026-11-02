@@ -46,11 +46,29 @@ require(['jquery', 'mage/translate'], function ($, $t) {
             return isValid;
         }
 
+        function formatExpiry(value) {
+            var fullYear = value.match(/^\s*(\d{1,2})\s*\/\s*(\d{4})\s*$/),
+                digits;
+            if (fullYear) {
+                return ('0' + fullYear[1]).slice(-2) + '/' + fullYear[2].substring(2);
+            }
+            digits = value.replace(/\D/g, '');
+            if (digits.length === 6) {
+                digits = digits.substring(0, 2) + digits.substring(4);
+            }
+            digits = digits.substring(0, 4);
+            if (/^[2-9]$/.test(digits)) {
+                digits = '0' + digits;
+            }
+
+            return digits.length > 2 ? digits.substring(0, 2) + '/' + digits.substring(2) : digits;
+        }
+
         function validateExpiryDate($elem) {
             var isValid = false, expiration;
-            $elem.val($.payment.formatExpiry($elem.val()));
+            $elem.val(formatExpiry($elem.val()));
             expiration = $elem.payment('cardExpiryVal');
-            if (!$.payment.validateCardExpiry(expiration.month, expiration.year)) {
+            if (!/^\d{2}\/\d{2}$/.test($elem.val()) || !$.payment.validateCardExpiry(expiration.month, expiration.year)) {
                 setWrong($elem);
             } else {
                 setValid($elem);
