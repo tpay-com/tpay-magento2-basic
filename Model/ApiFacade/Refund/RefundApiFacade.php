@@ -5,6 +5,7 @@ namespace Tpay\Magento2\Model\ApiFacade\Refund;
 use Magento\Payment\Model\InfoInterface;
 use Tpay\Magento2\Model\ApiFacade\OpenApi;
 use Tpay\Magento2\Model\ApiFacade\OpenApiFactory;
+use Tpay\Magento2\Model\TpayPayment;
 
 class RefundApiFacade
 {
@@ -44,6 +45,10 @@ class RefundApiFacade
         /** @var RefundCardOriginApi $refundOriginApi */
         $refundOriginApi = $this->refundOriginApi->create(['storeId' => $storeId]);
 
-        return $refundOriginApi->makeCardRefund($payment, $amount);
+        /** @var TpayPayment $tpayPayment */
+        $tpayPayment = $payment->getMethodInstance();
+        $currency = $payment->getOrder()->getBaseCurrencyCode();
+
+        return $refundOriginApi->makeCardRefund($payment, $amount, $tpayPayment->getISOCurrencyCode($currency));
     }
 }

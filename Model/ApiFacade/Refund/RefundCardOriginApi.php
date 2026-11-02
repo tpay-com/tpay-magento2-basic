@@ -21,7 +21,7 @@ class RefundCardOriginApi extends CardRefunds
         }
     }
 
-    public function makeCardRefund($payment, $amount, $currency = '985')
+    public function makeCardRefund($payment, $amount, $currency)
     {
         $transactionId = $payment->getParentTransactionId();
         $this->setAmount($amount)->setCurrency($currency);
