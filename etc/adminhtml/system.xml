@@ -200,6 +200,7 @@
                         <label>Number of days</label>
                         <validate>not-negative-amount validate-under-thirty</validate>
                         <depends><field id="active">1</field></depends>
+                        <comment>If you offer customers traditional bank transfers (postal orders), set the transaction validity time to a minimum of 3 days. With a shorter timeframe, the order will be canceled before the funds are booked, and the customer's delayed payment will be automatically refunded. Alternatively, disable payment methods with extended processing times.</comment>
                     </field>
                 </group>
                 <field id="version_comment" translate="label" type="label" sortOrder="19" showInDefault="1" showInWebsite="1" showInStore="1">
