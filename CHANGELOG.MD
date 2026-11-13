@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added warning in plugin configuration screen regarding auto cancel and long booking times for selected payment methods
 
+### Changed
+
+- Tpay OpenAPI SDK version updated to at least 2.6.0
+
 ## 2.9.1
 
 ### Fixed
